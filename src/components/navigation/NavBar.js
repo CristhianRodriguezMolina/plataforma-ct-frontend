@@ -1,12 +1,22 @@
-import React from 'react'
+import React from 'react';
 
 // SCSS
 import './NavBar.scss';
 
-export default function NavBar() {
+// COMPONENTS 
+
+// Link
+import { Link, withRouter } from 'react-router-dom';
+
+function NavBar() {
     return (
         <div className="navbar">
-            
+            <div className="ml-auto">
+                <Link className="btn btn-primary ml-auto mr-2" to="/">Index</Link>
+                <Link className="btn btn-primary ml-auto" to="/course/mycourses">My Courses</Link>                
+            </div>
         </div>
     )
 }
+
+export default withRouter(NavBar);
