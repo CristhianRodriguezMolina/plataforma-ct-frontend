@@ -24,6 +24,13 @@ import NavBar from './components/navigation/NavBar';
 // My courses
 import MyCourses from './components/course/MyCourses';
 
+// My activities
+import MyActivities from './components/activity/MyActivities';
+
+// My activities
+import CreateActivity from './components/activity/CreateActivity';
+
+
 // Error 404
 import Error404 from './components/error/Error404';
 
@@ -36,6 +43,8 @@ function App() {
           <Switch>
             <Route path="/" exact />
             <Route path='/course/mycourses' exact component={MyCourses} />
+            <Route path='/activity/myActivities' exact component={MyActivities} />
+            <Route path='/activity/create' exact component={CreateActivity} />
             <Route component={Error404} />
           </Switch>
         </div>
