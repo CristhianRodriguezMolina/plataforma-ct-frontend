@@ -5,7 +5,7 @@ import './CreateActivity.scss';
 // to make API calls
 import api from '../../services/api';
 
-const InfoBall = props => {
+const CreateActivity = props => {
 
     const [name, setName] = useState(''); //Save the data registered in name field
     const [description, setDescription] = useState(''); //Save the data registered in description field
@@ -73,4 +73,4 @@ const InfoBall = props => {
     )
 };
 
-export default InfoBall;
+export default CreateActivity;
