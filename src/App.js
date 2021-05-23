@@ -24,14 +24,19 @@ import NavBar from './components/navigation/NavBar';
 // My courses
 import MyCourses from './components/course/MyCourses';
 
+// Error 404
+import Error404 from './components/error/Error404';
+
 function App() {
   return (
     <Router>
       <div className="App">
         <NavBar/>
-        <div className="container">
+        <div className="app-container">
           <Switch>
-            <Route path='/course/mycourses' exact component={MyCourses}/>
+            <Route path="/" exact />
+            <Route path='/course/mycourses' exact component={MyCourses} />
+            <Route component={Error404} />
           </Switch>
         </div>
       </div>
