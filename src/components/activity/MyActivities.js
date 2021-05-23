@@ -73,7 +73,7 @@ const MyActivities = props => {
                     return (
                         <tr>
                             <td>{activity.name}</td>
-                            <td>{activity.description}</td>
+                            <td>{activity.type.localeCompare("logic_sequence") === 0 ? 'Logic sequence' : activity.type.localeCompare("maze") === 0? 'Maze' : 'Questionnaire'}</td>
                             <td>Me</td>
                             <td>{activity.updatedAt}</td>
                         </tr>  
@@ -89,7 +89,7 @@ const MyActivities = props => {
                 :   ""   
             }
             {showFetchButton
-                ?   <button type="button" className="btn btn-light btn-block" onClick={loadActivities}>Cargar mas</button>
+                ?   <button type="button" className="btn btn-light btn-block" onClick={loadActivities}>Load more</button>
                 :   ""
             }
         </div>
