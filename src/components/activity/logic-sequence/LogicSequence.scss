@@ -1,3 +1,11 @@
 .logic-sequence-container{
+    width: 70em;
+    height: 30em;
+    background-color: blue;
+    margin: auto;
     
+    .sequence-cards-container {
+        background-color: green;
+        width: 50%;
+    }
 }

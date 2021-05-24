@@ -5,6 +5,7 @@ import './CreateActivity.scss';
 // to make API calls
 import api from '../../services/api';
 
+
 const CreateActivity = props => {
 
     const [name, setName] = useState(''); //Save the data registered in name field

@@ -30,26 +30,34 @@ import MyActivities from './components/activity/MyActivities';
 // My activities
 import CreateActivity from './components/activity/CreateActivity';
 
+import { DndProvider } from 'react-dnd'
+
+import { HTML5Backend } from 'react-dnd-html5-backend'
+
 
 // Error 404
 import Error404 from './components/error/Error404';
+import LogicSequence from './components/activity/logic-sequence/LogicSequence';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <NavBar/>
-        <div className="app-container">
-          <Switch>
-            <Route path="/" exact />
-            <Route path='/course/mycourses' exact component={MyCourses} />
-            <Route path='/activity/myActivities' exact component={MyActivities} />
-            <Route path='/activity/create' exact component={CreateActivity} />
-            <Route component={Error404} />
-          </Switch>
+    <DndProvider backend={HTML5Backend}>
+      <Router>
+        <div className="App">
+          <NavBar/>
+          <div className="app-container">
+            <Switch>
+              <Route path="/" exact />
+              <Route path='/course/mycourses' exact component={MyCourses} />
+              <Route path='/activity/myActivities' exact component={MyActivities} />
+              <Route path='/activity/create' exact component={CreateActivity} />
+              <Route path='/activity/logic-sequence' exact component={LogicSequence} />
+              <Route component={Error404} />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </DndProvider>
   );
 }
 

@@ -59,6 +59,9 @@ const MyActivities = props => {
         
     };
 
+    const handleActivity = (activity_id) => {
+        console.log(activity_id)
+    };
     return (
         <div className="my-activities-container">
             <table className="activities-list">
@@ -76,7 +79,16 @@ const MyActivities = props => {
                             <td>{activity.type.localeCompare("logic_sequence") === 0 ? 'Logic sequence' : activity.type.localeCompare("maze") === 0? 'Maze' : 'Questionnaire'}</td>
                             <td>Me</td>
                             <td>{activity.updatedAt}</td>
-                        </tr>  
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropbtn">...</button>
+                                    <div class="dropdown-content">
+                                        <button onClick={handleActivity(activity._id)}>Edit</button>
+                                        <button>Delete</button>
+                                    </div>
+                                </div> 
+                            </td>
+                        </tr>
                     )
                 }))
                 :""
