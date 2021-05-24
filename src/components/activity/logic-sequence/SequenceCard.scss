@@ -1,6 +1,17 @@
 .sequence-card-container {
-    
-    background-color: red;
     height: 4em;
     margin: 1em 2em;
+    padding-top: 0.8em;
+
+    .secundary-sequence-card-container {
+
+       
+
+         h1 {
+            font-size: 2em;
+         }
+        width: 95%;
+        background-color: yellow;
+        margin: auto;
+    }
 }
