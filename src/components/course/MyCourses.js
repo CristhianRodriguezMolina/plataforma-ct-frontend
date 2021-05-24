@@ -69,6 +69,7 @@ export default function MyCourses({ history }) {
         }, 2000)
     }
 
+    // Funcion para crear un curso dados unos datos basicos
     const createCourse = async() => {
         setProcess(true);
         setProcessMessage('The course is creating...');
@@ -80,13 +81,13 @@ export default function MyCourses({ history }) {
             visible: false
         }); 
 
-        const { message } = response.data;
+        const { course, message } = response.data;
 
-        if(response.data.course){
+        if(course){
             setProcess(false);
             setProcessMessage('');
 
-            courses.push(response.data.course)
+            courses.push(course)
 
             showSuccess(message);
         }else if(message){
@@ -96,12 +97,16 @@ export default function MyCourses({ history }) {
         }
     }
 
+    const redirect = course => {
+        history.push(`/course/edit/${course._id}`);
+    }
+
     return (
         <div>
             <TitleCard 
                 title="My courses"
                 color="#B6E768"
-            />
+            />            
             {success?
                 <Alert severity="success">{successMessage}</Alert>
                 : ""
@@ -114,25 +119,29 @@ export default function MyCourses({ history }) {
                 <Alert severity="info">{processMessage}</Alert>
                 : ""
             }
-            <div className="d-flex justify-content-center">
-                <div className="d-flex flex-wrap">
-                    {
-                        courses?
-                        courses.map(course => (
-                            <CourseCard
-                                image="https://i.blogs.es/8c3c21/pcbuild2/450_1000.jpg"
-                                course={course}
-                            />
-                        ))
-                        : 
-                        (
-                            <div className="mx-auto">
-                                <h2>There is no courses</h2>
-                            </div>
-                        )
-                    }
-                </div>
-            </div>
+            {   
+                courses && courses.length>0 ?
+                (
+                    <div className="d-flex flex-wrap mx-auto">
+                        {
+                            courses.map(course => (
+                                <CourseCard
+                                    image="https://i.blogs.es/8c3c21/pcbuild2/450_1000.jpg"
+                                    course={course}
+                                    setCourses={setCourses}
+                                    onPress={() => redirect(course)}
+                                />
+                            ))
+                        }
+                    </div>
+                )                        
+                : 
+                (
+                    <div>
+                        <h3 className="there-is-no-courses">There is no courses</h3>
+                    </div>
+                )                   
+            }
             <button className="btn btn-success btn-create-course" onClick={createCourse}>Add course</button>
         </div>
     )

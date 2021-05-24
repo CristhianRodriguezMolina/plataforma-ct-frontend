@@ -24,6 +24,9 @@ import NavBar from './components/navigation/NavBar';
 // My courses
 import MyCourses from './components/course/MyCourses';
 
+// Course view
+import CourseView from './components/course/MyCourses';
+
 // My activities
 import MyActivities from './components/activity/MyActivities';
 
@@ -43,6 +46,7 @@ function App() {
           <Switch>
             <Route path="/" exact />
             <Route path='/course/mycourses' exact component={MyCourses} />
+            <Route path='/course/edit/:id' exact component={CourseView} />
             <Route path='/activity/myActivities' exact component={MyActivities} />
             <Route path='/activity/create' exact component={CreateActivity} />
             <Route component={Error404} />
