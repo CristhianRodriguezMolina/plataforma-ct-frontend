@@ -69,6 +69,11 @@ export default function MyCourses({ history }) {
         }, 2000)
     }
 
+    // Funcion para redirigin a la pagina de edición de un curso en especifico con la history
+    const redirect = course => {
+        history.push(`/course/edit/${course._id}`);
+    }
+
     // Funcion para crear un curso dados unos datos basicos
     const createCourse = async() => {
         setProcess(true);
@@ -95,18 +100,14 @@ export default function MyCourses({ history }) {
         }else{
             showError('Error inesperado en el servidor');
         }
-    }
-
-    const redirect = course => {
-        history.push(`/course/edit/${course._id}`);
-    }
+    }   
 
     return (
         <div>
             <TitleCard 
                 title="My courses"
                 color="#B6E768"
-            />            
+            />      
             {success?
                 <Alert severity="success">{successMessage}</Alert>
                 : ""

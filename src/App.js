@@ -25,14 +25,13 @@ import NavBar from './components/navigation/NavBar';
 import MyCourses from './components/course/MyCourses';
 
 // Course view
-import CourseView from './components/course/MyCourses';
+import CourseView from './components/course/CourseView';
 
 // My activities
 import MyActivities from './components/activity/MyActivities';
 
 // My activities
 import CreateActivity from './components/activity/CreateActivity';
-
 
 // Error 404
 import Error404 from './components/error/Error404';
@@ -44,11 +43,13 @@ function App() {
         <NavBar/>
         <div className="app-container">
           <Switch>
-            <Route path="/" exact />
+            <Route path='/course/:type/:id' exact >
+              <CourseView/>
+            </Route>
             <Route path='/course/mycourses' exact component={MyCourses} />
-            <Route path='/course/edit/:id' exact component={CourseView} />
             <Route path='/activity/myActivities' exact component={MyActivities} />
             <Route path='/activity/create' exact component={CreateActivity} />
+            <Route path="/" exact />
             <Route component={Error404} />
           </Switch>
         </div>

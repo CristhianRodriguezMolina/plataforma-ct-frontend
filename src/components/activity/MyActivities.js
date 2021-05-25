@@ -33,7 +33,7 @@ const MyActivities = props => {
     }, [activities]);
 
     useEffect(() => {
-        if(count != 0){
+        if(count !== 0){
             setFin(range);
         }
     }, [count]);
