@@ -51,7 +51,7 @@ function App() {
               <Route path='/course/mycourses' exact component={MyCourses} />
               <Route path='/activity/myActivities' exact component={MyActivities} />
               <Route path='/activity/create' exact component={CreateActivity} />
-              <Route path='/activity/logic-sequence' exact component={LogicSequence} />
+              <Route path='/activity/logic-sequence' component={LogicSequence} />
               <Route component={Error404} />
             </Switch>
           </div>

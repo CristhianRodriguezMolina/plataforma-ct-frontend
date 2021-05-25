@@ -7,6 +7,7 @@ import api from '../../../services/api';
 
 import SequenceCard from './SequenceCard';
 import CardDataPanel from './CardDataPanel';
+import { useLocation } from "react-router-dom";
 
 export const LogicSequenceContext = createContext({
     sortList: null
@@ -14,24 +15,43 @@ export const LogicSequenceContext = createContext({
 
 const LogicSequence = props => {
 
-    const [sequenceList, setSequenceList] = useState([
-        {
-            id:"1",
-            name:"This is my first sequence"
-        },
-        {
-            id:"2",
-            name:"This is my second sequence"
-        },
-        {
-            id:"3",
-            name:"This is my third sequence"
-        },
-        {
-            id:"4",
-            name:"This is my fourth sequence"
+    const [sequenceList, setSequenceList] = useState([]);
+    const [logicSequence, setLogicSequence] = useState(null);
+    //Data passed through the history.push
+    const location = useLocation();
+
+    useEffect(() => {
+        const fetch = async() => {
+            let array = window.location.href.split("/");
+            let activity_id = array[array.length - 1];
+            await api.get(`/api/logic_sequence/${activity_id}`)
+                .then((res) => {
+                    console.log(res.data.sequence_cards);
+                    list = res.data.sequence_cards;
+                    console.log("res.data")
+                    console.log(res.data)
+                    setLogicSequence(res.data);
+                })
+                .catch(err => {
+                    window.alert("Unexpected error!");
+                    console.error(err);
+                })
         }
-    ])
+        
+        let list = []
+        if(location.state == undefined){
+            fetch();
+        }
+        else{
+            list = location.state.data.savedChild.savedLogicSequence.sequence_cards;
+        }
+
+        if(logicSequence == undefined){
+            fetch();
+        }
+        
+        setSequenceList(list);
+    }, [location, logicSequence]);
 
     const sortList = (dragged_id, target_id) => {
         console.log("dragged_id")
@@ -68,6 +88,27 @@ const LogicSequence = props => {
 
     };
 
+    const createCard = async() => {
+        if(logicSequence != undefined){
+            await api.post(`/api/logic_sequence/sequence_card/${logicSequence._id}`, { 
+                name: "My sequence card",
+                image: "image.jpg"
+            })
+            .then((res) => {
+                window.alert(res.data.message);
+                setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+            })
+            .catch(err => {
+                if (err.response) {
+                    window.alert(err.response.data.message);
+                }
+                else {
+                    console.error(err);
+                }
+            })
+        }
+    };
+
     return (
         <LogicSequenceContext.Provider value={{sortList}}>
             <div className="logic-sequence-container">
@@ -79,6 +120,7 @@ const LogicSequence = props => {
                         .map((sequence, i) => (
                             <SequenceCard sequenceName={sequence.name} sequenceId={sequence.id}></SequenceCard>
                         ))}
+                <button onClick={createCard}>Create Card</button>
                 </div>
                 <CardDataPanel>
                 </CardDataPanel>

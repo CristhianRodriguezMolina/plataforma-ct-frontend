@@ -6,7 +6,7 @@ import './CreateActivity.scss';
 import api from '../../services/api';
 
 
-const CreateActivity = props => {
+const CreateActivity = (props) => {
 
     const [name, setName] = useState(''); //Save the data registered in name field
     const [description, setDescription] = useState(''); //Save the data registered in description field
@@ -31,7 +31,10 @@ const CreateActivity = props => {
                 type
             })
             .then((res) => {
-                window.alert(res.data.message);
+                props.history.push({
+                    pathname: `/activity/logic-sequence/${res.data.activity._id}`,
+                    state: { data: res.data }
+                })
             })
             .catch(err => {
                 if (err.response) {
