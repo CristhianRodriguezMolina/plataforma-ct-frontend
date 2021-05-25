@@ -25,7 +25,7 @@ export default function CourseView(props, { history }) {
             fetchData();
             console.log('test')
         }
-    }, [])
+    })
 
     const fetchData = async() => {
         try {

@@ -11,9 +11,6 @@ import './course.scss';
 // Icono Delete
 import DeleteIcon from '@material-ui/icons/Delete';
 
-// Icono
-import Icon from '@material-ui/core/Icon';
-
 // Boton de icono
 import IconButton from '@material-ui/core/IconButton';
 
