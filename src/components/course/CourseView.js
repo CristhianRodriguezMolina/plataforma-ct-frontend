@@ -12,6 +12,9 @@ import TitleCard from '../common/TitleCard';
 // Boton de material UI
 import Button from '@material-ui/core/Button';
 
+// Course Information (Teacher view)
+import CourseInformation from './teacher-view/CourseInformation';
+
 export default function CourseView(props, { history }) {
 
     // Datos que vienen como parametros en la ruta para este componente
@@ -25,7 +28,7 @@ export default function CourseView(props, { history }) {
             fetchData();
             console.log('test')
         }
-    })
+    }, [course])
 
     const fetchData = async() => {
         try {
@@ -57,7 +60,12 @@ export default function CourseView(props, { history }) {
                     </div>
                 </div>
                 <div className="col col-md-9">
-
+                    {
+                        type==="edit" && course?
+                            <CourseInformation course={course} setCourse={setCourse} />
+                            :
+                            ""
+                    }
                 </div>
             </div>
         </div>

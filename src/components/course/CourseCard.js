@@ -52,7 +52,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     const deleteCourse = async() => {
         try {
             setProcess(true);
-            setProcessMessage('The course is deleting...');
+            setProcessMessage('El curso se esta borrando...');
 
             const response = await api.delete(`/api/course/${course._id}`);
 
@@ -77,6 +77,8 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
             showError('Error inesperado en el servidor');
             console.log(`Ha ocurrido un error: ${error}`);
         }
+        setProcess(false);
+        setProcessMessage('');
     }
 
     return (

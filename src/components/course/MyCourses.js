@@ -30,6 +30,7 @@ export default function MyCourses({ history }) {
     // INFO BASE DE UN CURSO
     const [name, setName] = useState('New course');
     const [description, setDescription] = useState('Add a description');
+    const [topic, setTopic] = useState('Add a topic');
 
     // Cursos de la base de datos
     const [courses, setCourses] = useState(null);
@@ -82,7 +83,7 @@ export default function MyCourses({ history }) {
         const response = await api.post('/api/course', {
             name,
             description,
-            topic: '',
+            topic,
             visible: false
         }); 
 
