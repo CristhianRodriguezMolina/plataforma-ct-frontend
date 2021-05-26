@@ -12,6 +12,7 @@ import { LogicSequenceContext } from './LogicSequence';
 import {SortableElement} from 'react-sortable-hoc';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 const SequenceCard = SortableElement(({value}) => {
 
@@ -25,10 +26,8 @@ const SequenceCard = SortableElement(({value}) => {
     return (
         <div className="sequence-card-container">
             <div className="d-flex justify-content-between">
-                <h1>{value.name}</h1>
-                <IconButton onClick={handleClick} style={{backgroundColor: 'blue'}} arial-label="Delete" color="primary">
-                    <EditIcon style={{backgroundColor: 'red'}} />
-                </IconButton>
+                <h1>{value.name}</h1>                
+                <button onClick={handleClick} className="btn btn-info">H</button>                
             </div>
         </div>
     )
