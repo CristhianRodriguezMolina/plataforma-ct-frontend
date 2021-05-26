@@ -26,8 +26,8 @@ const SequenceCard = SortableElement(({value}) => {
         <div className="sequence-card-container">
             <div className="d-flex justify-content-between">
                 <h1>{value.name}</h1>
-                <IconButton onClick={() => handleClick()} style={{backgroundColor: 'blue'}} arial-label="delete" color="primary">
-                    <EditIcon onClick={() => handleClick()} style={{backgroundColor: 'red'}} />
+                <IconButton onClick={handleClick} style={{backgroundColor: 'blue'}} arial-label="Delete" color="primary">
+                    <EditIcon style={{backgroundColor: 'red'}} />
                 </IconButton>
             </div>
         </div>
