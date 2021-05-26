@@ -21,6 +21,9 @@ const LogicSequence = props => {
     const [logicSequence, setLogicSequence] = useState(null);
     const [selectedCard, setSelectedCard] = useState(null);
 
+    const [activityName, setActivityName] = useState("");
+    const [activityDescription, setActivityDescription] = useState("");
+
 
     const { activityId } = useParams();
 
@@ -104,13 +107,34 @@ const LogicSequence = props => {
         }
     };
 
+    const saveLogicSequence = async() => {
+        await api.put(`/api/activity/${activityId}`, {
+            activity: {
+                name: logicSequence.activity_id.name,
+                description: logicSequence.activity_id.description,
+                type: logicSequence.activityId.type
+            },
+            child: logicSequence.sequence_cards
+        }).then(res => {
+            window.alert(res.data.message);
+        }).catch(err => {
+            if(err.response)
+            {
+                window.alert(err.response.data.message);
+            }
+            else{
+                window.alert(err);
+            }
+        });
+    }
+
     return (
         <LogicSequenceContext.Provider value={{sortList, selectedCard, setSelectedCard, logicSequence}}>
             <div className="logic-sequence-container">
                 {logicSequence?
                     <div>
-                        <h1>{logicSequence.activity_id.name}</h1>
-                        <p>{logicSequence.activity_id.description}</p>
+                        <input value={logicSequence.activity_id.name} onChange={evt => setActivityName(evt.target.value)}></input>
+                        <input value={logicSequence.activity_id.description} onChange={evt => setActivityDescription(evt.target.value)}></input>
                     </div>
                     :
                     <div>
@@ -121,11 +145,10 @@ const LogicSequence = props => {
                 <div className="panels">
                     <div className="sequence-cards-container">
                         {sequenceList?
-                        (console.log("================I DONT UNDESTAND????"),
-                        console.log(sequenceList),sequenceList
+                        sequenceList
                             .map((sequence, i) => (
                                 <SequenceCard key={i} sequenceName={sequence.name} sequenceId={sequence._id}></SequenceCard>
-                            )))
+                            ))
                         :
                         ""
                         }
@@ -133,7 +156,9 @@ const LogicSequence = props => {
                     </div>
                     <CardDataPanel>
                     </CardDataPanel>
+
                 </div>
+                <button onClick={() => saveLogicSequence()}>Save changes</button>
             </div>
         </LogicSequenceContext.Provider>
     )

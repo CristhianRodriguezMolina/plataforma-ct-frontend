@@ -15,8 +15,7 @@ function NavBar() {
                 <Link className="btn btn-primary ml-auto mr-2" to="/">Index</Link>
                 <Link className="btn btn-primary ml-auto mr-2" to="/course/mycourses">My Courses</Link>
                 <Link className="btn btn-primary ml-auto mr-2" to="/activity/myactivities">My Activities</Link>
-                <Link className="btn btn-primary ml-auto mr-2" to="/activity/create">Create Activity</Link> 
-                <Link className="btn btn-primary ml-auto" to="/activity/logic-sequence">Logic Sequence</Link>                
+                <Link className="btn btn-primary ml-auto" to="/activity/create">Create Activity</Link>                
             </div>
         </div>
     )
