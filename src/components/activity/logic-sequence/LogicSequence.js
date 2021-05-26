@@ -8,13 +8,29 @@ import api from '../../../services/api';
 import SequenceCard from './SequenceCard';
 import CardDataPanel from './CardDataPanel';
 import { useParams } from "react-router-dom";
+import arrayMove from 'array-move';
+
+import {SortableContainer} from 'react-sortable-hoc';
+
+
 
 export const LogicSequenceContext = createContext({
     selectedCard: null,
-    sortList: null,
     logicSequence: null
 })
 
+const SortableList = SortableContainer(({items}) => {
+    const handleClick = () => {
+        console.log("sequence card clicked");
+    };
+    return (
+        <ul>
+        {items.map((value, index) => (
+            <div onClick={(()=>handleClick())}><SequenceCard key={`item-${index}`} index={index} value={value} /></div>
+        ))}
+        </ul>
+    );
+    });
 const LogicSequence = props => {
 
     const [sequenceList, setSequenceList] = useState(null);
@@ -128,8 +144,20 @@ const LogicSequence = props => {
         });
     }
 
+    const onSortEnd = ({oldIndex, newIndex}) => {
+
+        let arrayCopy = [...sequenceList];
+        arrayCopy = arrayMove(arrayCopy, oldIndex, newIndex);
+        // setSequenceList(({items}) => ({
+        //     items: arrayMove(items, oldIndex, newIndex),
+        // }));
+        setSequenceList(arrayCopy);
+    };
+
+   
+
     return (
-        <LogicSequenceContext.Provider value={{sortList, selectedCard, setSelectedCard, logicSequence}}>
+        <LogicSequenceContext.Provider value={{selectedCard, setSelectedCard, logicSequence}}>
             <div className="logic-sequence-container">
                 {logicSequence?
                     <div>
@@ -145,14 +173,9 @@ const LogicSequence = props => {
                 <div className="panels">
                     <div className="sequence-cards-container">
                         {sequenceList?
-                        sequenceList
-                            .map((sequence, i) => (
-                                <SequenceCard key={i} sequenceName={sequence.name} sequenceId={sequence._id}></SequenceCard>
-                            ))
-                        :
-                        ""
-                        }
-                    <button onClick={() => createCard()}>Create Card</button>
+                            <SortableList items={sequenceList} onSortEnd={onSortEnd} />:""}
+                        
+                        <button onClick={() => createCard()}>Create Card</button>
                     </div>
                     <CardDataPanel>
                     </CardDataPanel>

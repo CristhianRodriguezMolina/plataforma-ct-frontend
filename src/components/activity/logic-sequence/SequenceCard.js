@@ -7,47 +7,23 @@ import api from '../../../services/api';
 import { useDrag, useDrop } from 'react-dnd';
 import { Itemtypes } from '../../../util/item';
 import { LogicSequenceContext } from './LogicSequence';
+import {SortableElement} from 'react-sortable-hoc';
 
-const SequenceCard = props => {
+const SequenceCard = SortableElement(({value}) => {
 
-    const { sortList, setSelectedCard } = useContext(LogicSequenceContext);
-
-    const [{isDragging}, drag] = useDrag({
-        type: Itemtypes.SEQUENCE_CARD,
-        item: {
-            id: props.sequenceId
-        },
-        collect: monitor => ({
-            isDragging: !!monitor.isDragging(),
-        }),
-    })
-
-    const [{isOver}, drop] = useDrop({
-        accept: Itemtypes.SEQUENCE_CARD,
-        drop: (item, monitor) => {
-            console.log("something has been dropped!");
-            sortList(item.id, props.sequenceId);
-        },
-        collect: monitor => ({
-            isOver: !!monitor.isOver()
-        })
-    })
+    const { setSelectedCard } = useContext(LogicSequenceContext);
 
     const handleClick = () => {
         console.log("sequence card clicked");
-        setSelectedCard(props.sequenceId);
+        setSelectedCard(value._id);
     };
 
     return (
-        <div className="sequence-card-container" ref={drop} style={{
-            backgroundColor: isOver?"red":"white",
-          }}>
-            <div  onClick={handleClick} className="secundary-sequence-card-container" ref={drag} style={{opacity:isDragging?"0.5":"1"}}>
-                <h1>{props.sequenceName}</h1>
-            </div>
+        <div className="sequence-card-container">
+            <h1>{value.name}</h1>
         </div>
     )
-}
+});
 
 export default SequenceCard;
     
