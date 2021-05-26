@@ -59,9 +59,25 @@ const MyActivities = props => {
         
     };
 
-    const handleActivity = (activity_id) => {
-        console.log("activity_id")
-        console.log(activity_id)
+    const handleEdit = (activity_id) => {
+        props.history.push(`/activity/logic-sequence/${activity_id}`);
+    };
+
+    const handleDelete = async(activity_id) => {
+        await api.delete(`/api/activity/${activity_id}`)
+        .then((res) => {
+            let array = activities.filter((activity, i) => activity._id !== activity_id);
+            setActivities(array);
+            window.alert(res.data.message);
+        })
+        .catch(err => {
+            if (err.response) {
+                window.alert(err.response.data.message);
+            }
+            else {
+                console.error(err);
+            }
+        })
     };
     return (
         <div className="my-activities-container">
@@ -84,7 +100,10 @@ const MyActivities = props => {
                             <td>Me</td>
                             <td>{activity.updatedAt}</td>
                             <td>
-                                <button onClick={() => handleActivity(activity._id)}>Edit</button>
+                                <button onClick={() => handleEdit(activity._id)}>Edit</button>
+                            </td>
+                            <td>
+                                <button onClick={() => handleDelete(activity._id)}>Delete</button>
                             </td>
                         </tr>
                     )
