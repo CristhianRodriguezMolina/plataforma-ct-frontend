@@ -10,11 +10,13 @@ import { LogicSequenceContext } from './LogicSequence';
 
 const SequenceCard = props => {
 
-    const { sortList } = useContext(LogicSequenceContext);
+    const { sortList, setSelectedCard } = useContext(LogicSequenceContext);
 
     const [{isDragging}, drag] = useDrag({
         type: Itemtypes.SEQUENCE_CARD,
-        item: {id:props.sequenceId},
+        item: {
+            id: props.sequenceId
+        },
         collect: monitor => ({
             isDragging: !!monitor.isDragging(),
         }),
@@ -31,11 +33,16 @@ const SequenceCard = props => {
         })
     })
 
+    const handleClick = () => {
+        console.log("sequence card clicked");
+        setSelectedCard(props.sequenceId);
+    };
+
     return (
         <div className="sequence-card-container" ref={drop} style={{
             backgroundColor: isOver?"red":"white",
           }}>
-            <div className="secundary-sequence-card-container" ref={drag} style={{opacity:isDragging?"0.5":"1"}}>
+            <div  onClick={handleClick} className="secundary-sequence-card-container" ref={drag} style={{opacity:isDragging?"0.5":"1"}}>
                 <h1>{props.sequenceName}</h1>
             </div>
         </div>

@@ -3,6 +3,12 @@
     height: 30em;
     background-color: blue;
     margin: auto;
+   
+
+    .panels{
+        display: flex;
+        flex-direction: row;
+    }
     
     .sequence-cards-container {
         background-color: green;

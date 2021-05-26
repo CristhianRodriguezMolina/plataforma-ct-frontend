@@ -7,51 +7,43 @@ import api from '../../../services/api';
 
 import SequenceCard from './SequenceCard';
 import CardDataPanel from './CardDataPanel';
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export const LogicSequenceContext = createContext({
-    sortList: null
+    selectedCard: null,
+    sortList: null,
+    logicSequence: null
 })
 
 const LogicSequence = props => {
 
-    const [sequenceList, setSequenceList] = useState([]);
+    const [sequenceList, setSequenceList] = useState(null);
     const [logicSequence, setLogicSequence] = useState(null);
-    //Data passed through the history.push
-    const location = useLocation();
+    const [selectedCard, setSelectedCard] = useState(null);
+
+
+    const { activityId } = useParams();
 
     useEffect(() => {
         const fetch = async() => {
-            let array = window.location.href.split("/");
-            let activity_id = array[array.length - 1];
-            await api.get(`/api/logic_sequence/${activity_id}`)
+            await api.get(`/api/logic_sequence/${activityId}`)
                 .then((res) => {
                     console.log(res.data.sequence_cards);
-                    list = res.data.sequence_cards;
                     console.log("res.data")
                     console.log(res.data)
                     setLogicSequence(res.data);
+                    setSequenceList(res.data.sequence_cards); 
                 })
                 .catch(err => {
                     window.alert("Unexpected error!");
                     console.error(err);
                 })
         }
-        
-        let list = []
-        if(location.state == undefined){
-            fetch();
-        }
-        else{
-            list = location.state.data.savedChild.savedLogicSequence.sequence_cards;
-        }
 
-        if(logicSequence == undefined){
+        if(!logicSequence){
             fetch();
         }
-        
-        setSequenceList(list);
-    }, [location, logicSequence]);
+    }, [logicSequence]);
 
     const sortList = (dragged_id, target_id) => {
         console.log("dragged_id")
@@ -59,43 +51,46 @@ const LogicSequence = props => {
         console.log("target_id")
         console.log(target_id)
       
-        if(dragged_id!== target_id){
+        if(dragged_id !== target_id){
          
-            
-            const dragged = sequenceList.filter((sequence, i) => sequence.id === dragged_id)
-            const draggedPosition=sequenceList.map((i) => {return i.id;}).indexOf(dragged_id);
-            const targetPosition=sequenceList.map((i) => {return i.id;}).indexOf(target_id);
-            sequenceList.splice(draggedPosition, 1)
-            sequenceList.splice(targetPosition, 0, dragged[0]);
+            let tempList = [...sequenceList];
+            const dragged = tempList.filter((sequence, i) => sequence._id === dragged_id);
+            const draggedPosition=tempList.map((i) => {return i._id;}).indexOf(dragged_id);
+            const targetPosition=tempList.map((i) => {return i._id;}).indexOf(target_id);
+            tempList.splice(draggedPosition, 1)
+            tempList.splice(targetPosition, 0, dragged[0]);
             console.log("dragged")
             console.log(dragged)
             console.log("targetPosition")
             console.log(targetPosition)
-            console.log("sequenceList")
-            console.log(sequenceList)
+            console.log("tempList")
+            console.log(tempList)
+            setSequenceList(tempList)
 
-            console.log("last")
-            const lastItem = sequenceList[sequenceList.length - 1]
-            console.log(lastItem)
-            sequenceList.splice(sequenceList.length - 1, 1)
-            console.log("sequenceList after")
-            console.log(sequenceList)
+            // console.log("last")
+            // const lastItem = tempList[tempList.length - 1]
+            // console.log(lastItem)
+            // tempList.splice(tempList.length - 1, 1)
+            // console.log("tempList after")
+            // console.log(tempList)
 
             
-            setSequenceList(sequenceList.concat(lastItem))
+            // setSequenceList(tempList.concat(lastItem))
         }
         
 
     };
 
     const createCard = async() => {
-        if(logicSequence != undefined){
+        if(logicSequence){
             await api.post(`/api/logic_sequence/sequence_card/${logicSequence._id}`, { 
                 name: "My sequence card",
                 image: "image.jpg"
             })
             .then((res) => {
                 window.alert(res.data.message);
+                console.log("New List");
+                console.log(res.data.updatedLogicSequence.sequence_cards);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
             })
             .catch(err => {
@@ -110,20 +105,35 @@ const LogicSequence = props => {
     };
 
     return (
-        <LogicSequenceContext.Provider value={{sortList}}>
+        <LogicSequenceContext.Provider value={{sortList, selectedCard, setSelectedCard, logicSequence}}>
             <div className="logic-sequence-container">
-                <h1>Name of the logic sequence</h1>
-                <p>Desciption of the logic sequence activity</p>
+                {logicSequence?
+                    <div>
+                        <h1>{logicSequence.activity_id.name}</h1>
+                        <p>{logicSequence.activity_id.description}</p>
+                    </div>
+                    :
+                    <div>
+                        <h1>Description of the logic sequence activity</h1>
+                        <p>Name of the logic sequence</p>
+                    </div>}
                 <hr></hr>
-                <div className="sequence-cards-container">
-                    {sequenceList
-                        .map((sequence, i) => (
-                            <SequenceCard sequenceName={sequence.name} sequenceId={sequence.id}></SequenceCard>
-                        ))}
-                <button onClick={createCard}>Create Card</button>
+                <div className="panels">
+                    <div className="sequence-cards-container">
+                        {sequenceList?
+                        (console.log("================I DONT UNDESTAND????"),
+                        console.log(sequenceList),sequenceList
+                            .map((sequence, i) => (
+                                <SequenceCard key={i} sequenceName={sequence.name} sequenceId={sequence._id}></SequenceCard>
+                            )))
+                        :
+                        ""
+                        }
+                    <button onClick={createCard}>Create Card</button>
+                    </div>
+                    <CardDataPanel>
+                    </CardDataPanel>
                 </div>
-                <CardDataPanel>
-                </CardDataPanel>
             </div>
         </LogicSequenceContext.Provider>
     )

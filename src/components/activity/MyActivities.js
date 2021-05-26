@@ -33,7 +33,7 @@ const MyActivities = props => {
     }, [activities]);
 
     useEffect(() => {
-        if(count != 0){
+        if(count !== 0){
             setFin(range);
         }
     }, [count]);
@@ -60,39 +60,38 @@ const MyActivities = props => {
     };
 
     const handleActivity = (activity_id) => {
+        console.log("activity_id")
         console.log(activity_id)
     };
     return (
         <div className="my-activities-container">
             <table className="activities-list">
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Owner</th>
-                    <th>LastModified</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Owner</th>
+                        <th>LastModified</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {activities?
                 (activities.slice(0, fin).map((activity, i) => {
                     return (
-                        <tr>
+                        <tr key={i}>
                             <td>{activity.name}</td>
-                            <td>{activity.type.localeCompare("logic_sequence") === 0 ? 'Logic sequence' : activity.type.localeCompare("maze") === 0? 'Maze' : 'Questionnaire'}</td>
+                            <td>{activity.type.localeCompare("logic_sequence") === 0 ? 'Logic sequence' : activity.type.localeCompare("maze") === 0 ? 'Maze' : 'Questionnaire'}</td>
                             <td>Me</td>
                             <td>{activity.updatedAt}</td>
                             <td>
-                                <div class="dropdown">
-                                    <button class="dropbtn">...</button>
-                                    <div class="dropdown-content">
-                                        <button onClick={handleActivity(activity._id)}>Edit</button>
-                                        <button>Delete</button>
-                                    </div>
-                                </div> 
+                                <button onClick={() => handleActivity(activity._id)}>Edit</button>
                             </td>
                         </tr>
                     )
                 }))
-                :""
+                :null
                 }
+                </tbody>
             </table>
             {loadingCourses
                 ?   <div key="spinner" className="spinner-border loading-spinner" role="status">

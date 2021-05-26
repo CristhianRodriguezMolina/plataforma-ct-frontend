@@ -31,10 +31,7 @@ const CreateActivity = (props) => {
                 type
             })
             .then((res) => {
-                props.history.push({
-                    pathname: `/activity/logic-sequence/${res.data.activity._id}`,
-                    state: { data: res.data }
-                })
+                props.history.push(`/activity/logic-sequence/${res.data.activity._id}`);
             })
             .catch(err => {
                 if (err.response) {
