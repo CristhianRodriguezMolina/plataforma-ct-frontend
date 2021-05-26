@@ -104,9 +104,11 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                     }
                 </div>
             </div>
-            <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCourse}>
-                    <DeleteIcon />
-            </IconButton>
+            <div className="text-center">
+                <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCourse}>
+                        <DeleteIcon />
+                </IconButton>
+            </div>
         </div>
     )
 }

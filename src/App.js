@@ -3,7 +3,7 @@ import React from 'react';
 // SCSS
 import './App.scss';
 
-// BOOTSTRAP -----------------------------------------------------------
+// BOOTSTRAP ----------------------------------------------------------
 
 // scss
 import 'bootstrap/scss/bootstrap.scss';
@@ -12,6 +12,11 @@ import 'bootstrap/scss/bootstrap.scss';
 import 'bootstrap/dist/js/bootstrap';
 import 'jquery/dist/jquery';
 import 'popper.js/dist/popper';
+
+// CONTEXTO -----------------------------------------------------------
+
+// User State
+import UserState from './context/user/UserState';
 
 // COMPONENTS ---------------------------------------------------------
 
@@ -38,23 +43,23 @@ import Error404 from './components/error/Error404';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <NavBar/>
-        <div className="app-container">
-          <Switch>
-            <Route path='/course/:type/:id' exact >
-              <CourseView/>
-            </Route>
-            <Route path='/course/mycourses' exact component={MyCourses} />
-            <Route path='/activity/myActivities' exact component={MyActivities} />
-            <Route path='/activity/create' exact component={CreateActivity} />
-            <Route path="/" exact />
-            <Route component={Error404} />
-          </Switch>
+    <UserState>
+      <Router>
+        <div className="App">
+          <NavBar/>
+          <div className="app-container">
+            <Switch>
+              <Route path='/course/:type/:id' exact component={CourseView} />
+              <Route path='/course/mycourses' exact component={MyCourses} />
+              <Route path='/activity/myActivities' exact component={MyActivities} />
+              <Route path='/activity/create' exact component={CreateActivity} />
+              <Route path="/" exact />
+              <Route component={Error404} />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </UserState>
   );
 }
 
