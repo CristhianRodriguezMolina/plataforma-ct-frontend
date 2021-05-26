@@ -129,7 +129,7 @@ const LogicSequence = props => {
                         :
                         ""
                         }
-                    <button onClick={createCard}>Create Card</button>
+                    <button onClick={() => createCard()}>Create Card</button>
                     </div>
                     <CardDataPanel>
                     </CardDataPanel>

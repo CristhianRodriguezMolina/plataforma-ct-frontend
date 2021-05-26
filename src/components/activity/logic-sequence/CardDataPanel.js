@@ -11,23 +11,25 @@ const CardDataPanel = props => {
 
     const { selectedCard, logicSequence } = useContext(LogicSequenceContext);
     const [card, setCard] = useState(null);
+    const [cardName, setCardName] = useState("");
 
     useEffect(()=>{
-        if(logicSequence){
-            setCard(logicSequence.sequence_cards.filter((card, i) => card.id === selectedCard)[0]);
+        console.log("selected card in dard data panel");
+        console.log(selectedCard);
+        if(selectedCard){
+            let tempCard = logicSequence.sequence_cards.filter((card, i) => card._id === selectedCard)[0]
+            console.log("CARD IN CARD DATA PANEL");
+            console.log(tempCard);
+            setCardName(tempCard.name)
         }
-    }, [card]);
-
-    const doSomething = () => {
-        console.log("isClicked");
-    };
+    }, [selectedCard]);
 
     return (
-        <div onClick={doSomething} className="card-data-panel-container">
+        <div className="card-data-panel-container">
             <h1>CardDataPanel</h1>
             <p>In this data panel you can change the data from a card that you have selected</p>
             <h2>Key word *</h2>
-            <input></input>
+            <input value={cardName} onChange={evt => setCardName(evt.target.value)}></input>
             <h2>Image (optional)</h2>
             <input></input>
             <button>Save</button>
