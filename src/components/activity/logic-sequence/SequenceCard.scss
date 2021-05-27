@@ -2,8 +2,14 @@
     height: 4em;
     margin: 1em 2em;
     padding-top: 0.8em;
+    display: flex;
+    flex-direction: row;
     h1 {
         font-size: 2em;
+    }
+
+    .maanage-buttons-container {
+        
     }
     
     cursor: pointer;

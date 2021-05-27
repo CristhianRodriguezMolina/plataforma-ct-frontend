@@ -16,13 +16,13 @@ import {SortableContainer} from 'react-sortable-hoc';
 
 export const LogicSequenceContext = createContext({
     selectedCard: null,
-    logicSequence: null
+    logicSequence: null,
+    setSequenceList: null,
+    sequenceList: null
 })
 
 const SortableList = SortableContainer(({items}) => {
-    const handleClick = () => {
-        console.log("sequence card clicked");
-    };
+    
     return (
         <ul>
         {items.map((value, index) => (
@@ -51,7 +51,9 @@ const LogicSequence = props => {
                     console.log("res.data")
                     console.log(res.data)
                     setLogicSequence(res.data);
-                    setSequenceList(res.data.sequence_cards); 
+                    setSequenceList(res.data.sequence_cards);
+                    setActivityName(res.data.activity_id.name);
+                    setActivityDescription(res.data.activity_id.description);
                 })
                 .catch(err => {
                     window.alert("Unexpected error!");
@@ -63,42 +65,6 @@ const LogicSequence = props => {
             fetch();
         }
     }, [logicSequence]);
-
-    const sortList = (dragged_id, target_id) => {
-        console.log("dragged_id")
-        console.log(dragged_id)
-        console.log("target_id")
-        console.log(target_id)
-      
-        if(dragged_id !== target_id){
-         
-            let tempList = [...sequenceList];
-            const dragged = tempList.filter((sequence, i) => sequence._id === dragged_id);
-            const draggedPosition=tempList.map((i) => {return i._id;}).indexOf(dragged_id);
-            const targetPosition=tempList.map((i) => {return i._id;}).indexOf(target_id);
-            tempList.splice(draggedPosition, 1)
-            tempList.splice(targetPosition, 0, dragged[0]);
-            console.log("dragged")
-            console.log(dragged)
-            console.log("targetPosition")
-            console.log(targetPosition)
-            console.log("tempList")
-            console.log(tempList)
-            setSequenceList(tempList)
-
-            // console.log("last")
-            // const lastItem = tempList[tempList.length - 1]
-            // console.log(lastItem)
-            // tempList.splice(tempList.length - 1, 1)
-            // console.log("tempList after")
-            // console.log(tempList)
-
-            
-            // setSequenceList(tempList.concat(lastItem))
-        }
-        
-
-    };
 
     const createCard = async() => {
         if(logicSequence){
@@ -124,13 +90,20 @@ const LogicSequence = props => {
     };
 
     const saveLogicSequence = async() => {
+        console.log("saveLogicSequence")
+        console.log(logicSequence)
+        console.log(activityName)
+        console.log(activityDescription)
+        console.log("sequenceList")
+        console.log(sequenceList)
         await api.put(`/api/activity/${activityId}`, {
             activity: {
-                name: logicSequence.activity_id.name,
-                description: logicSequence.activity_id.description,
-                type: logicSequence.activityId.type
+                name: activityName,
+                description: activityDescription
             },
-            child: logicSequence.sequence_cards
+            child: {
+                sequence_cards: sequenceList
+            }
         }).then(res => {
             window.alert(res.data.message);
         }).catch(err => {
@@ -139,7 +112,7 @@ const LogicSequence = props => {
                 window.alert(err.response.data.message);
             }
             else{
-                window.alert(err);
+                console.log(err)
             }
         });
     }
@@ -148,21 +121,20 @@ const LogicSequence = props => {
 
         let arrayCopy = [...sequenceList];
         arrayCopy = arrayMove(arrayCopy, oldIndex, newIndex);
-        // setSequenceList(({items}) => ({
-        //     items: arrayMove(items, oldIndex, newIndex),
-        // }));
+        console.log("ARRAY COPY WHEN WE SORT");
+        console.log(arrayCopy);
         setSequenceList(arrayCopy);
     };
 
    
 
     return (
-        <LogicSequenceContext.Provider value={{selectedCard, setSelectedCard, logicSequence}}>
+        <LogicSequenceContext.Provider value={{selectedCard, setSelectedCard, logicSequence, setSequenceList, sequenceList}}>
             <div className="logic-sequence-container">
                 {logicSequence?
                     <div>
-                        <input value={logicSequence.activity_id.name} onChange={evt => setActivityName(evt.target.value)}></input>
-                        <input value={logicSequence.activity_id.description} onChange={evt => setActivityDescription(evt.target.value)}></input>
+                        <input value={activityName} onChange={evt => setActivityName(evt.target.value)}></input>
+                        <input value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></input>
                     </div>
                     :
                     <div>

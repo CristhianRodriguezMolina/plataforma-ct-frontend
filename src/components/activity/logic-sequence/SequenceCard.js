@@ -14,21 +14,42 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import zIndex from '@material-ui/core/styles/zIndex';
 
+
 const SequenceCard = SortableElement(({value}) => {
 
-    const { setSelectedCard } = useContext(LogicSequenceContext);
+    const { setSequenceList, logicSequence, setSelectedCard } = useContext(LogicSequenceContext);
 
     const handleClick = () => {
         console.log("sequence card clicked");
         setSelectedCard(value._id);
     };
+    
+    const deleteCard = async() => {
+        await api.delete(`/api/logic_sequence/sequence_card/${logicSequence._id}/${value._id}`)
+            .then((res) => {
+                window.alert(res.data.message);
+                setSelectedCard(null);
+                setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+            })
+            .catch(err => {
+                if(err.response){
+                    console.error(err.response.message);
+                }
+                else{
+                    console.error(err);
+
+                }
+                window.alert("Unexpected error!");
+            })
+    }
 
     return (
         <div className="sequence-card-container">
-            <div className="d-flex justify-content-between">
-                <h1>{value.name}</h1>                
-                <button onClick={handleClick} className="btn btn-info">H</button>                
-            </div>
+            <h1>{value.name}</h1> 
+            <div className="maanage-buttons-container">        
+                <button onClick={handleClick} className="btn btn-info">Edit</button>
+                <button onClick={deleteCard} className="btn btn-info">Del</button>
+            </div>   
         </div>
     )
 });
