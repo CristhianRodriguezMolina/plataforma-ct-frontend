@@ -93,7 +93,7 @@ export default function MyCourses({ history }) {
             setProcess(false);
             setProcessMessage('');
 
-            courses.push(course)
+            courses.push(course);
 
             showSuccess(message);
         }else if(message){
@@ -106,7 +106,7 @@ export default function MyCourses({ history }) {
     return (
         <div>
             <TitleCard 
-                title="My courses"
+                title="Mis cursos"
                 color="#B6E768"
             />      
             {success?
@@ -128,6 +128,7 @@ export default function MyCourses({ history }) {
                         {
                             courses.map(course => (
                                 <CourseCard
+                                    key={course._id}
                                     image="https://i.blogs.es/8c3c21/pcbuild2/450_1000.jpg"
                                     course={course}
                                     setCourses={setCourses}
@@ -140,11 +141,11 @@ export default function MyCourses({ history }) {
                 : 
                 (
                     <div>
-                        <h3 className="there-is-no-courses">There is no courses</h3>
+                        <h3 className="there-is-no-courses">Aún no hay cursos</h3>
                     </div>
                 )                   
             }
-            <button className="btn btn-success btn-create-course" onClick={createCourse}>Add course</button>
+            <button className="btn btn-success btn-create-course" onClick={createCourse}>Crear curso</button>
         </div>
     )
 }
