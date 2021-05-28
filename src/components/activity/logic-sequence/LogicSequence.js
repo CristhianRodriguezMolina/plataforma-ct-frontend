@@ -45,11 +45,8 @@ const LogicSequence = props => {
 
     useEffect(() => {
         const fetch = async() => {
-            await api.get(`/api/logic_sequence/${activityId}`)
+            await api.get(`/api/logic-sequence/${activityId}`)
                 .then((res) => {
-                    console.log(res.data.sequence_cards);
-                    console.log("res.data")
-                    console.log(res.data)
                     setLogicSequence(res.data);
                     setSequenceList(res.data.sequence_cards);
                     setActivityName(res.data.activity_id.name);
@@ -67,15 +64,13 @@ const LogicSequence = props => {
     }, [logicSequence]);
 
     const createCard = async() => {
-        if(logicSequence){
-            await api.post(`/api/logic_sequence/sequence_card/${logicSequence._id}`, { 
+        if(logicSequence) {
+            await api.post(`/api/logic-sequence/sequence-card/${logicSequence._id}`, { 
                 name: "My sequence card",
                 image: "image.jpg"
             })
             .then((res) => {
                 window.alert(res.data.message);
-                console.log("New List");
-                console.log(res.data.updatedLogicSequence.sequence_cards);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
             })
             .catch(err => {
@@ -90,12 +85,6 @@ const LogicSequence = props => {
     };
 
     const saveLogicSequence = async() => {
-        console.log("saveLogicSequence")
-        console.log(logicSequence)
-        console.log(activityName)
-        console.log(activityDescription)
-        console.log("sequenceList")
-        console.log(sequenceList)
         await api.put(`/api/activity/${activityId}`, {
             activity: {
                 name: activityName,
@@ -107,12 +96,11 @@ const LogicSequence = props => {
         }).then(res => {
             window.alert(res.data.message);
         }).catch(err => {
-            if(err.response)
-            {
+            if(err.response) {
                 window.alert(err.response.data.message);
             }
-            else{
-                console.log(err)
+            else {
+                console.error(err);
             }
         });
     }
@@ -121,8 +109,6 @@ const LogicSequence = props => {
 
         let arrayCopy = [...sequenceList];
         arrayCopy = arrayMove(arrayCopy, oldIndex, newIndex);
-        console.log("ARRAY COPY WHEN WE SORT");
-        console.log(arrayCopy);
         setSequenceList(arrayCopy);
     };
 

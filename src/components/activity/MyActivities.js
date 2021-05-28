@@ -23,9 +23,14 @@ const MyActivities = props => {
                     .then((response) => {
                         setActivities(response.data.activities);
                         setCount(response.data.count);
+                        if(response.data.count == 0) {
+                            setLoadingCourses(false);
+                            setShowFetchButton(false);
+                        }
                     }).catch((error) => {
                         //Show an error during the process
                         console.log("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
+                        console.error(error);
                     });
             };
             fetch();

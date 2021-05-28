@@ -15,13 +15,6 @@ const CreateActivity = (props) => {
     const handleSubmit = async(e) => {
         e.preventDefault(); //Prevent the form reload the webside
 
-        console.log("name")
-        console.log(name)
-        console.log("description")
-        console.log(description)
-        console.log("type")
-        console.log(type)
-
         //Verifying fields
         if(name.trim().localeCompare("") !== 0) {
             //Making API calls
@@ -31,7 +24,7 @@ const CreateActivity = (props) => {
                 type
             })
             .then((res) => {
-                props.history.push(`/activity/logic-sequence/${res.data.activity._id}`);
+                props.history.push(`/activity/logic-sequence/${res.data.activity_id}`);
             })
             .catch(err => {
                 if (err.response) {

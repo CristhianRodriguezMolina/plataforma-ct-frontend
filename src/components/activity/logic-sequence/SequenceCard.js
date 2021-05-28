@@ -20,12 +20,11 @@ const SequenceCard = SortableElement(({value}) => {
     const { setSequenceList, logicSequence, setSelectedCard } = useContext(LogicSequenceContext);
 
     const handleClick = () => {
-        console.log("sequence card clicked");
         setSelectedCard(value._id);
     };
     
     const deleteCard = async() => {
-        await api.delete(`/api/logic_sequence/sequence_card/${logicSequence._id}/${value._id}`)
+        await api.delete(`/api/logic-sequence/sequence-card/${logicSequence._id}/${value._id}`)
             .then((res) => {
                 window.alert(res.data.message);
                 setSelectedCard(null);

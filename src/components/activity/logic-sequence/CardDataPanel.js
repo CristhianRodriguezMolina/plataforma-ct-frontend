@@ -14,14 +14,9 @@ const CardDataPanel = props => {
     const [cardName, setCardName] = useState("");
 
     useEffect(()=>{
-        console.log("selected card in dard data panel");
-        console.log(selectedCard);
-        console.log(logicSequence)
         if(selectedCard){
             let tempCard = sequenceList.filter((card, i) => card._id === selectedCard)[0];
             if(tempCard) {
-                console.log("CARD IN CARD DATA PANEL");
-                console.log(tempCard);
                 setCardName(tempCard.name)
             }
             
@@ -29,8 +24,7 @@ const CardDataPanel = props => {
     }, [selectedCard]);
 
     const saveCardInfo = async() => {
-        console.log("saveCardInfo")
-        await api.put(`/api/logic_sequence/sequence_card/${logicSequence._id}/${selectedCard}`, {
+        await api.put(`/api/logic-sequence/sequence-card/${logicSequence._id}/${selectedCard}`, {
             name: cardName
         })
             .then((res) => {
