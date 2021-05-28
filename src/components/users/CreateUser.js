@@ -123,12 +123,10 @@ export default function CreateUser({ history }) {
                             genre,                      //
                             role}); 
                     }else{
-                        response = await api.put(`/api/person/${user._id}`, { //Peticion post a la api para crear un usuario nuevo
-                            id,                         //
-                            password,                   //  PARAMETROS 
-                            confirm_password,           //  DE 
-                            first_name,                 //  LA PETICION
-                            last_name,                  //
+                        response = await api.put(`/api/person/${user._id}`, { //Peticion post a la api para crear un usuario nuevo                               
+                            id,                         //  PARAMETROS
+                            first_name,                 //  DE 
+                            last_name,                  //  LA PETICION
                             age,                        //
                             genre,                      //
                             role}); 
