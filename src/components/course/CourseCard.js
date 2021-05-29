@@ -90,8 +90,13 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                 <hr className="mx-2 my-1"/>
                 <img src={image} alt="CourseImage"/>
                 <div className="info mt-3">
-                    <p className="text-left m-0">You are going on <b>{course.actual_unit}</b>  due <b>{course.due_date}</b></p>
-                    <p className="text-left m-0">It has <b>{course.students}</b> students</p>
+                    {
+                        course.actual_unit?
+                            <p className="text-left m-0">Vas en la <b>{course.actual_unit}</b> y vence <b>{course.due_date}</b></p>
+                        :
+                            <p className="text-left m-0"><b>Aún no hay unidades</b></p>
+                    }
+                    <p className="text-left m-0">Tiene <b>{course.students}</b> estudiantes</p>
                     {success?
                         <Alert severity="success">{successMessage}</Alert>
                         : ""

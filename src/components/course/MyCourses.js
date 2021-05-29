@@ -28,9 +28,9 @@ export default function MyCourses({ history }) {
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
     // INFO BASE DE UN CURSO
-    const [name, setName] = useState('New course');
-    const [description, setDescription] = useState('Add a description');
-    const [topic, setTopic] = useState('Add a topic');
+    const [name, setName] = useState('Nuevo curso');
+    const [description, setDescription] = useState('Añade una descripción para el curso');
+    const [topic, setTopic] = useState('Añade un tema para el curso');
 
     // Cursos de la base de datos
     const [courses, setCourses] = useState(null);
@@ -43,7 +43,7 @@ export default function MyCourses({ history }) {
                         setCourses(response.data.courses);
                     }).catch((error) => {
                         //Muestra errores durante el proceso
-                        console.log("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
+                        console.log(`Un error ha ocurrido, por favor intentelo de nuevo mas tarde: ${error}`);
                     });
             };
             fetch();

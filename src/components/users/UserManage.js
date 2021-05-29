@@ -43,7 +43,7 @@ export default function UserManage({ history }) {
             <Container maxWidth="md">
                 <form className="search-form d-flex justify-content-between mt-4">  
                     <div className="text-field form-group mr-3">
-                        <input className="form-control" />
+                        <input className="form-control text-center" />
                     </div>                    
                     <div className="form-group">
                         <button type="submit" className="btn-search btn btn-primary">Buscar</button>

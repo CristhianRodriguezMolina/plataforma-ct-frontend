@@ -54,9 +54,9 @@ export default function CourseView(props, { history }) {
             <div className="row w-100">
                 <div className="col col-md-3">
                     <div className="pt-4">
-                        <Button variant="contained" className="d-block course-view-botton">Course Info</Button>
-                        <Button variant="contained" className="d-block course-view-botton">Units</Button>
-                        <Button variant="contained" className="d-block course-view-botton">{type==="edit"?"Students":"Classmates"}</Button>
+                        <Button variant="contained" className="d-block course-view-botton">Info del curso</Button>
+                        <Button variant="contained" className="d-block course-view-botton">Unidades</Button>
+                        <Button variant="contained" className="d-block course-view-botton">{type==="edit"?"Estudiantes":"Compañeros"}</Button>
                     </div>
                 </div>
                 <div className="col col-md-9">
