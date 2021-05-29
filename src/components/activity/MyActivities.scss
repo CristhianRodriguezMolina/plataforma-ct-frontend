@@ -1,5 +1,26 @@
 .my-activities-container {
+    width: 100%;
+
     .activities-list {
         width: 100%;
+        th {
+            background-color: grey;
+        }
+        tr {
+            border-bottom-style: solid;
+        }
     }
+
+    .activities-list {
+        @for $i from 2 to 5 {
+            td:nth-child(#{$i}) {
+                display: none;
+            }
+
+            th:nth-child(#{$i}) {
+                display: none;
+            }
+        }    
+    }
+    
 }

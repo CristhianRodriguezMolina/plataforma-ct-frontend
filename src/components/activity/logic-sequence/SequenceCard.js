@@ -6,7 +6,6 @@ import './SequenceCard.scss';
 import api from '../../../services/api';
 
 // COMPONENTS
-import { useDrag, useDrop } from 'react-dnd';
 import { Itemtypes } from '../../../util/item';
 import { LogicSequenceContext } from './LogicSequence';
 import {SortableElement} from 'react-sortable-hoc';

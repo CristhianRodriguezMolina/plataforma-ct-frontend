@@ -1,2 +1,52 @@
-.create-activity-container{
+.create-activity-container {
+    margin: 5em 1em auto 1em;
+    .title {
+        font-size: 1.7em;
+        margin-bottom: 0em;
+    }
+
+    p {
+        font-size: 0.8em;
+    }
+
+    h2 {
+        font-size: 1em;
+    }
+
+    .radio-group {
+        display: grid;
+        grid-template-columns: 15px auto;
+        grid-template-rows: 50% 50%;
+
+        .radio-button {
+            grid-column: 1;
+            grid-row: 1 / 3;
+        }
+        label {
+            margin: auto 0.5em;
+        }
+        .title-label {
+            font-size: 1em;
+            grid-column: 2;
+            grid-row: 1;
+            
+        }
+        .description-label {
+            font-size: 0.8em;
+            grid-column: 2;
+            grid-row: 2;
+        }
+    }
+
+}
+
+@media only screen and (min-width: 740px) {
+    .create-activity-container {
+        width: 45em;
+        margin-top: 2em;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0;
+        padding-right: 0;
+    }
 }

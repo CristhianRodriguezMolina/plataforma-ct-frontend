@@ -5,6 +5,9 @@ import './MyActivities.scss';
 //To make api calls
 import api from '../../services/api';
 
+// Title card
+import TitleCard from '../common/TitleCard';
+
 const MyActivities = props => {
 
     const [activities, setActivities] = useState(null);
@@ -85,7 +88,12 @@ const MyActivities = props => {
         })
     };
     return (
+            
         <div className="my-activities-container">
+        <TitleCard 
+                title="Mis actividades"
+                color="#FA61CD"
+            /> 
             <table className="activities-list">
                 <thead>
                     <tr>
@@ -93,6 +101,8 @@ const MyActivities = props => {
                         <th>Type</th>
                         <th>Owner</th>
                         <th>LastModified</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,10 +115,10 @@ const MyActivities = props => {
                             <td>Me</td>
                             <td>{activity.updatedAt}</td>
                             <td>
-                                <button onClick={() => handleEdit(activity._id)}>Edit</button>
+                                <button className="btn btn-primary" onClick={() => handleEdit(activity._id)}>Editar</button>
                             </td>
                             <td>
-                                <button onClick={() => handleDelete(activity._id)}>Delete</button>
+                                <button className="btn btn-danger" onClick={() => handleDelete(activity._id)}>Borrar</button>
                             </td>
                         </tr>
                     )
