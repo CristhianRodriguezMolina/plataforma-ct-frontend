@@ -24,13 +24,19 @@
             overflow: hidden;
             max-width: 10em;
         }
+
+        .activity-description {
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 13em;
+        }
         
 
         .activity-icon {
             margin-right: 0.5em;
         }
 
-        @for $i from 2 to 5 {
+        @for $i from 2 to 4 {
             td:nth-child(#{$i}) {
                 display: none;
             }
@@ -129,7 +135,7 @@
     
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 1200px) {
 
     .my-activities-container {
 
@@ -140,24 +146,6 @@
             }
         
             th:nth-child(3) {
-                display: table-cell;
-            }
-        }
-    }
-    
-}
-
-@media only screen and (min-width: 1200px) {
-
-    .my-activities-container {
-
-        .activities-list { 
-
-            td:nth-child(4) {
-                display: table-cell;
-            }
-        
-            th:nth-child(4) {
                 display: table-cell;
             }
         }

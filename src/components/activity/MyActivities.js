@@ -133,10 +133,9 @@ const MyActivities = props => {
             <table className="activities-list">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Owner</th>
-                        <th>LastModified</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Última modificación</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -153,14 +152,9 @@ const MyActivities = props => {
                                 }
                                 {activity.name}
                             </td>
-                            <td>
-                                {
-                                    activity.type.localeCompare("logic_sequence") === 0 ?
-                                    'Logic sequence' : activity.type.localeCompare("maze") === 0 ?
-                                    'Maze' : 'Questionnaire'
-                                }
+                            <td className="activity-description">
+                                {activity.description}
                             </td>
-                            <td>Me</td>
                             <td>{activity.updatedAt.slice(0, 10)}</td>
                             <td>
                                 <div className="drop-menu">
