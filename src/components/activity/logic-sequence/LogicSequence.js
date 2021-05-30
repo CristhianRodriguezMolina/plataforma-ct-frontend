@@ -44,9 +44,6 @@ const LogicSequence = props => {
     const nameInput = useRef(null);
     const desInput = useRef(null);
 
-    const popcorn = document.querySelector('#popcorn');
-    const tooltip = document.querySelector('#tooltip');
-
 
     const { activityId } = useParams();
 
@@ -133,13 +130,12 @@ const LogicSequence = props => {
         if (event.key === 'Enter') {
             setShowDesInput(false);
         }
+
+        event.target.style.height = 'inherit';
+        event.target.style.height = `${event.target.scrollHeight}px`;
     }
 
     const handleNameInputClick = () => {
-        const nInput = document.getElementById('nInput');
-        if(nInput) {
-            nInput.style.height = `${nInput.scrollHeight}px`;
-        }
         setShowNameInput(true);
     }
 
@@ -166,11 +162,11 @@ const LogicSequence = props => {
                 {logicSequence?
                     <div className="logic-sequence-info">
                         {showNameInput? 
-                        <textarea id="nInput" type="text" rows={1} ref={nameInput} onKeyDown={handleKeyDownNameInput} className="form-control activity-name-input" value={activityName} onBlur={() => setShowNameInput(false)} onChange={evt => setActivityName(evt.target.value)}></textarea>
+                        <textarea type="text" rows={1} ref={nameInput} onKeyDown={handleKeyDownNameInput} className="form-control activity-name-input" value={activityName} onBlur={() => setShowNameInput(false)} onChange={evt => setActivityName(evt.target.value)}></textarea>
                         : <h1 onClick={handleNameInputClick} className="activity-name-label">{activityName}</h1> }
                         
                         {showDesInput? 
-                        <textarea ref={desInput} onKeyDown={handleKeyDownDesInput} className="form-control activity-description-input" onBlur={() => setShowDesInput(false)} value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></textarea>
+                        <textarea type="text" rows={1} ref={desInput} onKeyDown={handleKeyDownDesInput} className="form-control activity-description-input" onBlur={() => setShowDesInput(false)} value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></textarea>
                         : <h1 onClick={() => setShowDesInput(true)} className="activity-description-label">{activityDescription}</h1> }
                     </div>
                     :

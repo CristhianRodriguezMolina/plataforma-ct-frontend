@@ -20,14 +20,15 @@
         }
 
         .activity-description-input {
-            width: 53em;
+            width: 90em;
             font-size: 0.8em;
             margin: 0.5em auto 0 auto;
             padding: 0.7em;
             resize: none;
             overflow: hidden;
+            line-height: 1.2em;
         }
-        
+
         .activity-name-label {
             width: 25em;
             margin: 0.5em auto 0 auto;
@@ -38,10 +39,11 @@
         }
 
         .activity-description-label {
-            width: 53em;
+            width: 90em;
             font-size: 0.8em;
             margin: 0.5em auto 0 auto;
             padding: 0.7em;
+            word-wrap: break-word;
         }
     }
     
