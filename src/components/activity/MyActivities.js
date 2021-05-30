@@ -99,8 +99,6 @@ const MyActivities = props => {
     };
 
     const showMenu = (activity_id) => {
-        console.log("clicked it");
-        console.log(activity_id);
         setCurrentMenu(`menu${activity_id}`)
         setIsActive(true);
     };

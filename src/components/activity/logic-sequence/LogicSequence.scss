@@ -1,11 +1,49 @@
-.logic-sequence-container{
+.logic-sequence-container {
     width: 70em;
     height: 30em;
-    background-color: blue;
     margin: auto;
-   
 
-   
+    .logic-sequence-info {
+
+        h1:hover  {
+            background-color: rgb(233, 233, 233);
+        }
+        .activity-name-input {
+            text-align: center;
+            width: 25em;
+            font-size: 1.7em;
+            margin: 0.5em auto 0 auto;
+            padding: 0.4em;
+            resize: none;
+            overflow: hidden;
+            line-height: 1.2em;
+        }
+
+        .activity-description-input {
+            width: 53em;
+            font-size: 0.8em;
+            margin: 0.5em auto 0 auto;
+            padding: 0.7em;
+            resize: none;
+            overflow: hidden;
+        }
+        
+        .activity-name-label {
+            width: 25em;
+            margin: 0.5em auto 0 auto;
+            font-size: 1.7em;
+            text-align: center;
+            padding: 0.4em;
+            word-wrap: break-word;
+        }
+
+        .activity-description-label {
+            width: 53em;
+            font-size: 0.8em;
+            margin: 0.5em auto 0 auto;
+            padding: 0.7em;
+        }
+    }
     
     .sequence-cards-container {
         background-color: green;

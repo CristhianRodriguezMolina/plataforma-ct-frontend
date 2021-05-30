@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useRef, useState } from 'react';
+
 
 import './LogicSequence.scss';
 
@@ -11,8 +12,6 @@ import { useParams } from "react-router-dom";
 import arrayMove from 'array-move';
 
 import {SortableContainer} from 'react-sortable-hoc';
-
-
 
 export const LogicSequenceContext = createContext({
     selectedCard: null,
@@ -39,6 +38,14 @@ const LogicSequence = props => {
 
     const [activityName, setActivityName] = useState("");
     const [activityDescription, setActivityDescription] = useState("");
+
+    const [showNameInput, setShowNameInput] = useState(false);
+    const [showDesInput, setShowDesInput] = useState(false);
+    const nameInput = useRef(null);
+    const desInput = useRef(null);
+
+    const popcorn = document.querySelector('#popcorn');
+    const tooltip = document.querySelector('#tooltip');
 
 
     const { activityId } = useParams();
@@ -112,15 +119,59 @@ const LogicSequence = props => {
         setSequenceList(arrayCopy);
     };
 
+    const handleKeyDownNameInput = (event) => {
+        if (event.key === 'Enter') {
+            setShowNameInput(false);
+        }
+
+        event.target.style.height = 'inherit';
+        event.target.style.height = `${event.target.scrollHeight}px`;
+
+    }
+
+    const handleKeyDownDesInput = (event) => {
+        if (event.key === 'Enter') {
+            setShowDesInput(false);
+        }
+    }
+
+    const handleNameInputClick = () => {
+        const nInput = document.getElementById('nInput');
+        if(nInput) {
+            nInput.style.height = `${nInput.scrollHeight}px`;
+        }
+        setShowNameInput(true);
+    }
+
+    useEffect(() => {
+        if(showNameInput) {
+            nameInput.current.focus();
+            nameInput.current.selectionStart = nameInput.current.value.length;
+            nameInput.current.selectionEnd = nameInput.current.value.length;
+        }
+    }, [showNameInput]);
    
+
+    useEffect(() => {
+        if(showDesInput) {
+            desInput.current.focus();
+            desInput.current.selectionStart = desInput.current.value.length;
+            desInput.current.selectionEnd = desInput.current.value.length;
+        }
+    }, [showDesInput]);
 
     return (
         <LogicSequenceContext.Provider value={{selectedCard, setSelectedCard, logicSequence, setSequenceList, sequenceList}}>
             <div className="logic-sequence-container">
                 {logicSequence?
-                    <div>
-                        <input value={activityName} onChange={evt => setActivityName(evt.target.value)}></input>
-                        <input value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></input>
+                    <div className="logic-sequence-info">
+                        {showNameInput? 
+                        <textarea id="nInput" type="text" rows={1} ref={nameInput} onKeyDown={handleKeyDownNameInput} className="form-control activity-name-input" value={activityName} onBlur={() => setShowNameInput(false)} onChange={evt => setActivityName(evt.target.value)}></textarea>
+                        : <h1 onClick={handleNameInputClick} className="activity-name-label">{activityName}</h1> }
+                        
+                        {showDesInput? 
+                        <textarea ref={desInput} onKeyDown={handleKeyDownDesInput} className="form-control activity-description-input" onBlur={() => setShowDesInput(false)} value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></textarea>
+                        : <h1 onClick={() => setShowDesInput(true)} className="activity-description-label">{activityDescription}</h1> }
                     </div>
                     :
                     <div>
