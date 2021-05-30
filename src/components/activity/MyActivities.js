@@ -19,6 +19,11 @@ const MyActivities = props => {
     const [count, setCount] = useState(0);
     const range = 10;
 
+    const [isActive, setIsActive] = useState(false);
+
+    const [currentMenu, setCurrentMenu] = useState(false);
+
+
     useEffect(() => {
         if(!activities){
             const fetch = async()=>{
@@ -87,6 +92,32 @@ const MyActivities = props => {
             }
         })
     };
+
+    const showMenu = (activity_id) => {
+        console.log("clicked it");
+        console.log(activity_id);
+        setCurrentMenu(`menu${activity_id}`)
+        setIsActive(true);
+    };
+
+    useEffect(() => {
+        const pageClickEvent = (e) => {
+            setIsActive(!isActive);
+        };
+
+        
+      
+        // If the item is active (ie open) then listen for clicks
+        if (isActive) {
+          window.addEventListener('click', pageClickEvent);
+        }
+      
+        return () => {
+          window.removeEventListener('click', pageClickEvent);
+        }
+      
+      }, [isActive]);
+
     return (
             
         <div className="my-activities-container">
@@ -102,7 +133,6 @@ const MyActivities = props => {
                         <th>Owner</th>
                         <th>LastModified</th>
                         <th></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,10 +145,13 @@ const MyActivities = props => {
                             <td>Me</td>
                             <td>{activity.updatedAt}</td>
                             <td>
-                                <button className="btn btn-primary" onClick={() => handleEdit(activity._id)}>Editar</button>
-                            </td>
-                            <td>
-                                <button className="btn btn-danger" onClick={() => handleDelete(activity._id)}>Borrar</button>
+                                <div className="drop-menu">
+                                    <button onClick={() => showMenu(activity._id)} className="dropbutton">...</button>
+                                    <div className={`dp-content ${isActive && currentMenu.localeCompare(`menu${activity._id}`) == 0? 'dp-content-active' : ''}`}>
+                                        <button onClick={() => handleEdit(activity._id)}>Editar</button>
+                                        <button onClick={() => handleDelete(activity._id)}>Borrar</button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     )
@@ -127,6 +160,7 @@ const MyActivities = props => {
                 }
                 </tbody>
             </table>
+            
             {loadingCourses
                 ?   <div key="spinner" className="spinner-border loading-spinner" role="status">
                         <span className="sr-only">Loading...</span>

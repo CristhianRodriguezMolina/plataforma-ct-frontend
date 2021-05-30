@@ -1,3 +1,5 @@
+
+
 .my-activities-container {
     width: 100%;
 
@@ -9,9 +11,7 @@
         tr {
             border-bottom-style: solid;
         }
-    }
 
-    .activities-list {
         @for $i from 2 to 5 {
             td:nth-child(#{$i}) {
                 display: none;
@@ -20,7 +20,75 @@
             th:nth-child(#{$i}) {
                 display: none;
             }
-        }    
+        }
+        
+        .drop-menu {
+            /* The container <div> - needed to position the dropdown content */
+            position: relative;
+            display: inline-block;
+
+            /* Dropdown Button */
+            .dropbutton {
+                border: none;
+                background-color: inherit;
+                padding: 5px;
+                cursor: pointer;
+            }
+
+            /* Dropdown button on hover & focus */
+            .dropbutton:hover {
+                background-color: #e0e6eb;
+            }
+            .dropbutton:focus { 
+                background-color: #b8c2ca;
+            }
+
+            
+            
+            /* Dropdown Content (Hidden by Default) */
+            .dp-content {
+                
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-20px);
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+                display: flex;
+                flex-direction: column;
+                left: -8.5em;
+                
+
+                /* Buttons inside the dropdown */
+                button {
+                    border: none;
+                    background-color: inherit;
+                    padding: 5px;
+                    cursor: pointer;
+                    
+                   
+                }
+
+                /* Dropdown button on hover & focus */
+                button:hover {
+                    background-color: #e0e6eb;
+                }
+                button:focus { 
+                    background-color: #b8c2ca;
+                }
+                
+            }
+
+            
+            .dp-content-active {
+                transform: translateY(0);
+                visibility: visible;
+                opacity: 1;
+            }
+            
+        }
     }
     
 }
