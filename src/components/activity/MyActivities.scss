@@ -32,8 +32,13 @@
         }
         
 
+        .name-tag {
+            padding-left: 1.3em;
+        }
+
         .activity-icon {
             margin-right: 0.5em;
+            margin-left: 0.5em;
         }
 
         @for $i from 2 to 4 {

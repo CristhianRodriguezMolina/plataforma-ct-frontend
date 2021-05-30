@@ -99,7 +99,7 @@ const MyActivities = props => {
     };
 
     const showMenu = (activity_id) => {
-        setCurrentMenu(`menu${activity_id}`)
+        setCurrentMenu(`menu${activity_id}`);
         setIsActive(true);
     };
 
@@ -131,7 +131,7 @@ const MyActivities = props => {
             <table className="activities-list">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
+                        <th className="name-tag">Nombre</th>
                         <th>Descripción</th>
                         <th>Última modificación</th>
                         <th></th>
