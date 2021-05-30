@@ -14,7 +14,7 @@ import TitleCard from '../common/TitleCard';
 // Course Card
 import CourseCard from './CourseCard';
 
-// Alerta
+// Alert
 import Alert from '@material-ui/lab/Alert';
 
 export default function MyCourses({ history }) {

@@ -8,6 +8,11 @@ import api from '../../services/api';
 // Title card
 import TitleCard from '../common/TitleCard';
 
+// Activities icons
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import BallotIcon from '@material-ui/icons/Ballot';
+import BorderVerticalIcon from '@material-ui/icons/BorderVertical';
+
 const MyActivities = props => {
 
     const [activities, setActivities] = useState(null);
@@ -140,14 +145,27 @@ const MyActivities = props => {
                 (activities.slice(0, fin).map((activity, i) => {
                     return (
                         <tr key={i}>
-                            <td>{activity.name}</td>
-                            <td>{activity.type.localeCompare("logic_sequence") === 0 ? 'Logic sequence' : activity.type.localeCompare("maze") === 0 ? 'Maze' : 'Questionnaire'}</td>
+                            <td className="activity-name">
+                                {
+                                    activity.type.localeCompare("logic_sequence") === 0 ? 
+                                    <AccountTreeIcon className="activity-icon"/> : activity.type.localeCompare("maze") === 0 ?
+                                    <BorderVerticalIcon className="activity-icon"/> : <BallotIcon className="activity-icon"/>
+                                }
+                                {activity.name}
+                            </td>
+                            <td>
+                                {
+                                    activity.type.localeCompare("logic_sequence") === 0 ?
+                                    'Logic sequence' : activity.type.localeCompare("maze") === 0 ?
+                                    'Maze' : 'Questionnaire'
+                                }
+                            </td>
                             <td>Me</td>
-                            <td>{activity.updatedAt}</td>
+                            <td>{activity.updatedAt.slice(0, 10)}</td>
                             <td>
                                 <div className="drop-menu">
                                     <button onClick={() => showMenu(activity._id)} className="dropbutton">...</button>
-                                    <div className={`dp-content ${isActive && currentMenu.localeCompare(`menu${activity._id}`) == 0? 'dp-content-active' : ''}`}>
+                                    <div className={`dp-content ${isActive && currentMenu.localeCompare(`menu${activity._id}`) === 0? 'dp-content-active' : ''}`}>
                                         <button onClick={() => handleEdit(activity._id)}>Editar</button>
                                         <button onClick={() => handleDelete(activity._id)}>Borrar</button>
                                     </div>

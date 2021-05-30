@@ -1,15 +1,33 @@
-
-
 .my-activities-container {
     width: 100%;
 
     .activities-list {
         width: 100%;
         th {
-            background-color: grey;
+            background-color: rgb(209, 206, 206);
+            color: rgb(111, 111, 112);
+            font-weight: normal;
+            padding: 0.4em;
         }
         tr {
             border-bottom-style: solid;
+            border-bottom-width: 1px;
+            border-bottom-color: rgb(209, 206, 206);
+            
+            td {
+                padding: 0.4em;
+            }
+        }
+        
+        .activity-name {
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 10em;
+        }
+        
+
+        .activity-icon {
+            margin-right: 0.5em;
         }
 
         @for $i from 2 to 5 {
@@ -88,6 +106,60 @@
                 opacity: 1;
             }
             
+        }
+    }
+    
+}
+
+@media only screen and (min-width: 675px) {
+
+    .my-activities-container {
+
+        .activities-list { 
+
+            td:nth-child(2) {
+                display: table-cell;
+            }
+        
+            th:nth-child(2) {
+                display: table-cell;
+            }
+        }
+    }
+    
+}
+
+@media only screen and (min-width: 900px) {
+
+    .my-activities-container {
+
+        .activities-list { 
+
+            td:nth-child(3) {
+                display: table-cell;
+            }
+        
+            th:nth-child(3) {
+                display: table-cell;
+            }
+        }
+    }
+    
+}
+
+@media only screen and (min-width: 1200px) {
+
+    .my-activities-container {
+
+        .activities-list { 
+
+            td:nth-child(4) {
+                display: table-cell;
+            }
+        
+            th:nth-child(4) {
+                display: table-cell;
+            }
         }
     }
     
