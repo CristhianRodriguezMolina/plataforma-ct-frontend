@@ -42,7 +42,12 @@ const LogicSequence = props => {
     const [showNameInput, setShowNameInput] = useState(false);
     const [showDesInput, setShowDesInput] = useState(false);
     const nameInput = useRef(null);
+    const nH1 = useRef(null);
+    const dH1 = useRef(null);
+    const [nIHeight, setNIHeight] = useState(0);
+    const [dIHeight, setDIHeight] = useState(0);
     const desInput = useRef(null);
+    
 
 
     const { activityId } = useParams();
@@ -136,7 +141,13 @@ const LogicSequence = props => {
     }
 
     const handleNameInputClick = () => {
+        setNIHeight(nH1.current.clientHeight);
         setShowNameInput(true);
+    }
+    
+    const handleDesInputClick = () => {
+        setDIHeight(dH1.current.clientHeight);
+        setShowDesInput(true)
     }
 
     useEffect(() => {
@@ -162,12 +173,12 @@ const LogicSequence = props => {
                 {logicSequence?
                     <div className="logic-sequence-info">
                         {showNameInput? 
-                        <textarea type="text" rows={1} ref={nameInput} onKeyDown={handleKeyDownNameInput} className="form-control activity-name-input" value={activityName} onBlur={() => setShowNameInput(false)} onChange={evt => setActivityName(evt.target.value)}></textarea>
-                        : <h1 onClick={handleNameInputClick} className="activity-name-label">{activityName}</h1> }
+                        <textarea type="text" style={{height: nIHeight}} ref={nameInput} onKeyDown={handleKeyDownNameInput} className="form-control activity-name-input" value={activityName} onBlur={() => setShowNameInput(false)} onChange={evt => setActivityName(evt.target.value)}></textarea>
+                        : <h1 ref={nH1}  onClick={handleNameInputClick} className="activity-name-label">{activityName}</h1> }
                         
                         {showDesInput? 
-                        <textarea type="text" rows={1} ref={desInput} onKeyDown={handleKeyDownDesInput} className="form-control activity-description-input" onBlur={() => setShowDesInput(false)} value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></textarea>
-                        : <h1 onClick={() => setShowDesInput(true)} className="activity-description-label">{activityDescription}</h1> }
+                        <textarea type="text" style={{height: dIHeight}} ref={desInput} onKeyDown={handleKeyDownDesInput} className="form-control activity-description-input" onBlur={() => setShowDesInput(false)} value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></textarea>
+                        : <h1 ref={dH1} onClick={handleDesInputClick} className="activity-description-label">{activityDescription}</h1> }
                     </div>
                     :
                     <div>
@@ -180,13 +191,13 @@ const LogicSequence = props => {
                         {sequenceList?
                             <SortableList items={sequenceList} onSortEnd={onSortEnd} />:""}
                         
-                        <button onClick={() => createCard()}>Create Card</button>
+                        <button className="btn btn-success" onClick={() => createCard()}>Create Card</button>
                     </div>
                     <CardDataPanel>
                     </CardDataPanel>
 
                 </div>
-                <button onClick={() => saveLogicSequence()}>Save changes</button>
+                <button className="btn btn-primary" onClick={() => saveLogicSequence()}>Save changes</button>
             </div>
         </LogicSequenceContext.Provider>
     )
