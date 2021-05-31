@@ -47,11 +47,11 @@ const CardDataPanel = props => {
         <div className="card-data-panel-container">
             <h1>CardDataPanel</h1>
             <p>In this data panel you can change the data from a card that you have selected</p>
-            <h2>Key word *</h2>
-            <input value={cardName} onChange={evt => setCardName(evt.target.value)}></input>
-            <h2>Image (optional)</h2>
-            <input></input>
-            <button onClick={saveCardInfo}>Save</button>
+            <h2>Key word <span style={{color: "red"}}>*</span></h2>
+            <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input>
+            <h2>Image <span style={{color: "rgb(129, 129, 129)"}}>(optional)</span></h2>
+            <div className="image-container"><p>Subir imagen</p></div>
+            <button className="btn btn-primary" onClick={saveCardInfo}>Guardar</button>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 
 import './LogicSequence.scss';
@@ -13,6 +13,9 @@ import arrayMove from 'array-move';
 
 import {SortableContainer} from 'react-sortable-hoc';
 import DynamicInput from './DynamicInput';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+// Boton de icono
+import IconButton from '@material-ui/core/IconButton';
 
 export const LogicSequenceContext = createContext({
     selectedCard: null,
@@ -24,11 +27,11 @@ export const LogicSequenceContext = createContext({
 const SortableList = SortableContainer(({items}) => {
     
     return (
-        <ul>
+        <div>
         {items.map((value, index) => (
             <SequenceCard key={`item-${index}`} index={index} value={value} />
         ))}
-        </ul>
+        </div>
     );
     });
 const LogicSequence = props => {
@@ -122,20 +125,22 @@ const LogicSequence = props => {
 
     const nameInputStyle = {
         textAlign: "center",
-        width: "25em",
+        width: "80%",
         fontSize: "1.7em",
         margin: "0.5em auto 0 auto",
         padding: "0.4em",
-        lineHeight: "1.2em"
+        lineHeight: "1.2em",
+        fontWeight: "600"
     }
 
-    const nameLabelStyle = {
-        width: "90em",
+    const desInputStyle = {
+        width: "auto",
         fontSize: "0.8em",
         margin: "0.5em auto 0 auto",
         padding: "0.7em",
         overflow: "hidden",
-        lineHeight: "1.2em"
+        lineHeight: "1.2em",
+        fontWeight: "500"
     }
 
     return (
@@ -144,7 +149,7 @@ const LogicSequence = props => {
                 {logicSequence?
                     <div className="logic-sequence-info">
                         <DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
-                        <DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={nameLabelStyle} sendValue={updateDes}></DynamicInput>
+                        <DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
                     </div>
                     :
                     <div>
@@ -156,14 +161,19 @@ const LogicSequence = props => {
                     <div className="sequence-cards-container">
                         {sequenceList?
                             <SortableList items={sequenceList} onSortEnd={onSortEnd} />:""}
-                        
-                        <button className="btn btn-success" onClick={() => createCard()}>Create Card</button>
+                        <div className="create-card-button">
+                            <div style={{width: "43%"}}></div>
+                            <IconButton color="primary" aria-label="Delete" onClick={createCard}>
+                                    <AddCircleIcon style={{ fontSize: 40}}/>
+                            </IconButton>
+                        </div>
                     </div>
                     <CardDataPanel>
                     </CardDataPanel>
 
                 </div>
-                <button className="btn btn-primary" onClick={() => saveLogicSequence()}>Save changes</button>
+                <hr></hr>
+                <button className="save-button btn btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
             </div>
         </LogicSequenceContext.Provider>
     )

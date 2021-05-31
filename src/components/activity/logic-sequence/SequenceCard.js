@@ -51,10 +51,7 @@ const SequenceCard = SortableElement(({value}) => {
     return (
         <div className="sequence-card-container">
             <h1>{value.name}</h1> 
-            <div className="maanage-buttons-container">
-            <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCourse}>
-                        <DeleteIcon />
-                </IconButton>      
+            <div className="maanage-buttons-container">   
                 <button onClick={handleClick} className="btn btn-info">Edit</button>
                 <button onClick={deleteCard} className="btn btn-info">Del</button>
             </div>   
