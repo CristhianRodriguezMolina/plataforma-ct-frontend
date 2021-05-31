@@ -147,7 +147,7 @@ const LogicSequence = props => {
     
     const handleDesInputClick = () => {
         setDIHeight(dH1.current.clientHeight);
-        setShowDesInput(true)
+        setShowDesInput(true);
     }
 
     useEffect(() => {
@@ -173,11 +173,11 @@ const LogicSequence = props => {
                 {logicSequence?
                     <div className="logic-sequence-info">
                         {showNameInput? 
-                        <textarea type="text" style={{height: nIHeight}} ref={nameInput} onKeyDown={handleKeyDownNameInput} className="form-control activity-name-input" value={activityName} onBlur={() => setShowNameInput(false)} onChange={evt => setActivityName(evt.target.value)}></textarea>
-                        : <h1 ref={nH1}  onClick={handleNameInputClick} className="activity-name-label">{activityName}</h1> }
+                        <textarea type="text" rows={1} style={{height: nIHeight}} ref={nameInput} onKeyDown={handleKeyDownNameInput} className="form-control activity-name-input" value={activityName} onBlur={() => setShowNameInput(false)} onChange={evt => setActivityName(evt.target.value)}></textarea>
+                        : <h1 ref={nH1} onClick={handleNameInputClick} className="activity-name-label">{activityName}</h1> }
                         
                         {showDesInput? 
-                        <textarea type="text" style={{height: dIHeight}} ref={desInput} onKeyDown={handleKeyDownDesInput} className="form-control activity-description-input" onBlur={() => setShowDesInput(false)} value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></textarea>
+                        <textarea type="text" rows={1} style={{height: dIHeight}} ref={desInput} onKeyDown={handleKeyDownDesInput} className="form-control activity-description-input" onBlur={() => setShowDesInput(false)} value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></textarea>
                         : <h1 ref={dH1} onClick={handleDesInputClick} className="activity-description-label">{activityDescription}</h1> }
                     </div>
                     :
