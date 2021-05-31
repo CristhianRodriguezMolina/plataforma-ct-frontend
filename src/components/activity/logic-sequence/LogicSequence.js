@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import arrayMove from 'array-move';
 
 import {SortableContainer} from 'react-sortable-hoc';
+import DynamicInput from './DynamicInput';
 
 export const LogicSequenceContext = createContext({
     selectedCard: null,
@@ -38,18 +39,7 @@ const LogicSequence = props => {
 
     const [activityName, setActivityName] = useState("");
     const [activityDescription, setActivityDescription] = useState("");
-
-    const [showNameInput, setShowNameInput] = useState(false);
-    const [showDesInput, setShowDesInput] = useState(false);
-    const nameInput = useRef(null);
-    const nH1 = useRef(null);
-    const dH1 = useRef(null);
-    const [nIHeight, setNIHeight] = useState(0);
-    const [dIHeight, setDIHeight] = useState(0);
-    const desInput = useRef(null);
     
-
-
     const { activityId } = useParams();
 
     useEffect(() => {
@@ -121,64 +111,40 @@ const LogicSequence = props => {
         setSequenceList(arrayCopy);
     };
 
-    const handleKeyDownNameInput = (event) => {
-        if (event.key === 'Enter') {
-            setShowNameInput(false);
-        }
+    const updateName = (value) => {
+        setActivityName(value);
+    };
 
-        event.target.style.height = 'inherit';
-        event.target.style.height = `${event.target.scrollHeight}px`;
+    const updateDes = (value) => {
+        setActivityDescription(value);
+    };
 
+
+    const nameInputStyle = {
+        textAlign: "center",
+        width: "25em",
+        fontSize: "1.7em",
+        margin: "0.5em auto 0 auto",
+        padding: "0.4em",
+        lineHeight: "1.2em"
     }
 
-    const handleKeyDownDesInput = (event) => {
-        if (event.key === 'Enter') {
-            setShowDesInput(false);
-        }
-
-        event.target.style.height = 'inherit';
-        event.target.style.height = `${event.target.scrollHeight}px`;
+    const nameLabelStyle = {
+        width: "90em",
+        fontSize: "0.8em",
+        margin: "0.5em auto 0 auto",
+        padding: "0.7em",
+        overflow: "hidden",
+        lineHeight: "1.2em"
     }
-
-    const handleNameInputClick = () => {
-        setNIHeight(nH1.current.clientHeight);
-        setShowNameInput(true);
-    }
-    
-    const handleDesInputClick = () => {
-        setDIHeight(dH1.current.clientHeight);
-        setShowDesInput(true);
-    }
-
-    useEffect(() => {
-        if(showNameInput) {
-            nameInput.current.focus();
-            nameInput.current.selectionStart = nameInput.current.value.length;
-            nameInput.current.selectionEnd = nameInput.current.value.length;
-        }
-    }, [showNameInput]);
-   
-
-    useEffect(() => {
-        if(showDesInput) {
-            desInput.current.focus();
-            desInput.current.selectionStart = desInput.current.value.length;
-            desInput.current.selectionEnd = desInput.current.value.length;
-        }
-    }, [showDesInput]);
 
     return (
         <LogicSequenceContext.Provider value={{selectedCard, setSelectedCard, logicSequence, setSequenceList, sequenceList}}>
             <div className="logic-sequence-container">
                 {logicSequence?
                     <div className="logic-sequence-info">
-                        {showNameInput? 
-                        <textarea type="text" rows={1} style={{height: nIHeight}} ref={nameInput} onKeyDown={handleKeyDownNameInput} className="form-control activity-name-input" value={activityName} onBlur={() => setShowNameInput(false)} onChange={evt => setActivityName(evt.target.value)}></textarea>
-                        : <h1 ref={nH1} onClick={handleNameInputClick} className="activity-name-label">{activityName}</h1> }
-                        
-                        {showDesInput? 
-                        <textarea type="text" rows={1} style={{height: dIHeight}} ref={desInput} onKeyDown={handleKeyDownDesInput} className="form-control activity-description-input" onBlur={() => setShowDesInput(false)} value={activityDescription} onChange={evt => setActivityDescription(evt.target.value)}></textarea>
-                        : <h1 ref={dH1} onClick={handleDesInputClick} className="activity-description-label">{activityDescription}</h1> }
+                        <DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
+                        <DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={nameLabelStyle} sendValue={updateDes}></DynamicInput>
                     </div>
                     :
                     <div>
