@@ -62,9 +62,9 @@ export default function UserList({ type }) {
 
             let response = null;
 
-            if(type=="teachers"){                
+            if(type==="teachers"){                
                 response = await api.get("/api/person/role/teacher");
-            }else if(type=="students"){
+            }else if(type==="students"){
                 response = await api.get("/api/person/role/student");
             }
 

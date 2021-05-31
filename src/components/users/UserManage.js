@@ -27,9 +27,9 @@ export default function UserManage({ history }) {
     }, [type])
 
     const redirectCreate = () => {
-        if(type=="teachers"){
+        if(type==="teachers"){
             history.push('/user/teachers/create');
-        }else if(type=="students"){
+        }else if(type==="students"){
             history.push('/user/students/create');
         }
     }
@@ -37,8 +37,8 @@ export default function UserManage({ history }) {
     return (
         <div className="manage-user">
             <TitleCard 
-                title={type=="teachers"?"Gestión de profesores":"Gestión de alumnos"}
-                color={type=="teachers"?"#FFA552":"#3C8AFF"}
+                title={type==="teachers"?"Gestión de profesores":"Gestión de alumnos"}
+                color={type==="teachers"?"#FFA552":"#3C8AFF"}
             /> 
             <Container maxWidth="md">
                 <form className="search-form d-flex justify-content-between mt-4">  
@@ -52,9 +52,9 @@ export default function UserManage({ history }) {
                 <div className="">
                     <UserList type={type} />
                 </div>
-                <button onClick={redirectCreate} className={type=="teachers"?"btn btn-warning btn-create-user":"btn btn-primary btn-create-user"}>
+                <button onClick={redirectCreate} className={type==="teachers"?"btn btn-warning btn-create-user":"btn btn-primary btn-create-user"}>
                     {
-                        type=="teachers"?
+                        type==="teachers"?
                             "Crear profesor"
                         :
                             "Crear estudiante"
