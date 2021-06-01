@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useRef } from 'react';
 
 
 import './LogicSequence.scss';
@@ -21,7 +21,10 @@ export const LogicSequenceContext = createContext({
     selectedCard: null,
     logicSequence: null,
     setSequenceList: null,
-    sequenceList: null
+    sequenceList: null,
+    cardDeleted: null,
+    setCardDeleted: null,
+    setSelectedCard: null
 })
 
 const SortableList = SortableContainer(({items}) => {
@@ -39,11 +42,18 @@ const LogicSequence = props => {
     const [sequenceList, setSequenceList] = useState(null);
     const [logicSequence, setLogicSequence] = useState(null);
     const [selectedCard, setSelectedCard] = useState(null);
+    const [cardDeleted, setCardDeleted] = useState(null);
 
     const [activityName, setActivityName] = useState("");
     const [activityDescription, setActivityDescription] = useState("");
+
+    const [cardName, setCardName] = useState("");
+
+    const [showInpNewCard, setShowInpNewCard] = useState(false);
     
     const { activityId } = useParams();
+
+    const newCardInput = useRef(null); 
 
     useEffect(() => {
         const fetch = async() => {
@@ -68,12 +78,14 @@ const LogicSequence = props => {
     const createCard = async() => {
         if(logicSequence) {
             await api.post(`/api/logic-sequence/sequence-card/${logicSequence._id}`, { 
-                name: "My sequence card",
+                name: cardName,
                 image: "image.jpg"
             })
             .then((res) => {
-                window.alert(res.data.message);
+                // window.alert(res.data.message);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+                newCardInput.current.value="";
+                setCardName("");
             })
             .catch(err => {
                 if (err.response) {
@@ -115,6 +127,7 @@ const LogicSequence = props => {
     };
 
     const updateName = (value) => {
+        console.log(value)
         setActivityName(value);
     };
 
@@ -143,8 +156,18 @@ const LogicSequence = props => {
         fontWeight: "500"
     }
 
+    const createCardHandler = () => {
+        setShowInpNewCard(true);
+    };
+
+    const handleKeyDownInput = (event) => {
+        if (event.key === 'Enter') {
+            createCard()
+        }
+    };
+
     return (
-        <LogicSequenceContext.Provider value={{selectedCard, setSelectedCard, logicSequence, setSequenceList, sequenceList}}>
+        <LogicSequenceContext.Provider value={{selectedCard, setSelectedCard, logicSequence, setSequenceList, sequenceList, cardDeleted, setCardDeleted}}>
             <div className="logic-sequence-container">
                 {logicSequence?
                     <div className="logic-sequence-info">
@@ -153,20 +176,22 @@ const LogicSequence = props => {
                     </div>
                     :
                     <div>
-                        <h1>Description of the logic sequence activity</h1>
-                        <p>Name of the logic sequence</p>
+                        <h1 style={nameInputStyle} >Description of the logic sequence activity</h1>
+                        <p style={desInputStyle} >Name of the logic sequence</p>
                     </div>}
                 <hr className="hr-bar"></hr>
                 <div className="panels">
                     <div className="sequence-cards-container">
                         {sequenceList?
                             <SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} />:""}
+                        {showInpNewCard?<input ref={newCardInput} onChange={(e) => setCardName(e.target.value)} className="form-control" placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}></input>:
                         <div className="create-card-button">
-                            <div style={{width: "43%"}}></div>
-                            <IconButton color="primary" aria-label="Delete" onClick={createCard}>
+                            <div style={{width: "42%"}}></div>
+                            <IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
                                     <AddCircleIcon style={{ fontSize: 40}}/>
                             </IconButton>
                         </div>
+                        }
                     </div>
                     <CardDataPanel>
                     </CardDataPanel>

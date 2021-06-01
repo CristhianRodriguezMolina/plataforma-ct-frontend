@@ -19,7 +19,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const SequenceCard = SortableElement(({value}) => {
 
-    const { setSequenceList, logicSequence, setSelectedCard } = useContext(LogicSequenceContext);
+    const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted } = useContext(LogicSequenceContext);
+
 
     const handleClick = () => {
         setSelectedCard(value._id);
@@ -31,6 +32,8 @@ const SequenceCard = SortableElement(({value}) => {
                 window.alert(res.data.message);
                 setSelectedCard(null);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+                setCardDeleted(true);
+                
             })
             .catch(err => {
                 if(err.response){

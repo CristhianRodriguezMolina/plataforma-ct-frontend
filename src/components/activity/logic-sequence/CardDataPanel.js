@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 
 import './CardDataPanel.scss';
 
@@ -9,19 +9,49 @@ import { LogicSequenceContext } from './LogicSequence';
 
 const CardDataPanel = props => {
 
-    const { sequenceList, setSequenceList, logicSequence, selectedCard } = useContext(LogicSequenceContext);
-    const [card, setCard] = useState(null);
+    const { sequenceList, setSequenceList, logicSequence, selectedCard, cardDeleted, setCardDeleted, setSelectedCard } = useContext(LogicSequenceContext);
     const [cardName, setCardName] = useState("");
 
+    const saveButton = useRef(null);
+
     useEffect(()=>{
-        if(selectedCard){
+        if(!selectedCard || selectedCard === ""){
+            saveButton.current.disabled = true;
+        }
+        else { 
             let tempCard = sequenceList.filter((card, i) => card._id === selectedCard)[0];
             if(tempCard) {
                 setCardName(tempCard.name)
+                saveButton.current.disabled = false;
             }
-            
         }
+
     }, [selectedCard]);
+
+    useEffect(() => {
+        if(cardDeleted) {
+            let tempCard = sequenceList.filter((card, i) => card._id === selectedCard)[0];
+            if(tempCard) {
+                setCardName(tempCard.name);
+                saveButton.current.disabled = false;
+            }
+            else{
+                let length = sequenceList.length
+                if(length > 0) {
+                    setCardName(sequenceList[length - 1]);
+                    setSelectedCard(sequenceList[length - 1]._id);
+                    saveButton.current.disabled = false;
+                }
+                else {
+                    setCardName("");
+                    setSelectedCard("");
+                    saveButton.current.disabled = true;
+                }
+                
+            }
+            setCardDeleted(false);
+        }
+    }, [cardDeleted]);
 
     const saveCardInfo = async() => {
         await api.put(`/api/logic-sequence/sequence-card/${logicSequence._id}/${selectedCard}`, {
@@ -49,9 +79,9 @@ const CardDataPanel = props => {
             <p>En este panel de datos puedes cambiar los datos de la tajeta de secuencia que tienes seleccionada</p>
             <h2>Frase <span style={{color: "red"}}>*</span></h2>
             <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input>
-            <h2>Imagen <span style={{color: "rgb(129, 129, 129)"}}>(opcional)</span></h2>
+            <h2>Imagen <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></h2>
             <div className="image-container"><p>Subir imagen</p></div>
-            <button className="btn btn-primary" onClick={saveCardInfo}>Guardar</button>
+            <button ref={saveButton} className="btn btn-primary" onClick={saveCardInfo}>Guardar</button>
         </div>
     )
 }

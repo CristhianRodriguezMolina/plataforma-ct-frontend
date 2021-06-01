@@ -60,11 +60,11 @@ const CreateActivity = (props) => {
                 <hr/>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label className="form-label">Nombre *</label>
+                        <label className="form-label">Nombre <span style={{color: "red"}}>*</span></label>
                         <input className="form-control" type="text" id="name" name="name" onChange={evt => setName(evt.target.value)}></input>
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Descripción (Opcional)</label>
+                        <label className="form-label">Descripción <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></label>
                         <textarea className="form-control" type="text" id="description" name="description" onChange={evt => setDescription(evt.target.value)}></textarea>
                     </div>
                     <hr/>
