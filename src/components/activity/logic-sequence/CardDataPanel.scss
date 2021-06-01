@@ -39,12 +39,19 @@
 
 @media only screen and (min-width: 850px) {
     .card-data-panel-container {
+
         width: auto;
-        margin: 2em 0 1em;
-        padding: 0 0 0 1em;
+        margin: 0em 0 1em;
+        padding: 1em 0 0 1em;
         border: none;
         p {
             margin-bottom: 4em;
+        }
+
+        .sticky-panel {
+            position: sticky;
+            top: 0;
+            padding-top: 2em;
         }
     }
 }

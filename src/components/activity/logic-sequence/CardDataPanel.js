@@ -108,21 +108,23 @@ const CardDataPanel = props => {
 
     return (
         <div className="card-data-panel-container">
-            {success?  
-                <Alert className="alert-message" severity="success">{successMessage}</Alert>
-                : ""
-            }
-            {error?
-                <Alert className="alert-message" severity="error">{errorMessage}</Alert>
-                : ""
-            }
-            <h1>Panel de los datos de la tarjeta</h1>
-            <p>En este panel de datos puedes cambiar los datos de la tajeta de secuencia que tienes seleccionada</p>
-            <h2>Frase <span style={{color: "red"}}>*</span></h2>
-            <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input>
-            <h2>Imagen <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></h2>
-            <div className="image-container"><p>Subir imagen</p></div>
-            <button ref={saveButton} className="btn btn-primary" onClick={saveCardInfo}>Guardar</button>
+            <div className="sticky-panel">
+                {success?  
+                    <Alert className="alert-message" severity="success">{successMessage}</Alert>
+                    : ""
+                }
+                {error?
+                    <Alert className="alert-message" severity="error">{errorMessage}</Alert>
+                    : ""
+                }
+                <h1>Panel de los datos de la tarjeta</h1>
+                <p>En este panel de datos puedes cambiar los datos de la tajeta de secuencia que tienes seleccionada</p>
+                <h2>Frase <span style={{color: "red"}}>*</span></h2>
+                <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input>
+                <h2>Imagen <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></h2>
+                <div className="image-container"><p>Subir imagen</p></div>
+                <button ref={saveButton} className="btn btn-primary" onClick={saveCardInfo}>Guardar</button>
+            </div>
         </div>
     )
 }

@@ -64,6 +64,7 @@ const MyActivities = props => {
     useEffect(() => {
         if(!activities){
             const fetch = async()=>{
+                console.log(api.getUri);
                 await api.get('/api/activity')
                     .then((response) => {
                         setActivities(response.data.activities);
@@ -74,7 +75,9 @@ const MyActivities = props => {
                         }
                     }).catch((error) => {
                         //Show errors ocurred during the process
+                        console.error(error)
                         showError("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
+                        setLoadingCourses(false);
                     });
             };
             fetch();
