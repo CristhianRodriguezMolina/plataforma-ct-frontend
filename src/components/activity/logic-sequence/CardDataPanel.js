@@ -1,11 +1,15 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 
 import './CardDataPanel.scss';
+import '../alert-message.scss';
 
 // to make API calls
 import api from '../../../services/api';
 
 import { LogicSequenceContext } from './LogicSequence';
+
+// Alert
+import Alert from '@material-ui/lab/Alert';
 
 const CardDataPanel = props => {
 
@@ -13,6 +17,35 @@ const CardDataPanel = props => {
     const [cardName, setCardName] = useState("");
 
     const saveButton = useRef(null);
+
+    // MENSAJES DEL FORMULARIO
+    const [error, setError] = useState(false); //Variable flag de existencia de error
+    const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+    const [process, setProcess] = useState(true); //Variable flag de existencia de un proceso
+    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+    const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+    const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+
+     // Funcion para mostrar una alerta de error dado un mensaje
+    const showError = (message) => {
+        setError(true);   //Se cambia el estado de mensaje de error a verdadero
+        setErrorMessage(message); //Se setea el mensaje de error
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setError(false);
+            setErrorMessage("");
+        }, 2000)
+    }
+
+    // Funcion para mostrar una alerta satisfactoria dado un mensaje
+    const showSuccess = (message) => {
+        setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+        setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setSuccess(false);
+            setSuccessMessage("");
+        }, 2000)
+    }
 
     useEffect(()=>{
         if(!selectedCard || selectedCard === ""){
@@ -58,15 +91,15 @@ const CardDataPanel = props => {
             name: cardName
         })
             .then((res) => {
-                window.alert(res.data.message);
+                showSuccess(res.data.message)
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
             })
             .catch(err => {
                 if(err.response){
-                    console.error(err.response.message);
+                    showError(err.response.message);
                 }
                 else{
-                    console.error(err);
+                    showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
 
                 }
                 window.alert("Unexpected error!");
@@ -75,6 +108,14 @@ const CardDataPanel = props => {
 
     return (
         <div className="card-data-panel-container">
+            {success?  
+                <Alert className="alert-message" severity="success">{successMessage}</Alert>
+                : ""
+            }
+            {error?
+                <Alert className="alert-message" severity="error">{errorMessage}</Alert>
+                : ""
+            }
             <h1>Panel de los datos de la tarjeta</h1>
             <p>En este panel de datos puedes cambiar los datos de la tajeta de secuencia que tienes seleccionada</p>
             <h2>Frase <span style={{color: "red"}}>*</span></h2>

@@ -29,6 +29,10 @@
 @media only screen and (min-width: 850px) {
     .logic-sequence-container {
         width: 50em;
+
+        .logic-sequence-alert{
+            width: 50em;
+        }
         .panels {
             display: grid;
             grid-template-columns: repeat(2, minmax(auto, 50%));

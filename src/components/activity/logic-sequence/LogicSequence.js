@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState, useRef } from 'react';
 
 
 import './LogicSequence.scss';
+import '../alert-message.scss';
 
 // to make API calls
 import api from '../../../services/api';
@@ -16,6 +17,10 @@ import DynamicInput from './DynamicInput';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 // Boton de icono
 import IconButton from '@material-ui/core/IconButton';
+
+
+// Alert
+import Alert from '@material-ui/lab/Alert';
 
 export const LogicSequenceContext = createContext({
     selectedCard: null,
@@ -55,6 +60,35 @@ const LogicSequence = props => {
 
     const newCardInput = useRef(null); 
 
+    // MENSAJES DEL FORMULARIO
+    const [error, setError] = useState(false); //Variable flag de existencia de error
+    const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+    const [process, setProcess] = useState(true); //Variable flag de existencia de un proceso
+    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+    const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+    const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+
+     // Funcion para mostrar una alerta de error dado un mensaje
+    const showError = (message) => {
+        setError(true);   //Se cambia el estado de mensaje de error a verdadero
+        setErrorMessage(message); //Se setea el mensaje de error
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setError(false);
+            setErrorMessage("");
+        }, 2000)
+    }
+
+    // Funcion para mostrar una alerta satisfactoria dado un mensaje
+    const showSuccess = (message) => {
+        setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+        setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setSuccess(false);
+            setSuccessMessage("");
+        }, 2000)
+    }
+
     useEffect(() => {
         const fetch = async() => {
             await api.get(`/api/logic-sequence/${activityId}`)
@@ -63,10 +97,11 @@ const LogicSequence = props => {
                     setSequenceList(res.data.sequence_cards);
                     setActivityName(res.data.activity_id.name);
                     setActivityDescription(res.data.activity_id.description);
+                    setProcess(false);
                 })
                 .catch(err => {
-                    window.alert("Unexpected error!");
-                    console.error(err);
+                    setProcess(false);
+                    showError("No se han podido cargar las tajetas, por favor intentelo mas tarde!");
                 })
         }
 
@@ -89,10 +124,10 @@ const LogicSequence = props => {
             })
             .catch(err => {
                 if (err.response) {
-                    window.alert(err.response.data.message);
+                    showError(err.response.data.message);
                 }
                 else {
-                    console.error(err);
+                    showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
                 }
             })
         }
@@ -108,13 +143,13 @@ const LogicSequence = props => {
                 sequence_cards: sequenceList
             }
         }).then(res => {
-            window.alert(res.data.message);
+            showSuccess(res.data.message);
         }).catch(err => {
             if(err.response) {
-                window.alert(err.response.data.message);
+                showError(err.response.data.message);
             }
             else {
-                console.error(err);
+                showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
             }
         });
     }
@@ -169,6 +204,15 @@ const LogicSequence = props => {
     return (
         <LogicSequenceContext.Provider value={{selectedCard, setSelectedCard, logicSequence, setSequenceList, sequenceList, cardDeleted, setCardDeleted}}>
             <div className="logic-sequence-container">
+                {success?  
+                    <Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
+                    : ""
+                }
+                {error?
+                    <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
+                    : ""
+                }
+                
                 {logicSequence?
                     <div className="logic-sequence-info">
                         <DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
@@ -180,6 +224,10 @@ const LogicSequence = props => {
                         <p style={desInputStyle} >Name of the logic sequence</p>
                     </div>}
                 <hr className="hr-bar"></hr>
+                {process?
+                    <Alert severity="info">{"Cargando tarjetas, por favor espere"}</Alert>
+                    : ""
+                }
                 <div className="panels">
                     <div className="sequence-cards-container">
                         {sequenceList?

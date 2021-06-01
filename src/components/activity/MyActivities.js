@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import './MyActivities.scss';
+import './alert-message.scss';
 
 //To make api calls
 import api from '../../services/api';
