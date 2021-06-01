@@ -1,19 +1,61 @@
-.logic-sequence-container{
-    width: 70em;
-    height: 30em;
-    background-color: blue;
-    margin: auto;
-   
+.logic-sequence-container {
+    width: auto;
+    margin: 4em auto auto auto;
 
-   
-    
+    .logic-sequence-info {
+
+        h1:hover  {
+            background-color: rgb(233, 233, 233);
+        }
+    }
+
     .sequence-cards-container {
-        background-color: green;
-        width: 50%;
+        width: auto;
+        margin: 1em;
+        background-color: rgb(233, 233, 233);
+        border-radius: 5px;
+
+        .create-card-button {
+            display: flex;
+        }
+    }
+
+    .save-button {
+        margin: 1em;
     }
 }
 
-.panels{
-    display: flex;
-    flex-direction: row;
+
+@media only screen and (min-width: 850px) {
+    .logic-sequence-container {
+        width: 50em;
+
+        .logic-sequence-alert{
+            width: 50em;
+        }
+        .panels {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(auto, 50%));
+            margin: 0;
+            padding: 0;
+        }
+
+        hr {
+            margin: 0;
+            padding: 0;
+        }
+    
+        .sequence-cards-container {
+            margin: 0;
+            padding: 0;
+            width: auto;
+           
+        }
+
+        .hr-bar {
+            visibility: hidden;
+        }
+
+    }
+    
 }

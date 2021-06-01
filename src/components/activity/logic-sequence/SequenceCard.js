@@ -6,7 +6,6 @@ import './SequenceCard.scss';
 import api from '../../../services/api';
 
 // COMPONENTS
-import { useDrag, useDrop } from 'react-dnd';
 import { Itemtypes } from '../../../util/item';
 import { LogicSequenceContext } from './LogicSequence';
 import {SortableElement} from 'react-sortable-hoc';
@@ -14,10 +13,14 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import zIndex from '@material-ui/core/styles/zIndex';
 
+// Icono Delete
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 const SequenceCard = SortableElement(({value}) => {
 
-    const { setSequenceList, logicSequence, setSelectedCard } = useContext(LogicSequenceContext);
+    const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted } = useContext(LogicSequenceContext);
+
 
     const handleClick = () => {
         setSelectedCard(value._id);
@@ -29,6 +32,8 @@ const SequenceCard = SortableElement(({value}) => {
                 window.alert(res.data.message);
                 setSelectedCard(null);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+                setCardDeleted(true);
+                
             })
             .catch(err => {
                 if(err.response){
@@ -43,11 +48,13 @@ const SequenceCard = SortableElement(({value}) => {
     }
 
     return (
-        <div className="sequence-card-container">
+        <div onClick={handleClick} className="sequence-card-container">
             <h1>{value.name}</h1> 
-            <div className="maanage-buttons-container">        
-                <button onClick={handleClick} className="btn btn-info">Edit</button>
-                <button onClick={deleteCard} className="btn btn-info">Del</button>
+            <div className="manage-buttons-container">
+                <div style={{width: "15%"}}></div>   
+                <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCard}>
+                        <DeleteIcon />
+                </IconButton>
             </div>   
         </div>
     )
