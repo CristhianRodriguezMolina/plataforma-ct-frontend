@@ -1,0 +1,19 @@
+.dynamic-input-container { 
+    .dynamic-input {
+        width: 30em;
+        font-size: 1.2em;
+        margin: 0.5em auto 0 auto;
+        padding: 0.4em;
+        resize: none;
+        overflow: hidden;
+        line-height: 1.2em;
+    }
+
+    .dynamic-label {
+        width: 30em;
+        margin: 0.5em auto 0 auto;
+        font-size: 1.2em;
+        padding: 0.4em;
+        word-wrap: break-word;
+    }
+}

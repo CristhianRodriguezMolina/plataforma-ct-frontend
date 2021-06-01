@@ -5,6 +5,9 @@ import './CreateActivity.scss';
 // to make API calls
 import api from '../../services/api';
 
+// Title card
+import TitleCard from '../common/TitleCard';
+
 
 const CreateActivity = (props) => {
 
@@ -12,9 +15,12 @@ const CreateActivity = (props) => {
     const [description, setDescription] = useState(''); //Save the data registered in description field
     const [type, setType] = useState('logic_sequence')//Save the selected option in radio buttons
 
-    const handleSubmit = async(e) => {
-        e.preventDefault(); //Prevent the form reload the webside
+    
 
+    const handleSubmit = async(e) => {
+        e.preventDefault(); //Prevent form reload the webside
+
+        console.log(type);
         //Verifying fields
         if(name.trim().localeCompare("") !== 0) {
             //Making API calls
@@ -41,28 +47,47 @@ const CreateActivity = (props) => {
     }
 
     return (
-        <div className="create-activity-container">
-            <h1>Create new activity</h1>
-            <p>An activity is a didactic exercise</p>
-            <hr/>
-            <form onSubmit={handleSubmit}>
-                <h2>Name *</h2>
-                <input type="text" id="name" name="name" onChange={evt => setName(evt.target.value)}></input>
-                <h2>Description (Optional)</h2>
-                <input type="text" id="description" name="description" onChange={evt => setDescription(evt.target.value)}></input>
+        <div>
+            <TitleCard 
+                title="Gestión de actividades"
+                color="#FA61CD"
+            />  
+
+            <div className="create-activity-container">
+                
+                <h1 className="title">Create new activity</h1>
+                <p>A repository contains all project files, including the revision history. Already have a project repository elsewhere?</p>
                 <hr/>
-                <h2>Type *</h2>
-                <input type="radio" checked="checked" id="logic_sequence" name="activity" value="logic_sequence" onChange={evt => setType(evt.target.value)}/>
-                <label for="logic_sequence">Logic sequence</label><br/>
-                <label for="logic_sequence">Sort the sequences according with the action</label><br/>
-                <input type="radio" id="maze" name="activity" value="maze" onChange={evt => setType(evt.target.value)}/>
-                <label for="maze">Maze</label><br/>
-                <label for="maze">Guide the character through the maze</label><br/>
-                <input type="radio" id="questionnaire" name="activity" value="questionnaire" onChange={evt => setType(evt.target.value)}/>
-                <label for="questionnaire">Questionnaire</label><br/>
-                <label for="questionnaire">Select the correct answer</label><br/>
-                <button type="submit">Create Activity</button>
-            </form>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="form-label">Nombre <span style={{color: "red"}}>*</span></label>
+                        <input className="form-control" type="text" id="name" name="name" onChange={evt => setName(evt.target.value)}></input>
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label">Descripción <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></label>
+                        <textarea className="form-control" type="text" id="description" name="description" onChange={evt => setDescription(evt.target.value)}></textarea>
+                    </div>
+                    <hr/>
+                    <h2>Tipo de actividad *</h2>
+                    <div className="radio-group">
+                        <input className="radio-button" type="radio" id="logic_sequence" name="activity" value="logic_sequence" onChange={evt => setType(evt.target.value)}/>
+                        <label className="title-label" for="logic_sequence">Secuencia lógica</label>
+                        <label className="description-label" for="logic_sequence">Ordena las secuencias en el orden correcto en el que se realiza una acción.</label><br/>
+                    </div>
+                    <div className="radio-group">
+                        <input className="radio-button" type="radio" id="maze" name="activity" value="maze" onChange={evt => setType(evt.target.value)}/>
+                        <label className="title-label" for="maze">Laberinto</label><br/>
+                        <label className="description-label" for="maze">Guia al personaje a través del laberinto.</label><br/>
+                    </div>
+                    <div className="radio-group">
+                        <input className="radio-button" type="radio" id="questionnaire" name="activity" value="questionnaire" onChange={evt => setType(evt.target.value)}/>
+                        <label className="title-label" for="questionnaire">Cuestionario</label><br/>
+                        <label className="description-label" for="questionnaire">Selecciona la respuesta correcta</label><br/>
+                    </div>
+                    <hr/>
+                    <button className="btn btn-success" type="submit">Crear Actividad</button>
+                </form>
+            </div>
         </div>
     )
 };

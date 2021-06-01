@@ -13,7 +13,7 @@ import 'bootstrap/dist/js/bootstrap';
 import 'jquery/dist/jquery';
 import 'popper.js/dist/popper';
 
-// CONTEXTO -----------------------------------------------------------
+// CONTEXT -----------------------------------------------------------
 
 // User State
 import UserState from './context/user/UserState';
@@ -38,12 +38,6 @@ import MyActivities from './components/activity/MyActivities';
 // My activities
 import CreateActivity from './components/activity/CreateActivity';
 
-// DND provider
-import { DndProvider } from 'react-dnd'
-
-// HTML5 backend
-import { HTML5Backend } from 'react-dnd-html5-backend'
-
 // Logic sequence
 import LogicSequence from './components/activity/logic-sequence/LogicSequence';
 
@@ -59,29 +53,28 @@ import Error404 from './components/error/Error404';
 function App() {
   return (
     <UserState>
-      <DndProvider backend={HTML5Backend}>
-        <Router>
-          <div className="App">
-            <NavBar/>
-            <div className="app-container">   
-              <Switch>                         
-                <Route path='/activity/myActivities' exact component={MyActivities} />
-                <Route path='/activity/create' exact component={CreateActivity} />
-                <Route path='/activity/logic-sequence/:activityId' component={LogicSequence} />
-                <Route path='/user/:type/:action/:ID' component={CreateUser} />
-                <Route path='/user/:type/:action/' component={CreateUser} />
-                <Route path='/user/:type' exact component={UserManage} />
-                <Route path='/course/:type/:id' exact component={CourseView} />
-                <Route path='/course/mycourses' exact component={MyCourses} />
-                <Route path='/activity/myActivities' exact component={MyActivities} />
-                <Route path='/activity/create' exact component={CreateActivity} />
-                <Route path="/" exact />
-                <Route component={Error404} />
-              </Switch>
-            </div>
+      <Router>
+        <div className="App">
+          <NavBar/>
+          <div className="app-container">
+            <Switch>              
+              <Route path='/user/:type/:action/:ID' component={CreateUser} />
+              <Route path='/user/:type/:action/' component={CreateUser} />
+              <Route path='/user/:type' exact component={UserManage} />
+              <Route path='/course/:type/:id' exact component={CourseView} />
+              <Route path='/course/mycourses' exact component={MyCourses} />
+              <Route path='/activity/myActivities' exact component={MyActivities} />
+              <Route path='/activity/create' exact component={CreateActivity} />
+              <Route path='/activity/logic-sequence/:activityId' component={LogicSequence} />
+              <Route path="/" exact />
+              <Route path='/activity/logic-sequence/:activityId'>
+                <LogicSequence/>
+              </Route>
+              <Route component={Error404} />
+            </Switch>
           </div>
-        </Router>
-      </DndProvider>
+        </div>
+      </Router>
     </UserState>
   );
 }
