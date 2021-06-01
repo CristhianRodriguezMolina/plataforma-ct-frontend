@@ -13,6 +13,9 @@ import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import BallotIcon from '@material-ui/icons/Ballot';
 import BorderVerticalIcon from '@material-ui/icons/BorderVertical';
 
+// Alert
+import Alert from '@material-ui/lab/Alert';
+
 const MyActivities = props => {
 
     const [activities, setActivities] = useState(null);
@@ -22,12 +25,40 @@ const MyActivities = props => {
     const [init, setInit] = useState(0);
     const [fin, setFin] = useState(0);
     const [count, setCount] = useState(0);
-    const range = 10;
+    const range = 14;
 
     const [isActive, setIsActive] = useState(false);
 
     const [currentMenu, setCurrentMenu] = useState(false);
 
+     // MENSAJES DEL FORMULARIO
+     const [error, setError] = useState(false); //Variable flag de existencia de error
+     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+     const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
+     const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+
+     // Funcion para mostrar una alerta de error dado un mensaje
+    const showError = (message) => {
+        setError(true);   //Se cambia el estado de mensaje de error a verdadero
+        setErrorMessage(message); //Se setea el mensaje de error
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setError(false);
+            setErrorMessage("");
+        }, 2000)
+    }
+
+    // Funcion para mostrar una alerta satisfactoria dado un mensaje
+    const showSuccess = (message) => {
+        setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+        setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setSuccess(false);
+            setSuccessMessage("");
+        }, 2000)
+    }
 
     useEffect(() => {
         if(!activities){
@@ -41,9 +72,8 @@ const MyActivities = props => {
                             setShowFetchButton(false);
                         }
                     }).catch((error) => {
-                        //Show an error during the process
-                        console.log("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
-                        console.error(error);
+                        //Show errors ocurred during the process
+                        showError("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
                     });
             };
             fetch();
@@ -86,27 +116,35 @@ const MyActivities = props => {
         .then((res) => {
             let array = activities.filter((activity, i) => activity._id !== activity_id);
             setActivities(array);
-            window.alert(res.data.message);
+            showSuccess(res.data.message)
         })
         .catch(err => {
             if (err.response) {
-                window.alert(err.response.data.message);
+                showError(err.response.data.message);
             }
             else {
-                console.error(err);
+                showError("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
             }
         })
     };
+    const pageClickEvent = (e) => {
+        setIsActive(!isActive);
+    };
 
     const showMenu = (activity_id) => {
+
         setCurrentMenu(`menu${activity_id}`);
-        setIsActive(true);
+        
+        if(!isActive) {
+            setIsActive(true);
+        }
+        // else {
+        //     window.removeEventListener('click', pageClickEvent);
+        // }
     };
 
     useEffect(() => {
-        const pageClickEvent = (e) => {
-            setIsActive(!isActive);
-        };
+        
 
         
       
@@ -124,6 +162,14 @@ const MyActivities = props => {
     return (
             
         <div className="my-activities-container">
+            {success?  
+                <Alert className="alert-message" severity="success">{successMessage}</Alert>
+                : ""
+            }
+            {error?
+                <Alert className="alert-message" severity="error">{errorMessage}</Alert>
+                : ""
+            }
         <TitleCard 
                 title="Mis actividades"
                 color="#FA61CD"
@@ -164,19 +210,20 @@ const MyActivities = props => {
                                 </div>
                             </td>
                         </tr>
+                        
                     )
                 }))
                 :null
                 }
+                   
                 </tbody>
             </table>
             
             {loadingCourses
-                ?   <div key="spinner" className="spinner-border loading-spinner" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
+                ?   <Alert severity="info">{"Cargando actividades... por favor espere"}</Alert>
                 :   ""   
             }
+            
             {showFetchButton
                 ?   <button type="button" className="btn btn-light btn-block" onClick={loadActivities}>Load more</button>
                 :   ""

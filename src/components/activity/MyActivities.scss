@@ -1,5 +1,14 @@
 .my-activities-container {
     width: 100%;
+    
+    .alert-message {
+        position: fixed;
+        bottom: 1em;
+        left: 1em;
+        display: inline-flex;
+        width: 90%;
+    }
+
 
     .activities-list {
         width: 100%;
@@ -122,9 +131,23 @@
     
 }
 
+@media only screen and (min-width: 350px) {
+    
+    .my-activities-container {
+
+        .alert-message {
+            width: 93%;
+        }
+    }
+}
+
 @media only screen and (min-width: 675px) {
 
     .my-activities-container {
+
+        .alert-message {
+            width: 95%;
+        }
 
         .activities-list { 
 
@@ -140,9 +163,16 @@
     
 }
 
+
+
+
 @media only screen and (min-width: 1200px) {
 
     .my-activities-container {
+
+        .alert-message {
+            width: 98%;
+        }
 
         .activities-list { 
 
