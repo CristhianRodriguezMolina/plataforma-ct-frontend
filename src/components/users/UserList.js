@@ -94,7 +94,7 @@ export default function UserList({ type }) {
     }
 
     return (
-        <div className="mt-4">
+        <div className="mt-4">            
             {success?
                 <Alert severity="success">{successMessage}</Alert>
                 : ""
