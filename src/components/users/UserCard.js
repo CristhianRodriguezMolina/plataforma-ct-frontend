@@ -4,20 +4,20 @@ import React, { useState } from 'react'
 import api from '../../services/api';
 
 // SCSS
-import './course.scss';
+import './user.scss';
 
 // COMPONENTS
 
-// Icono Delete
-import DeleteIcon from '@material-ui/icons/Delete';
-
-// Boton de icono
-import IconButton from '@material-ui/core/IconButton';
+// Avatar
+import Avatar from '@material-ui/core/Avatar';
 
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 
-export default function CourseCard({ course, setCourses, image, onPress }) {
+// Link
+import Link from 'react-router-dom/Link';
+
+export default function UserCard({ user, setUsers, history, type }) {
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -26,8 +26,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
-
-    
+        
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
         setError(true);   //Se cambia el estado de mensaje de error a verdadero
@@ -48,55 +47,47 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
         }, 2000)
     }
 
-    // Funcion para eliminar el curso asociado a este componente
-    const deleteCourse = async() => {
+    const deleteUser = async() => {
         try {
             setProcess(true);
-            setProcessMessage('El curso se esta borrando...');
+            setProcessMessage('Borrando usuario...');
 
-            const response = await api.delete(`/api/course/${course._id}`);
+            const response = await api.delete(`/api/person/${user._id}`);    
+            
+            const { deletedUser, message } = response.data;      
 
-            const { deletedCourse, message } = response.data;
-
-            if(deletedCourse){
+            if(deletedUser){
                 setProcess(false);
                 setProcessMessage('');
-
-                // Para quitar el curso que se elimino de la lista de cursos
-                setCourses(prevValues => {
-                    return prevValues.filter(value => value !== course)
-                })
-    
+                
                 showSuccess(message);
+
+                // Asignacion de los cursos de la base de datos                
+                setUsers(prevValues => {
+                    return prevValues.filter(value => value !== user)
+                });
+    
             }else if(message){
                 showError(message);
             }else{
                 showError('Error inesperado en el servidor');
-            }
+            }            
         } catch (error) {
             showError('Error inesperado en el servidor');
             console.log(`Ha ocurrido un error: ${error}`);
         }
-        setProcess(false);
-        setProcessMessage('');
     }
 
     return (
-        <div className="course-card m-4 p-3" >            
-            <div onClick={onPress}>
-                <div className="d-flex justify-content-between align-items-center">
-                    <h1 className="h5 text-left m-0 p-0">{course.name}</h1>                
-                </div>
-                <hr className="mx-2 my-1"/>
-                <img src={image} alt="CourseImage"/>
-                <div className="info mt-3">
-                    {
-                        course.actual_unit?
-                            <p className="text-left m-0">Vas en la <b>{course.actual_unit}</b> y vence <b>{course.due_date}</b></p>
-                        :
-                            <p className="text-left m-0"><b>Aún no hay unidades</b></p>
-                    }
-                    <p className="text-left m-0">Tiene <b>{course.students}</b> estudiantes</p>
+        <div className="user-card d-flex justify-content-between mb-4">
+            <div className="card d-flex justify-content-center align-items-left mr-3">
+                <div className="d-flex align-items-center px-4">
+                    <Avatar className="mr-2" src="https://i.pinimg.com/originals/32/a3/69/32a3690fe66a73adcb98922874eb8b8a.jpg"/>
+                    <div className="ml-2 mr-5">
+                        <p className="m-0">{user.first_name} {user.last_name}</p>                            
+                        <p className="m-0 text-muted">Edad: {user.age}</p>                            
+                        <p className="m-0 text-muted">ID: {user.id}</p>                            
+                    </div>
                     {success?
                         <Alert severity="success">{successMessage}</Alert>
                         : ""
@@ -109,12 +100,13 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                         <Alert severity="info">{processMessage}</Alert>
                         : ""
                     }
-                </div>
+                </div>                
             </div>
-            <div className="text-right">
-                <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCourse}>
-                        <DeleteIcon />
-                </IconButton>
+            <div className="d-flex flex-column">
+                <div className="button-group btn-group-vertical">
+                    <Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>                    
+                    <button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>                    
+                </div>
             </div>
         </div>
     )
