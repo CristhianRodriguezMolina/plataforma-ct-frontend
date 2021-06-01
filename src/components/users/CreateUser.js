@@ -4,6 +4,9 @@ import { useParams } from 'react-router-dom';
 // API
 import api from '../../services/api';
 
+// Date formater
+import dateFormat from 'dateformat';
+
 // COMPONENTS
 
 // Tarjeta de titulo
@@ -22,8 +25,8 @@ export default function CreateUser({ history }) {
 
     const [first_name, setFirstName] = useState(''); //Primer nombre del usuario
     const [last_name, setLastName] = useState(''); //Apellido del usuario
-    const [age, setAge] = useState(''); //Edad del usuario
-    const [genre, setGenre] = useState(''); //Genero del usuario
+    const [birth_date, setBirthDate] = useState(''); //Edad del usuario
+    const [genre, setGenre] = useState('Selecciona un genero'); //Genero del usuario
     const [id, setId] = useState(''); //Id del usuario
     const [password, setPassword] = useState(''); //Contraseña del usuario
     const [confirm_password, setConfirmPassword] = useState(''); //Comfirmación de contraseña del usuario
@@ -50,13 +53,22 @@ export default function CreateUser({ history }) {
     }, [type])
 
     // Funcion para mostrar una alerta de error dado un mensaje
-    const showError = (message) => {
+    const showError = (error) => {
         setError(true);   //Se cambia el estado de mensaje de error a verdadero
-        setErrorMessage(message); //Se setea el mensaje de error
+        setErrorMessage(error); //Se setea el mensaje de error
         setTimeout(() => { //Dura 2sg en pantalla el mensaje
             setError(false);
             setErrorMessage("");
         }, 2000)
+    }
+
+    const getStringDate = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
+        
+        return `${year}-${month}-${day}`
     }
 
     // METODO PARA OBTENER LOS DATOS DE UN USUARIO EN DADO CASO DE QUE SE VAYA A EDITAR CON LA ID QUE LLEGA POR LA RUTA
@@ -70,7 +82,8 @@ export default function CreateUser({ history }) {
             const { user, message } = response.data;
 
             if(user){
-                setAge(user.age);
+                console.log(getStringDate(user.birth_date))
+                setBirthDate(user.birth_date);
                 setId(user.id);
                 setGenre(user.genre);
                 setFirstName(user.first_name);
@@ -101,7 +114,7 @@ export default function CreateUser({ history }) {
         try {
             if(password !== "" && confirm_password !== "" || action==="edit"){
                 if (id !== "" && first_name !== "" && last_name !== ""  //Se verifica la existencia de todos los campos del formulario
-                 && age !== "" && genre !== "") {
+                 && birth_date !== Date.now && genre !== "") {
     
                     setProcess(true);
                     setProcessMessage("Creando usuario...");
@@ -119,7 +132,7 @@ export default function CreateUser({ history }) {
                             confirm_password,           //  DE 
                             first_name,                 //  LA PETICION
                             last_name,                  //
-                            age,                        //
+                            birth_date,                        //
                             genre,                      //
                             role}); 
                     }else{
@@ -127,15 +140,17 @@ export default function CreateUser({ history }) {
                             id,                         //  PARAMETROS
                             first_name,                 //  DE 
                             last_name,                  //  LA PETICION
-                            age,                        //
+                            birth_date,                        //
                             genre,                      //
                             role}); 
                     }
     
                     const { savedUser, updatedUser, message } = response.data;
+
+                    console.log(response.data)
     
                     if (savedUser || updatedUser) { //Se verifica si existe                 
-                        setAge('');
+                        setBirthDate(Date.now);
                         setId('');
                         setGenre('');
                         setPassword('');    
@@ -185,12 +200,16 @@ export default function CreateUser({ history }) {
                         <input className="form-control" type="text" onChange={evt => setLastName(evt.target.value)} value={last_name} label="Apellidos" name="apellidos" required />
                     </div>
                     <div className="form-group">
-                        <label>Edad</label>
-                        <input className="form-control" type="number" min="0" max="100" onChange={evt => setAge(evt.target.value)} value={age} label="Edad" name="edad" required />
+                        <label>Edad</label> 
+                        <input className="form-control" type="date" min="1980-01-01" max={dateFormat(new Date(), 'yyyy-mm-dd')} onChange={evt => setBirthDate(evt.target.value)} value={dateFormat(birth_date, 'yyyy-mm-dd')} label="Fecha de cumpleaños" name="fechadecumpleaños" required />
                     </div>
                     <div className="form-group">
                         <label>Genero</label>
-                        <input className="form-control" type="text" onChange={evt => setGenre(evt.target.value)} value={genre} label="Genero" name="genero" required />
+                        <select className="form-control shadow" onChange={evt => setGenre(evt.target.value)} value={genre} aria-label="Default select example" required>
+                            <option value="F">Femenino</option>
+                            <option value="M">Masculino</option>
+                            <option value="NB">No binario</option>
+                        </select>
                     </div>
                     <div className="form-group">
                         <label>ID</label>
@@ -203,7 +222,7 @@ export default function CreateUser({ history }) {
                             <p className=""><b>Datos de sesión</b></p>
                             <div className="form-group">
                                 <label>Contraseña</label>
-                                <input className="form-control" type="password" onChange={evt => setPassword(evt.target.value)} value={password} label="Contrasena" name="contrasena" required />
+                                <input className="form-control" type="password" minLength="4" onChange={evt => setPassword(evt.target.value)} value={password} label="Contrasena" name="contrasena" required />
                             </div>
                             <div className="form-group">
                                 <label>Confirmar contraseña</label>

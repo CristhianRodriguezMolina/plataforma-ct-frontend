@@ -104,7 +104,7 @@ export default function UserCard({ user, setUsers, history, type }) {
             </div>
             <div className="d-flex flex-column">
                 <div className="button-group btn-group-vertical">
-                    <Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary" data-toggle="modal" data-target="#userDetail">Editar</Link>                    
+                    <Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>                    
                     <button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>                    
                 </div>
             </div>
