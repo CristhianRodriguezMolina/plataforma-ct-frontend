@@ -45,11 +45,11 @@ const CardDataPanel = props => {
 
     return (
         <div className="card-data-panel-container">
-            <h1>CardDataPanel</h1>
-            <p>In this data panel you can change the data from a card that you have selected</p>
-            <h2>Key word <span style={{color: "red"}}>*</span></h2>
+            <h1>Panel de los datos de la tarjeta</h1>
+            <p>En este panel de datos puedes cambiar los datos de la tajeta de secuencia que tienes seleccionada</p>
+            <h2>Frase <span style={{color: "red"}}>*</span></h2>
             <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input>
-            <h2>Image <span style={{color: "rgb(129, 129, 129)"}}>(optional)</span></h2>
+            <h2>Imagen <span style={{color: "rgb(129, 129, 129)"}}>(opcional)</span></h2>
             <div className="image-container"><p>Subir imagen</p></div>
             <button className="btn btn-primary" onClick={saveCardInfo}>Guardar</button>
         </div>

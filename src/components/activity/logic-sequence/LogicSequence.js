@@ -134,7 +134,7 @@ const LogicSequence = props => {
     }
 
     const desInputStyle = {
-        width: "auto",
+        width: "100%",
         fontSize: "0.8em",
         margin: "0.5em auto 0 auto",
         padding: "0.7em",
@@ -156,11 +156,11 @@ const LogicSequence = props => {
                         <h1>Description of the logic sequence activity</h1>
                         <p>Name of the logic sequence</p>
                     </div>}
-                <hr></hr>
+                <hr className="hr-bar"></hr>
                 <div className="panels">
                     <div className="sequence-cards-container">
                         {sequenceList?
-                            <SortableList items={sequenceList} onSortEnd={onSortEnd} />:""}
+                            <SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} />:""}
                         <div className="create-card-button">
                             <div style={{width: "43%"}}></div>
                             <IconButton color="primary" aria-label="Delete" onClick={createCard}>
@@ -172,7 +172,7 @@ const LogicSequence = props => {
                     </CardDataPanel>
 
                 </div>
-                <hr></hr>
+                <hr className="hr-bar"></hr>
                 <button className="save-button btn btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
             </div>
         </LogicSequenceContext.Provider>
