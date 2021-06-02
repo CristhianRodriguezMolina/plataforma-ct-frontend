@@ -162,7 +162,6 @@ const LogicSequence = props => {
     };
 
     const updateName = (value) => {
-        console.log(value)
         setActivityName(value);
     };
 
