@@ -6,6 +6,9 @@ import api from '../../services/api';
 // SCSS
 import './user.scss';
 
+// Util
+import * as util from '../../util/util';
+
 // COMPONENTS
 
 // Avatar
@@ -87,7 +90,7 @@ export default function UserCard({ user, setUsers, history, type }) {
                     <Avatar className="mr-2" src="https://i.pinimg.com/originals/32/a3/69/32a3690fe66a73adcb98922874eb8b8a.jpg"/>
                     <div className="ml-2 mr-5">
                         <p className="m-0">{user.first_name} {user.last_name}</p>                            
-                        <p className="m-0 text-muted">Edad: {Math.floor((new Date().getTime() - new Date(user.birth_date).getTime())/(1000 * 3600 * 24)/365)} años</p>                            
+                        <p className="m-0 text-muted">Edad: {util.getAge(user.birth_date)} años</p>                            
                         <p className="m-0 text-muted">ID: {user.id}</p>                            
                     </div>
                     {success?

@@ -67,9 +67,6 @@ function App() {
               <Route path='/activity/create' exact component={CreateActivity} />
               <Route path='/activity/logic-sequence/:activityId' component={LogicSequence} />
               <Route path="/" exact />
-              <Route path='/activity/logic-sequence/:activityId'>
-                <LogicSequence/>
-              </Route>
               <Route component={Error404} />
             </Switch>
           </div>

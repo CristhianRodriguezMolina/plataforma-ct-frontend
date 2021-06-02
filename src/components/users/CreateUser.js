@@ -94,7 +94,8 @@ export default function CreateUser({ history }) {
                 setProcess(false);
                 setProcessMessage('');
 
-                console.log(user);
+                console.log(birth_date)
+                console.log(new Date())
             }else{
                 showError(message);
             }
@@ -193,7 +194,7 @@ export default function CreateUser({ history }) {
                     <p className=""><b>Datos personales</b></p>
                     <div className="form-group">
                         <label className="form-label">Nombres</label>
-                        <input className="form-control" type="text" onChange={evt => setFirstName(evt.target.value)} value={first_name} label="Nombre" name="nombres" required />
+                        <input className="form-control" type="text" onChange={evt => setFirstName(evt.target.value)} value={first_name} label="Nombre" name="nombres" required />                        
                     </div>
                     <div className="form-group">
                         <label>Apellidos</label>
@@ -201,7 +202,7 @@ export default function CreateUser({ history }) {
                     </div>
                     <div className="form-group">
                         <label>Edad</label> 
-                        <input className="form-control" type="date" min="1980-01-01" max={dateFormat(new Date(), 'yyyy-mm-dd')} onChange={evt => setBirthDate(evt.target.value)} value={dateFormat(birth_date, 'yyyy-mm-dd')} label="Fecha de cumpleaños" name="fechadecumpleaños" required />
+                        <input className="form-control" type="date" min="1950-01-01" max={dateFormat(new Date(), 'yyyy-mm-dd')} onChange={evt => setBirthDate(new Date(evt.target.value))} value={dateFormat(birth_date, 'GMT:yyyy-mm-dd')} label="Fecha de cumpleaños" name="fechadecumpleaños" required />
                     </div>
                     <div className="form-group">
                         <label>Genero</label>
