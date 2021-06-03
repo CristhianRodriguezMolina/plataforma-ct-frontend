@@ -20,6 +20,15 @@ export default function UserManage({ history }) {
     // Datos que vienen como parametros en la ruta para este componente
     const { type } = useParams();
 
+    // UseEffect para cambiar el color de la barra de navegación
+    useEffect(() => {
+        if(type === "teachers"){
+            localStorage.setItem('navbar-color', '#ffe0b2')
+        }else if( type === "students"){
+            localStorage.setItem('navbar-color', '#bbdefb')
+        }
+    }, [type, localStorage.getItem('navbar-color')]);
+
     useEffect(() => {
         if(type !== "teachers" && type !== "students"){
             history.push('/')

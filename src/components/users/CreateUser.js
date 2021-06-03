@@ -40,6 +40,15 @@ export default function CreateUser({ history }) {
     const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
     const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
 
+    // UseEffect para cambiar el color de la barra de navegación
+    useEffect(() => {
+        if(type === "teachers"){
+            localStorage.setItem('navbar-color', '#ffe0b2')
+        }else if( type === "students"){
+            localStorage.setItem('navbar-color', '#bbdefb')
+        }
+    }, [type, localStorage.getItem('navbar-color')]);
+
     useEffect(() => {
         if(ID){ // En caso de que llegue una ID de usuario por la ruta            
             fetchUser();
@@ -184,8 +193,8 @@ export default function CreateUser({ history }) {
     return (
         <div>
             <TitleCard 
-                title={type=="teachers"?"Gestión de profesores":"Gestion de alumnos"}
-                color={type=="teachers"?"#FFA552":"#3C8AFF"}
+                title={type==="teachers"?"Gestión de profesores":"Gestion de alumnos"}
+                color={type==="teachers"?"#FFA552":"#3C8AFF"}
             /> 
             <Container className="mt-4" maxWidth="sm">
                 <form onSubmit={evt => createUser(evt)} className="form-create-user">

@@ -35,6 +35,11 @@ export default function MyCourses({ history }) {
     // Cursos de la base de datos
     const [courses, setCourses] = useState(null);
 
+    // UseEffect para cambiar el color de la barra de navegación
+    useEffect(() => {
+        localStorage.setItem('navbar-color', '#dcedc8')
+    });
+
     useEffect(() => {
         if(!courses){
             const fetch = async()=>{

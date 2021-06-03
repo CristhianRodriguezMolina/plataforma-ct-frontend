@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-export default function Error404() {
+export default function Login() {
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
@@ -9,7 +9,7 @@ export default function Error404() {
 
     return (
         <div>
-            <h1>404 NOT FOUND</h1>
+            
         </div>
     )
 }

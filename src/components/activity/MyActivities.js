@@ -40,6 +40,10 @@ const MyActivities = props => {
      const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
      const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+    // UseEffect para cambiar el color de la barra de navegación
+    useEffect(() => {
+        localStorage.setItem('navbar-color', '#f8bbd0')
+    });
 
      // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
