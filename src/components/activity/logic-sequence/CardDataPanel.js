@@ -2,11 +2,15 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 
 import './CardDataPanel.scss';
 import '../alert-message.scss';
+import '../../common/DynamicInput';
 
 // to make API calls
 import api from '../../../services/api';
 
 import { LogicSequenceContext } from './LogicSequence';
+
+import DynamicInput from '../../common/DynamicInput';
+import DropzoneUploader from '../../common/DropzoneUploader';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
@@ -15,6 +19,7 @@ const CardDataPanel = props => {
 
     const { sequenceList, setSequenceList, logicSequence, selectedCard, cardDeleted, setCardDeleted, setSelectedCard } = useContext(LogicSequenceContext);
     const [cardName, setCardName] = useState("");
+    const [upload, setUpload] = useState(false);
 
     const saveButton = useRef(null);
 
@@ -86,7 +91,14 @@ const CardDataPanel = props => {
         }
     }, [cardDeleted]);
 
+    useEffect(() => {
+        if(upload){
+            setUpload(false);
+        }
+    }, [upload]);
+
     const saveCardInfo = async() => {
+        setUpload(true);
         await api.put(`/api/logic-sequence/sequence-card/${logicSequence._id}/${selectedCard}`, {
             name: cardName
         })
@@ -100,11 +112,41 @@ const CardDataPanel = props => {
                 }
                 else{
                     showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
-
                 }
-                window.alert("Unexpected error!");
             })
     };
+
+    const uploadImage = async (files) => {
+        const formData = new FormData(); //Crea un formulario
+        formData.append('image', files[0]); //Añade un nombre al formulario
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data' //Para aceptar archivos binarios
+            }
+        };
+
+        //Hace una llamada a la api con la imagen
+        await api.post(`/api/data/upload-img/${logicSequence._id}/${selectedCard}`, formData, config)
+            .then((response) => {
+                showSuccess(response.data.message);
+                setSequenceList(response.data.updatedLogicSequence.sequence_cards);
+            }).catch((error) => {
+                //Muestra errores durante el proceso
+                console.log(error);
+                showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
+            });
+    }
+
+    const inputStyle = {
+        fontSize: "0.8em",
+        margin: "0.5em auto 0 auto",
+        padding: "0.7em",
+        overflow: "hidden",
+        lineHeight: "1.2em",
+        fontWeight: "500",
+        minHeight: "2.5em",
+        paddingLeft: 0
+    }
 
     return (
         <div className="card-data-panel-container">
@@ -117,12 +159,18 @@ const CardDataPanel = props => {
                     <Alert className="alert-message" severity="error">{errorMessage}</Alert>
                     : ""
                 }
+
                 <h1>Panel de los datos de la tarjeta</h1>
                 <p>En este panel de datos puedes cambiar los datos de la tajeta de secuencia que tienes seleccionada</p>
                 <h2>Frase <span style={{color: "red"}}>*</span></h2>
-                <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input>
+                <DynamicInput dynamicInputValue={cardName} dynamicInputStyle={inputStyle} sendValue={(value) => setCardName(value)}></DynamicInput>
+                {/* <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input> */}
                 <h2>Imagen <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></h2>
-                <div className="image-container"><p>Subir imagen</p></div>
+                <DropzoneUploader 
+                        onFormSubmit={uploadImage} 
+                        upload={upload} 
+                        type="image/jpeg, image/png, image/gif" 
+                        maxFiles="1"/>
                 <button ref={saveButton} className="btn btn-primary" onClick={saveCardInfo}>Guardar</button>
             </div>
         </div>

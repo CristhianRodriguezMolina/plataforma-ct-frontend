@@ -12,9 +12,9 @@ const DynamicInput = props => {
     const input = useRef(null);
     
     useEffect(() => {
-        if(!value) {
+        // if(!value) {
             setValue(props.dynamicInputValue);
-        }
+        // }
     }, [props.dynamicInputValue]);
 
     useEffect(() => {

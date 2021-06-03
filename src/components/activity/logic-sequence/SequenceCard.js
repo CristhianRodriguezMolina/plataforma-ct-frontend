@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './SequenceCard.scss';
 
@@ -79,8 +79,19 @@ const SequenceCard = SortableElement(({value}) => {
             })
     }
 
+    useEffect(() => {
+        console.log("the image has been changed")
+        console.log(value.image);
+    }, [value.image]);
+
     return (
         <div onClick={handleClick} className="sequence-card-container">
+            {value.image? 
+                <img className="sequence-card-img" src={`http://localhost:4000/i/${value.image}`} alt="default"/> :
+                <img className="sequence-card-img" src={'/default.png'} alt="default"/>
+            }
+            
+            
             {success?  
                 <Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
                 : ""
@@ -89,7 +100,9 @@ const SequenceCard = SortableElement(({value}) => {
                 <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
                 : ""
             }
-            <h1>{value.name}</h1> 
+            <div className="text-container">
+                <h1>{value.name}</h1> 
+            </div>
             <div className="manage-buttons-container">
                 <div style={{width: "15%"}}></div>   
                 <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCard}>

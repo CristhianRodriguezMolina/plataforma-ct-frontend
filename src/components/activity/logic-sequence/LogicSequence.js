@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 import arrayMove from 'array-move';
 
 import {SortableContainer} from 'react-sortable-hoc';
-import DynamicInput from './DynamicInput';
+import DynamicInput from '../../common/DynamicInput';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 // Boton de icono
 import IconButton from '@material-ui/core/IconButton';
@@ -113,8 +113,7 @@ const LogicSequence = props => {
     const createCard = async() => {
         if(logicSequence) {
             await api.post(`/api/logic-sequence/sequence-card/${logicSequence._id}`, { 
-                name: cardName,
-                image: "image.jpg"
+                name: cardName
             })
             .then((res) => {
                 // window.alert(res.data.message);
@@ -187,7 +186,8 @@ const LogicSequence = props => {
         padding: "0.7em",
         overflow: "hidden",
         lineHeight: "1.2em",
-        fontWeight: "500"
+        fontWeight: "500",
+        minHeight: "2.5em"
     }
 
     const createCardHandler = () => {
