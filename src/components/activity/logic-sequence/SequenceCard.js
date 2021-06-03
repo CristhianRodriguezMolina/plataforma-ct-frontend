@@ -24,7 +24,7 @@ import Alert from '@material-ui/lab/Alert';
 
 const SequenceCard = SortableElement(({value}) => {
 
-    const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted } = useContext(LogicSequenceContext);
+    const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted, selectedCard } = useContext(LogicSequenceContext);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -66,6 +66,7 @@ const SequenceCard = SortableElement(({value}) => {
                 setSelectedCard(null);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
                 setCardDeleted(true);
+                console.log("the card has been deleted")
                 
             })
             .catch(err => {
@@ -78,14 +79,8 @@ const SequenceCard = SortableElement(({value}) => {
                 }
             })
     }
-
-    useEffect(() => {
-        console.log("the image has been changed")
-        console.log(value.image);
-    }, [value.image]);
-
     return (
-        <div onClick={handleClick} className="sequence-card-container">
+        <div onClick={handleClick} className={`sequence-card-container ${selectedCard === value._id?'selected-card':''}`} >
             {value.image? 
                 <img className="sequence-card-img" src={`http://localhost:4000/i/${value.image}`} alt="default"/> :
                 <img className="sequence-card-img" src={'/default.png'} alt="default"/>
