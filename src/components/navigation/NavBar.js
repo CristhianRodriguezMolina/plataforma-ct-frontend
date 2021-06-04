@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 function NavBar() {
 
-    const { user, logoutHandler } = useContext(UserContext);
+    const { logoutHandler } = useContext(UserContext);
     
     // Estilos de material UI
     const classes = useStyles();
@@ -72,40 +72,44 @@ function NavBar() {
     return (
         <>
             {
-                user?
+                localStorage.getItem('token')?
                 <div>
                     <AppBar className="" style={{backgroundColor: color}}>
                         <Toolbar>
-                            <Container maxWidth="lg" className="d-flex justify-content-between align-items-center text-black">
+                            <Container maxWidth="lg" className="d-flex justify-content-between align-items-center">
                                 <Typography variant="h6">
                                     <IconButton>
                                         APP
                                     </IconButton>
                                 </Typography>
-                                <div className="dropdown">
-                                    <IconButton
-                                        className='dropdown-toggle'
-                                        id='dropdownProfileMenu'
-                                        data-toggle='dropdown'
-                                        aria-expanded='false'
-                                    >
-                                        <Avatar src={`${process.env.REACT_APP_API_URL}/profile/img1.jpg`} />
-                                    </IconButton>
-                                    <ul className="navbar-user-options dropdown-menu shadow" aria-labelledby="dropdownProfileMenu">
-                                        <Typography variant="subtitle2">    
-                                            <li><Link className="dropdown-item" to="">Perfil</Link></li>
-                                            <li><Link className="dropdown-item" to="/">Login</Link></li>
-                                            <div className="dropdown-divider"></div>
-                                            <li><Link className="dropdown-item" to="/user/teachers">Gestion de profesores</Link></li>
-                                            <li><Link className="dropdown-item" to="/user/students">Gestión de estudiantes</Link></li>
-                                            <div className="dropdown-divider"></div>
-                                            <li><Link className="dropdown-item" to="/course/mycourses">Mis cursos</Link></li>
-                                            <li><Link className="dropdown-item" to="/activity/myactivities">Mis actividades</Link></li>
-                                            <li><Link className="dropdown-item" to="/activity/create">Crear actividad</Link></li>
-                                            <div className="dropdown-divider"></div>
-                                            <li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/">Cerrar sesión</Link></li>
-                                        </Typography>
-                                    </ul>
+                                <div className="d-flex align-items-center">
+                                    <Typography variant="h6" color="textSecondary">Bienvenido</Typography>
+                                    <Typography variant="h6" color="textPrimary" className="ml-2">{localStorage.getItem('user_name')}</Typography>
+                                    <div className="dropdown">
+                                        <IconButton
+                                            className='dropdown-toggle'
+                                            id='dropdownProfileMenu'
+                                            data-toggle='dropdown'
+                                            aria-expanded='false'
+                                        >
+                                            <Avatar src={`${process.env.REACT_APP_API_URL}/profile/img1.jpg`} />
+                                        </IconButton>
+                                        <ul className="navbar-user-options dropdown-menu shadow" aria-labelledby="dropdownProfileMenu">
+                                            <Typography variant="subtitle2">    
+                                                <li><Link className="dropdown-item" to="">Perfil</Link></li>
+                                                <li><Link className="dropdown-item" to="/">Login</Link></li>
+                                                <div className="dropdown-divider"></div>
+                                                <li><Link className="dropdown-item" to="/user/teachers">Gestion de profesores</Link></li>
+                                                <li><Link className="dropdown-item" to="/user/students">Gestión de estudiantes</Link></li>
+                                                <div className="dropdown-divider"></div>
+                                                <li><Link className="dropdown-item" to="/course/mycourses">Mis cursos</Link></li>
+                                                <li><Link className="dropdown-item" to="/activity/myactivities">Mis actividades</Link></li>
+                                                <li><Link className="dropdown-item" to="/activity/create">Crear actividad</Link></li>
+                                                <div className="dropdown-divider"></div>
+                                                <li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/">Cerrar sesión</Link></li>
+                                            </Typography>
+                                        </ul>
+                                    </div>
                                 </div>
                             </Container>
                         </Toolbar>

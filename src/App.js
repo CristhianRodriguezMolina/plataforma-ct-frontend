@@ -77,18 +77,18 @@ function App() {
             <div className="app-container">
               <Switch>    
                 {/* USER */}          
-                <ProtectedRoute path='/user/:type/:action/:ID' component={CreateUser} />
-                <ProtectedRoute path='/user/:type/:action/' component={CreateUser} />
-                <ProtectedRoute path='/user/:type' exact component={UserManage} />
+                <ProtectedRoute type="admin, teacher" path='/user/:type/:action/:ID' component={CreateUser} />
+                <ProtectedRoute type="admin, teacher" path='/user/:type/:action/' component={CreateUser} />
+                <ProtectedRoute type="admin, teacher" path='/user/:type' exact component={UserManage} />
 
                 {/* COURSE */}
                 <ProtectedRoute path='/course/:type/:id' exact component={CourseView} />
                 <ProtectedRoute path='/course/mycourses' exact component={MyCourses} />
 
                 {/* ACTIVITY */}
-                <ProtectedRoute path='/activity/myActivities' exact component={MyActivities} />
-                <ProtectedRoute path='/activity/create' exact component={CreateActivity} />
-                <ProtectedRoute path='/activity/logic-sequence/:activityId' component={LogicSequence} />
+                <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
+                <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
+                <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' component={LogicSequence} />
 
                 {/* INDEX/LOGIN */}
                 <Route path="/" exact component={Login} />

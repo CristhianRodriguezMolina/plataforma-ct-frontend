@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
 
 // API
 import api from '../../services/api';
@@ -17,7 +20,11 @@ import CourseCard from './CourseCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+
 export default function MyCourses({ history }) {
+
+    // CONTEXT DATA
+    const {  } = useContext(UserContext);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -32,8 +39,7 @@ export default function MyCourses({ history }) {
     const [description, setDescription] = useState('Añade una descripción para el curso');
     const [topic, setTopic] = useState('Añade un tema para el curso');
 
-    // Cursos de la base de datos
-    const [courses, setCourses] = useState(null);
+    const [courses, setCourses] = useState(null)
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
@@ -42,18 +48,34 @@ export default function MyCourses({ history }) {
 
     useEffect(() => {
         if(!courses){
-            const fetch = async()=>{
-                await api.get('/api/course')
-                    .then((response) => {
-                        setCourses(response.data.courses);
-                    }).catch((error) => {
-                        //Muestra errores durante el proceso
-                        console.log(`Un error ha ocurrido, por favor intentelo de nuevo mas tarde: ${error}`);
-                    });
-            };
-            fetch();
+            getUserCourses();
         }
     }, [courses])
+
+    const getUserCourses = async() => {
+        try {
+            setProcess(true);
+            setProcessMessage('Obteniendo cursos...');
+
+            const response = await api.get(`/api/course/mycourses/${localStorage.getItem('user_id')}`);
+            
+            const { courses, message } = response.data;
+            
+            if(courses){                
+                setCourses(courses);
+
+                setProcess(false);
+                setProcessMessage('');
+
+                showSuccess(message);
+            }else {
+                showError(message);
+            }
+        } catch (error) {
+            console.error(error);
+            showError(error);
+        }
+    }
 
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
@@ -87,6 +109,7 @@ export default function MyCourses({ history }) {
 
         const response = await api.post('/api/course', {
             name,
+            creator: localStorage.getItem('user_id'),
             description,
             topic,
             visible: false

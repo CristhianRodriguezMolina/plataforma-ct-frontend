@@ -23,7 +23,7 @@ import { AccountCircleOutlined, Lock } from '@material-ui/icons'
 
 export default function Login({ history }) {
 
-    const { signinHandler, setUser } = useContext(UserContext);
+    const { signinHandler } = useContext(UserContext);
 
     // Datos del inicio de sesion
     const [id, setId] = useState('')
@@ -61,18 +61,20 @@ export default function Login({ history }) {
 
             const { user_name, user_id, user_role, user_image, token, message } = response.data;
 
-            console.log(response)
-
             if(user_id && token){  
-                setUser({
+                localStorage.setItem('user_name', user_name);
+                localStorage.setItem('user_id', user_id);
+                localStorage.setItem('user_role', user_role);
+                localStorage.setItem('user_image', user_image);
+                localStorage.setItem('token', token);
+
+                signinHandler({
                     token,
                     user_name,
                     user_id,
                     user_role,
                     user_image
                 });
-                
-                signinHandler();
 
                 history.push('/course/mycourses');
             }else {
@@ -107,9 +109,9 @@ export default function Login({ history }) {
                             Sign in
                         </Typography>
                         <hr className="mx-4"/>
-                        <Typography>
-                            <Container>
-                                <form onSubmit={evt => signIn(evt)}>
+                        <Container>
+                            <form onSubmit={evt => signIn(evt)}>
+                                <Typography>
                                     <div className="form-group my-4 d-flex align-items-center">
                                         <AccountCircleOutlined className="align-self-end mr-2" />
                                         <TextField color="secondary" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Numero de identificación" name="id" required />                                    
@@ -121,9 +123,9 @@ export default function Login({ history }) {
                                     <div className="form-group d-flex justify-content-center">
                                         <Button type="submit" variant="outlined" color="secondary" className="btn btn-primary">Sign in</Button>
                                     </div>
-                                </form>
-                            </Container>
-                        </Typography>
+                                </Typography>
+                            </form>
+                        </Container>
                         <Link color="secondary" className="" to="/course/mycourses">Olvido la contraseña?</Link>
                     </div>
                 </div>
