@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './CreateActivity.scss';
 
@@ -15,7 +15,10 @@ const CreateActivity = (props) => {
     const [description, setDescription] = useState(''); //Save the data registered in description field
     const [type, setType] = useState('logic_sequence')//Save the selected option in radio buttons
 
-    
+    // UseEffect para cambiar el color de la barra de navegación
+    useEffect(() => {
+        localStorage.setItem('navbar-color', '#f8bbd0')
+    });
 
     const handleSubmit = async(e) => {
         e.preventDefault(); //Prevent form reload the webside

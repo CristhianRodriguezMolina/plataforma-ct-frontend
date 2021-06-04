@@ -1,15 +1,21 @@
-import { GET_USER, GET_USER_COURSES } from '../types'
+import { LOGOUT, SIGNIN } from '../types'
 
 export default (state, action) => {
     const { payload, type } = action;
 
     switch (type) {
-        case GET_USER:            
-            break;
-
-        case GET_USER_COURSES:        
-            break;
-    
+        case SIGNIN: 
+            return {
+                ...state,
+                ...payload
+            }
+        
+        case LOGOUT:
+            return {
+                ...state,
+                ...payload
+            }
+            
         default:
             return state;
     }
