@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
 
-// CONTEXT
-import UserContext from '../../context/user/UserContext';
-
 // API
 import api from '../../services/api';
 
@@ -22,9 +19,6 @@ import Alert from '@material-ui/lab/Alert';
 
 
 export default function MyCourses({ history }) {
-
-    // CONTEXT DATA
-    const {  } = useContext(UserContext);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
