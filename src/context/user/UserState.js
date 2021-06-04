@@ -14,6 +14,7 @@ const UserState = (props) => {
     const initialState = {
         user: null,
         courses: [],
+        isLoggedIn: false,
         isAdmin: false,
         isTeacher: false,
         isStudent: false
@@ -72,6 +73,7 @@ const UserState = (props) => {
 
         // Gestionar el rol del usuario que esta haciendo login
         dispatch({ type: SIGNIN, payload: {
+            isLoggedIn: true,
             isAdmin: isAdminHandler(),
             isTeacher: isTeacherHandler(),
             isStudent: isStudentHandler()
@@ -82,6 +84,7 @@ const UserState = (props) => {
         dispatch({ type: LOGOUT, payload: {
             user: null,
             courses: [],
+            isLoggedIn: false,
             isAdmin: false,
             isTeacher: false,
             isStudent: false
@@ -95,6 +98,7 @@ const UserState = (props) => {
         setUserCourses,
         signinHandler,
         logoutHandler,
+        isLoggedIn: state.isLoggedIn,
         isAdmin: state.isAdmin,
         isTeacher: state.isTeacher,
         isStudent: state.isStudent 

@@ -63,6 +63,9 @@ import Error404 from './components/error/Error404';
 // Theme config
 import theme from './themeConfig';
 
+// Ruta protegida
+import ProtectedRoute from './components/protected-route/ProtectedRoute';
+
 function App() {
 
   return (
@@ -74,18 +77,18 @@ function App() {
             <div className="app-container">
               <Switch>    
                 {/* USER */}          
-                <Route path='/user/:type/:action/:ID' component={CreateUser} />
-                <Route path='/user/:type/:action/' component={CreateUser} />
-                <Route path='/user/:type' exact component={UserManage} />
+                <ProtectedRoute path='/user/:type/:action/:ID' component={CreateUser} />
+                <ProtectedRoute path='/user/:type/:action/' component={CreateUser} />
+                <ProtectedRoute path='/user/:type' exact component={UserManage} />
 
                 {/* COURSE */}
-                <Route path='/course/:type/:id' exact component={CourseView} />
-                <Route path='/course/mycourses' exact component={MyCourses} />
+                <ProtectedRoute path='/course/:type/:id' exact component={CourseView} />
+                <ProtectedRoute path='/course/mycourses' exact component={MyCourses} />
 
                 {/* ACTIVITY */}
-                <Route path='/activity/myActivities' exact component={MyActivities} />
-                <Route path='/activity/create' exact component={CreateActivity} />
-                <Route path='/activity/logic-sequence/:activityId' component={LogicSequence} />
+                <ProtectedRoute path='/activity/myActivities' exact component={MyActivities} />
+                <ProtectedRoute path='/activity/create' exact component={CreateActivity} />
+                <ProtectedRoute path='/activity/logic-sequence/:activityId' component={LogicSequence} />
 
                 {/* INDEX/LOGIN */}
                 <Route path="/" exact component={Login} />
