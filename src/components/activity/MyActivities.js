@@ -32,13 +32,13 @@ const MyActivities = props => {
 
     const [currentMenu, setCurrentMenu] = useState(false);
 
-     // MENSAJES DEL FORMULARIO
-     const [error, setError] = useState(false); //Variable flag de existencia de error
-     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-     const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
-     const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
-     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
-     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+    // MENSAJES DEL FORMULARIO
+    const [error, setError] = useState(false); //Variable flag de existencia de error
+    const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+    const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
+    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+    const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+    const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {

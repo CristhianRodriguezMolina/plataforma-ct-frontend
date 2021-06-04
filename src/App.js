@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
+// CONTEXT 
+import UserContext from './context/user/UserContext';
 
 // SCSS
 import './App.scss';
@@ -61,6 +64,7 @@ import Error404 from './components/error/Error404';
 import theme from './themeConfig';
 
 function App() {
+
   return (
     <UserState>
       <ThemeProvider theme={theme}>
@@ -68,16 +72,25 @@ function App() {
           <div className="App">
             <NavBar/>
             <div className="app-container">
-              <Switch>              
+              <Switch>    
+                {/* USER */}          
                 <Route path='/user/:type/:action/:ID' component={CreateUser} />
                 <Route path='/user/:type/:action/' component={CreateUser} />
                 <Route path='/user/:type' exact component={UserManage} />
+
+                {/* COURSE */}
                 <Route path='/course/:type/:id' exact component={CourseView} />
                 <Route path='/course/mycourses' exact component={MyCourses} />
+
+                {/* ACTIVITY */}
                 <Route path='/activity/myActivities' exact component={MyActivities} />
                 <Route path='/activity/create' exact component={CreateActivity} />
                 <Route path='/activity/logic-sequence/:activityId' component={LogicSequence} />
+
+                {/* INDEX/LOGIN */}
                 <Route path="/" exact component={Login} />
+
+                {/* ERRORS */}
                 <Route component={Error404} />
               </Switch>
             </div>

@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
 
 // SCSS
 import './NavBar.scss';
@@ -26,6 +30,7 @@ import Avatar from '@material-ui/core/Avatar';
 // Container
 import Container from '@material-ui/core/Container'
 
+// Make styles
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
@@ -36,50 +41,81 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function NavBar() {
+
+    const { user, logoutHandler } = useContext(UserContext);
     
+    // Estilos de material UI
     const classes = useStyles();
 
+    // Color basico de la navbar
     const [color, setColor] = useState('#424242');
 
+    // Objeto de la ruta actual
+    const router = useLocation();
+    const [currentLocation, setCurrentLocation] = useState(router.pathname);
+
+    // UseEffect para cambiar el color de la navbar
     useEffect(() => {
         setColor(localStorage.getItem('navbar-color'))
-    }, [localStorage.getItem('navbar-color')]);
+
+        const changeColor = () => {
+            if(currentLocation !== router.pathname){
+                setCurrentLocation(router.pathname);
+                return true;
+            }else{
+                return false;
+            }
+        }
+        changeColor();
+    });
     
     return (
-        <div>
-            <AppBar style={{backgroundColor: color}}>
-                <Toolbar>
-                    <Container maxWidth="lg" className="d-flex justify-content-between align-items-center text-black">
-                        <Typography variant="h6">
-                            <IconButton>
-                                APP
-                            </IconButton>
-                        </Typography>
-                        <div className="dropdown">
-                            <IconButton
-                                className='dropdown-toggle'
-                                id='dropdownProfileMenu'
-                                data-toggle='dropdown'
-                                aria-expanded='false'
-                            >
-                                <Avatar>
-                                    H
-                                </Avatar>
-                            </IconButton>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownProfileMenu">
-                                <li><Link className="dropdown-item" to="/">Index</Link></li>
-                                <li><Link className="dropdown-item" to="/user/teachers">Teacher manage</Link></li>
-                                <li><Link className="dropdown-item" to="/user/students">Students manage</Link></li>
-                                <li><Link className="dropdown-item" to="/course/mycourses">My Courses</Link></li>
-                                <li><Link className="dropdown-item" to="/activity/myactivities">My Activities</Link></li>
-                                <li><Link className="dropdown-item" to="/activity/create">Create Activity</Link></li>
-                            </ul>
-                        </div>
-                    </Container>
-                </Toolbar>
-            </AppBar>
-            <div className={classes.offset}></div>
-        </div>
+        <>
+            {
+                user?
+                <div>
+                    <AppBar className="" style={{backgroundColor: color}}>
+                        <Toolbar>
+                            <Container maxWidth="lg" className="d-flex justify-content-between align-items-center text-black">
+                                <Typography variant="h6">
+                                    <IconButton>
+                                        APP
+                                    </IconButton>
+                                </Typography>
+                                <div className="dropdown">
+                                    <IconButton
+                                        className='dropdown-toggle'
+                                        id='dropdownProfileMenu'
+                                        data-toggle='dropdown'
+                                        aria-expanded='false'
+                                    >
+                                        <Avatar src={`${process.env.REACT_APP_API_URL}/profile/img1.jpg`} />
+                                    </IconButton>
+                                    <ul className="navbar-user-options dropdown-menu shadow" aria-labelledby="dropdownProfileMenu">
+                                        <Typography variant="subtitle2">    
+                                            <li><Link className="dropdown-item" to="">Perfil</Link></li>
+                                            <li><Link className="dropdown-item" to="/">Login</Link></li>
+                                            <div className="dropdown-divider"></div>
+                                            <li><Link className="dropdown-item" to="/user/teachers">Gestion de profesores</Link></li>
+                                            <li><Link className="dropdown-item" to="/user/students">Gestión de estudiantes</Link></li>
+                                            <div className="dropdown-divider"></div>
+                                            <li><Link className="dropdown-item" to="/course/mycourses">Mis cursos</Link></li>
+                                            <li><Link className="dropdown-item" to="/activity/myactivities">Mis actividades</Link></li>
+                                            <li><Link className="dropdown-item" to="/activity/create">Crear actividad</Link></li>
+                                            <div className="dropdown-divider"></div>
+                                            <li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/">Cerrar sesión</Link></li>
+                                        </Typography>
+                                    </ul>
+                                </div>
+                            </Container>
+                        </Toolbar>
+                    </AppBar>
+                    <div className={classes.offset}></div>
+                </div>
+                :
+                ""
+            }
+        </>
     )
 }
 

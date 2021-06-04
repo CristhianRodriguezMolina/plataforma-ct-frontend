@@ -6,47 +6,98 @@ import api from '../../services/api'
 import UserReducer from './UserReducer';
 import UserContext from './UserContext';
 
+// Types
+import { GET_USER, GET_USER_COURSES, SIGNIN, LOGOUT } from '../types';
+
 const UserState = (props) => {
 
     const initialState = {
-        user: null
+        user: null,
+        courses: [],
+        isAdmin: false,
+        isTeacher: false,
+        isStudent: false
     };
 
     const [state, dispatch] = useReducer(UserReducer, initialState);
 
-    const getUser = (user) => {
-        
+    const setUser = (user) => {
+        try {
+            dispatch({ type: GET_USER, payload: user });
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const getUserCourses = async() => {
+    const setUserCourses = async() => {
         try {
             if(user){
-                
+                const response = await api.get(`/api/course/mycourses/${user.user_id}`);
+
+                const { courses } = response.data;
+
+                if(courses){
+                    dispatch({ type: GET_USER_COURSES, payload: courses })
+                }
             }
         } catch (error) {
-            
+            console.error(error);
         }
     }
 
-    const isTeacher = () => {
-
+    const isAdminHandler = () => {
+        if(state.user){
+            return state.user.user_role === "admin"? true : false;
+        }
+        return false;
     }
 
-    const isStudent = () => {
-
+    const isTeacherHandler = () => {
+        if(state.user){
+            return state.user.user_role === "teacher"? true : false;
+        }
+        return false;
     }
 
-    const isAdmin = () => {
+    const isStudentHandler = () => {
+        if(state.user){
+            return state.user.user_role === "student"? true : false;
+        }
+        return false;
+    }
 
+    const signinHandler = () => {
+        // Obtener los cursos del usuario que esta haciendo login
+        setUserCourses();
+
+        // Gestionar el rol del usuario que esta haciendo login
+        dispatch({ type: SIGNIN, payload: {
+            isAdmin: isAdminHandler(),
+            isTeacher: isTeacherHandler(),
+            isStudent: isStudentHandler()
+        } });
+    }
+
+    const logoutHandler = () => {
+        dispatch({ type: LOGOUT, payload: {
+            user: null,
+            courses: [],
+            isAdmin: false,
+            isTeacher: false,
+            isStudent: false
+        } });
     }
 
     const user = {
         user: state.user,
-        getUser,
-        getUserCourses,
-        isAdmin,
-        isTeacher,
-        isStudent 
+        courses: state.courses,
+        setUser,
+        setUserCourses,
+        signinHandler,
+        logoutHandler,
+        isAdmin: state.isAdmin,
+        isTeacher: state.isTeacher,
+        isStudent: state.isStudent 
     };
 
     return (

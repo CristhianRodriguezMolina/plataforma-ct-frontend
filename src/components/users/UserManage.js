@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 // SCSS
 import './user.scss';
@@ -27,7 +27,7 @@ export default function UserManage({ history }) {
         }else if( type === "students"){
             localStorage.setItem('navbar-color', '#bbdefb')
         }
-    }, [type, localStorage.getItem('navbar-color')]);
+    }, [type]);
 
     useEffect(() => {
         if(type !== "teachers" && type !== "students"){
