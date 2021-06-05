@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 
+//SCSS
 import './CreateActivity.scss';
+import '../common/alert-message.scss';
 
 // to make API calls
 import api from '../../services/api';
 
 // Title card
 import TitleCard from '../common/TitleCard';
+
+// Alert
+import Alert from '@material-ui/lab/Alert';
 
 
 const CreateActivity = (props) => {
@@ -15,7 +20,30 @@ const CreateActivity = (props) => {
     const [description, setDescription] = useState(''); //Save the data registered in description field
     const [type, setType] = useState('logic_sequence')//Save the selected option in radio buttons
 
-    
+    // MENSAJES DEL FORMULARIO
+    const [error, setError] = useState(false); //Variable flag de existencia de error
+    const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+    const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
+    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+
+    // Funcion para mostrar una alerta de error dado un mensaje
+    const showError = (message) => {
+        setError(true);   //Se cambia el estado de mensaje de error a verdadero
+        setErrorMessage(message); //Se setea el mensaje de error
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setError(false);
+            setErrorMessage("");
+        }, 2000)
+    }
+
+    const showInfo = (message) => {
+        setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+        setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setProcess(false);
+            setProcessMessage("");
+        }, 2000)
+    }
 
     const handleSubmit = async(e) => {
         e.preventDefault(); //Prevent form reload the webside
@@ -34,15 +62,15 @@ const CreateActivity = (props) => {
             })
             .catch(err => {
                 if (err.response) {
-                    window.alert(err.response.data.message);
+                    showError(err.response.data.message);
                 }
                 else {
-                    console.error(err);
+                    showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
                 }
             })
         }
         else {
-            window.alert("Name field required!");
+            showInfo("El nombre de la actividad es requerido");
         }
     }
 
@@ -54,14 +82,13 @@ const CreateActivity = (props) => {
             />  
 
             <div className="create-activity-container">
-                
                 <h1 className="title">Create new activity</h1>
                 <p>A repository contains all project files, including the revision history. Already have a project repository elsewhere?</p>
                 <hr/>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label className="form-label">Nombre <span style={{color: "red"}}>*</span></label>
-                        <input className="form-control" type="text" id="name" name="name" onChange={evt => setName(evt.target.value)}></input>
+                        <input className="form-control" type="text" id="name" name="name" onChange={evt => setName(evt.target.value)} required></input>
                     </div>
                     <div className="form-group">
                         <label className="form-label">Descripción <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></label>
@@ -88,6 +115,14 @@ const CreateActivity = (props) => {
                     <button className="btn btn-success" type="submit">Crear Actividad</button>
                 </form>
             </div>
+            {error?
+                <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
+                : ""
+            }
+            {process?
+                <Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
+                : ""
+            }
         </div>
     )
 };

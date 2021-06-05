@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 
 import './CardDataPanel.scss';
-import '../alert-message.scss';
+import '../../common/alert-message.scss';
 import '../../common/DynamicInput';
 
 // to make API calls
@@ -26,7 +26,7 @@ const CardDataPanel = props => {
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-    const [process, setProcess] = useState(true); //Variable flag de existencia de un proceso
+    const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
     const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
@@ -49,6 +49,15 @@ const CardDataPanel = props => {
         setTimeout(() => { //Dura 2sg en pantalla el mensaje
             setSuccess(false);
             setSuccessMessage("");
+        }, 2000)
+    }
+
+    const showInfo = (message) => {
+        setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+        setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setProcess(false);
+            setProcessMessage("");
         }, 2000)
     }
 
@@ -97,44 +106,57 @@ const CardDataPanel = props => {
         }
     }, [upload]);
 
-    const saveCardInfo = async() => {
+    const buttonHandler = () => {
         setUpload(true);
-        await api.put(`/api/logic-sequence/sequence-card/${logicSequence._id}/${selectedCard}`, {
-            name: cardName
-        })
-            .then((res) => {
-                showSuccess(res.data.message)
-                setSequenceList(res.data.updatedLogicSequence.sequence_cards);
-            })
-            .catch(err => {
-                if(err.response){
-                    showError(err.response.message);
-                }
-                else{
-                    showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
-                }
-            })
     };
-
-    const uploadImage = async (files) => {
-        const formData = new FormData(); //Crea un formulario
-        formData.append('image', files[0]); //Añade un nombre al formulario
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data' //Para aceptar archivos binarios
+    
+    const saveCardInfo = async (files) => {
+        if(cardName && cardName.trim().localeCompare("") !== 0) {
+            if(files.length > 0) {
+                console.log('se esta subiendo la imagen');
+                console.log(files);
+                const formData = new FormData(); //Crea un formulario
+                formData.append('image', files[0]); //Añade un nombre al formulario
+                formData.append('name', cardName);
+                const config = {
+                    headers: {
+                        'content-type': 'multipart/form-data', //Para aceptar archivos binarios
+                        'content-type': 'application/json'
+                    }
+                };
+                //Make api call to upload image
+                await api.post(`/api/data/upload-img/${logicSequence._id}/${selectedCard}`, formData, config)
+                    .then((response) => {
+                        setSequenceList(response.data.updatedLogicSequence.sequence_cards);
+                        
+                    }).catch((error) => {
+                        //Muestra errores durante el proceso
+                        console.log(error);
+                        showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+                    });
             }
-        };
-
-        //Hace una llamada a la api con la imagen
-        await api.post(`/api/data/upload-img/${logicSequence._id}/${selectedCard}`, formData, config)
-            .then((response) => {
-                showSuccess(response.data.message);
-                setSequenceList(response.data.updatedLogicSequence.sequence_cards);
-            }).catch((error) => {
-                //Muestra errores durante el proceso
-                console.log(error);
-                showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
-            });
+            else {
+                console.log('se esta guardando la info');
+                await api.put(`/api/logic-sequence/sequence-card/${logicSequence._id}/${selectedCard}`, {
+                    name: cardName
+                })
+                    .then((res) => {
+                        showSuccess(res.data.message)
+                        setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+                    })
+                    .catch(err => {
+                        if(err.response){
+                            showError(err.response.message);
+                        }
+                        else{
+                            showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+                        }
+                    })
+            }
+        }
+        else {
+            showInfo("El nombre de la tarjeta es requerido");
+        }
     }
 
     const inputStyle = {
@@ -159,6 +181,10 @@ const CardDataPanel = props => {
                     <Alert className="alert-message" severity="error">{errorMessage}</Alert>
                     : ""
                 }
+                {process?
+                    <Alert className="alert-message" severity="info">{processMessage}</Alert>
+                    : ""
+                }
 
                 <h1>Panel de los datos de la tarjeta</h1>
                 <p>En este panel de datos puedes cambiar los datos de la tajeta de secuencia que tienes seleccionada</p>
@@ -167,11 +193,11 @@ const CardDataPanel = props => {
                 {/* <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input> */}
                 <h2>Imagen <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></h2>
                 <DropzoneUploader 
-                        onFormSubmit={uploadImage} 
+                        onFormSubmit={saveCardInfo} 
                         upload={upload} 
                         type="image/jpeg, image/png, image/gif" 
                         maxFiles="1"/>
-                <button ref={saveButton} className="btn btn-primary" onClick={saveCardInfo}>Guardar</button>
+                <button ref={saveButton} className="btn btn-primary" onClick={buttonHandler}>Guardar</button>
             </div>
         </div>
     )

@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 
+//SCSS
 import './SequenceCard.scss';
+import '../../common/alert-message.scss';
 
 // to make API calls
 import api from '../../../services/api';
@@ -17,7 +19,6 @@ import zIndex from '@material-ui/core/styles/zIndex';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
-import '../alert-message.scss';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
@@ -66,7 +67,6 @@ const SequenceCard = SortableElement(({value}) => {
                 setSelectedCard(null);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
                 setCardDeleted(true);
-                console.log("the card has been deleted")
                 
             })
             .catch(err => {
@@ -74,7 +74,7 @@ const SequenceCard = SortableElement(({value}) => {
                     showError(err.response.message);
                 }
                 else{
-                    showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
+                    showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
 
                 }
             })

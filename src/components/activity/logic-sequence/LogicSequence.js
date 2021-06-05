@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState, useRef } from 'react';
 
 
 import './LogicSequence.scss';
-import '../alert-message.scss';
+import '../../common/alert-message.scss';
 
 // to make API calls
 import api from '../../../services/api';
@@ -30,7 +30,7 @@ export const LogicSequenceContext = createContext({
     cardDeleted: null,
     setCardDeleted: null,
     setSelectedCard: null
-})
+});
 
 const SortableList = SortableContainer(({items}) => {
     
@@ -41,7 +41,8 @@ const SortableList = SortableContainer(({items}) => {
         ))}
         </div>
     );
-    });
+});
+
 const LogicSequence = props => {
 
     const [sequenceList, setSequenceList] = useState(null);
@@ -63,10 +64,12 @@ const LogicSequence = props => {
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-    const [process, setProcess] = useState(true); //Variable flag de existencia de un proceso
+    const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
     const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+    const [loading, setLoading] = useState(true);
 
 
      // Funcion para mostrar una alerta de error dado un mensaje
@@ -77,7 +80,7 @@ const LogicSequence = props => {
             setError(false);
             setErrorMessage("");
         }, 2000)
-    }
+    };
 
     // Funcion para mostrar una alerta satisfactoria dado un mensaje
     const showSuccess = (message) => {
@@ -87,7 +90,16 @@ const LogicSequence = props => {
             setSuccess(false);
             setSuccessMessage("");
         }, 2000)
-    }
+    };
+
+    const showInfo = (message) => {
+        setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+        setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setProcess(false);
+            setProcessMessage("");
+        }, 2000)
+    };
 
     useEffect(() => {
         const fetch = async() => {
@@ -97,10 +109,10 @@ const LogicSequence = props => {
                     setSequenceList(res.data.sequence_cards);
                     setActivityName(res.data.activity_id.name);
                     setActivityDescription(res.data.activity_id.description);
-                    setProcess(false);
+                    setLoading(false);
                 })
                 .catch(err => {
-                    setProcess(false);
+                    setLoading(false);
                     showError("No se han podido cargar las tajetas, por favor intentelo mas tarde!");
                 })
         }
@@ -111,47 +123,56 @@ const LogicSequence = props => {
     }, [logicSequence]);
 
     const createCard = async() => {
-        if(logicSequence) {
-            await api.post(`/api/logic-sequence/sequence-card/${logicSequence._id}`, { 
-                name: cardName
-            })
-            .then((res) => {
-                // window.alert(res.data.message);
-                setSequenceList(res.data.updatedLogicSequence.sequence_cards);
-                newCardInput.current.value="";
-                setCardName("");
-            })
-            .catch(err => {
-                if (err.response) {
-                    showError(err.response.data.message);
-                }
-                else {
-                    showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
-                }
-            })
+        if(cardName && cardName.trim().localeCompare("") !== 0) {
+            if(logicSequence) {
+                await api.post(`/api/logic-sequence/sequence-card/${logicSequence._id}`, { 
+                    name: cardName
+                })
+                .then((res) => {
+                    setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+                    newCardInput.current.value="";
+                    setCardName("");
+                })
+                .catch(err => {
+                    if (err.response) {
+                        showError(err.response.data.message);
+                    }
+                    else {
+                        showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+                    }
+                })
+            }
+        } else {
+            setCardName("");
+            setShowInpNewCard(false);
         }
     };
 
     const saveLogicSequence = async() => {
-        await api.put(`/api/activity/${activityId}`, {
-            activity: {
-                name: activityName,
-                description: activityDescription
-            },
-            child: {
-                sequence_cards: sequenceList
-            }
-        }).then(res => {
-            showSuccess(res.data.message);
-        }).catch(err => {
-            if(err.response) {
-                showError(err.response.data.message);
-            }
-            else {
-                showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
-            }
-        });
-    }
+        if(activityName && activityName.trim().localeCompare("") !== 0) {
+            await api.put(`/api/activity/${activityId}`, {
+                activity: {
+                    name: activityName,
+                    description: activityDescription
+                },
+                child: {
+                    sequence_cards: sequenceList
+                }
+            }).then(res => {
+                showSuccess(res.data.message);
+            }).catch(err => {
+                if(err.response) {
+                    showError(err.response.data.message);
+                }
+                else {
+                    showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+                }
+            });
+        }
+        else {
+            showInfo("El nombre de la actividad es requerido");
+        }
+    };
 
     const onSortEnd = ({oldIndex, newIndex}) => {
 
@@ -177,7 +198,7 @@ const LogicSequence = props => {
         padding: "0.4em",
         lineHeight: "1.2em",
         fontWeight: "600"
-    }
+    };
 
     const desInputStyle = {
         width: "100%",
@@ -188,7 +209,7 @@ const LogicSequence = props => {
         lineHeight: "1.2em",
         fontWeight: "500",
         minHeight: "2.5em"
-    }
+    };
 
     const createCardHandler = () => {
         setShowInpNewCard(true);
@@ -211,6 +232,10 @@ const LogicSequence = props => {
                     <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
                     : ""
                 }
+                {process?
+                    <Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
+                    : ""
+                }
                 
                 {logicSequence?
                     <div className="logic-sequence-info">
@@ -223,7 +248,7 @@ const LogicSequence = props => {
                         <p style={desInputStyle} >Name of the logic sequence</p>
                     </div>}
                 <hr className="hr-bar"></hr>
-                {process?
+                {loading?
                     <Alert severity="info">{"Cargando tarjetas, por favor espere"}</Alert>
                     : ""
                 }
@@ -231,7 +256,7 @@ const LogicSequence = props => {
                     <div className="sequence-cards-container">
                         {sequenceList?
                             <SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} />:""}
-                        {showInpNewCard?<input ref={newCardInput} onChange={(e) => setCardName(e.target.value)} className="form-control" placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}></input>:
+                        {showInpNewCard?<input ref={newCardInput} value={cardName} onChange={(e) => setCardName(e.target.value)} className="form-control" placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}></input>:
                         <div className="create-card-button">
                             <div style={{width: "42%"}}></div>
                             <IconButton color="primary" aria-label="Create" onClick={createCardHandler}>

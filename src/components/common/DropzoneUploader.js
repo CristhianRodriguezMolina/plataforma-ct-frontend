@@ -18,25 +18,13 @@ const UploadImage = props => {
     } = useDropzone({
         accept: props.type
     });
-
-    const [upload, setUpload] = useState(false);
-    const [filesToUpload, setFilesToUpload] = useState([])
+    const [filesToUpload, setFilesToUpload] = useState([]);
 
     useEffect(() => {
-        if(upload){
-            if(acceptedFiles.length > 0) {
-                props.onFormSubmit(filesToUpload);
-                setFilesToUpload([])
-            }
-            else {
-                setUpload(false);
-            }
-                
+        if(props.upload){
+            props.onFormSubmit(filesToUpload);
+            setFilesToUpload([]);
         }
-    }, [upload]);
-
-    useEffect(() => {
-        setUpload(props.upload);
     }, [props.upload]);
 
 
