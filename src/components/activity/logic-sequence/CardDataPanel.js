@@ -89,7 +89,7 @@ const CardDataPanel = props => {
     const saveCardInfo = async() => {
         await api.put(`/api/logic-sequence/sequence-card/${logicSequence._id}/${selectedCard}`, {
             name: cardName
-        })
+        }, {headers: {'x-access-token':localStorage.getItem('token')}})
             .then((res) => {
                 showSuccess(res.data.message)
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);

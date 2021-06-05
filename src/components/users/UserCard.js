@@ -20,6 +20,9 @@ import Alert from '@material-ui/lab/Alert';
 // Link
 import Link from 'react-router-dom/Link';
 
+// Iconos
+import { Delete, Edit } from '@material-ui/icons';
+
 export default function UserCard({ user, setUsers, history, type }) {
 
     // MENSAJES DEL FORMULARIO
@@ -55,7 +58,7 @@ export default function UserCard({ user, setUsers, history, type }) {
             setProcess(true);
             setProcessMessage('Borrando usuario...');
 
-            const response = await api.delete(`/api/person/${user._id}`);    
+            const response = await api.delete(`/api/person/${user._id}`, {headers: {'x-access-token':localStorage.getItem('token')}});    
             
             const { deletedUser, message } = response.data;      
 
@@ -108,10 +111,14 @@ export default function UserCard({ user, setUsers, history, type }) {
                 </div>                
             </div>
             <div className="d-flex flex-column">
-                <div className="button-group btn-group-vertical">
+                <div className="icon-buttons button-group btn-group-vertical">
+                    <Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>                    
+                    <button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>                  
+                </div>                 
+                <div className="group-buttons button-group btn-group-vertical">
                     <Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>                    
-                    <button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>                    
-                </div>
+                    <button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>                                        
+                </div>     
             </div>
         </div>
     )

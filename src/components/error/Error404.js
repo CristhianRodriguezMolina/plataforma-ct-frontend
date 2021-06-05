@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react'
 
+// SCSS
+import './error.scss';
+
+// COMPONENTS
+
+//Link
+import Link from '@material-ui/core/Link';
+
 export default function Error404() {
 
     // UseEffect para cambiar el color de la barra de navegación
@@ -8,8 +16,20 @@ export default function Error404() {
     });
 
     return (
-        <div>
-            <h1>404 NOT FOUND</h1>
+        <div className="error404">
+            <body>
+                <div>
+                    <aside><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/4424790/Mirror.png" alt="404 Image" />
+                    </aside>
+                    <main>
+                        <h1>Sorry!</h1>
+                        <p>
+                        No eres suficientemente cool para visitar esta pagina o no existe <em>. . . como tu vida social.</em>
+                        </p>
+                        <Link className='btn btn404' to={localStorage.getItem('token')?'/course/mycourses':'/'}>Ya puedes irte!</Link>
+                    </main>
+                </div>
+            </body>
         </div>
     )
 }

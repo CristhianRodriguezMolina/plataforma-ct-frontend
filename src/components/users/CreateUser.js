@@ -86,7 +86,7 @@ export default function CreateUser({ history }) {
             setProcess(true);
             setProcessMessage("Obteniendo datos usuario...");
 
-            const response = await api.get(`/api/person/${ID}`);
+            const response = await api.get(`/api/person/${ID}`, {headers: {'x-access-token':localStorage.getItem('token')}});
 
             const { user, message } = response.data;
 
@@ -122,7 +122,7 @@ export default function CreateUser({ history }) {
         e.preventDefault();
 
         try {
-            if(password !== "" && confirm_password !== "" || action==="edit"){
+            if((password !== "" && confirm_password !== "") || action==="edit"){
                 if (id !== "" && first_name !== "" && last_name !== ""  //Se verifica la existencia de todos los campos del formulario
                  && birth_date !== Date.now && genre !== "") {
     
@@ -144,7 +144,7 @@ export default function CreateUser({ history }) {
                             last_name,                  //
                             birth_date,                        //
                             genre,                      //
-                            role}); 
+                            role}, {headers: {'x-access-token':localStorage.getItem('token')}}); 
                     }else{
                         response = await api.put(`/api/person/${user._id}`, { //Peticion post a la api para crear un usuario nuevo                               
                             id,                         //  PARAMETROS
@@ -152,7 +152,7 @@ export default function CreateUser({ history }) {
                             last_name,                  //  LA PETICION
                             birth_date,                        //
                             genre,                      //
-                            role}); 
+                            role}, {headers: {'x-access-token':localStorage.getItem('token')}}); 
                     }
     
                     const { savedUser, updatedUser, message } = response.data;

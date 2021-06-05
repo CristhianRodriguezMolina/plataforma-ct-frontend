@@ -68,7 +68,7 @@ const MyActivities = props => {
     useEffect(() => {
         if(!activities){
             const fetch = async()=>{
-                await api.get('/api/activity')
+                await api.get('/api/activity', {headers: {'x-access-token':localStorage.getItem('token')}})
                     .then((response) => {
                         setActivities(response.data.activities);
                         setCount(response.data.count);

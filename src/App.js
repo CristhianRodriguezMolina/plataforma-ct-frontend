@@ -89,9 +89,13 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' component={LogicSequence} />
+                
+                {/* INDEX/LOGIN */}
+                <Route path="/unauthorized" exact component={Error404} />
 
                 {/* INDEX/LOGIN */}
                 <Route path="/" exact component={Login} />
+
 
                 {/* ERRORS */}
                 <Route component={Error404} />

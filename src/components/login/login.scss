@@ -19,16 +19,52 @@ background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(130,17,17,0.8) 30%,
     height: 100%;
 }
 
+.header-login {
+    position: absolute;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    top: 0;
+    width: 100%;
+    color: white;
+    padding: 20px 0px;
+    font-size: larger;
+}
+
+.footer-login {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    h1 {
+        margin: 0 0;
+    }
+    div {
+        height: 3em;
+        width: 1px;
+        background-color: white;
+        margin: 5px 1em;
+    }
+}
+
 .login-card {    
     position: absolute;
     background-color: #ffffff;
-    width: 44em;
+    min-width: 22em;
     border-radius: 10px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 
+    .signin-side {
+        margin: 0 auto;
+    }
+
     .login-image {
+        display: none;
         background: url('../../assets/login-image.jpg')no-repeat;        
         background-size: cover;
         border-radius: 10px 0px 0px 10px;        
@@ -38,5 +74,33 @@ background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(130,17,17,0.8) 30%,
 
     .btn-signin {
         background-color: #ffcdd2;        
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .footer-login {
+        h1 {
+            margin: 0 1em;
+        }
+    }
+
+    .login-card {
+        width: 44em;
+
+        .login-image {
+            display: block;
+        }
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .footer-login {
+        h1 {
+            margin: 0 4em;
+        }
+    }
+
+    .login-card {
+        width: 44em;
     }
 }

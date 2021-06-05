@@ -51,7 +51,7 @@ export default function MyCourses({ history }) {
             setProcess(true);
             setProcessMessage('Obteniendo cursos...');
 
-            const response = await api.get(`/api/course/mycourses/${localStorage.getItem('user_id')}`);
+            const response = await api.get(`/api/course/mycourses/${localStorage.getItem('user_id')}`, {headers: {'x-access-token':localStorage.getItem('token')}});
             
             const { courses, message } = response.data;
             
@@ -107,7 +107,7 @@ export default function MyCourses({ history }) {
             description,
             topic,
             visible: false
-        }); 
+        }, {headers: {'x-access-token':localStorage.getItem('token')}}); 
 
         const { course, message } = response.data;
 

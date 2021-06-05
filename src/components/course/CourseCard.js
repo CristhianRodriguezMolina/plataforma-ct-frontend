@@ -54,7 +54,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
             setProcess(true);
             setProcessMessage('El curso se esta borrando...');
 
-            const response = await api.delete(`/api/course/${course._id}`);
+            const response = await api.delete(`/api/course/${course._id}`, {headers: {'x-access-token':localStorage.getItem('token')}});
 
             const { deletedCourse, message } = response.data;
 

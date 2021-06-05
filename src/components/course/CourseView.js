@@ -37,7 +37,7 @@ export default function CourseView(props, { history }) {
 
     const fetchData = async() => {
         try {
-            const response = await api.get(`/api/course/${id}`);
+            const response = await api.get(`/api/course/${id}`, {headers: {'x-access-token':localStorage.getItem('token')}});
 
             setCourse(response.data.course);
         } catch (error) {

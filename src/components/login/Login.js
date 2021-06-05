@@ -19,7 +19,7 @@ import { Container, Link, TextField, Typography, Button } from '@material-ui/cor
 import Alert from '@material-ui/lab/Alert';
 
 // Icons
-import { AccountCircleOutlined, Lock } from '@material-ui/icons'
+import { AccountCircleOutlined, Lock, Copyright, Devices, ImportContacts } from '@material-ui/icons'
 
 export default function Login({ history }) {
 
@@ -38,6 +38,11 @@ export default function Login({ history }) {
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
         localStorage.setItem('navbar-color', '#ffcdd2')
+
+        if(localStorage.getItem('token')){
+            console.log('yo')
+            return history.push('/course/mycourses')
+        }
     });
 
      // Funcion para mostrar una alerta de error dado un mensaje
@@ -99,36 +104,57 @@ export default function Login({ history }) {
                     <Alert className="alert-message" severity="info">{processMessage}</Alert>
                     : ""
                 }
+                <header className="header-login">
+                    <Container className="d-flex">
+                        <Typography variant="h5" className="mr-auto">App</Typography>
+                        <Typography variant="h6">Login</Typography>
+                    </Container>
+                </header>
                 <div className="login-card shadow row">
                     <div className="col-md-6 p-0">
-                        <div className="login-image m-0">
+                        <div className="login-image">
                         </div>                        
                     </div>
-                    <div className="col-md-6 px-3 pt-2 pb-4 signin-side">
-                        <Typography variant="h6">
-                            Sign in
-                        </Typography>
-                        <hr className="mx-4"/>
-                        <Container>
-                            <form onSubmit={evt => signIn(evt)}>
-                                <Typography>
-                                    <div className="form-group my-4 d-flex align-items-center">
-                                        <AccountCircleOutlined className="align-self-end mr-2" />
-                                        <TextField color="secondary" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Numero de identificación" name="id" required />                                    
-                                    </div>
-                                    <div className="form-group my-4 d-flex align-items-center">
-                                        <Lock className="align-self-end mr-2" />
-                                        <TextField color="secondary" className="form-control" type="password" minLength="4" onChange={evt => setPassword(evt.target.value)} value={password} label="Contraseña" name="contrasena" required />
-                                    </div>
-                                    <div className="form-group d-flex justify-content-center">
-                                        <Button type="submit" variant="outlined" color="secondary" className="btn btn-primary">Sign in</Button>
-                                    </div>
-                                </Typography>
-                            </form>
-                        </Container>
-                        <Link color="secondary" className="" to="/course/mycourses">Olvido la contraseña?</Link>
+                    <div className="col-md-6 px-3 pt-2 pb-4">
+                        <div className="signin-side">
+                            <Typography variant="h6">
+                                Sign in
+                            </Typography>
+                            <hr className="mx-4"/>
+                            <Container>
+                                <form onSubmit={evt => signIn(evt)}>
+                                    <Typography>
+                                        <div className="form-group my-4 d-flex align-items-center">
+                                            <AccountCircleOutlined className="align-self-end mr-2" />
+                                            <TextField color="secondary" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Numero de identificación" name="id" required />                                    
+                                        </div>
+                                        <div className="form-group my-4 d-flex align-items-center">
+                                            <Lock className="align-self-end mr-2" />
+                                            <TextField color="secondary" className="form-control" type="password" minLength="4" onChange={evt => setPassword(evt.target.value)} value={password} label="Contraseña" name="contrasena" required />
+                                        </div>
+                                        <div className="form-group d-flex justify-content-center">
+                                            <Button type="submit" variant="outlined" color="secondary" className="btn btn-primary">Sign in</Button>
+                                        </div>
+                                    </Typography>
+                                </form>
+                            </Container>
+                            <Link color="secondary" className="" to="/course/mycourses">Olvido la contraseña?</Link>
+                        </div>
                     </div>
                 </div>
+                <footer className="footer-login">
+                    <Typography variant="subtitle1" component="h1" className="">
+                        Copyrigt <Copyright/>    
+                    </Typography>
+                    <div></div>
+                    <Typography variant="subtitle1" component="h1"  className="">
+                        Uniquindio <ImportContacts/>
+                    </Typography>
+                    <div></div>
+                    <Typography variant="subtitle1" component="h1"  className="">
+                        Wil/Cris <Devices />
+                    </Typography>
+                </footer>
             </div>
         </div>
     )

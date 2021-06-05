@@ -91,7 +91,7 @@ const LogicSequence = props => {
 
     useEffect(() => {
         const fetch = async() => {
-            await api.get(`/api/logic-sequence/${activityId}`)
+            await api.get(`/api/logic-sequence/${activityId}`, {headers: {'x-access-token':localStorage.getItem('token')}})
                 .then((res) => {
                     setLogicSequence(res.data);
                     setSequenceList(res.data.sequence_cards);

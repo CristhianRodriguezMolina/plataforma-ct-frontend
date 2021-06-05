@@ -58,7 +58,7 @@ export default function CourseInformation({ course, setCourse }) {
                 name,
                 description, 
                 topic
-            })
+            }, {headers: {'x-access-token':localStorage.getItem('token')}});
 
             const { updatedCourse, message } = response.data;
 

@@ -36,7 +36,7 @@ export default function ProtectedRoute({ component, type, ...options }) {
             )
         }else{
             return (
-                <Redirect to='/' />
+                <Redirect to='/unauthorized' />
             )
         }
     }

@@ -1,5 +1,19 @@
 .navbar-user-options {
     border-radius: 10px;
     border: 1px solid #858585;    
+    font-size: 1.5em;
     //background-color: #eeeeee;
+}
+
+.welcome-word {
+    display: none;
+}
+
+@media only screen and (min-width: 576px) {
+    .welcome-word {
+        display: block;
+    }
+    .navbar-user-options {
+        font-size: 1em;
+    }
 }
