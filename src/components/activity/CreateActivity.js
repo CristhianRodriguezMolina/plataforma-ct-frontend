@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //SCSS
 import './CreateActivity.scss';
@@ -44,6 +44,10 @@ const CreateActivity = (props) => {
             setProcessMessage("");
         }, 2000)
     }
+    // UseEffect para cambiar el color de la barra de navegación
+    useEffect(() => {
+        localStorage.setItem('navbar-color', '#f8bbd0')
+    });
 
     const handleSubmit = async(e) => {
         e.preventDefault(); //Prevent form reload the webside

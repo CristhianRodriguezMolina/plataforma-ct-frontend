@@ -23,6 +23,11 @@ export default function CourseView(props, { history }) {
     // Curso que se obtiene de la id que llega por parametro de la ruta
     const [course, setCourse] = useState(null);
 
+    // UseEffect para cambiar el color de la barra de navegación
+    useEffect(() => {
+        localStorage.setItem('navbar-color', '#dcedc8')
+    });
+
     useEffect(() => {
         if(!course){
             fetchData();
