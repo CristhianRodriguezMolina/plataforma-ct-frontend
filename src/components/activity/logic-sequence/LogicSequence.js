@@ -256,13 +256,16 @@ const LogicSequence = props => {
                     <div className="sequence-cards-container">
                         {sequenceList?
                             <SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} />:""}
-                        {showInpNewCard?<input ref={newCardInput} value={cardName} onChange={(e) => setCardName(e.target.value)} className="form-control" placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}></input>:
-                        <div className="create-card-button">
-                            <div style={{width: "42%"}}></div>
-                            <IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
-                                    <AddCircleIcon style={{ fontSize: 40}}/>
-                            </IconButton>
-                        </div>
+                        {showInpNewCard?
+                            <input ref={newCardInput} value={cardName} onChange={(e) => setCardName(e.target.value)} className="form-control" 
+                                placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}>
+                            </input>:
+                            <div className="create-card-button">
+                                <div style={{width: "42%"}}></div>
+                                <IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
+                                        <AddCircleIcon style={{ fontSize: 40}}/>
+                                </IconButton>
+                            </div>
                         }
                     </div>
                     <CardDataPanel>

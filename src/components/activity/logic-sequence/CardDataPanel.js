@@ -83,9 +83,9 @@ const CardDataPanel = props => {
                 saveButton.current.disabled = false;
             }
             else{
-                let length = sequenceList.length
+                let length = sequenceList.length;
                 if(length > 0) {
-                    setCardName(sequenceList[length - 1]);
+                    setCardName(sequenceList[length - 1].name);
                     setSelectedCard(sequenceList[length - 1]._id);
                     saveButton.current.disabled = false;
                 }
@@ -113,8 +113,6 @@ const CardDataPanel = props => {
     const saveCardInfo = async (files) => {
         if(cardName && cardName.trim().localeCompare("") !== 0) {
             if(files.length > 0) {
-                console.log('se esta subiendo la imagen');
-                console.log(files);
                 const formData = new FormData(); //Crea un formulario
                 formData.append('image', files[0]); //Añade un nombre al formulario
                 formData.append('name', cardName);
@@ -189,14 +187,14 @@ const CardDataPanel = props => {
                 <h1>Panel de los datos de la tarjeta</h1>
                 <p>En este panel de datos puedes cambiar los datos de la tajeta de secuencia que tienes seleccionada</p>
                 <h2>Frase <span style={{color: "red"}}>*</span></h2>
-                <DynamicInput dynamicInputValue={cardName} dynamicInputStyle={inputStyle} sendValue={(value) => setCardName(value)}></DynamicInput>
+                <DynamicInput dynamicInputValue={cardName} dynamicInputStyle={inputStyle} sendValue={(val) =>  setCardName(val)}></DynamicInput>
                 {/* <input className="form-control" value={cardName} onChange={evt => setCardName(evt.target.value)}></input> */}
                 <h2>Imagen <span style={{color: "rgb(129, 129, 129)"}}>(Opcional)</span></h2>
                 <DropzoneUploader 
-                        onFormSubmit={saveCardInfo} 
-                        upload={upload} 
-                        type="image/jpeg, image/png, image/gif" 
-                        maxFiles="1"/>
+                    onFormSubmit={saveCardInfo} 
+                    upload={upload} 
+                    type="image/jpeg, image/png, image/gif" 
+                    maxFiles="1"/>
                 <button ref={saveButton} className="btn btn-primary" onClick={buttonHandler}>Guardar</button>
             </div>
         </div>
