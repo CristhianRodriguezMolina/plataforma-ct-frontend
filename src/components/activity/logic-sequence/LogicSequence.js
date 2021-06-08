@@ -269,7 +269,6 @@ const LogicSequence = props => {
                                 placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}>
                             </input>:
                             <div className="create-card-button">
-                                <div style={{width: "42%"}}></div>
                                 <IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
                                         <AddCircleIcon style={{ fontSize: 40}}/>
                                 </IconButton>

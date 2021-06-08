@@ -183,6 +183,7 @@ const MyActivities = props => {
         <TitleCard 
                 title="Mis actividades"
                 color="#FA61CD"
+                colorFont="#FFF"
             /> 
             <table className="activities-list">
                 <thead>

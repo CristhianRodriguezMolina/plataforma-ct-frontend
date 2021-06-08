@@ -30,8 +30,6 @@ const SequenceCard = SortableElement(({value}) => {
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-    const [process, setProcess] = useState(true); //Variable flag de existencia de un proceso
-    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
@@ -84,10 +82,9 @@ const SequenceCard = SortableElement(({value}) => {
     return (
         <div onClick={handleClick} className={`sequence-card-container ${selectedCard === value._id?'selected-card':''}`} >
             {value.image? 
-                <img className="sequence-card-img" src={`http://localhost:4000/i/${value.image}`} alt="default"/> :
+                <img className="sequence-card-img" src={`${process.env.REACT_APP_API_URL}/i/${value.image}`} alt="default"/> :
                 <img className="sequence-card-img" src={'/default.png'} alt="default"/>
             }
-            
             
             {success?  
                 <Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
@@ -101,7 +98,6 @@ const SequenceCard = SortableElement(({value}) => {
                 <h1>{value.name}</h1> 
             </div>
             <div className="manage-buttons-container">
-                <div style={{width: "15%"}}></div>   
                 <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCard}>
                         <DeleteIcon />
                 </IconButton>
