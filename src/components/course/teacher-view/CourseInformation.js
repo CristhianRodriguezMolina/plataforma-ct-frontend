@@ -11,6 +11,8 @@ import './teacherview.scss';
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 
+
+/* TEACHER */
 export default function CourseInformation({ course, setCourse }) {
 
     // Data del curso para realizar cambios
@@ -58,7 +60,7 @@ export default function CourseInformation({ course, setCourse }) {
                 name,
                 description, 
                 topic
-            })
+            }, {headers: {'x-access-token':localStorage.getItem('token')}});
 
             const { updatedCourse, message } = response.data;
 

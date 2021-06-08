@@ -63,9 +63,9 @@ export default function UserList({ type }) {
             let response = null;
 
             if(type==="teachers"){                
-                response = await api.get("/api/person/role/teacher");
+                response = await api.get("/api/person/role/teacher", {headers: {'x-access-token':localStorage.getItem('token')}});
             }else if(type==="students"){
-                response = await api.get("/api/person/role/student");
+                response = await api.get("/api/person/role/student", {headers: {'x-access-token':localStorage.getItem('token')}});
             }
 
             const { users, message } = response.data;
@@ -83,11 +83,17 @@ export default function UserList({ type }) {
                     showSuccess(message);
                 }
             }else if(message){
+                setProcess(false);
+                setProcessMessage('');
                 showError(message);
             }else{
+                setProcess(false);
+                setProcessMessage('');
                 showError('Error inesperado en el servidor');
             }
         } catch (error) {
+            setProcess(false);
+            setProcessMessage('');
             showError('Error inesperado en el servidor');
             console.log(`Ha ocurrido un error: ${error}`);
         }
@@ -107,7 +113,7 @@ export default function UserList({ type }) {
                 <Alert severity="info">{processMessage}</Alert>
                 : ""
             }
-            <div>
+            <div>                
                 {
                     users&&users.length>0?
                     (

@@ -61,7 +61,7 @@ const SequenceCard = SortableElement(({value}) => {
     };
     
     const deleteCard = async() => {
-        await api.delete(`/api/logic-sequence/sequence-card/${logicSequence._id}/${value._id}`)
+        await api.delete(`/api/logic-sequence/sequence-card/${logicSequence._id}/${value._id}`, {headers: {'x-access-token':localStorage.getItem('token')}})
             .then((res) => {
                 showSuccess(res.data.message);
                 setSelectedCard(null);

@@ -83,7 +83,7 @@ function NavBar() {
                                     </IconButton>
                                 </Typography>
                                 <div className="d-flex align-items-center">
-                                    <Typography variant="h6" color="textSecondary">Bienvenido</Typography>
+                                    <Typography variant="h6" color="textSecondary" className="welcome-word">Bienvenido</Typography>
                                     <Typography variant="h6" color="textPrimary" className="ml-2">{localStorage.getItem('user_name')}</Typography>
                                     <div className="dropdown">
                                         <IconButton
@@ -95,7 +95,7 @@ function NavBar() {
                                             <Avatar src={`${process.env.REACT_APP_API_URL}/profile/img1.jpg`} />
                                         </IconButton>
                                         <ul className="navbar-user-options dropdown-menu shadow" aria-labelledby="dropdownProfileMenu">
-                                            <Typography variant="subtitle2">    
+                                            {/* <Typography variant="subtitle2"> */}    
                                                 <li><Link className="dropdown-item" to="">Perfil</Link></li>
                                                 <li><Link className="dropdown-item" to="/">Login</Link></li>
                                                 <div className="dropdown-divider"></div>
@@ -107,7 +107,7 @@ function NavBar() {
                                                 <li><Link className="dropdown-item" to="/activity/create">Crear actividad</Link></li>
                                                 <div className="dropdown-divider"></div>
                                                 <li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/">Cerrar sesión</Link></li>
-                                            </Typography>
+                                            {/* </Typography> */}
                                         </ul>
                                     </div>
                                 </div>

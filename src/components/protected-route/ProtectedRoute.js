@@ -32,11 +32,11 @@ export default function ProtectedRoute({ component, type, ...options }) {
     }else{
         if(isLoggedIn){
             return (
-                <Redirect to="/course/mycourses" />
+                <Redirect to="/unauthorized" />
             )
         }else{
             return (
-                <Redirect to='/' />
+                <Redirect to='/unauthorized' />
             )
         }
     }

@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
+
 // API
 import api from '../../services/api';
 
@@ -17,8 +20,10 @@ import CourseCard from './CourseCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
-
 export default function MyCourses({ history }) {
+
+    // Datos del contexto de usuario
+    const { isAdmin, isTeacher, isStudent } = useContext(UserContext);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -51,7 +56,7 @@ export default function MyCourses({ history }) {
             setProcess(true);
             setProcessMessage('Obteniendo cursos...');
 
-            const response = await api.get(`/api/course/mycourses/${localStorage.getItem('user_id')}`);
+            const response = await api.get(`/api/course/mycourses/${localStorage.getItem('user_id')}`, {headers: {'x-access-token':localStorage.getItem('token')}});
             
             const { courses, message } = response.data;
             
@@ -63,10 +68,14 @@ export default function MyCourses({ history }) {
 
                 showSuccess(message);
             }else {
+                setProcess(false);
+                setProcessMessage('');
                 showError(message);
             }
         } catch (error) {
             console.error(error);
+            setProcess(false);
+            setProcessMessage('');
             showError(error);
         }
     }
@@ -93,7 +102,11 @@ export default function MyCourses({ history }) {
 
     // Funcion para redirigin a la pagina de edición de un curso en especifico con la history
     const redirect = course => {
-        history.push(`/course/edit/${course._id}`);
+        if(isAdmin || isTeacher){
+            history.push(`/course/edit/${course._id}/course-info`);
+        }else if(isStudent){
+            history.push(`/course/view/${course._id}/course-info`);
+        }
     }
 
     // Funcion para crear un curso dados unos datos basicos
@@ -107,7 +120,7 @@ export default function MyCourses({ history }) {
             description,
             topic,
             visible: false
-        }); 
+        }, {headers: {'x-access-token':localStorage.getItem('token')}}); 
 
         const { course, message } = response.data;
 
@@ -146,7 +159,7 @@ export default function MyCourses({ history }) {
             {   
                 courses && courses.length>0 ?
                 (
-                    <div className="d-flex flex-wrap mx-auto">
+                    <div className="courses-container mx-lg-5">
                         {
                             courses.map(course => (
                                 <CourseCard
@@ -167,7 +180,12 @@ export default function MyCourses({ history }) {
                     </div>
                 )                   
             }
-            <button className="btn btn-success btn-create-course" onClick={createCourse}>Crear curso</button>
+            {
+                isTeacher || isAdmin?
+                    <button className="btn btn-success btn-create-course" onClick={() => createCourse()}>Crear curso</button>
+                :
+                ""
+            }
         </div>
     )
 }
