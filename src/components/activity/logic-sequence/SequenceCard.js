@@ -60,24 +60,26 @@ const SequenceCard = SortableElement(({value}) => {
         setSelectedCard(value._id);
     };
     
-    const deleteCard = async() => {
-        await api.delete(`/api/logic-sequence/sequence-card/${logicSequence._id}/${value._id}`, {headers: {'x-access-token':localStorage.getItem('token')}})
-            .then((res) => {
-                showSuccess(res.data.message);
-                setSelectedCard(null);
-                setSequenceList(res.data.updatedLogicSequence.sequence_cards);
-                setCardDeleted(true);
-                
-            })
-            .catch(err => {
-                if(err.response){
-                    showError(err.response.message);
-                }
-                else{
-                    showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+    const deleteCard = () => {
+        api.delete(`/api/logic-sequence/sequence-card/${logicSequence._id}/${value._id}`, {
+            headers: { 'x-access-token':localStorage.getItem('token') }
+        })
+        .then((res) => {
+            showSuccess(res.data.message);
+            setSelectedCard(null);
+            setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+            setCardDeleted(true);
+            
+        })
+        .catch(err => {
+            if(err.response){
+                showError(err.response.message);
+            }
+            else{
+                showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
 
-                }
-            })
+            }
+        })
     }
     return (
         <div onClick={handleClick} className={`sequence-card-container ${selectedCard === value._id?'selected-card':''}`} >

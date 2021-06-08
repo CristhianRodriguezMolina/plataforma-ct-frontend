@@ -102,19 +102,21 @@ const LogicSequence = props => {
     };
 
     useEffect(() => {
-        const fetch = async() => {
-            await api.get(`/api/logic-sequence/${activityId}`, {headers: {'x-access-token':localStorage.getItem('token')}})
-                .then((res) => {
-                    setLogicSequence(res.data);
-                    setSequenceList(res.data.sequence_cards);
-                    setActivityName(res.data.activity_id.name);
-                    setActivityDescription(res.data.activity_id.description);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    setLoading(false);
-                    showError("No se han podido cargar las tajetas, por favor intentelo mas tarde!");
-                })
+        const fetch = () => {
+            api.get(`/api/logic-sequence/${activityId}`, {
+                headers: { 'x-access-token':localStorage.getItem('token') }
+            })
+            .then((res) => {
+                setLogicSequence(res.data);
+                setSequenceList(res.data.sequence_cards);
+                setActivityName(res.data.activity_id.name);
+                setActivityDescription(res.data.activity_id.description);
+                setLoading(false);
+            })
+            .catch(err => {
+                setLoading(false);
+                showError("No se han podido cargar las tajetas, por favor intentelo mas tarde!");
+            })
         }
 
         if(!logicSequence){
@@ -122,11 +124,13 @@ const LogicSequence = props => {
         }
     }, [logicSequence]);
 
-    const createCard = async() => {
+    const createCard = () => {
         if(cardName && cardName.trim().localeCompare("") !== 0) {
             if(logicSequence) {
-                await api.post(`/api/logic-sequence/sequence-card/${logicSequence._id}`, { 
+                api.post(`/api/logic-sequence/sequence-card/${logicSequence._id}`, { 
                     name: cardName
+                }, {
+                    headers: { 'x-access-token': localStorage.getItem('token') }
                 })
                 .then((res) => {
                     setSequenceList(res.data.updatedLogicSequence.sequence_cards);
@@ -148,9 +152,9 @@ const LogicSequence = props => {
         }
     };
 
-    const saveLogicSequence = async() => {
+    const saveLogicSequence = () => {
         if(activityName && activityName.trim().localeCompare("") !== 0) {
-            await api.put(`/api/activity/${activityId}`, {
+            api.put(`/api/activity/${activityId}`, {
                 activity: {
                     name: activityName,
                     description: activityDescription
@@ -158,9 +162,13 @@ const LogicSequence = props => {
                 child: {
                     sequence_cards: sequenceList
                 }
-            }).then(res => {
+            }, {
+                headers: { 'x-access-token': localStorage.getItem('token') }
+            })
+            .then(res => {
                 showSuccess(res.data.message);
-            }).catch(err => {
+            })
+            .catch(err => {
                 if(err.response) {
                     showError(err.response.data.message);
                 }

@@ -67,20 +67,22 @@ const MyActivities = props => {
 
     useEffect(() => {
         if(!activities){
-            const fetch = async()=>{
-                await api.get('/api/activity', {headers: {'x-access-token':localStorage.getItem('token')}})
-                    .then((response) => {
-                        setActivities(response.data.activities);
-                        setCount(response.data.count);
-                        if(response.data.count == 0) {
-                            setLoadingCourses(false);
-                            setShowFetchButton(false);
-                        }
-                    }).catch((error) => {
-                        //Show errors ocurred during the process
-                        showError("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
+            const fetch = () => {
+                api.get('/api/activity', {
+                    headers: {'x-access-token':localStorage.getItem('token') }
+                })
+                .then((response) => {
+                    setActivities(response.data.activities);
+                    setCount(response.data.count);
+                    if(response.data.count == 0) {
                         setLoadingCourses(false);
-                    });
+                        setShowFetchButton(false);
+                    }
+                }).catch((error) => {
+                    //Show errors ocurred during the process
+                    showError("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
+                    setLoadingCourses(false);
+                });
             };
             fetch();
         }
@@ -117,8 +119,10 @@ const MyActivities = props => {
         props.history.push(`/activity/logic-sequence/${activity_id}`);
     };
 
-    const handleDelete = async(activity_id) => {
-        await api.delete(`/api/activity/${activity_id}`)
+    const handleDelete = (activity_id) => {
+        api.delete(`/api/activity/${activity_id}`, {
+            headers: { 'x-access-token': localStorage.getItem('token') }
+        })
         .then((res) => {
             let array = activities.filter((activity, i) => activity._id !== activity_id);
             setActivities(array);

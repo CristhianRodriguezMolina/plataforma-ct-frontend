@@ -4,12 +4,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import "./DropzoneUploader.scss";
+
+import PropTypes from 'prop-types';
  
 /**
  * Componente para subir imagenes de los usuarios al server
  * @param {*} props 
  */
-const UploadImage = props => {
+const DropzoneUploader = props => {
     const {
         acceptedFiles,
         fileRejections,
@@ -120,6 +122,14 @@ const UploadImage = props => {
             </section>          
         </div>
     )
+};
+
+DropzoneUploader.propTypes = {
+    onFormSubmit: PropTypes.func.isRequired,
+    upload: PropTypes.bool.isRequired,
+    type: PropTypes.string,
+    maxFiles: PropTypes.string
 }
 
-export default UploadImage
+
+export default DropzoneUploader;

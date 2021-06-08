@@ -110,7 +110,7 @@ const CardDataPanel = props => {
         setUpload(true);
     };
     
-    const saveCardInfo = async (files) => {
+    const saveCardInfo = (files) => {
         if(cardName && cardName.trim().localeCompare("") !== 0) {
             if(files.length > 0) {
                 const formData = new FormData(); //Crea un formulario
@@ -119,11 +119,12 @@ const CardDataPanel = props => {
                 const config = {
                     headers: {
                         'content-type': 'multipart/form-data', //Para aceptar archivos binarios
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'x-access-token': localStorage.getItem('token')
                     }
                 };
                 //Make api call to upload image
-                await api.post(`/api/data/upload-img/${logicSequence._id}/${selectedCard}`, formData, config)
+                api.post(`/api/data/upload-img/${logicSequence._id}/${selectedCard}`, formData, config)
                     .then((response) => {
                         setSequenceList(response.data.updatedLogicSequence.sequence_cards);
                         
@@ -134,22 +135,23 @@ const CardDataPanel = props => {
                     });
             }
             else {
-                console.log('se esta guardando la info');
-                await api.put(`/api/logic-sequence/sequence-card/${logicSequence._id}/${selectedCard}`, {
+                api.put(`/api/logic-sequence/sequence-card/${logicSequence._id}/${selectedCard}`, {
                     name: cardName
+                }, {
+                    headers: { 'x-access-token': localStorage.getItem('token') }
                 })
-                    .then((res) => {
-                        showSuccess(res.data.message)
-                        setSequenceList(res.data.updatedLogicSequence.sequence_cards);
-                    })
-                    .catch(err => {
-                        if(err.response){
-                            showError(err.response.message);
-                        }
-                        else{
-                            showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
-                        }
-                    })
+                .then((res) => {
+                    showSuccess(res.data.message)
+                    setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+                })
+                .catch(err => {
+                    if(err.response){
+                        showError(err.response.message);
+                    }
+                    else{
+                        showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+                    }
+                })
             }
         }
         else {

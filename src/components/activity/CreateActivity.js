@@ -49,17 +49,18 @@ const CreateActivity = (props) => {
         localStorage.setItem('navbar-color', '#f8bbd0')
     });
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = (e) => {
         e.preventDefault(); //Prevent form reload the webside
 
-        console.log(type);
         //Verifying fields
         if(name.trim().localeCompare("") !== 0) {
             //Making API calls
-            await api.post('/api/activity', { 
+            api.post('/api/activity', { 
                 name, 
                 description, 
                 type
+            }, {
+                headers: { 'x-access-token': localStorage.getItem('token') }
             })
             .then((res) => {
                 props.history.push(`/activity/logic-sequence/${res.data.activity_id}`);

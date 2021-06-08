@@ -3,6 +3,8 @@ import React from 'react'
 // SCSS
 import './titlecard.scss';
 
+import PropTypes from 'prop-types';
+
 export default function TitleCard(props) {
     return (
         <div className="title-container d-flex justify-content-center align-items-center" style={{backgroundColor: props.color}}>
@@ -12,4 +14,9 @@ export default function TitleCard(props) {
             </div>                
         </div>
     )
+};
+
+TitleCard.propTypes = {
+    title: PropTypes.string,
+    color: PropTypes.string
 }
