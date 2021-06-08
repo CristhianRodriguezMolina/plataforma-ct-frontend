@@ -1,6 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
+//SCSS
 import './SequenceCard.scss';
+import '../../common/alert-message.scss';
 
 // to make API calls
 import api from '../../../services/api';
@@ -17,14 +19,13 @@ import zIndex from '@material-ui/core/styles/zIndex';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
-import '../alert-message.scss';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
 const SequenceCard = SortableElement(({value}) => {
 
-    const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted } = useContext(LogicSequenceContext);
+    const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted, selectedCard } = useContext(LogicSequenceContext);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -59,28 +60,35 @@ const SequenceCard = SortableElement(({value}) => {
         setSelectedCard(value._id);
     };
     
-    const deleteCard = async() => {
-        await api.delete(`/api/logic-sequence/sequence-card/${logicSequence._id}/${value._id}`, {headers: {'x-access-token':localStorage.getItem('token')}})
-            .then((res) => {
-                showSuccess(res.data.message);
-                setSelectedCard(null);
-                setSequenceList(res.data.updatedLogicSequence.sequence_cards);
-                setCardDeleted(true);
-                
-            })
-            .catch(err => {
-                if(err.response){
-                    showError(err.response.message);
-                }
-                else{
-                    showError("A ocurrido un error inexperado, por favor intentelo mas tarde");
+    const deleteCard = () => {
+        api.delete(`/api/logic-sequence/sequence-card/${logicSequence._id}/${value._id}`, {
+            headers: { 'x-access-token':localStorage.getItem('token') }
+        })
+        .then((res) => {
+            showSuccess(res.data.message);
+            setSelectedCard(null);
+            setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+            setCardDeleted(true);
+            
+        })
+        .catch(err => {
+            if(err.response){
+                showError(err.response.message);
+            }
+            else{
+                showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
 
-                }
-            })
+            }
+        })
     }
-
     return (
-        <div onClick={handleClick} className="sequence-card-container">
+        <div onClick={handleClick} className={`sequence-card-container ${selectedCard === value._id?'selected-card':''}`} >
+            {value.image? 
+                <img className="sequence-card-img" src={`http://localhost:4000/i/${value.image}`} alt="default"/> :
+                <img className="sequence-card-img" src={'/default.png'} alt="default"/>
+            }
+            
+            
             {success?  
                 <Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
                 : ""
@@ -89,7 +97,9 @@ const SequenceCard = SortableElement(({value}) => {
                 <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
                 : ""
             }
-            <h1>{value.name}</h1> 
+            <div className="text-container">
+                <h1>{value.name}</h1> 
+            </div>
             <div className="manage-buttons-container">
                 <div style={{width: "15%"}}></div>   
                 <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCard}>

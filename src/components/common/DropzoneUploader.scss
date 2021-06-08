@@ -1,0 +1,57 @@
+.img-preview {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.upload-info-item
+{
+    display: inline-flex;
+    align-items: center;
+    height: 7.5em;
+    width: 100%;
+    list-style: none;
+
+    p {
+        height: fit-content;
+        margin: auto 1em;
+        margin-left: 2em;
+        margin-right: 0;
+        overflow: hidden;
+    }
+}
+
+.upload-info-container
+{
+    width: 100%;
+    padding: 0.5em;
+}
+
+.dropzone {
+    height: 20vh;
+    max-height: 10em;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    border-radius: 5px;
+    border: 1px dashed gray;
+    color: gray;
+    margin-bottom: 1em;
+
+    .info{
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 0 auto;
+        p {
+            margin: 0;
+        }
+
+        button {
+            margin: auto 0.5em;
+        }
+    }
+    
+}

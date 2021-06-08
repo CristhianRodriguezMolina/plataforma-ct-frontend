@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import './DynamicInput.scss';
 
 const DynamicInput = props => {
@@ -12,9 +14,9 @@ const DynamicInput = props => {
     const input = useRef(null);
     
     useEffect(() => {
-        if(!value) {
+        // if(!value) {
             setValue(props.dynamicInputValue);
-        }
+        // }
     }, [props.dynamicInputValue]);
 
     useEffect(() => {
@@ -57,6 +59,12 @@ const DynamicInput = props => {
             : <h1 style={props.dynamicInputStyle} ref={h1} onClick={handleInputClick} className="dynamic-label">{value}</h1> }
         </div>
     )
+};
+
+DynamicInput.propTypes = {
+    dynamicInputValue: PropTypes.string,
+    dynamicInputStyle: PropTypes.object, 
+    sendValue: PropTypes.func.isRequired
 }
 
 export default DynamicInput;
