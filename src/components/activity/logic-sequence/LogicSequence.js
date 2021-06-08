@@ -115,7 +115,7 @@ const LogicSequence = props => {
             await api.post(`/api/logic-sequence/sequence-card/${logicSequence._id}`, { 
                 name: cardName,
                 image: "image.jpg"
-            })
+            }, {headers: {'x-access-token':localStorage.getItem('token')}})
             .then((res) => {
                 // window.alert(res.data.message);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);

@@ -13,6 +13,7 @@ import { AppBar, Box, darken, Tab, Tabs, Typography } from '@material-ui/core'
 
 import lightGreen from '@material-ui/core/colors/lightGreen'
 import { red } from '@material-ui/core/colors';
+import CourseView from '../CourseView';
 
 /* TEACHER */
 function TabPanel(props) {
@@ -37,8 +38,8 @@ function TabPanel(props) {
 
   TabPanel.propTypes = {
     children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
   };
     
   function a11yProps(index) {
@@ -64,7 +65,12 @@ function TabPanel(props) {
 export default function UnitsInformation() {
 
     const classes = useStyles();
+
+    // Valor actual referente a la pestaña actuala abierta
     const [value, setValue] = useState(0);
+
+    // Auxiliar para llevar al cuenta de los datos
+    const [index, setIndex] = useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -91,6 +97,10 @@ export default function UnitsInformation() {
                     <Tab label="Item Seven" {...a11yProps(6)} />
                 </Tabs>
             </AppBar>
+            {
+                
+                
+            }
             <TabPanel value={value} index={0}>
                 Item One
             </TabPanel>

@@ -119,7 +119,7 @@ export default function CourseInformation({ course, setCourse }) {
                     </div>
                 </div>
                 <div className="form-group">
-                    <button type="submit" className="btn btn-info mt-3">Update changes</button>
+                    <button type="submit" className="btn btn-info mt-3">Actualizar cambios</button>
                 </div>
             </form>
         </div>

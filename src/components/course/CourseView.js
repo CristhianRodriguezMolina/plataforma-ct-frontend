@@ -116,7 +116,8 @@ export default function CourseView({ history }) {
                                     :
                                     view==="units-info"?
                                         <UnitsInformationTeacher/>
-                                        :""
+                                        :
+                                        <Redirect to="/unauthorized"/>
                         /* Vistas de un curso para un estudiante */
                         :
                         type==="view" && course?
@@ -128,7 +129,8 @@ export default function CourseView({ history }) {
                                     :
                                     view==="units-info"?
                                         <UnitsInformationStudent/>
-                                        :""
+                                        :
+                                        <Redirect to="/unauthorized"/>
                         :
                         ""
                     }
