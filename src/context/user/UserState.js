@@ -38,9 +38,9 @@ const UserState = (props) => {
         return false;
     }
     
-    const signinHandler = async () => {
+    const signinHandler = () => {
         try {
-            await dispatch({ type: SIGNIN, payload: {
+            dispatch({ type: SIGNIN, payload: {
                 isLoggedIn: isLoggedInHandler(),
                 isAdmin: isAdminHandler(),
                 isTeacher: isTeacherHandler(),
@@ -51,7 +51,7 @@ const UserState = (props) => {
         }
     };
     
-    const logoutHandler = async () => {
+    const logoutHandler = () => {
         try {
             localStorage.removeItem('user_name');
             localStorage.removeItem('user_id');
@@ -59,7 +59,7 @@ const UserState = (props) => {
             localStorage.removeItem('user_image');
             localStorage.removeItem('token');
 
-            await dispatch({ type: LOGOUT, payload: {
+            dispatch({ type: LOGOUT, payload: {
                 isLoggedIn: false,
                 isAdmin: false,
                 isTeacher: false,

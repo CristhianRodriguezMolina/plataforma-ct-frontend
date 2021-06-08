@@ -82,13 +82,13 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     }
 
     return (
-        <div className="course-card m-4 p-3" >            
+        <div className="course-card my-3 mx-2 p-3" >            
             <div onClick={onPress}>
                 <div className="d-flex justify-content-between align-items-center">
                     <h1 className="h5 text-left m-0 p-0">{course.name}</h1>                
                 </div>
                 <hr className="mx-2 my-1"/>
-                <img src={image} alt="CourseImage"/>
+                <img src={image} alt="CourseImage" loading="lazy"/>
                 <div className="info mt-3">
                     {
                         course.actual_unit?

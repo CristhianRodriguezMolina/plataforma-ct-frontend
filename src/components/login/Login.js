@@ -81,15 +81,19 @@ export default function Login({ history }) {
                     user_image
                 });
 
+                setProcess(false);
+                setProcessMessage('');
+
                 history.push('/course/mycourses');
             }else {
+                setProcess(false);
+                setProcessMessage('');
                 showError(message);
             }
         } catch (error) {
-            showError(error)
-        } finally {
             setProcess(false);
             setProcessMessage('');
+            showError(error);
         }
     }
 
@@ -144,7 +148,7 @@ export default function Login({ history }) {
                 </div>
                 <footer className="footer-login">
                     <Typography variant="subtitle1" component="h1" className="">
-                        Copyrigt <Copyright/>    
+                        Copyright <Copyright/>    
                     </Typography>
                     <div></div>
                     <Typography variant="subtitle1" component="h1"  className="">

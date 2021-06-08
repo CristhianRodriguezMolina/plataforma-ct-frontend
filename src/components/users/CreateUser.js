@@ -54,10 +54,10 @@ export default function CreateUser({ history }) {
             fetchUser();
         }
         if(action !== "create" && action !== "edit"){
-            history.push('/');
+            history.push('/unauthorized');
         }
         if(type !== "teachers" && type !== "students"){
-            history.push('/');
+            history.push('/unauthorized');
         }
     }, [type])
 
@@ -114,7 +114,7 @@ export default function CreateUser({ history }) {
 
             showError('Error inesperado en el servidor');
             console.log(`Ha ocurrido un error: ${error}`);
-            history.push('/');
+            history.push('/unauthorized');
         }
     }
 
