@@ -73,10 +73,15 @@ export default function MyCourses({ history }) {
                 showError(message);
             }
         } catch (error) {
-            console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
+            if(error.response){
+                console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
+                showError(error.response.data.message);                
+            }else{
+                console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
+                showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
+            }
             setProcess(false);
             setProcessMessage('');
-            showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
         }
     }
 

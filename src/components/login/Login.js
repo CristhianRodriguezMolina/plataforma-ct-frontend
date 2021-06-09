@@ -40,7 +40,6 @@ export default function Login({ history }) {
         localStorage.setItem('navbar-color', '#ffcdd2')
 
         if(localStorage.getItem('token')){
-            console.log('yo')
             return history.push('/course/mycourses')
         }
     });
@@ -64,7 +63,7 @@ export default function Login({ history }) {
 
             const response = await api.post('/api/auth/signin', { id, password });
 
-            const { user_name, user_id, user_role, user_image, token, message } = response.data;
+            const { user_name, user_id, user_role, user_image, token, created_at, message } = response.data;
 
             if(user_id && token){  
                 localStorage.setItem('user_name', user_name);
@@ -72,14 +71,10 @@ export default function Login({ history }) {
                 localStorage.setItem('user_role', user_role);
                 localStorage.setItem('user_image', user_image);
                 localStorage.setItem('token', token);
+                localStorage.setItem('created_at', created_at);
+                console.log(created_at)
 
-                signinHandler({
-                    token,
-                    user_name,
-                    user_id,
-                    user_role,
-                    user_image
-                });
+                signinHandler();
 
                 setProcess(false);
                 setProcessMessage('');

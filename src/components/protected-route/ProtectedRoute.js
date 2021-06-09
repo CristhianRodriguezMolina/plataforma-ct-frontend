@@ -11,7 +11,19 @@ import { Route, Redirect } from 'react-router';
 
 export default function ProtectedRoute({ component, type, ...options }) {
 
-    const { isLoggedIn, isAdmin, isTeacher, isStudent } = useContext(UserContext);
+    const { isLoggedIn, isAdmin, isTeacher, isStudent, logoutHandler } = useContext(UserContext);
+
+    const created_at = localStorage.getItem('created_at');        
+    if(created_at)
+    {
+        const now = Date.now().valueOf() / 1000;
+        if(now > parseInt(created_at)) {
+            logoutHandler();
+            return (
+                <Redirect to="/" />
+            )
+        }
+    }     
 
     // En caso de que no se de el parametro de type, significa que cualquiera de los roles puede entrar a esta ruta
     // Por tanto se setea el type en los tres roles

@@ -9,8 +9,11 @@ import { SIGNIN, LOGOUT } from '../types';
 const UserState = (props) => {
 
     const isLoggedInHandler = () => {
-        const role = localStorage.getItem('token');
-        if(role) return true;
+        const token = localStorage.getItem('token');
+        if(token) return true;
+
+        logoutHandler();
+
         return false;
     }
     
@@ -58,6 +61,7 @@ const UserState = (props) => {
             localStorage.removeItem('user_role');
             localStorage.removeItem('user_image');
             localStorage.removeItem('token');
+            localStorage.removeItem('created_at');
 
             dispatch({ type: LOGOUT, payload: {
                 isLoggedIn: false,

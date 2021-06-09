@@ -31,8 +31,13 @@ export default function UserList({ type }) {
     
     const [users, setUsers] = useState(null)
 
-    useEffect(() => {        
-        fetchUsers();
+    const [actualType, setActualType] = useState(type);
+
+    useEffect(() => {    
+        if(!users || actualType !== type){
+            setActualType(type);
+            fetchUsers();            
+        }    
     }, [location]);
     
     // Funcion para mostrar una alerta de error dado un mensaje
