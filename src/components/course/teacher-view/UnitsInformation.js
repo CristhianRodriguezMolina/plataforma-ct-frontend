@@ -14,6 +14,8 @@ import { AppBar, Box, darken, Tab, Tabs, Typography } from '@material-ui/core'
 import lightGreen from '@material-ui/core/colors/lightGreen'
 import { red } from '@material-ui/core/colors';
 
+import UnitContent from './UnitContent';
+
 /* TEACHER */
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -92,7 +94,7 @@ export default function UnitsInformation() {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                Item One
+              Item One
             </TabPanel>
             <TabPanel value={value} index={1}>
                 Item Two
@@ -112,6 +114,8 @@ export default function UnitsInformation() {
             <TabPanel value={value} index={6}>
                 Item Seven
             </TabPanel>
+
+            <UnitContent/>
         </div>
     )
 }

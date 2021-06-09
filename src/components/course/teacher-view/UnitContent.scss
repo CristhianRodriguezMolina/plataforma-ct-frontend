@@ -1,0 +1,26 @@
+.unit-content-container {
+    background-color: white;
+    width: auto;
+    max-width: 80em;
+    margin: auto;
+
+    .buttons-container {
+
+        display: grid;
+        grid-template-columns: 12em auto;
+
+        .switcher{
+            margin-top: 0.5em;
+            justify-content: right;
+        }
+    }
+}
+
+@media only screen and (min-width: 1366px) {
+    .unit-content-container {
+        width: 63em;
+        margin: auto;
+
+    }
+
+}
