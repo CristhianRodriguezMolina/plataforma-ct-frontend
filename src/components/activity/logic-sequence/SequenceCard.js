@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 
+// CONTEXT
+import UserContext from '../../../context/user/UserContext';
+
 //SCSS
 import './SequenceCard.scss';
 import '../../common/alert-message.scss';
@@ -25,13 +28,14 @@ import Alert from '@material-ui/lab/Alert';
 
 const SequenceCard = SortableElement(({value}) => {
 
+    const { env } = useContext(UserContext);
     const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted, selectedCard } = useContext(LogicSequenceContext);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-    const [process, setProcess] = useState(true); //Variable flag de existencia de un proceso
-    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+    const [info, setInfo] = useState(true); //Variable flag de existencia de un proceso
+    const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
@@ -84,11 +88,10 @@ const SequenceCard = SortableElement(({value}) => {
     return (
         <div onClick={handleClick} className={`sequence-card-container ${selectedCard === value._id?'selected-card':''}`} >
             {value.image? 
-                <img className="sequence-card-img" src={`http://localhost:4000/i/${value.image}`} alt="default"/> :
+                <img className="sequence-card-img" src={`${process.env.REACT_APP_API_URL}/i/${value.image}`} alt="default"/> :
                 <img className="sequence-card-img" src={'/default.png'} alt="default"/>
             }
-            
-            
+                        
             {success?  
                 <Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
                 : ""

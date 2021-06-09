@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+
+// API
+import api from '../../../services/api';
 
 // SCSS
 import './teacherview.scss';
 
-// COMPONENTS
-
+// Props types
 import PropTypes from 'prop-types';
 
+// COMPONENTS
+
+// MAterial UI Make Styles
 import { makeStyles } from '@material-ui/core/styles';
 
-import { AppBar, Box, darken, Tab, Tabs, Typography } from '@material-ui/core'
+// Components for the tab bar
+import { AppBar, Box, Button, Container, Tab, Tabs, Typography } from '@material-ui/core'
 
-import lightGreen from '@material-ui/core/colors/lightGreen'
-import { red } from '@material-ui/core/colors';
-import CourseView from '../CourseView';
+// Icons
+import { ControlPoint } from '@material-ui/icons';
+
+// Colors
+import { red, lightGreen } from '@material-ui/core/colors';
 
 /* TEACHER */
 function TabPanel(props) {
@@ -38,8 +46,8 @@ function TabPanel(props) {
 
   TabPanel.propTypes = {
     children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
   };
     
   function a11yProps(index) {
@@ -58,11 +66,12 @@ function TabPanel(props) {
       padding: 0,
     },
     bar: {
-        backgroundColor: lightGreen[100],
+        backgroundColor: 'white',
+        color: 'white'
     }
   }));
 
-export default function UnitsInformation() {
+export default function UnitsInformation({ course, setCourse }) {
 
     const classes = useStyles();
 
@@ -70,58 +79,92 @@ export default function UnitsInformation() {
     const [value, setValue] = useState(0);
 
     // Auxiliar para llevar al cuenta de los datos
-    const [index, setIndex] = useState(0);
+    const [addingUnit, setAddingUnit] = useState(false);
+
+    // UseEffect para cambiar la pestaña actual a la pestaña que se cree nueva
+    useEffect(() => {
+      console.log(course)
+      if(course.units.length > 0 && addingUnit){
+        setValue(course.units.length-1);
+        setAddingUnit(false);
+      }
+    }, [course])
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
 
+    const addUnit = async () => {
+      try {
+        const response = await api.post(`/api/course/unit/${course._id}`, {
+          name: "Nueva unidad",
+          description: "Añade una descripción"
+        }, {headers: {'x-access-token':localStorage.getItem('token')}});
+
+        const { updatedCourse, message } = response.data;
+
+        if(updatedCourse){
+          setAddingUnit(true);
+          setCourse(updatedCourse);
+        }else{
+          console.log(message)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const deleteUnit = async (unitId) => {
+      try {
+        const response = await api.delete(`/api/course/unit/${course._id}/${unitId}`, {headers: {'x-access-token':localStorage.getItem('token')}});
+
+        const { updatedCourse, message } = response.data;
+
+        if(updatedCourse){
+          setAddingUnit(true);
+          setCourse(updatedCourse);
+        }else{
+          console.log(message)
+        }
+      } catch (error) {
+        
+      }
+    }
+
     return (
         <div className={classes.root}>
             <AppBar className={classes.bar} position="static">
-                <Tabs
-                value={value}
-                onChange={handleChange}
-                variant="scrollable"
-                scrollButtons="on"
-                indicatorColor="primary"
-                textColor="primary"
-                aria-label="scrollable force tabs example"
-                >
-                    <Tab label="Item One" {...a11yProps(0)} />
-                    <Tab label="Item Two" {...a11yProps(1)} />
-                    <Tab label="Item Three" {...a11yProps(2)} />
-                    <Tab label="Item Four" {...a11yProps(3)} />
-                    <Tab label="Item Five" {...a11yProps(4)} />
-                    <Tab label="Item Six" {...a11yProps(5)} />
-                    <Tab label="Item Seven" {...a11yProps(6)} />
-                </Tabs>
+              <Container>
+                <div className="d-flex units-bar">
+                  <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  variant="scrollable"
+                  scrollButtons="on"
+                  indicatorColor="secondary"
+                  textColor="secondary"
+                  aria-label="scrollable force tabs example"                                 
+                  >
+                    {
+                      course.units.map(unit => (
+                        <Tab label={unit.name} {...a11yProps(course.units.indexOf(unit))} />
+                      ))
+                    }
+                    {course.units[0]?<div className="divider bg-white"></div>:""}
+                  </Tabs>
+                  {course.units[0]?<div className="divider"></div>:""}
+                  <Button onClick={() => addUnit()} color="secondary" className="px-3 ml-2"><ControlPoint/> Añadir unidad</Button>
+                </div>
+              </Container>
             </AppBar>
             {
-                
-                
+              course.units.map(unit => (
+                <TabPanel value={value} index={course.units.indexOf(unit)}>
+                  {unit.description} {course.units.indexOf(unit)}
+                  <Button color="secondary" variant="contained" onClick={() => deleteUnit(unit._id)}>Borra unidad</Button>
+                </TabPanel>
+              ))                
             }
-            <TabPanel value={value} index={0}>
-                Item One
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                Item Two
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                Item Three
-            </TabPanel>
-            <TabPanel value={value} index={3}>
-                Item Four
-            </TabPanel>
-            <TabPanel value={value} index={4}>
-                Item Five
-            </TabPanel>
-            <TabPanel value={value} index={5}>
-                Item Six
-            </TabPanel>
-            <TabPanel value={value} index={6}>
-                Item Seven
-            </TabPanel>
         </div>
     )
 }

@@ -9,6 +9,9 @@ import api from './services/api';
 // SCSS
 import './App.scss';
 
+// Dot env
+import dotenv from  'dotenv'
+
 // BOOTSTRAP ----------------------------------------------------------
 
 // scss
