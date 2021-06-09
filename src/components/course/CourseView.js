@@ -112,11 +112,12 @@ export default function CourseView({ history }) {
                                 <CourseInformationTeacher course={course} setCourse={setCourse} />
                                 :
                                 view==="students-info"?
-                                    <StudentsInformation/>
+                                    <StudentsInformation course={course} setCourse={setCourse}/>
                                     :
                                     view==="units-info"?
-                                        <UnitsInformationTeacher/>
-                                        :""
+                                        <UnitsInformationTeacher course={course} setCourse={setCourse}/>
+                                        :
+                                        <Redirect to="/unauthorized"/>
                         /* Vistas de un curso para un estudiante */
                         :
                         type==="view" && course?
@@ -124,11 +125,12 @@ export default function CourseView({ history }) {
                                 <CourseInformationStudent course={course} setCourse={setCourse} />
                                 :
                                 view==="students-info"?
-                                    <ClassmatesInformation/>
+                                    <ClassmatesInformation course={course} setCourse={setCourse}/>
                                     :
                                     view==="units-info"?
-                                        <UnitsInformationStudent/>
-                                        :""
+                                        <UnitsInformationStudent course={course} setCourse={setCourse}/>
+                                        :
+                                        <Redirect to="/unauthorized"/>
                         :
                         ""
                     }

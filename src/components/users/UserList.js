@@ -94,7 +94,7 @@ export default function UserList({ type }) {
         } catch (error) {
             setProcess(false);
             setProcessMessage('');
-            showError('Error inesperado en el servidor');
+            showError(`Un error ha ocurrido obteniendo los usuarios ${error}`);
             console.log(`Ha ocurrido un error: ${error}`);
         }
     }

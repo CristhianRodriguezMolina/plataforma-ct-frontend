@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 
+// CONTEXT
+import UserContext from '../../../context/user/UserContext';
+
 //SCSS
 import './SequenceCard.scss';
 import '../../common/alert-message.scss';
@@ -25,11 +28,14 @@ import Alert from '@material-ui/lab/Alert';
 
 const SequenceCard = SortableElement(({value}) => {
 
+    const { env } = useContext(UserContext);
     const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted, selectedCard } = useContext(LogicSequenceContext);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+    const [info, setInfo] = useState(true); //Variable flag de existencia de un proceso
+    const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 

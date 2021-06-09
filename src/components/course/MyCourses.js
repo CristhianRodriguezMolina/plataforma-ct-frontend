@@ -73,10 +73,10 @@ export default function MyCourses({ history }) {
                 showError(message);
             }
         } catch (error) {
-            console.error(error);
+            console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
             setProcess(false);
             setProcessMessage('');
-            showError(error);
+            showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
         }
     }
 

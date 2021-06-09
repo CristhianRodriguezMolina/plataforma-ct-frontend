@@ -74,7 +74,8 @@ const UserState = (props) => {
         isLoggedIn: isLoggedInHandler(),
         isAdmin: isAdminHandler(),
         isTeacher: isTeacherHandler(),
-        isStudent: isStudentHandler()
+        isStudent: isStudentHandler(),
+        env: process.env
     };
 
     const [state, dispatch] = useReducer(UserReducer, initialState);
@@ -86,6 +87,7 @@ const UserState = (props) => {
     const user = {
         signinHandler,
         logoutHandler,
+        env: state.env,
         isLoggedIn: state.isLoggedIn,
         isAdmin: state.isAdmin,
         isTeacher: state.isTeacher,
