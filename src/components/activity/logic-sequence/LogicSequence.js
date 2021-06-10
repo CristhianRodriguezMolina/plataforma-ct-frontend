@@ -9,7 +9,7 @@ import api from '../../../services/api';
 
 import SequenceCard from './SequenceCard';
 import CardDataPanel from './CardDataPanel';
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import arrayMove from 'array-move';
 
 import { SortableContainer } from 'react-sortable-hoc';
@@ -115,7 +115,12 @@ const LogicSequence = props => {
 				})
 				.catch(err => {
 					setLoading(false);
-					showError("No se han podido cargar las tajetas, por favor intentelo mas tarde!");
+					if (err.response.data.message) {
+						showError(err.response.data.message);
+					}
+					else {
+						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+					}
 				})
 		}
 
@@ -231,57 +236,65 @@ const LogicSequence = props => {
 
 	return (
 		<LogicSequenceContext.Provider value={{ selectedCard, setSelectedCard, logicSequence, setSequenceList, sequenceList, cardDeleted, setCardDeleted }}>
-			<div className="logic-sequence-container">
-				{success ?
-					<Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
-					: ""
-				}
-				{error ?
-					<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
-					: ""
-				}
-				{process ?
-					<Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
-					: ""
-				}
 
-				{logicSequence ?
-					<div className="logic-sequence-info">
-						<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
-						<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
+			{!loading ?
+				logicSequence ?
+					<div className="logic-sequence-container">
+
+						{success ?
+							<Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
+							: ""
+						}
+						{error ?
+							<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
+							: ""
+						}
+						{process ?
+							<Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
+							: ""
+						}
+
+						{logicSequence ?
+							<div className="logic-sequence-info">
+								<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
+								<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
+							</div>
+							:
+							<div>
+								<h1 style={nameInputStyle} >Description of the logic sequence activity</h1>
+								<p style={desInputStyle} >Name of the logic sequence</p>
+							</div>}
+						<hr className="hr-bar"></hr>
+						{loading ?
+							<Alert severity="info">{"Cargando tarjetas, por favor espere"}</Alert>
+							: ""
+						}
+						<div className="panels">
+							<div className="sequence-cards-container">
+								{sequenceList ?
+									<SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} /> : ""}
+								{showInpNewCard ?
+									<input ref={newCardInput} value={cardName} onChange={(e) => setCardName(e.target.value)} className="form-control"
+										placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}>
+									</input> :
+									<div className="create-card-button">
+										<IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
+											<AddCircleIcon style={{ fontSize: 40 }} />
+										</IconButton>
+									</div>
+								}
+							</div>
+							<CardDataPanel>
+							</CardDataPanel>
+
+						</div>
+						<hr className="hr-bar"></hr>
+						<button className="save-button btn btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
+
 					</div>
 					:
-					<div>
-						<h1 style={nameInputStyle} >Description of the logic sequence activity</h1>
-						<p style={desInputStyle} >Name of the logic sequence</p>
-					</div>}
-				<hr className="hr-bar"></hr>
-				{loading ?
-					<Alert severity="info">{"Cargando tarjetas, por favor espere"}</Alert>
-					: ""
-				}
-				<div className="panels">
-					<div className="sequence-cards-container">
-						{sequenceList ?
-							<SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} /> : ""}
-						{showInpNewCard ?
-							<input ref={newCardInput} value={cardName} onChange={(e) => setCardName(e.target.value)} className="form-control"
-								placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}>
-							</input> :
-							<div className="create-card-button">
-								<IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
-									<AddCircleIcon style={{ fontSize: 40 }} />
-								</IconButton>
-							</div>
-						}
-					</div>
-					<CardDataPanel>
-					</CardDataPanel>
-
-				</div>
-				<hr className="hr-bar"></hr>
-				<button className="save-button btn btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
-			</div>
+					<Redirect to="/unauthorized" />
+				: ""}
 		</LogicSequenceContext.Provider>
 	)
 }

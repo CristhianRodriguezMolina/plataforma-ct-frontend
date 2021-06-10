@@ -144,11 +144,9 @@ export default function UnitsInformation({ course, setCourse }) {
 				setAddingUnit(true);
 				setCourse(updatedCourse);
 			} else {
-				console.log(message)
 				showError(message);
 			}
 		} catch (error) {
-			console.error(error)
 			showError(error);
 		} finally {
 			setProcess(false);
@@ -171,11 +169,9 @@ export default function UnitsInformation({ course, setCourse }) {
 				setAddingUnit(true);
 				setCourse(updatedCourse);
 			} else {
-				console.log(message);
 				showError(message);
 			}
 		} catch (error) {
-			console.error(error)
 			showError(error);
 		} finally {
 			setProcess(false);

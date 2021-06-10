@@ -46,7 +46,6 @@ const DynamicInput = props => {
 
 	const onChangeHandler = (evt) => {
 		setValue(evt.target.value);
-		// props.sendValue(evt.target.value);
 	}
 
 	const handleOnblur = async (evt) => {
