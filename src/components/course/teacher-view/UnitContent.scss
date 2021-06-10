@@ -1,26 +1,34 @@
 .unit-content-container {
-    background-color: white;
-    width: auto;
-    max-width: 80em;
-    margin: auto;
+	background-color: white;
+	width: auto;
+	max-width: 80em;
+	margin: auto;
+	padding-top: 1em;
 
-    .buttons-container {
+	.unit-content-info {
+		margin: auto 0.5em;
+	}
 
-        display: grid;
-        grid-template-columns: 12em auto;
+	.buttons-container {
+		margin: 0.4em;
+		display: grid;
+		grid-template-columns: 12em auto;
 
-        .switcher{
-            margin-top: 0.5em;
-            justify-content: right;
-        }
-    }
+		.switcher {
+			margin-top: 0.5em;
+			justify-content: right;
+		}
+	}
+
+	.cards-container {
+		margin: auto 0.4em;
+		padding-bottom: 1em;
+	}
 }
 
 @media only screen and (min-width: 1366px) {
-    .unit-content-container {
-        width: 63em;
-        margin: auto;
-
-    }
-
+	.unit-content-container {
+		width: 60em;
+		margin: auto;
+	}
 }

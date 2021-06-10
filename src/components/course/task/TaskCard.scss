@@ -1,131 +1,123 @@
 .task-card-container {
-    position: relative;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .4);
+	position: relative;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 
-    margin: 0.5em;
-    
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 0.5em;
+	margin: 0.5em 0.5em 1em;
 
-    .activities-container {
+	display: flex;
+	flex-direction: column;
 
-        border-color: rgb(214, 214, 214);
-        border-width: 1px;
-        border-style: solid;
-        padding: 0.5em 0.5em 0.5em 0.2em;
-        h2 {
-            margin-left: 0.3em;
-            font-size: 0.9em;
-            font-weight: 700;
-        }
-        
-        .activities-visualization {
-            
-            // display: grid;
-            // grid-template-columns: repeat(7, auto);
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            .activity-item {
-                margin-bottom: 0.5em;
-                width: 1em;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                margin-left: 0.3em;
-                margin-right: 0.3em;
-                h4 {
-                    text-align: center;
-                    font-size: 0.9em;
-                }
-                
-                input[type="radio"]:disabled {
-                    display: none;
-                }
-            }
-        }
-    }
+	.activities-container {
+		border-color: rgb(214, 214, 214);
+		border-width: 1px;
+		border-style: solid;
+		padding: 0.5em 0.5em 0.5em 0.2em;
+		h2 {
+			margin-left: 0.3em;
+			font-size: 0.9em;
+			font-weight: 700;
+		}
 
-    .progress-visualization {
+		.activities-visualization {
+			// display: grid;
+			// grid-template-columns: repeat(7, auto);
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			.activity-item {
+				margin-bottom: 0.5em;
+				width: 1em;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				margin-left: 0.3em;
+				margin-right: 0.3em;
+				h4 {
+					text-align: center;
+					font-size: 0.9em;
+				}
 
-        padding-top: 0.5em;
-        padding-left: 0.5em;
-        border-color: rgb(214, 214, 214);
-        border-width: 0 0 1px 1px;
-        border-style: solid;
-        h3 {
-            font-size: 0.9em;
-        }
-    }
-    
-    .edit-button {
-        position: absolute;
-        width: 3em;
-        height: 2.5em;
-        bottom: 0.5em;
-        right: 4em;
-        border-radius: 4px;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-    }
-    
-    .delete-button {
-        position: absolute;
-        bottom: 0.5em;
-        right: 0.5em;
-        width: 3em;
-        height: 2.5em;
-        border-radius: 4px;
-    }
+				input[type="radio"]:disabled {
+					display: none;
+				}
+			}
+		}
+	}
 
+	.progress-visualization {
+		padding-top: 0.5em;
+		padding-left: 0.5em;
+		border-color: rgb(214, 214, 214);
+		border-width: 0 0 1px 1px;
+		border-style: solid;
+		h3 {
+			font-size: 0.9em;
+		}
+	}
+
+	.edit-button {
+		position: absolute;
+		width: 3em;
+		height: 2.5em;
+		bottom: 0.5em;
+		right: 4em;
+		border-radius: 4px;
+		justify-content: center;
+		align-items: center;
+		display: flex;
+	}
+
+	.delete-button {
+		position: absolute;
+		bottom: 0.5em;
+		right: 0.5em;
+		width: 3em;
+		height: 2.5em;
+		border-radius: 4px;
+	}
 }
 
 @media only screen and (min-width: 767px) {
-    .task-card-container {
-        display: grid;
-        grid-template-columns: auto 9em;
-        width: auto;
-        
-        .activities-container {
-            // border-radius: 3px 0 0 3px;
-            padding-bottom: 3em;
-        }
+	.task-card-container {
+		display: grid;
+		grid-template-columns: auto 9em;
+		width: auto;
 
-        .progress-visualization {
-            justify-content: center;
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-            border-width: 1px 1px 1px 0;
+		.activities-container {
+			// border-radius: 3px 0 0 3px;
+			padding-bottom: 3em;
+		}
 
-            h3 + h3 {
-                margin-top: 0.5em;
-            }
+		.progress-visualization {
+			justify-content: center;
+			display: flex;
+			flex-direction: column;
+			text-align: left;
+			border-width: 1px 1px 1px 0;
 
-            
-        }
+			h3 + h3 {
+				margin-top: 0.5em;
+			}
+		}
 
-        .edit-button {
-            position: absolute;
-            width: 3em;
-            bottom: 0.5em;
-            right: 13em;
-            border-radius: 4px;
-            justify-content: center;
-            align-items: center;
-            display: flex;
-        }
-        
-        .delete-button {
-            position: absolute;
-            bottom: 0.5em;
-            right: 9.5em;
-            width: 3em;
-            border-radius: 4px;
-        }
-    }
+		.edit-button {
+			position: absolute;
+			width: 3em;
+			bottom: 0.5em;
+			right: 13em;
+			border-radius: 4px;
+			justify-content: center;
+			align-items: center;
+			display: flex;
+		}
 
+		.delete-button {
+			position: absolute;
+			bottom: 0.5em;
+			right: 9.5em;
+			width: 3em;
+			border-radius: 4px;
+		}
+	}
 }
