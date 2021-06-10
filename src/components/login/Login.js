@@ -86,9 +86,13 @@ export default function Login({ history }) {
                 showError(message);
             }
         } catch (error) {
+            if(error.response){
+                showError(error.response.data.message);    
+            }else {
+                showError('Error al intentar hacer login');
+            }
             setProcess(false);
             setProcessMessage('');
-            showError(error);
         }
     }
 
