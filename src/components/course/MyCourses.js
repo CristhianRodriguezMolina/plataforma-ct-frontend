@@ -154,11 +154,11 @@ export default function MyCourses({ history }) {
 				color="#B6E768"
 			/>
 			{success ?
-				<Alert severity="success">{successMessage}</Alert>
+				<Alert className="alert-message" severity="success">{successMessage}</Alert>
 				: ""
 			}
 			{error ?
-				<Alert severity="error">{errorMessage}</Alert>
+				<Alert className="alert-message" severity="error">{errorMessage}</Alert>
 				: ""
 			}
 			{process ?

@@ -58,7 +58,7 @@ export default function UserManage({ history }) {
                         <button type="submit" className="btn-search btn btn-primary">Buscar</button>
                     </div>
                 </form>
-                <div className="">
+                <div className="" style={{marginBottom: "100px"}}>
                     <UserList type={type} />
                 </div>
                 <button onClick={redirectCreate} className={type==="teachers"?"btn btn-warning btn-create-user":"btn btn-primary btn-create-user"}>

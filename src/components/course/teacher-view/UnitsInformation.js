@@ -42,7 +42,7 @@ function TabPanel(props) {
 		>
 			{value === index && (
 				<Box p={3}>
-					<Typography>{children}</Typography>
+					<Typography component="div">{children}</Typography>
 				</Box>
 			)}
 		</div>
@@ -147,7 +147,13 @@ export default function UnitsInformation({ course, setCourse }) {
 				showError(message);
 			}
 		} catch (error) {
-			showError(error);
+			if(error.response){
+                console.log(`Un error ha ocurrido creando una unidad: ${error}`);
+                showError(error.response.data.message);                
+            }else{
+                console.log(`Un error ha ocurrido creando una unidad: ${error}`);
+                showError(`Un error ha ocurrido creando una unidad: ${error}`);
+            }
 		} finally {
 			setProcess(false);
 			setProcessMessage('')
@@ -172,7 +178,13 @@ export default function UnitsInformation({ course, setCourse }) {
 				showError(message);
 			}
 		} catch (error) {
-			showError(error);
+			if(error.response){
+                console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
+                showError(error.response.data.message);                
+            }else{
+                console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
+                showError(`Un error ha ocurrido borrando una unidad: ${error}`);
+            }
 		} finally {
 			setProcess(false);
 			setProcessMessage('')
