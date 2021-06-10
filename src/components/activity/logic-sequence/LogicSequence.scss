@@ -9,9 +9,14 @@
         border-radius: 5px;
 
         .create-card-button {
+            width: 100%;
+            justify-content: center;
+            align-items: center;
             display: flex;
         }
+        
     }
+   
 
     .save-button {
         margin: 1em;
@@ -42,6 +47,8 @@
             margin: 0;
             padding: 0;
             width: auto;
+
+            
            
         }
 
@@ -49,6 +56,13 @@
             visibility: hidden;
         }
 
+        
+        .create-card-button {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
     }
     
 }

@@ -91,7 +91,7 @@ const SequenceCard = SortableElement(({value}) => {
                 <img className="sequence-card-img" src={`${process.env.REACT_APP_API_URL}/i/${value.image}`} alt="default"/> :
                 <img className="sequence-card-img" src={'/default.png'} alt="default"/>
             }
-                        
+            
             {success?  
                 <Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
                 : ""
@@ -104,7 +104,6 @@ const SequenceCard = SortableElement(({value}) => {
                 <h1>{value.name}</h1> 
             </div>
             <div className="manage-buttons-container">
-                <div style={{width: "15%"}}></div>   
                 <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCard}>
                         <DeleteIcon />
                 </IconButton>
