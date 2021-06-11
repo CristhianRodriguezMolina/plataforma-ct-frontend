@@ -25,7 +25,7 @@ import Alert from "@material-ui/lab/Alert";
 
 export default function StudentsPopup(props) {
 	// Props for the modal
-	const { course, isOpen, toggle } = props;
+	const { course, isOpen, toggle, setIsAddingStudents } = props;
 
 	// MENSAJES DEL MODAL
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -87,6 +87,8 @@ export default function StudentsPopup(props) {
 
 			const { users, message } = response.data;
 
+			setProcess(false);
+			setProcessMessage("");
 			if (users) {
 				// Asignacion de los cursos de la base de datos
 				setStudents(users);
@@ -100,6 +102,8 @@ export default function StudentsPopup(props) {
 				showError(message);
 			}
 		} catch (error) {
+			setProcess(false);
+			setProcessMessage("");
 			if (error.response) {
 				console.log(`Un error ha ocurrido obteniendo los estudiantes ${error}`);
 				showError(error.response.data.message);
@@ -108,13 +112,12 @@ export default function StudentsPopup(props) {
 				showError(`Un error ha ocurrido obteniendo los estudiantes ${error}`);
 			}
 		}
-		setProcess(false);
-		setProcessMessage("");
 	};
 
 	// Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
 	const addStudents = async () => {
 		try {
+			setIsAddingStudents(true);
 			setProcess(true);
 			setProcessMessage("Añadiendo estudiantes...");
 
@@ -126,6 +129,8 @@ export default function StudentsPopup(props) {
 
 			const { acceptedStudents, deniedStudents, message } = response.data;
 
+			setProcess(false);
+			setProcessMessage("");
 			if (acceptedStudents) {
 				showSuccess(`${acceptedStudents.length} estudiantes agregados al curso`)
 				showError(`${deniedStudents.length} estudiantes denegados al curso`)
@@ -134,6 +139,8 @@ export default function StudentsPopup(props) {
 				showError(message)
 			}
 		} catch (error) {
+			setProcess(false);
+			setProcessMessage("");
 			if (error.response) {
 				console.log(`Un error ha ocurrido en el servidor: ${error}`);
 				showError(error.response.message);
@@ -142,14 +149,15 @@ export default function StudentsPopup(props) {
 				showError(`Un error ha ocurrido en el servidor: ${error}`);
 			}
 		}
-		setProcess(false);
-		setProcessMessage("");
+		setIsAddingStudents(false)
+		toggle();
 	};
 
 	return (
 		<div>
 			{success ? <Alert className="alert-message mb-5" severity="success">{successMessage}</Alert> : ""}
 			{error ? <Alert className="alert-message" severity="error">{errorMessage}</Alert> : ""}
+			{process ? <Alert className="alert-message" severity="info">{processMessage}</Alert> : ""}
 			<Modal
 				isOpen={isOpen}
 				toggle={toggle}
@@ -160,8 +168,6 @@ export default function StudentsPopup(props) {
 			>
 				<ModalHeader toggle={toggle}>Agregue alumnos a su curso</ModalHeader>
 				<ModalBody className="students-modal">
-
-					{process ? <Alert severity="info">{processMessage}</Alert> : ""}
 					<form className="search-form d-flex justify-content-between mt-4 ml-4 mb-3">
 						<div className="text-field form-group mr-3">
 							<input className="form-control text-center" />
