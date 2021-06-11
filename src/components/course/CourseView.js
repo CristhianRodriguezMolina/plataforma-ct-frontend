@@ -7,6 +7,9 @@ import UserContext from '../../context/user/UserContext';
 // API
 import api from '../../services/api';
 
+// SCSS
+import './course.scss';
+
 // COMPONENTES
 
 // Tarjeta de titulo

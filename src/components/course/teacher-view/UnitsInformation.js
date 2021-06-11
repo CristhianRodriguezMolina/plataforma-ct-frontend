@@ -41,7 +41,7 @@ function TabPanel(props) {
 			{...other}
 		>
 			{value === index && (
-				<Box p={3}>
+				<Box p={3} component="div">
 					<Typography component="div">{children}</Typography>
 				</Box>
 			)}
@@ -72,7 +72,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	bar: {
 		backgroundColor: 'white',
-		color: 'white'
+		color: 'white',
+		width: "100%"
 	}
 }));
 
@@ -219,30 +220,29 @@ export default function UnitsInformation({ course, setCourse }) {
 	return (
 		<div className={classes.root}>
 			<AppBar className={classes.bar} position="static">
-				<Container>
-					<div className="d-flex units-bar">
-						<Tabs
-							value={value}
-							onChange={handleChange}
-							variant="scrollable"
-							scrollButtons="on"
-							indicatorColor="secondary"
-							textColor="secondary"
-							aria-label="scrollable force tabs example"
-						>
-							{/* TABS FOR EACH UNIT IN THE COURSE */}
-							{
-								course.units.map((unit, index) => (
-									<Tab key={index} label={`Unidad ${index + 1}`} {...a11yProps(index)} />
-								))
-							}
-							{course.units[0] ? <div className="divider bg-white"></div> : ""}
-						</Tabs>
-						{course.units[0] ? <div className="divider"></div> : ""}.
-                  {/* BUTTON TO ADD NEW UNITS */}
-						<Button onClick={() => addUnit()} color="secondary" className="px-3 ml-2"><ControlPoint /> Añadir unidad</Button>
-					</div>
-				</Container>
+				<div className="d-flex">
+					<Tabs
+						value={value}
+						onChange={handleChange}
+						variant="scrollable"
+						scrollButtons="on"
+						indicatorColor="secondary"
+						textColor="secondary"
+						aria-label="scrollable force tabs example"
+						className="units-bar"
+					>
+						{/* TABS FOR EACH UNIT IN THE COURSE */}
+						{
+							course.units.map((unit, index) => (
+								<Tab key={index} label={`Unidad ${index + 1}`} {...a11yProps(index)} />
+							))
+						}
+						{course.units[0] ? <div className="divider bg-white"></div> : ""}
+					</Tabs>
+					{course.units[0] ? <div className="divider"></div> : ""}.
+					{/* BUTTON TO ADD NEW UNITS */}
+					<Button onClick={() => addUnit()} color="secondary" className="px-3 ml-2"><ControlPoint /> Añadir unidad</Button>
+				</div>
 				{success ?
 					<Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
 					: ""

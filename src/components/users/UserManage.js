@@ -20,6 +20,9 @@ export default function UserManage({ history }) {
     // Datos que vienen como parametros en la ruta para este componente
     const { type } = useParams();
 
+    // Actual location
+    let location = useLocation();
+
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
         if(type === "teachers"){

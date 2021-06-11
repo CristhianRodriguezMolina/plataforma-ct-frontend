@@ -15,11 +15,11 @@ export default function StudentModalCard(props) {
     useEffect(() => {
         if(checked){
             setStudentsToAdd(prevValues => {
-                return [...prevValues, student]
+                return [...prevValues, {_id: student._id}]
             });
         }else{
             setStudentsToAdd(prevValues => {
-                return prevValues.filter(value => value !== student)
+                return prevValues.filter(value => value._id !== student._id)
             });
         }
     }, [checked]);
@@ -32,7 +32,7 @@ export default function StudentModalCard(props) {
     return (
         <div className="user-modal-card">
             <div className="modal-card">
-                <Avatar className="mr-2" src="https://i.pinimg.com/originals/32/a3/69/32a3690fe66a73adcb98922874eb8b8a.jpg" />
+                <Avatar className="mr-2" src="https://picsum.photos/200/300" />
                 <div className="mr-auto">
                     <Typography component="h1">
                         {student.first_name} {student.last_name}

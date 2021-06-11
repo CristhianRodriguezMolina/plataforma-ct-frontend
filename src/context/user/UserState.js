@@ -12,7 +12,9 @@ const UserState = (props) => {
         const token = localStorage.getItem('token');
         if(token) return true;
 
-        logoutHandler();
+        if(state){
+            logoutHandler();
+        }
 
         return false;
     }

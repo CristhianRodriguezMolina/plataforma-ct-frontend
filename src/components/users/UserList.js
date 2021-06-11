@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 
 // API
 import api from '../../services/api';
@@ -35,6 +35,8 @@ export default function UserList({ type }) {
 
     useEffect(() => {    
         if(!users || actualType !== type){
+			setSuccess(false);
+			setUsers(null);
             setActualType(type);
             fetchUsers();            
         }    
@@ -76,9 +78,6 @@ export default function UserList({ type }) {
 			const { users, message } = response.data;
 
 			if (users) {
-				setProcess(false);
-				setProcessMessage('');
-
 				// Asignacion de los cursos de la base de datos
 				setUsers(users);
 
@@ -95,11 +94,16 @@ export default function UserList({ type }) {
 				showError('Error inesperado en el servidor');
 			}
 		} catch (error) {
-			setProcess(false);
-			setProcessMessage('');
-			showError(`Un error ha ocurrido obteniendo los usuarios ${error}`);
-			console.log(`Ha ocurrido un error: ${error}`);
+			if(error.response){
+				showError(error.response.message);
+				console.log(`Ha ocurrido un error: ${error}`);
+			}else{
+				showError(`Un error ha ocurrido obteniendo los usuarios ${error}`);
+				console.log(`Ha ocurrido un error: ${error}`);
+			}
 		}
+		setProcess(false);
+		setProcessMessage('');
 	}
 
 	return (
@@ -118,18 +122,16 @@ export default function UserList({ type }) {
 			}
 			<div>
 				{
-					users && users.length > 0 ?
-						(
+					users && users.length > 0 ?						
 							users.map(user => (
 								<UserCard key={user._id} user={user} setUsers={setUsers} type={type} />
-							))
-						)
+							))					
 						:
-						(
+						<>
 							<div>
 								<h3 className="there-is-no-users">Aún no hay {type === "teachers" ? "profesores" : "alumnos"}</h3>
 							</div>
-						)
+						</>	
 				}
 			</div>
 		</div>

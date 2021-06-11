@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // CONTEXT
 import UserContext from '../../context/user/UserContext';
@@ -24,6 +25,9 @@ export default function MyCourses({ history }) {
 
 	// Datos del contexto de usuario
 	const { isAdmin, isTeacher, isStudent } = useContext(UserContext);
+
+	// Actual location
+    let location = useLocation();
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error

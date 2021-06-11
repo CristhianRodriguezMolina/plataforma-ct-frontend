@@ -1,16 +1,7 @@
-import React, { useContext } from 'react';
-
-// CONTEXT 
-import UserContext from './context/user/UserContext';
-
-// API
-import api from './services/api';
+import React, { useContext, Suspense  } from 'react';
 
 // SCSS
 import './App.scss';
-
-// Dot env
-import dotenv from  'dotenv'
 
 // BOOTSTRAP ----------------------------------------------------------
 
@@ -27,47 +18,7 @@ import 'popper.js/dist/popper';
 // User State
 import UserState from './context/user/UserState';
 
-// COMPONENTS ---------------------------------------------------------
-
-// Router
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-
-import { ThemeProvider } from '@material-ui/core/styles'
-
-// Navigation
-import NavBar from './components/navigation/NavBar';
-
-// My courses
-import MyCourses from './components/course/MyCourses';
-
-// Course view
-import CourseView from './components/course/CourseView';
-
-// My activities
-import MyActivities from './components/activity/MyActivities';
-
-// My activities
-import CreateActivity from './components/activity/CreateActivity';
-
-// Logic sequence
-import LogicSequence from './components/activity/logic-sequence/LogicSequence';
-
-// Users manage
-import UserManage from './components/users/UserManage';
-
-// Create user
-import CreateUser from './components/users/CreateUser';
-
-// Login
-import Login from './components/login/Login';
-
-// Error 404
-import Error404 from './components/error/Error404';
-
-// Scroll
-import { Scrollbars } from 'react-custom-scrollbars'
-
-// ARCHIVES
+// ARCHIVES -----------------------------------------------------------
 
 // Theme config
 import theme from './themeConfig';
@@ -75,14 +26,60 @@ import theme from './themeConfig';
 // Ruta protegida
 import ProtectedRoute from './components/protected-route/ProtectedRoute';
 
+// COMPONENTS ---------------------------------------------------------
+
+// Router
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+
+import { ThemeProvider } from '@material-ui/core/styles'
+
+// Scroll
+import { Scrollbars } from 'react-custom-scrollbars'
+
+// Navigation
+import NavBar from './components/navigation/NavBar';
+
+// My courses
+const MyCourses = React.lazy(() => import('./components/course/MyCourses'));
+
+// Course view
+const CourseView = React.lazy(() => import('./components/course/CourseView'));
+
+// My activities
+const MyActivities = React.lazy(() => import('./components/activity/MyActivities'));
+
+// My activities
+const CreateActivity = React.lazy(() => import('./components/activity/CreateActivity'));
+
+// Logic sequence
+const LogicSequence = React.lazy(() => import('./components/activity/logic-sequence/LogicSequence'));
+
+// Users manage
+const UserManage = React.lazy(() => import('./components/users/UserManage'));
+
+// Create user
+const CreateUser = React.lazy(() => import('./components/users/CreateUser'));
+
+// Login
+const Login = React.lazy(() => import('./components/login/Login'));
+
+// Error 404
+const Error404 = React.lazy(() => import('./components/error/Error404'));
+
 function App() {
 
   return (
     <UserState>
-      <ThemeProvider theme={theme}>
         <Router>
           <div className="App">
             <NavBar/>
+            <Suspense fallback={
+              <div className="spinner-loading">
+                <div className="spinner-border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }>
               <div className="app-container">
                 <Switch>    
                   {/* USER */}          
@@ -108,10 +105,10 @@ function App() {
                   {/* ERRORS */}
                   <Route component={Error404} />
                 </Switch>
-            </div>
+              </div>
+            </Suspense>
           </div>
         </Router>
-      </ThemeProvider>
     </UserState>
   );
 }

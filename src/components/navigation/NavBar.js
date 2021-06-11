@@ -53,13 +53,16 @@ function NavBar() {
 	// Objeto de la ruta actual
 	const router = useLocation();
 	const [currentLocation, setCurrentLocation] = useState(router.pathname);
+	const [currentColor, setCurrentColor] = useState(localStorage.getItem('navbar-color'))
 
 	// UseEffect para cambiar el color de la navbar
 	useEffect(() => {
-		setColor(localStorage.getItem('navbar-color'))
+		console.log(localStorage.getItem('navbar-color'));
+		setColor(localStorage.getItem('navbar-color'));
 
 		const changeColor = () => {
 			if (currentLocation !== router.pathname) {
+				setCurrentColor(localStorage.getItem('navbar-color'));
 				setCurrentLocation(router.pathname);
 				return true;
 			} else {
@@ -67,7 +70,11 @@ function NavBar() {
 			}
 		}
 		changeColor();
-	});
+	}, [currentColor]);
+
+	useEffect(() => {
+		setCurrentColor(localStorage.getItem('navbar-color'));
+	})
 
 	return (
 		<>
