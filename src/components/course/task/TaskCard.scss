@@ -49,7 +49,7 @@
 		padding-top: 0.5em;
 		padding-left: 0.5em;
 		border-color: rgb(214, 214, 214);
-		border-width: 0 0 1px 1px;
+		border-width: 0 1px 1px 1px;
 		border-style: solid;
 		h3 {
 			font-size: 0.9em;
@@ -75,49 +75,5 @@
 		width: 3em;
 		height: 2.5em;
 		border-radius: 4px;
-	}
-}
-
-@media only screen and (min-width: 767px) {
-	.task-card-container {
-		display: grid;
-		grid-template-columns: auto 9em;
-		width: auto;
-
-		.activities-container {
-			// border-radius: 3px 0 0 3px;
-			padding-bottom: 3em;
-		}
-
-		.progress-visualization {
-			justify-content: center;
-			display: flex;
-			flex-direction: column;
-			text-align: left;
-			border-width: 1px 1px 1px 0;
-
-			h3 + h3 {
-				margin-top: 0.5em;
-			}
-		}
-
-		.edit-button {
-			position: absolute;
-			width: 3em;
-			bottom: 0.5em;
-			right: 13em;
-			border-radius: 4px;
-			justify-content: center;
-			align-items: center;
-			display: flex;
-		}
-
-		.delete-button {
-			position: absolute;
-			bottom: 0.5em;
-			right: 9.5em;
-			width: 3em;
-			border-radius: 4px;
-		}
 	}
 }
