@@ -21,7 +21,7 @@ export default function StudentModalCard(props) {
             setStudentsToAdd(prevValues => {
                 return prevValues.filter(value => value._id !== student._id)
             });
-        }
+        } 
     }, [checked]);
 
     // Funcion para manejar el cambio del checkbox
