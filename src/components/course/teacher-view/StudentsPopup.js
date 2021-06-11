@@ -114,16 +114,25 @@ export default function StudentsPopup(props) {
 
 	// Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
 	const addStudents = async () => {
-		console.log(studentsToAdd);
 		try {
 			setProcess(true);
 			setProcessMessage("Añadiendo estudiantes...");
 
-			const response = await api.get("/api/person/add-students/", {
+			const response = await api.post(`/api/course/add-students/${course._id}`, {
+				students: studentsToAdd
+			}, {
 				headers: { "x-access-token": localStorage.getItem("token") },
 			});
 
-			const { users, message } = response.data;
+			const { acceptedStudents, deniedStudents, message } = response.data;
+
+			if (acceptedStudents) {
+				showSuccess(`${acceptedStudents.length} estudiantes agregados al curso`)
+				showError(`${deniedStudents.length} estudiantes denegados al curso`)
+			} else {
+				showError(`${deniedStudents.length} estudiantes denegados al curso`)
+				showError(message)
+			}
 		} catch (error) {
 			if (error.response) {
 				console.log(`Un error ha ocurrido en el servidor: ${error}`);
@@ -133,17 +142,14 @@ export default function StudentsPopup(props) {
 				showError(`Un error ha ocurrido en el servidor: ${error}`);
 			}
 		}
+		setProcess(false);
+		setProcessMessage("");
 	};
 
 	return (
 		<div>
-			{error ? (
-				<Alert className="alert-message" severity="error">
-					{errorMessage}
-				</Alert>
-			) : (
-				""
-			)}
+			{success ? <Alert className="alert-message mb-5" severity="success">{successMessage}</Alert> : ""}
+			{error ? <Alert className="alert-message" severity="error">{errorMessage}</Alert> : ""}
 			<Modal
 				isOpen={isOpen}
 				toggle={toggle}
@@ -154,7 +160,7 @@ export default function StudentsPopup(props) {
 			>
 				<ModalHeader toggle={toggle}>Agregue alumnos a su curso</ModalHeader>
 				<ModalBody className="students-modal">
-					{success ? <Alert severity="success">{successMessage}</Alert> : ""}
+
 					{process ? <Alert severity="info">{processMessage}</Alert> : ""}
 					<form className="search-form d-flex justify-content-between mt-4 ml-4 mb-3">
 						<div className="text-field form-group mr-3">
