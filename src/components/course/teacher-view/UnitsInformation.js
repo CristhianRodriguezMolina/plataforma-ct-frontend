@@ -66,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
 		width: '100%',
-		backgroundColor: red[100],
 		margin: 0,
 		padding: 0,
 	},
@@ -220,29 +219,31 @@ export default function UnitsInformation({ course, setCourse }) {
 	return (
 		<div className={classes.root}>
 			<AppBar className={classes.bar} position="static">
-				<div className="d-flex">
-					<Tabs
-						value={value}
-						onChange={handleChange}
-						variant="scrollable"
-						scrollButtons="on"
-						indicatorColor="secondary"
-						textColor="secondary"
-						aria-label="scrollable force tabs example"
-						className="units-bar"
-					>
-						{/* TABS FOR EACH UNIT IN THE COURSE */}
-						{
-							course.units.map((unit, index) => (
-								<Tab key={index} label={`Unidad ${index + 1}`} {...a11yProps(index)} />
-							))
-						}
-						{course.units[0] ? <div className="divider bg-white"></div> : ""}
-					</Tabs>
-					{course.units[0] ? <div className="divider"></div> : ""}.
-					{/* BUTTON TO ADD NEW UNITS */}
-					<Button onClick={() => addUnit()} color="secondary" className="px-3 ml-2"><ControlPoint /> Añadir unidad</Button>
-				</div>
+				<Typography component="div">
+					<div className="d-flex">
+						<Tabs
+							value={value}
+							onChange={handleChange}
+							variant="scrollable"
+							scrollButtons="on"
+							indicatorColor="secondary"
+							textColor="secondary"
+							aria-label="scrollable force tabs example"
+							className="units-bar"
+						>						
+							{/* TABS FOR EACH UNIT IN THE COURSE */}
+							{
+								course.units.map((unit, index) => (
+									<Tab key={index} label={`Unidad ${index + 1}`} {...a11yProps(index)} />
+								))
+							}
+							{course.units[0] ? <div className="divider bg-white"></div> : ""}
+						</Tabs>
+						{course.units[0] ? <div className="divider"></div> : ""}.
+						{/* BUTTON TO ADD NEW UNITS */}
+						<Button onClick={() => addUnit()} color="secondary" className="px-3 ml-2"><ControlPoint /> Añadir unidad</Button>
+					</div>
+				</Typography>
 				{success ?
 					<Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
 					: ""
