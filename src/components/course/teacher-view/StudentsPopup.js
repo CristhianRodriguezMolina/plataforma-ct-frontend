@@ -121,13 +121,14 @@ export default function StudentsPopup(props) {
 			setProcess(true);
 			setProcessMessage("Añadiendo estudiantes...");
 
-			const response = await api.post(`/api/course/add-students/${course._id}`, {
+			const response = await api.post(`/api/course/students/${course._id}`, {
 				students: studentsToAdd
 			}, {
 				headers: { "x-access-token": localStorage.getItem("token") },
 			});
 
 			const { acceptedStudents, deniedStudents, message } = response.data;
+
 
 			setProcess(false);
 			setProcessMessage("");
