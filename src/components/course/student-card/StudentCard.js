@@ -24,6 +24,8 @@ export default function StudentCard(props) {
 	// Datos que llegan por parametros del componente
 	const { student, type } = props;
 
+
+
 	return (
 		<div className="user-modal-card">
 			<div className="modal-card">
@@ -37,7 +39,7 @@ export default function StudentCard(props) {
 						<p className="text-muted d-inline">Edad: {util.getAge(student.birth_date)}</p>
 					</Typography>
 				</div>
-				<Typography variant="title">
+				<Typography variant="subtitle1">
 					<div className="btn-group-sm btn-group-vertical">
 						<Tooltip title="Borrar" aria-label="delete">
 							<button className="btn btn-danger"><Delete /></button>

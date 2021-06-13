@@ -9,6 +9,9 @@ import TaskCard from '../task/TaskCard';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+// Button
+import Button from '@material-ui/core/Button';
+
 import PropTypes from 'prop-types';
 
 const UnitContent = props => {
@@ -67,6 +70,10 @@ const UnitContent = props => {
 		});
 	};
 
+	const handleDeleteChanges = () => {
+		props.onDeleteChanges(props.unitValue._id);
+	}
+
 	return (
 		<div className="unit-content-container">
 			<div className="unit-content-info">
@@ -92,6 +99,8 @@ const UnitContent = props => {
 				<TaskCard />
 				<TaskCard />
 			</div>
+			{/* BUTTON TO DELETE A SPECIFIC UNIT */}
+			<Button className="ml-3" color="secondary" variant="contained" onClick={handleDeleteChanges}>Borrar unidad</Button>
 		</div>
 	)
 };

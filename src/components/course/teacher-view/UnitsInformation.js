@@ -147,13 +147,13 @@ export default function UnitsInformation({ course, setCourse }) {
 				showError(message);
 			}
 		} catch (error) {
-			if(error.response){
-                console.log(`Un error ha ocurrido creando una unidad: ${error}`);
-                showError(error.response.data.message);                
-            }else{
-                console.log(`Un error ha ocurrido creando una unidad: ${error}`);
-                showError(`Un error ha ocurrido creando una unidad: ${error}`);
-            }
+			if (error.response) {
+				console.log(`Un error ha ocurrido creando una unidad: ${error}`);
+				showError(error.response.data.message);
+			} else {
+				console.log(`Un error ha ocurrido creando una unidad: ${error}`);
+				showError(`Un error ha ocurrido creando una unidad: ${error}`);
+			}
 		} finally {
 			setProcess(false);
 			setProcessMessage('')
@@ -178,13 +178,13 @@ export default function UnitsInformation({ course, setCourse }) {
 				showError(message);
 			}
 		} catch (error) {
-			if(error.response){
-                console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
-                showError(error.response.data.message);                
-            }else{
-                console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
-                showError(`Un error ha ocurrido borrando una unidad: ${error}`);
-            }
+			if (error.response) {
+				console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
+				showError(error.response.data.message);
+			} else {
+				console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
+				showError(`Un error ha ocurrido borrando una unidad: ${error}`);
+			}
 		} finally {
 			setProcess(false);
 			setProcessMessage('')
@@ -230,7 +230,7 @@ export default function UnitsInformation({ course, setCourse }) {
 							textColor="secondary"
 							aria-label="scrollable force tabs example"
 							className="units-bar"
-						>						
+						>
 							{/* TABS FOR EACH UNIT IN THE COURSE */}
 							{
 								course.units.map((unit, index) => (
@@ -261,9 +261,7 @@ export default function UnitsInformation({ course, setCourse }) {
 			{
 				course.units.map((unit, index) => (
 					<TabPanel value={value} key={index} index={index}>
-						<UnitContent unitValue={unit} onUpdateChanges={handleUpdateUnit} />
-						{/* BUTTON TO DELETE A SPECIFIC UNIT */}
-						<Button color="secondary" variant="contained" onClick={() => deleteUnit(unit._id)}>Borrar unidad</Button>
+						<UnitContent unitValue={unit} onUpdateChanges={handleUpdateUnit} onDeleteChanges={deleteUnit} />
 					</TabPanel>
 				))
 			}

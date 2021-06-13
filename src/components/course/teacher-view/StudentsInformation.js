@@ -84,13 +84,11 @@ export default function StudentsInformation(props) {
             if (students) {
                 setStudents(students);
                 showSuccess(message);
-            } else {
-                showError(message);
             }
         } catch (error) {
-            if (error.response) {
+            if (error.response.data) {
                 console.log(`Error obteniendo los estudiantes del curso: ${error}`);
-                showError(error.response.message);
+                showError(error.response.data.message);
             } else {
                 console.log(`Error obteniendo los estudiantes del curso: ${error}`);
                 showError(`Error obteniendo los estudiantes del curso`);
@@ -119,7 +117,7 @@ export default function StudentsInformation(props) {
                 </form>
                 {students ?
                     students.map(student => (
-                        <StudentCard student={student} />
+                        <StudentCard key={student._id} student={student} />
                     ))
                     :
                     <>
@@ -130,7 +128,7 @@ export default function StudentsInformation(props) {
                 }
             </div>
 
-            <Button className="btn-modal-add-student" variant="contained" color="secondary" onClick={toggle}>Modal</Button>
+            <Button className="btn-modal-add-student" variant="contained" color="secondary" onClick={toggle}>Agregar alumnos</Button>
             <StudentsPopup course={course} isOpen={isOpen} toggle={toggle} setCourseStudents={setStudents} setIsAddingStudents={setIsAddingStudents} />
         </div>
     )

@@ -135,15 +135,18 @@ export default function StudentsPopup(props) {
 				showSuccess(`${acceptedStudents.length} estudiantes agregados al curso`);
 				showError(`${deniedStudents.length} estudiantes denegados al curso`);
 			} else {
-				showError(`${deniedStudents.length} estudiantes denegados al curso`);
-				showError(message);
+				if (deniedStudents) {
+					showError(`${deniedStudents.length} estudiantes denegados al curso`);
+				} else {
+					showError(message);
+				}
 			}
 		} catch (error) {
 			setProcess(false);
 			setProcessMessage("");
 			if (error.response) {
 				console.log(`Un error ha ocurrido en el servidor: ${error}`);
-				showError(error.response.message);
+				showError(error.response.data.message);
 			} else {
 				console.log(`Un error ha ocurrido en el servidor: ${error}`);
 				showError(`Un error ha ocurrido en el servidor: ${error}`);
@@ -180,7 +183,7 @@ export default function StudentsPopup(props) {
 					</form>
 					{students
 						? students.map((student) => (
-							<div className="d-flex justify-content-start align-items-center">
+							<div key={student._id} className="d-flex justify-content-start align-items-center">
 								<h5 className="mr-3">{students.indexOf(student) + 1}</h5>
 								<StudentModalCard
 									student={student}
