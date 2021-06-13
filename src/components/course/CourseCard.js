@@ -17,6 +17,9 @@ import IconButton from '@material-ui/core/IconButton';
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 
+// Tip de uso
+import Tooltip from '@material-ui/core/Tooltip';
+
 export default function CourseCard({ course, setCourses, image, onPress }) {
 
     // MENSAJES DEL FORMULARIO
@@ -27,7 +30,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
-    
+
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
         setError(true);   //Se cambia el estado de mensaje de error a verdadero
@@ -49,16 +52,16 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     }
 
     // Funcion para eliminar el curso asociado a este componente
-    const deleteCourse = async() => {
+    const deleteCourse = async () => {
         try {
             setProcess(true);
             setProcessMessage('El curso se esta borrando...');
 
-            const response = await api.delete(`/api/course/${course._id}`, {headers: {'x-access-token':localStorage.getItem('token')}});
+            const response = await api.delete(`/api/course/${course._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
             const { deletedCourse, message } = response.data;
 
-            if(deletedCourse){
+            if (deletedCourse) {
                 setProcess(false);
                 setProcessMessage('');
 
@@ -66,11 +69,11 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                 setCourses(prevValues => {
                     return prevValues.filter(value => value !== course)
                 })
-    
+
                 showSuccess(message);
-            }else if(message){
+            } else if (message) {
                 showError(message);
-            }else{
+            } else {
                 showError('Error inesperado en el servidor');
             }
         } catch (error) {
@@ -82,39 +85,41 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     }
 
     return (
-        <div className="course-card my-3 mx-2 p-3" >            
+        <div className="course-card my-3 mx-2 p-3" >
             <div onClick={onPress}>
                 <div className="d-flex justify-content-between align-items-center">
-                    <h1 className="h5 text-left m-0 p-0">{course.name}</h1>                
+                    <h1 className="h5 text-left m-0 p-0">{course.name}</h1>
                 </div>
-                <hr className="mx-2 my-1"/>
-                <img src={image} alt="CourseImage" loading="lazy"/>
+                <hr className="mx-2 my-1" />
+                <img src={image} alt="CourseImage" loading="lazy" />
                 <div className="info mt-3">
                     {
-                        course.actual_unit?
+                        course.actual_unit ?
                             <p className="text-left m-0">Vas en la <b>{course.actual_unit}</b> y vence <b>{course.due_date}</b></p>
-                        :
+                            :
                             <p className="text-left m-0"><b>Aún no hay unidades</b></p>
                     }
                     <p className="text-left m-0">Tiene <b>{course.students}</b> estudiantes</p>
-                    {success?
+                    {success ?
                         <Alert severity="success">{successMessage}</Alert>
                         : ""
                     }
-                    {error?
+                    {error ?
                         <Alert severity="error">{errorMessage}</Alert>
                         : ""
                     }
-                    {process?
+                    {process ?
                         <Alert severity="info">{processMessage}</Alert>
                         : ""
                     }
                 </div>
             </div>
             <div className="text-right">
-                <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCourse}>
+                <Tooltip title="Borrar" aria-label="delete">
+                    <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCourse}>
                         <DeleteIcon />
-                </IconButton>
+                    </IconButton>
+                </Tooltip>
             </div>
         </div>
     )

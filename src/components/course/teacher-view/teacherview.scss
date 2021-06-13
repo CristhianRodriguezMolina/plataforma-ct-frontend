@@ -1,27 +1,27 @@
 .course-information {
-    width: 100%;    
+    width: 100%;
 }
 
-.units-bar  {
-   width: 100%;
+.units-bar {
+    width: 100%;
 }
 
 .students-modal {
     margin: 0 0 0 1em;
     padding-top: 0;
     max-height: 25em;
-    height: 23em;    
+    height: 23em;
 }
 
 .search-form {
     .text-field {
         width: 100%;
         border-radius: 10px;
-        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));   
-    }    
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    }
     .btn-search {
         width: 100px;
-        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));   
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     }
 }
 
@@ -41,20 +41,62 @@
         margin-bottom: 1em;
         padding: 1em 2em;
         border-radius: 10px;
-        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));  
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     }
+}
+
+.students-container {
+    margin-bottom: 100px;
+    padding: 3em 1em 0 1em;
+}
+
+.there-is-no-students {
+    color: #575757;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+}
+
+.btn-modal-add-student {
+    position: fixed;
+    width: 120px;
+    height: 60px;
+    right: 40px;
+    bottom: 30px;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
 @media only screen and (min-height: 768px) {
     .students-modal {
         max-height: 37em;
-        height: 35em;        
+        height: 35em;
         padding: 0 3em;
     }
 }
 
+@media only screen and (min-width: 576px) {
+    .students-container {
+        margin-bottom: 100px;
+        padding: 3em 3.5em 0 3.5em;
+    }
+}
+
 @media only screen and (min-width: 992px) {
-    .students-modal {     
+    .students-modal {
         padding: 1em 3em;
+    }
+
+    .students-container {
+        margin-bottom: 100px;
+        padding: 3em 8em 0 8em;
+    }
+}
+
+@media only screen and (min-width: 1600px) {
+    .students-container {
+        margin-bottom: 100px;
+        padding: 3em 15em 0 15em;
     }
 }

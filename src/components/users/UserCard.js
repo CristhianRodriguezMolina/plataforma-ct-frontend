@@ -17,6 +17,9 @@ import Avatar from '@material-ui/core/Avatar';
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 
+// Tip de uso
+import Tooltip from '@material-ui/core/Tooltip';
+
 // Link
 import Link from 'react-router-dom/Link';
 
@@ -91,8 +94,8 @@ export default function UserCard({ user, setUsers, history, type }) {
 					<Avatar className="mr-2" src="https://i.pinimg.com/originals/32/a3/69/32a3690fe66a73adcb98922874eb8b8a.jpg" />
 					<div className="ml-2 mr-5">
 						<p className="m-0">{user.first_name} {user.last_name}</p>
-						<p className="m-0 text-muted">Edad: {util.getAge(user.birth_date)} años</p>
 						<p className="m-0 text-muted">ID: {user.id}</p>
+						<p className="m-0 text-muted">Edad: {util.getAge(user.birth_date)} años</p>
 					</div>
 					{success ?
 						<Alert severity="success">{successMessage}</Alert>
@@ -110,8 +113,12 @@ export default function UserCard({ user, setUsers, history, type }) {
 			</div>
 			<div className="d-flex flex-column">
 				<div className="icon-buttons button-group btn-group-vertical">
-					<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
-					<button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
+					<Tooltip title="Editar" aria-label="edit">
+						<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
+					</Tooltip>
+					<Tooltip title="Borrar" aria-label="delete">
+						<button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
+					</Tooltip>
 				</div>
 				<div className="group-buttons button-group btn-group-vertical">
 					<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>

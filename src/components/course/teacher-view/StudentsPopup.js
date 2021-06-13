@@ -25,7 +25,7 @@ import Alert from "@material-ui/lab/Alert";
 
 export default function StudentsPopup(props) {
 	// Props for the modal
-	const { course, isOpen, toggle, setIsAddingStudents } = props;
+	const { course, isOpen, toggle, setCourseStudents, setIsAddingStudents } = props;
 
 	// MENSAJES DEL MODAL
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -35,7 +35,7 @@ export default function StudentsPopup(props) {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(""); //Mensaje de proceso satisfactorio
 
-	// List of students
+	// List of students that can be added to the course
 	const [students, setStudents] = useState(null);
 
 	// List of student that will be added to the course
@@ -81,25 +81,23 @@ export default function StudentsPopup(props) {
 			setProcess(true);
 			setProcessMessage("Obteniendo estudiantes...");
 
-			const response = await api.get("/api/person/role/student", {
+			const response = await api.get(`/api/course/not-in-course-students/${course._id}`, {
 				headers: { "x-access-token": localStorage.getItem("token") },
 			});
 
-			const { users, message } = response.data;
+			const { students, message } = response.data;
 
 			setProcess(false);
 			setProcessMessage("");
-			if (users) {
+			if (students) {
 				// Asignacion de los cursos de la base de datos
-				setStudents(users);
+				setStudents(students);
 
-				console.log(users);
-
-				if (users.length > 0) {
+				if (students.length > 0) {
 					showSuccess(message);
 				}
 			} else {
-				showError(message);
+				showSuccess('No hay alumnos para agregar');
 			}
 		} catch (error) {
 			setProcess(false);
@@ -117,7 +115,7 @@ export default function StudentsPopup(props) {
 	// Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
 	const addStudents = async () => {
 		try {
-			setIsAddingStudents(true);
+			setIsAddingStudents(true); // This flag activate the fetch users in the StudentsInformation view
 			setProcess(true);
 			setProcessMessage("Añadiendo estudiantes...");
 
@@ -132,11 +130,13 @@ export default function StudentsPopup(props) {
 			setProcess(false);
 			setProcessMessage("");
 			if (acceptedStudents) {
-				showSuccess(`${acceptedStudents.length} estudiantes agregados al curso`)
-				showError(`${deniedStudents.length} estudiantes denegados al curso`)
+				fetchStudents();
+
+				showSuccess(`${acceptedStudents.length} estudiantes agregados al curso`);
+				showError(`${deniedStudents.length} estudiantes denegados al curso`);
 			} else {
-				showError(`${deniedStudents.length} estudiantes denegados al curso`)
-				showError(message)
+				showError(`${deniedStudents.length} estudiantes denegados al curso`);
+				showError(message);
 			}
 		} catch (error) {
 			setProcess(false);
@@ -149,7 +149,7 @@ export default function StudentsPopup(props) {
 				showError(`Un error ha ocurrido en el servidor: ${error}`);
 			}
 		}
-		setIsAddingStudents(false)
+		setIsAddingStudents(false);
 		toggle();
 	};
 
@@ -188,7 +188,13 @@ export default function StudentsPopup(props) {
 								/>
 							</div>
 						))
-						: ""}
+						:
+						<>
+							<div>
+								<h3 className="there-is-no-students">Ya estan todos los alumnos agregados al curso<br />O aún no hay alumnos en la plataforma</h3>
+							</div>
+						</>
+					}
 				</ModalBody>
 				<ModalFooter>
 					<Button

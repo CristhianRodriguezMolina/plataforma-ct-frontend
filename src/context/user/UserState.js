@@ -10,52 +10,54 @@ const UserState = (props) => {
 
     const isLoggedInHandler = () => {
         const token = localStorage.getItem('token');
-        if(token) return true;
+        if (token) return true;
 
-        if(state){
+        if (state) {
             logoutHandler();
         }
 
         return false;
     }
-    
+
     const isAdminHandler = () => {
         const role = localStorage.getItem('user_role');
-        if(role){
-            return role === "admin"? true : false;
+        if (role) {
+            return role === "admin" ? true : false;
         }
         return false;
     }
-    
+
     const isTeacherHandler = () => {
         const role = localStorage.getItem('user_role');
-        if(role){
-            return role === "teacher"? true : false;
+        if (role) {
+            return role === "teacher" ? true : false;
         }
         return false;
     }
-    
+
     const isStudentHandler = () => {
         const role = localStorage.getItem('user_role');
-        if(role){
-            return role === "student"? true : false;
+        if (role) {
+            return role === "student" ? true : false;
         }
         return false;
     }
-    
+
     const signinHandler = () => {
         try {
-            dispatch({ type: SIGNIN, payload: {
-                isLoggedIn: isLoggedInHandler(),
-                isAdmin: isAdminHandler(),
-                isTeacher: isTeacherHandler(),
-                isStudent: isStudentHandler(),
-            } });
+            dispatch({
+                type: SIGNIN, payload: {
+                    isLoggedIn: isLoggedInHandler(),
+                    isAdmin: isAdminHandler(),
+                    isTeacher: isTeacherHandler(),
+                    isStudent: isStudentHandler(),
+                }
+            });
         } catch (error) {
             console.error(error);
         }
     };
-    
+
     const logoutHandler = () => {
         try {
             localStorage.removeItem('user_name');
@@ -65,12 +67,14 @@ const UserState = (props) => {
             localStorage.removeItem('token');
             localStorage.removeItem('created_at');
 
-            dispatch({ type: LOGOUT, payload: {
-                isLoggedIn: false,
-                isAdmin: false,
-                isTeacher: false,
-                isStudent: false
-            } });            
+            dispatch({
+                type: LOGOUT, payload: {
+                    isLoggedIn: false,
+                    isAdmin: false,
+                    isTeacher: false,
+                    isStudent: false
+                }
+            });
         } catch (error) {
             console.error(error);
         }
@@ -97,7 +101,7 @@ const UserState = (props) => {
         isLoggedIn: state.isLoggedIn,
         isAdmin: state.isAdmin,
         isTeacher: state.isTeacher,
-        isStudent: state.isStudent 
+        isStudent: state.isStudent
     };
 
     return (

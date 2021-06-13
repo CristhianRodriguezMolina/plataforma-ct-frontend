@@ -14,6 +14,12 @@ import Button from '@material-ui/core/Button';
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 
+// Container
+import Container from '@material-ui/core/Container';
+
+// Student card
+import StudentCard from '../student-card/StudentCard';
+
 /* TECAHER */
 export default function StudentsInformation(props) {
 
@@ -35,6 +41,7 @@ export default function StudentsInformation(props) {
 
     const [students, setStudents] = useState(null);
 
+    // UseEffect para obtener los alumnos del curso o en dado caso que se agreguen nuevos alumnos al curso se vuelvan a obtener
     useEffect(() => {
         if (!students || isAddingStudents) {
             fetchStudents();
@@ -99,18 +106,32 @@ export default function StudentsInformation(props) {
             {error ? <Alert className="alert-message" severity="error">{errorMessage}</Alert> : ""}
             {process ? <Alert className="alert-message" severity="info">{processMessage}</Alert> : ""}
 
-            {students ?
-                students.map(student => (
-                    <div>
-                        {student.first_name} {student.last_name}
+            <div className="students-container">
+                <form className="search-form d-flex justify-content-between mb-3">
+                    <div className="text-field form-group mr-3">
+                        <input className="form-control text-center" />
                     </div>
-                ))
-                :
-                ""
-            }
+                    <div className="form-group">
+                        <button type="submit" className="btn-search btn btn-primary">
+                            Buscar
+                        </button>
+                    </div>
+                </form>
+                {students ?
+                    students.map(student => (
+                        <StudentCard student={student} />
+                    ))
+                    :
+                    <>
+                        <div>
+                            <h3 className="there-is-no-students">Aún no hay alumnos en el curso</h3>
+                        </div>
+                    </>
+                }
+            </div>
 
-            <Button variant="contained" color="primary" onClick={toggle}>Modal</Button>
-            <StudentsPopup course={course} isOpen={isOpen} toggle={toggle} setIsAddingStudents={setIsAddingStudents} />
+            <Button className="btn-modal-add-student" variant="contained" color="secondary" onClick={toggle}>Modal</Button>
+            <StudentsPopup course={course} isOpen={isOpen} toggle={toggle} setCourseStudents={setStudents} setIsAddingStudents={setIsAddingStudents} />
         </div>
     )
 }
