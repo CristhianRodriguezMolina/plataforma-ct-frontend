@@ -115,7 +115,7 @@ const LogicSequence = props => {
 				})
 				.catch(err => {
 					setLoading(false);
-					if (err.response.data.message) {
+					if (err.response) {
 						showError(err.response.data.message);
 					}
 					else {
@@ -143,7 +143,7 @@ const LogicSequence = props => {
 						setCardName("");
 					})
 					.catch(err => {
-						if (err.response.data.message) {
+						if (err.response) {
 							showError(err.response.data.message);
 						}
 						else {
