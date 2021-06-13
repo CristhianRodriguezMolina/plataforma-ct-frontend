@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
+
+// API
+import api from '../../../services/api';
 
 // Util
 import * as util from '../../../util/util';
+
+// SCSS
+import './StudentCard.scss';
 
 // COMPONENTS
 
@@ -18,18 +24,78 @@ import { Link } from 'react-router-dom'
 
 // Icons
 import { Delete, Edit, Cached } from '@material-ui/icons'
+import { Alert } from '@material-ui/lab';
 
 export default function StudentCard(props) {
 
 	// Datos que llegan por parametros del componente
-	const { student, type } = props;
+	const { student, course, setStudents, setIsAddingStudents, type } = props;
 
+	// MENSAJES DEL FORMULARIO
+	const [error, setError] = useState(false); //Variable flag de existencia de error
+	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+	const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
+	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+	// Funcion para mostrar una alerta de error dado un mensaje
+	const showError = (message) => {
+		setError(true);   //Se cambia el estado de mensaje de error a verdadero
+		setErrorMessage(message); //Se setea el mensaje de error
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setError(false);
+			setErrorMessage("");
+		}, 2000)
+	}
+
+	// Funcion para mostrar una alerta satisfactoria dado un mensaje
+	const showSuccess = (message) => {
+		setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setSuccess(false);
+			setSuccessMessage("");
+		}, 2000)
+	}
+
+	const deleteStundentFromCourse = async () => {
+		try {
+			setIsAddingStudents(true);
+			setProcess(true);
+			setProcessMessage('Borrando usuario...');
+
+			const response = await api.delete(`/api/course/students/${course._id}/${student._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
+
+			const { message } = response.data;
+
+			showSuccess(message);
+
+			// Eliminacion del estudiante de la lista de estudiantes del curso
+			setStudents(prevValues => {
+				if (prevValues.length === 1) {
+					return null;
+				}
+				return prevValues.filter(value => value !== student)
+			});
+		} catch (error) {
+			if (error.response) {
+				showError('Error inesperado en el servidor');
+				console.log(error.response.data.message);
+			} else {
+				showError('Error inesperado en el servidor');
+				console.log(`Ha ocurrido un error: ${error}`);
+			}
+		}
+		setProcess(false);
+		setProcessMessage('');
+		setIsAddingStudents(false);
+	}
 
 	return (
-		<div className="user-modal-card">
-			<div className="modal-card">
-				<Avatar className="mr-2" src="https://picsum.photos/200/300" />
+		<div className="course-user">
+			<div className="student-course-card">
+				<Avatar className="student-avatar mr-2" src="https://picsum.photos/200/300" />
 				<div className="mr-auto">
 					<Typography component="h1">
 						{student.first_name} {student.last_name}
@@ -39,10 +105,22 @@ export default function StudentCard(props) {
 						<p className="text-muted d-inline">Edad: {util.getAge(student.birth_date)}</p>
 					</Typography>
 				</div>
+				{success ?
+					<Alert severity="success">{successMessage}</Alert>
+					: ""
+				}
+				{error ?
+					<Alert severity="error">{errorMessage}</Alert>
+					: ""
+				}
+				{process ?
+					<Alert severity="info">{processMessage}</Alert>
+					: ""
+				}
 				<Typography variant="subtitle1">
 					<div className="btn-group-sm btn-group-vertical">
-						<Tooltip title="Borrar" aria-label="delete">
-							<button className="btn btn-danger"><Delete /></button>
+						<Tooltip title="Borrar del curso" aria-label="delete">
+							<button onClick={deleteStundentFromCourse} className="btn btn-danger"><Delete /></button>
 						</Tooltip>
 						<Tooltip title="Editar" aria-label="edit">
 							<Link to={`/user/students/edit/${student._id}`} className="btn btn-info"><Edit /></Link>

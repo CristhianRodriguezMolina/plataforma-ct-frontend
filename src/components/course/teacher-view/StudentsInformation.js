@@ -117,7 +117,7 @@ export default function StudentsInformation(props) {
                 </form>
                 {students ?
                     students.map(student => (
-                        <StudentCard key={student._id} student={student} />
+                        <StudentCard key={student._id} student={student} setStudents={setStudents} setIsAddingStudents={setIsAddingStudents} course={course} />
                     ))
                     :
                     <>
@@ -129,7 +129,7 @@ export default function StudentsInformation(props) {
             </div>
 
             <Button className="btn-modal-add-student" variant="contained" color="secondary" onClick={toggle}>Agregar alumnos</Button>
-            <StudentsPopup course={course} isOpen={isOpen} toggle={toggle} setCourseStudents={setStudents} setIsAddingStudents={setIsAddingStudents} />
+            <StudentsPopup course={course} isOpen={isOpen} toggle={toggle} setCourseStudents={setStudents} isAddingStudents={isAddingStudents} setIsAddingStudents={setIsAddingStudents} />
         </div>
     )
 }

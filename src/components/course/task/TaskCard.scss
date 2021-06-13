@@ -1,4 +1,5 @@
 .task-card-container {
+	border-radius: 10px;
 	position: relative;
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 
@@ -8,6 +9,7 @@
 	flex-direction: column;
 
 	.activities-container {
+		border-radius: 10px 10px 0 0;
 		border-color: rgb(214, 214, 214);
 		border-width: 1px;
 		border-style: solid;
@@ -46,6 +48,7 @@
 	}
 
 	.progress-visualization {
+		border-radius: 0 0 10px 10px;
 		padding-top: 0.5em;
 		padding-left: 0.5em;
 		border-color: rgb(214, 214, 214);

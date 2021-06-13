@@ -33,14 +33,14 @@ export default function UserList({ type }) {
 
 	const [actualType, setActualType] = useState(type);
 
-    useEffect(() => {    
-        if(!users || actualType !== type){
+	useEffect(() => {
+		if (!users || actualType !== type) {
 			setSuccess(false);
 			setUsers(null);
-            setActualType(type);
-            fetchUsers();            
-        }    
-    }, [location]);
+			setActualType(type);
+			fetchUsers();
+		}
+	}, [location]);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -94,10 +94,10 @@ export default function UserList({ type }) {
 				showError('Error inesperado en el servidor');
 			}
 		} catch (error) {
-			if(error.response){
+			if (error.response) {
 				showError(error.response.message);
 				console.log(`Ha ocurrido un error: ${error}`);
-			}else{
+			} else {
 				showError(`Un error ha ocurrido obteniendo los usuarios ${error}`);
 				console.log(`Ha ocurrido un error: ${error}`);
 			}
@@ -122,16 +122,16 @@ export default function UserList({ type }) {
 			}
 			<div>
 				{
-					users && users.length > 0 ?						
-							users.map(user => (
-								<UserCard key={user._id} user={user} setUsers={setUsers} type={type} />
-							))					
+					users && users.length > 0 ?
+						users.map(user => (
+							<UserCard key={user._id} user={user} setUsers={setUsers} type={type} />
+						))
 						:
 						<>
 							<div>
 								<h3 className="there-is-no-users">Aún no hay {type === "teachers" ? "profesores" : "alumnos"}</h3>
 							</div>
-						</>	
+						</>
 				}
 			</div>
 		</div>

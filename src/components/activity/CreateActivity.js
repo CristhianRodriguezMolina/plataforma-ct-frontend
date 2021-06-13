@@ -102,34 +102,42 @@ const CreateActivity = (props) => {
 					</div>
 					<hr />
 					<h2>Tipo de actividad *</h2>
-					<div className="radio-group">
+					<div className="radio-group d-flex justify-conetent-start align-items-center">
 						<input className="radio-button" type="radio" id="logic_sequence" name="activity" value="logic_sequence" onChange={evt => setType(evt.target.value)} />
-						<label className="title-label" for="logic_sequence">Secuencia lógica</label>
-						<label className="description-label" for="logic_sequence">Ordena las secuencias en el orden correcto en el que se realiza una acción.</label><br />
+						<div>
+							<label className="title-label" for="logic_sequence">Secuencia lógica</label><br />
+							<label className="description-label" for="logic_sequence">Ordena las secuencias en el orden correcto en el que se realiza una acción.</label><br />
+						</div>
 					</div>
-					<div className="radio-group">
+					<div className="radio-group d-flex justify-conetent-start align-items-center">
 						<input className="radio-button" type="radio" id="maze" name="activity" value="maze" onChange={evt => setType(evt.target.value)} />
-						<label className="title-label" for="maze">Laberinto</label><br />
-						<label className="description-label" for="maze">Guia al personaje a través del laberinto.</label><br />
+						<div>
+							<label className="title-label" for="maze">Laberinto</label><br />
+							<label className="description-label" for="maze">Guia al personaje a través del laberinto.</label><br />
+						</div>
 					</div>
-					<div className="radio-group">
+					<div className="radio-group d-flex justify-conetent-start align-items-center">
 						<input className="radio-button" type="radio" id="questionnaire" name="activity" value="questionnaire" onChange={evt => setType(evt.target.value)} />
-						<label className="title-label" for="questionnaire">Cuestionario</label><br />
-						<label className="description-label" for="questionnaire">Selecciona la respuesta correcta</label><br />
+						<div>
+							<label className="title-label" for="questionnaire">Cuestionario</label><br />
+							<label className="description-label" for="questionnaire">Selecciona la respuesta correcta</label><br />
+						</div>
 					</div>
 					<hr />
 					<button className="btn btn-success" type="submit">Crear Actividad</button>
 				</form>
 			</div>
-			{error ?
-				<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
-				: ""
+			{
+				error ?
+					<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
+					: ""
 			}
-			{process ?
-				<Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
-				: ""
+			{
+				process ?
+					<Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
+					: ""
 			}
-		</div>
+		</div >
 	)
 };
 

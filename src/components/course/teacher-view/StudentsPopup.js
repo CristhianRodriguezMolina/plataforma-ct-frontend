@@ -25,7 +25,7 @@ import Alert from "@material-ui/lab/Alert";
 
 export default function StudentsPopup(props) {
 	// Props for the modal
-	const { course, isOpen, toggle, setCourseStudents, setIsAddingStudents } = props;
+	const { course, isOpen, toggle, setCourseStudents, isAddingStudents, setIsAddingStudents } = props;
 
 	// MENSAJES DEL MODAL
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -42,14 +42,15 @@ export default function StudentsPopup(props) {
 	const [studentsToAdd, setStudentsToAdd] = useState([]);
 
 	useEffect(() => {
-		if (!students) {
+		if (!students || isAddingStudents) {
 			fetchStudents();
 		}
-	}, [students]);
+	}, [students, isAddingStudents]);
 
 	useEffect(() => {
 		if (isOpen) {
 			setStudentsToAdd([]);
+
 		}
 	}, [isOpen]);
 

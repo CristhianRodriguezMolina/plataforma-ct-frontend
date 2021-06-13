@@ -213,15 +213,15 @@ export default function CreateUser({ history }) {
 					<p className=""><b>Datos personales</b></p>
 					<div className="form-group">
 						<label className="form-label">Nombres</label>
-						<input className="form-control" type="text" onChange={evt => setFirstName(evt.target.value)} value={first_name} label="Nombre" name="nombres" required />
+						<input className="form-control shadow" type="text" onChange={evt => setFirstName(evt.target.value)} value={first_name} label="Nombre" name="nombres" required />
 					</div>
 					<div className="form-group">
 						<label>Apellidos</label>
-						<input className="form-control" type="text" onChange={evt => setLastName(evt.target.value)} value={last_name} label="Apellidos" name="apellidos" required />
+						<input className="form-control shadow" type="text" onChange={evt => setLastName(evt.target.value)} value={last_name} label="Apellidos" name="apellidos" required />
 					</div>
 					<div className="form-group">
 						<label>Edad</label>
-						<input className="form-control" type="date" min="1950-01-01" max={dateFormat(new Date(), 'yyyy-mm-dd')} onChange={evt => setBirthDate(new Date(evt.target.value))} value={dateFormat(birth_date, 'GMT:yyyy-mm-dd')} label="Fecha de cumpleaños" name="fechadecumpleaños" required />
+						<input className="form-control shadow" type="date" min="1950-01-01" max={dateFormat(new Date(), 'yyyy-mm-dd')} onChange={evt => setBirthDate(new Date(evt.target.value))} value={dateFormat(birth_date, 'GMT:yyyy-mm-dd')} label="Fecha de cumpleaños" name="fechadecumpleaños" required />
 					</div>
 					<div className="form-group">
 						<label>Genero</label>
@@ -233,7 +233,7 @@ export default function CreateUser({ history }) {
 					</div>
 					<div className="form-group">
 						<label>ID</label>
-						<input className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="ID" name="id" required />
+						<input className="form-control shadow" type="number" onChange={evt => setId(evt.target.value)} value={id} label="ID" name="id" required />
 					</div>
 					{
 						action === "create" ?
@@ -242,11 +242,11 @@ export default function CreateUser({ history }) {
 								<p className=""><b>Datos de sesión</b></p>
 								<div className="form-group">
 									<label>Contraseña</label>
-									<input className="form-control" type="password" minLength="4" onChange={evt => setPassword(evt.target.value)} value={password} label="Contrasena" name="contrasena" required />
+									<input className="form-control shadow" type="password" minLength="4" onChange={evt => setPassword(evt.target.value)} value={password} label="Contrasena" name="contrasena" required />
 								</div>
 								<div className="form-group">
 									<label>Confirmar contraseña</label>
-									<input className="form-control" type="password" onChange={evt => setConfirmPassword(evt.target.value)} value={confirm_password} label="Confirmar contrasena" name="confirmar_contrasena" required />
+									<input className="form-control shadow" type="password" onChange={evt => setConfirmPassword(evt.target.value)} value={confirm_password} label="Confirmar contrasena" name="confirmar_contrasena" required />
 								</div>
 							</>
 							:
@@ -262,7 +262,7 @@ export default function CreateUser({ history }) {
 						: ""
 					}
 					<div className="form-group d-flex justify-content-center">
-						<button className={type === "teachers" ? "btn btn-warning form-control btn-create-user" : "btn btn-primary form-control btn-create-user"}>{action === "create" ? "Crear" : "Actualizar"}</button>
+						<button className={type === "teachers" ? "btn btn-warning form-control btn-create-user shadow mt-4" : "btn btn-primary form-control btn-create-user shadow mt-4"}>{action === "create" ? "Crear" : "Actualizar"}</button>
 					</div>
 				</form>
 			</Container>

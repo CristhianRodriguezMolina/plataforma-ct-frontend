@@ -80,7 +80,7 @@ const UnitContent = props => {
 				<DynamicInput dynamicInputValue={unitName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
 				<DynamicInput dynamicInputValue={unitDes} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
 			</div>
-			<div className="buttons-container">
+			<div className="buttons-container d-flex justify-content-between">
 				<button type="submit" onClick={handleUpdateChanges} className="btn btn-info m-2">Guardar cambios</button>
 				<FormControlLabel className="switcher" label="Visible" control={
 					<Switch
