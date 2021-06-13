@@ -45,7 +45,7 @@ export default function StudentCard(props) {
 							<button className="btn btn-danger"><Delete /></button>
 						</Tooltip>
 						<Tooltip title="Editar" aria-label="edit">
-							<Link to="info" className="btn btn-info"><Edit /></Link>
+							<Link to={`/user/students/edit/${student._id}`} className="btn btn-info"><Edit /></Link>
 						</Tooltip>
 						<Tooltip title="Progreso" aria-label="progress">
 							<Link to="progress" className="btn btn-success"><Cached /></Link>

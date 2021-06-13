@@ -13,21 +13,20 @@ export default function ProtectedRoute({ component, type, ...options }) {
 
     const { isLoggedIn, isAdmin, isTeacher, isStudent, logoutHandler } = useContext(UserContext);
 
-    const created_at = localStorage.getItem('created_at');        
-    if(created_at)
-    {
+    const created_at = localStorage.getItem('created_at');
+    if (created_at) {
         const now = Date.now().valueOf() / 1000;
-        if(now > parseInt(created_at)) {
+        if (now > parseInt(created_at)) {
             logoutHandler();
             return (
                 <Redirect to="/" />
             )
         }
-    }     
+    }
 
     // En caso de que no se de el parametro de type, significa que cualquiera de los roles puede entrar a esta ruta
     // Por tanto se setea el type en los tres roles
-    if(!type){ 
+    if (!type) {
         type = "admin,teacher,student"
     }
 
@@ -37,16 +36,16 @@ export default function ProtectedRoute({ component, type, ...options }) {
     typeMap.set('teacher', isTeacher && type.includes('teacher')); // En caso de que sea teacher y el tipo de ruta sea para teacher
     typeMap.set('student', isStudent && type.includes('student')); // En caso de que sea student y el tipo de ruta sea para student
 
-    if(isLoggedIn && (typeMap.get('admin') || typeMap.get('teacher') || typeMap.get('student'))){
+    if (isLoggedIn && (typeMap.get('admin') || typeMap.get('teacher') || typeMap.get('student'))) {
         return (
             <Route {...options} component={component} />
         )
-    }else{
-        if(isLoggedIn){
+    } else {
+        if (isLoggedIn) {
             return (
                 <Redirect to="/unauthorized" />
             )
-        }else{
+        } else {
             return (
                 <Redirect to='/unauthorized' />
             )

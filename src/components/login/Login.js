@@ -39,13 +39,13 @@ export default function Login({ history }) {
     useEffect(() => {
         localStorage.setItem('navbar-color', '#ffcdd2')
 
-        if(localStorage.getItem('token')){
+        if (localStorage.getItem('token')) {
             return history.push('/course/mycourses')
         }
     });
 
-     // Funcion para mostrar una alerta de error dado un mensaje
-     const showError = (message) => {
+    // Funcion para mostrar una alerta de error dado un mensaje
+    const showError = (message) => {
         setError(true);   //Se cambia el estado de mensaje de error a verdadero
         setErrorMessage(message); //Se setea el mensaje de error
         setTimeout(() => { //Dura 2sg en pantalla el mensaje
@@ -65,7 +65,7 @@ export default function Login({ history }) {
 
             const { user_name, user_id, user_role, user_image, token, created_at, message } = response.data;
 
-            if(user_id && token){  
+            if (user_id && token) {
                 localStorage.setItem('user_name', user_name);
                 localStorage.setItem('user_id', user_id);
                 localStorage.setItem('user_role', user_role);
@@ -80,15 +80,15 @@ export default function Login({ history }) {
                 setProcessMessage('');
 
                 history.push('/course/mycourses');
-            }else {
+            } else {
                 setProcess(false);
                 setProcessMessage('');
                 showError(message);
             }
         } catch (error) {
-            if(error.response){
-                showError(error.response.data.message);    
-            }else {
+            if (error.response) {
+                showError(error.response.data.message);
+            } else {
                 showError('Error al intentar hacer login');
             }
             setProcess(false);
@@ -99,11 +99,11 @@ export default function Login({ history }) {
     return (
         <div className="background-login">
             <div className="background-overlay">
-                {error?
+                {error ?
                     <Alert className="alert-message" severity="error">{errorMessage}</Alert>
                     : ""
                 }
-                {process?
+                {process ?
                     <Alert className="alert-message" severity="info">{processMessage}</Alert>
                     : ""
                 }
@@ -116,20 +116,20 @@ export default function Login({ history }) {
                 <div className="login-card shadow row">
                     <div className="col-md-6 p-0">
                         <div className="login-image">
-                        </div>                        
+                        </div>
                     </div>
                     <div className="col-md-6 px-3 pt-2 pb-4">
                         <div className="signin-side">
                             <Typography variant="h6">
                                 Sign in
                             </Typography>
-                            <hr className="mx-4"/>
+                            <hr className="mx-4" />
                             <Container>
                                 <form onSubmit={evt => signIn(evt)}>
                                     <Typography>
                                         <div className="form-group my-4 d-flex align-items-center">
                                             <AccountCircleOutlined className="align-self-end mr-2" />
-                                            <TextField color="secondary" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Numero de identificación" name="id" required />                                    
+                                            <TextField color="secondary" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Numero de identificación" name="id" required />
                                         </div>
                                         <div className="form-group my-4 d-flex align-items-center">
                                             <Lock className="align-self-end mr-2" />
@@ -147,14 +147,14 @@ export default function Login({ history }) {
                 </div>
                 <footer className="footer-login">
                     <Typography variant="subtitle1" component="h1" className="">
-                        Copyright <Copyright/>    
+                        Copyright <Copyright />
                     </Typography>
                     <div></div>
-                    <Typography variant="subtitle1" component="h1"  className="">
-                        Uniquindio <ImportContacts/>
+                    <Typography variant="subtitle1" component="h1" className="">
+                        Uniquindio <ImportContacts />
                     </Typography>
                     <div></div>
-                    <Typography variant="subtitle1" component="h1"  className="">
+                    <Typography variant="subtitle1" component="h1" className="">
                         Wil/Cris <Devices />
                     </Typography>
                 </footer>

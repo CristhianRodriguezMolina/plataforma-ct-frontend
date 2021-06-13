@@ -178,7 +178,7 @@ export default function CreateUser({ history }) {
 						setFirstName('');
 						setLastName('');
 
-						history.push(`/user/${type}`);
+						history.goBack();
 					} else {
 						showError(message);
 					}

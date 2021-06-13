@@ -1,4 +1,4 @@
-import React, { useContext, Suspense  } from 'react';
+import React, { useContext, Suspense } from 'react';
 
 // SCSS
 import './App.scss';
@@ -70,45 +70,45 @@ function App() {
 
   return (
     <UserState>
-        <Router>
-          <div className="App">
-            <NavBar/>
-            <Suspense fallback={
-              <div className="spinner-loading">
-                <div className="spinner-border" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
+      <Router>
+        <div className="App">
+          <NavBar />
+          <Suspense fallback={
+            <div className="spinner-loading">
+              <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span>
               </div>
-            }>
-              <div className="app-container">
-                <Switch>    
-                  {/* USER */}          
-                  <ProtectedRoute type="admin, teacher" path='/user/:type/:action/:ID' exact component={CreateUser} />
-                  <ProtectedRoute type="admin, teacher" path='/user/:type/:action/' exact component={CreateUser} />
-                  <ProtectedRoute type="admin, teacher" path='/user/:type' exact component={UserManage} />
+            </div>
+          }>
+            <div className="app-container">
+              <Switch>
+                {/* USER */}
+                <ProtectedRoute type="admin, teacher" path='/user/:type/:action/:ID' exact component={CreateUser} />
+                <ProtectedRoute type="admin, teacher" path='/user/:type/:action/' exact component={CreateUser} />
+                <ProtectedRoute type="admin, teacher" path='/user/:type' exact component={UserManage} />
 
-                  {/* COURSE */}
-                  <ProtectedRoute path='/course/:type/:id/:view' exact component={CourseView} />
-                  <ProtectedRoute path='/course/mycourses' exact component={MyCourses} />
+                {/* COURSE */}
+                <ProtectedRoute path='/course/:type/:id/:view' exact component={CourseView} />
+                <ProtectedRoute path='/course/mycourses' exact component={MyCourses} />
 
-                  {/* ACTIVITY */}
-                  <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
-                  <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
-                  <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' component={LogicSequence} />
-                  
-                  {/* INDEX/LOGIN */}
-                  <Route path="/unauthorized" exact component={Error404} />
+                {/* ACTIVITY */}
+                <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
+                <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
+                <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
 
-                  {/* INDEX/LOGIN */}
-                  <Route path="/" exact component={Login} />
+                {/* INDEX/LOGIN */}
+                <Route path="/unauthorized" exact component={Error404} />
 
-                  {/* ERRORS */}
-                  <Route component={Error404} />
-                </Switch>
-              </div>
-            </Suspense>
-          </div>
-        </Router>
+                {/* INDEX/LOGIN */}
+                <Route path="/" component={Login} />
+
+                {/* ERRORS */}
+                <Route component={Error404} />
+              </Switch>
+            </div>
+          </Suspense>
+        </div>
+      </Router>
     </UserState>
   );
 }

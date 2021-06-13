@@ -12,9 +12,12 @@ const UserState = (props) => {
         const token = localStorage.getItem('token');
         if (token) return true;
 
-        if (state) {
-            logoutHandler();
-        }
+        localStorage.removeItem('user_name');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('user_role');
+        localStorage.removeItem('user_image');
+        localStorage.removeItem('token');
+        localStorage.removeItem('created_at');
 
         return false;
     }
@@ -84,15 +87,10 @@ const UserState = (props) => {
         isLoggedIn: isLoggedInHandler(),
         isAdmin: isAdminHandler(),
         isTeacher: isTeacherHandler(),
-        isStudent: isStudentHandler(),
-        env: process.env
+        isStudent: isStudentHandler()
     };
 
     const [state, dispatch] = useReducer(UserReducer, initialState);
-
-    useEffect(() => {
-        console.log(state)
-    }, [state])
 
     const user = {
         signinHandler,
