@@ -24,7 +24,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 // Icono Delete
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
+// Modal de confirmación 
+import AlertModal from '../../common/AlertModal';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
@@ -42,6 +43,8 @@ const SequenceCard = SortableElement(({ value }) => {
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+    // Variable de estado para el modal
+    const [open, setOpen] = useState(false);
 
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
@@ -109,11 +112,18 @@ const SequenceCard = SortableElement(({ value }) => {
                 </div>
                 <div className="manage-buttons-container">
                     <Tooltip title="Borrar" aria-label="delete">
-                        <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCard}>
+                        <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
                 </div>
+                <AlertModal
+                    type="delete"
+                    open={open}
+                    handleClose={() => setOpen(!open)}
+                    message='¿Esta seguro que quiere eliminar esta tarjeta?'
+                    action={deleteCard}
+                />
             </div>
         </Tooltip>
     )

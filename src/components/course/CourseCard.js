@@ -8,6 +8,9 @@ import './course.scss';
 
 // COMPONENTS
 
+// Modal de confirmación 
+import AlertModal from '../common/AlertModal';
+
 // Icono Delete
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -30,6 +33,8 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+    // Variable de estado para el modal
+    const [open, setOpen] = useState(false);
 
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
@@ -116,11 +121,18 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
             </div>
             <div className="text-right">
                 <Tooltip title="Borrar" aria-label="delete">
-                    <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={deleteCourse}>
+                    <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
             </div>
+            <AlertModal
+                type="delete"
+                open={open}
+                handleClose={() => setOpen(!open)}
+                message='¿Esta seguro que quiere eliminar este curso?'
+                action={deleteCourse}
+            />
         </div>
     )
 }

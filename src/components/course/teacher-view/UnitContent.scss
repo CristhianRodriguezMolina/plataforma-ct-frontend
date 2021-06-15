@@ -24,6 +24,16 @@
 		margin: auto 0.4em;
 		padding-bottom: 1em;
 	}
+
+	.btn-delete {
+		background-color: #f44336;
+		&:hover {
+			background-color: #d32f2f;
+		}
+		&:active {
+			background-color: #ef9a9a;
+		}
+	}
 }
 
 @media only screen and (min-width: 1366px) {

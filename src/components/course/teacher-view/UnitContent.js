@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
+// WithRouter
+import { withRouter } from 'react-router-dom';
+
+// SCSS
 import './UnitContent.scss';
+
+// COMPONENTS
 
 import DynamicInput from '../../common/DynamicInput';
 
@@ -12,6 +18,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 // Button
 import Button from '@material-ui/core/Button';
 
+// Modal de confirmacion de borrado
+import AlertModal from '../../common/AlertModal';
+
 import PropTypes from 'prop-types';
 
 const UnitContent = props => {
@@ -19,6 +28,9 @@ const UnitContent = props => {
 	const [unitName, setUnitName] = useState("");
 	const [unitDes, setUnitDes] = useState("");
 	const [visible, setVisible] = useState(false);
+
+	// Variable de estado para el modal
+	const [open, setOpen] = useState(false);
 
 	const updateName = (value) => {
 		setUnitName(value);
@@ -74,6 +86,10 @@ const UnitContent = props => {
 		props.onDeleteChanges(props.unitValue._id);
 	}
 
+	const redirect = () => {
+		props.history.push(`/course/edit/${props.course._id}/units-info/${props.unitValue._id}`);
+	}
+
 	return (
 		<div className="unit-content-container">
 			<div className="unit-content-info">
@@ -92,7 +108,7 @@ const UnitContent = props => {
 				} />
 			</div>
 			<div className="cards-container">
-				<TaskCard />
+				<TaskCard onPress={() => redirect()} />
 				<TaskCard />
 				<TaskCard />
 				<TaskCard />
@@ -100,7 +116,14 @@ const UnitContent = props => {
 				<TaskCard />
 			</div>
 			{/* BUTTON TO DELETE A SPECIFIC UNIT */}
-			<Button className="ml-3" color="secondary" variant="contained" onClick={handleDeleteChanges}>Borrar unidad</Button>
+			<Button className="btn-delete ml-3" color="secondary" variant="contained" onClick={() => setOpen(!open)}>Borrar unidad</Button>
+			<AlertModal
+				type="delete"
+				open={open}
+				handleClose={() => setOpen(!open)}
+				message='¿Esta seguro que quiere borrar esta unidad del curso?'
+				action={handleDeleteChanges}
+			/>
 		</div>
 	)
 };
@@ -114,4 +137,4 @@ UnitContent.propTypes = {
 	onUpdateChanges: PropTypes.func
 }
 
-export default UnitContent;
+export default withRouter(UnitContent);

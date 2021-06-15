@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function UnitsInformation({ course, setCourse }) {
+export default function UnitsInformation({ course, setCourse, history }) {
 
 	const classes = useStyles();
 
@@ -261,7 +261,7 @@ export default function UnitsInformation({ course, setCourse }) {
 			{
 				course.units.map((unit, index) => (
 					<TabPanel value={value} key={index} index={index}>
-						<UnitContent unitValue={unit} onUpdateChanges={handleUpdateUnit} onDeleteChanges={deleteUnit} />
+						<UnitContent course={course} unitValue={unit} onUpdateChanges={handleUpdateUnit} onDeleteChanges={deleteUnit} />
 					</TabPanel>
 				))
 			}

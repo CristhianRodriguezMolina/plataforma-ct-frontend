@@ -25,50 +25,50 @@ export default function UserManage({ history }) {
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
-        if(type === "teachers"){
+        if (type === "teachers") {
             localStorage.setItem('navbar-color', '#ffe0b2')
-        }else if( type === "students"){
+        } else if (type === "students") {
             localStorage.setItem('navbar-color', '#bbdefb')
         }
     }, [type]);
 
     useEffect(() => {
-        if(type !== "teachers" && type !== "students"){
+        if (type !== "teachers" && type !== "students") {
             history.push('/')
         }
     }, [type])
 
     const redirectCreate = () => {
-        if(type==="teachers"){
+        if (type === "teachers") {
             history.push('/user/teachers/create');
-        }else if(type==="students"){
+        } else if (type === "students") {
             history.push('/user/students/create');
         }
     }
-    
+
     return (
         <div className="manage-user">
-            <TitleCard 
-                title={type==="teachers"?"Gestión de profesores":"Gestión de alumnos"}
-                color={type==="teachers"?"#FFA552":"#3C8AFF"}
-            /> 
+            <TitleCard
+                title={type === "teachers" ? "Gestión de profesores" : "Gestión de alumnos"}
+                color={type === "teachers" ? "#FFA552" : "#3C8AFF"}
+            />
             <Container maxWidth="md">
-                <form className="search-form d-flex justify-content-between mt-4">  
+                <form className="search-form d-flex justify-content-between mt-4">
                     <div className="text-field form-group mr-3">
                         <input className="form-control text-center" />
-                    </div>                    
+                    </div>
                     <div className="form-group">
                         <button type="submit" className="btn-search btn btn-primary">Buscar</button>
                     </div>
                 </form>
-                <div className="" style={{marginBottom: "100px"}}>
+                <div className="" style={{ marginBottom: "100px" }}>
                     <UserList type={type} />
                 </div>
-                <button onClick={redirectCreate} className={type==="teachers"?"btn btn-warning btn-create-user":"btn btn-primary btn-create-user"}>
+                <button onClick={redirectCreate} className={type === "teachers" ? "btn btn-warning btn-create-user" : "btn btn-primary btn-create-user"}>
                     {
-                        type==="teachers"?
+                        type === "teachers" ?
                             "Crear profesor"
-                        :
+                            :
                             "Crear estudiante"
                     }
                 </button>

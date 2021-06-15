@@ -11,6 +11,9 @@ import * as util from '../../util/util';
 
 // COMPONENTS
 
+// Modal de confirmacion de borrado
+import AlertModal from '../common/AlertModal';
+
 // Avatar
 import Avatar from '@material-ui/core/Avatar';
 
@@ -35,6 +38,9 @@ export default function UserCard({ user, setUsers, history, type }) {
 	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+	// Variable de estado para el modal
+	const [open, setOpen] = useState(false);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -82,8 +88,13 @@ export default function UserCard({ user, setUsers, history, type }) {
 				showError('Error inesperado en el servidor');
 			}
 		} catch (error) {
-			showError('Error inesperado en el servidor');
-			console.log(`Ha ocurrido un error: ${error}`);
+			if (error.response) {
+				showError(error.response.data.message);
+				console.log(error.response.data.message);
+			} else {
+				showError('Error inesperado en el servidor');
+				console.log(`Ha ocurrido un error en el servidor`);
+			}
 		}
 	}
 
@@ -117,13 +128,20 @@ export default function UserCard({ user, setUsers, history, type }) {
 						<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
 					</Tooltip>
 					<Tooltip title="Borrar" aria-label="delete">
-						<button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
+						<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
 					</Tooltip>
 				</div>
 				<div className="group-buttons button-group btn-group-vertical">
 					<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>
-					<button onClick={deleteUser} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>
+					<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>
 				</div>
+				<AlertModal
+					type="delete"
+					open={open}
+					handleClose={() => setOpen(!open)}
+					message={type === "teachers" ? '¿Esta seguro que quiere borrar este profesor de la plataforma?' : '¿Esta seguro que quiere borrar este estudiante de la plataforma?'}
+					action={deleteUser}
+				/>
 			</div>
 		</div>
 	)

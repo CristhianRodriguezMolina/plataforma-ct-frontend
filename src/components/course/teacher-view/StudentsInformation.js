@@ -86,7 +86,7 @@ export default function StudentsInformation(props) {
                 showSuccess(message);
             }
         } catch (error) {
-            if (error.response.data) {
+            if (error.response) {
                 console.log(`Error obteniendo los estudiantes del curso: ${error}`);
                 showError(error.response.data.message);
             } else {

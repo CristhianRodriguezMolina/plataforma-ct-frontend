@@ -1,0 +1,74 @@
+import React, { useEffect, useState } from 'react'
+
+// SCSS
+import './AlertModal.scss';
+
+// COMPONENTS
+
+// Modal
+import { Modal, Button } from '@material-ui/core';
+
+// Iconos
+import { Error, Info, CheckCircle } from '@material-ui/icons';
+
+// Colors
+import { green, blue } from '@material-ui/core/colors';
+
+export default function AlertModal(props) {
+
+	const { message, open, handleClose, action, type } = props;
+
+	const [btnClass, setBtnClass] = useState('btn-delete ml-auto mr-2');
+
+	useEffect(() => {
+		if (type === 'delete') {
+			setBtnClass('btn-delete ml-auto mr-2');
+		} else if (type === 'success') {
+			setBtnClass('btn-success ml-auto mr-2');
+		} else if (type === 'info') {
+			setBtnClass('btn-info ml-auto mr-2');
+		}
+	});
+
+	const executeAction = () => {
+		handleClose();
+		action();
+	}
+
+	return (
+		<Modal
+			open={open}
+			onClose={handleClose}
+			aria-labelledby="simple-modal-title"
+			aria-describedby="simple-modal-description"
+		>
+			<div className="alert-modal">
+				<div className="alert-modal-header">
+					{
+						type === "delete" ?
+							<Error color="error" fontSize="large" />
+							:
+							type === "success" ?
+								<CheckCircle fontSize="large" style={{ color: green[500] }} />
+								:
+								type === "info" ?
+									<Info fontSize="large" style={{ color: blue[500] }} />
+									:
+									""
+					}
+					<hr />
+				</div>
+				<div className="alert-modal-body">
+					{message}
+				</div>
+				<div className="alert-modal-footer">
+					<hr />
+					<div>
+						<Button onClick={executeAction} className={btnClass} color="secondary" variant="contained">{type === 'delete' ? 'Borrar' : 'Aceptar'}</Button>
+						<Button onClick={handleClose} color="primary" variant="contained">Cancelar</Button>
+					</div>
+				</div>
+			</div>
+		</Modal>
+	)
+}

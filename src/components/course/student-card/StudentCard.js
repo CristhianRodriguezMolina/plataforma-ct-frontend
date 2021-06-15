@@ -16,6 +16,9 @@ import Avatar from '@material-ui/core/Avatar';
 
 import Typography from '@material-ui/core/Typography';
 
+// Modal de confirmacion de borrado
+import AlertModal from '../../common/AlertModal';
+
 // Tip de uso
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -24,6 +27,8 @@ import { Link } from 'react-router-dom'
 
 // Icons
 import { Delete, Edit, Cached } from '@material-ui/icons'
+
+// Alert
 import { Alert } from '@material-ui/lab';
 
 export default function StudentCard(props) {
@@ -38,6 +43,9 @@ export default function StudentCard(props) {
 	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+	// Variable de estado para el modal
+	const [open, setOpen] = useState(false);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -120,7 +128,7 @@ export default function StudentCard(props) {
 				<Typography variant="subtitle1">
 					<div className="btn-group-sm btn-group-vertical">
 						<Tooltip title="Borrar del curso" aria-label="delete">
-							<button onClick={deleteStundentFromCourse} className="btn btn-danger"><Delete /></button>
+							<button onClick={() => setOpen(!open)} className="btn btn-danger"><Delete /></button>
 						</Tooltip>
 						<Tooltip title="Editar" aria-label="edit">
 							<Link to={`/user/students/edit/${student._id}`} className="btn btn-info"><Edit /></Link>
@@ -130,6 +138,13 @@ export default function StudentCard(props) {
 						</Tooltip>
 					</div>
 				</Typography>
+				<AlertModal
+					type="delete"
+					open={open}
+					handleClose={() => setOpen(!open)}
+					message='¿Esta seguro que quiere quitar este estudiante del curso?'
+					action={deleteStundentFromCourse}
+				/>
 			</div>
 		</div>
 	)

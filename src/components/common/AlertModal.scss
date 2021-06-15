@@ -1,0 +1,63 @@
+.alert-modal {
+	background-color: whitesmoke;
+	width: 22em;
+	height: 18em;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	padding: 2em 1em;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	.alert-modal-header {
+		text-align: center;
+	}
+	.alert-modal-body {
+		text-align: center;
+	}
+	.alert-modal-footer {
+		display: flex;
+		flex-direction: column;
+		.btn-delete {
+			background-color: #f44336;
+			&:hover {
+				background-color: #d32f2f;
+			}
+			&:active {
+				background-color: #ef9a9a;
+			}
+		}
+		.btn-info {
+			background-color: #2196f3;
+			&:hover {
+				background-color: #1976d2;
+			}
+			&:active {
+				background-color: #90caf9;
+			}
+		}
+		.btn-success {
+			background-color: #4caf50;
+			&:hover {
+				background-color: #388e3c;
+			}
+			&:active {
+				background-color: #a5d6a7;
+			}
+		}
+		hr {
+			width: 100%;
+		}
+		div {
+			display: flex;
+			justify-content: end;
+		}
+	}
+}
+
+.delete-icon {
+	color: greenyellow;
+}

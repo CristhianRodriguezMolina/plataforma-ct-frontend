@@ -17,6 +17,9 @@ import BorderVerticalIcon from '@material-ui/icons/BorderVertical';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+// Modal de confirmación 
+import AlertModal from '../common/AlertModal';
+
 const MyActivities = props => {
 
 	const [activities, setActivities] = useState(null);
@@ -31,6 +34,12 @@ const MyActivities = props => {
 	const [isActive, setIsActive] = useState(false);
 
 	const [currentMenu, setCurrentMenu] = useState(false);
+
+	// Variable de estado para el modal
+	const [open, setOpen] = useState(false);
+
+	// ID de la actividad actual a ser borrada
+	const [activityIdToDelete, setActivityIdToDelete] = useState(null);
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -216,7 +225,7 @@ const MyActivities = props => {
 											<button onClick={() => showMenu(activity._id)} className="dropbutton">...</button>
 											<div className={`dp-content ${isActive && currentMenu.localeCompare(`menu${activity._id}`) === 0 ? 'dp-content-active' : ''}`}>
 												<button onClick={() => handleEdit(activity._id)}>Editar</button>
-												<button onClick={() => handleDelete(activity._id)}>Borrar</button>
+												<button onClick={() => { setOpen(!open); setActivityIdToDelete(activity._id); }}>Borrar</button>
 											</div >
 										</div >
 									</td >
@@ -229,7 +238,13 @@ const MyActivities = props => {
 
 				</tbody >
 			</table >
-
+			<AlertModal
+				type="delete"
+				open={open}
+				handleClose={() => setOpen(!open)}
+				message='¿Esta seguro que quiere eliminar esta actividad?'
+				action={() => handleDelete(activityIdToDelete)}
+			/>
 			{
 				loadingCourses
 					? <Alert severity="info">{"Cargando actividades... por favor espere"}</Alert>

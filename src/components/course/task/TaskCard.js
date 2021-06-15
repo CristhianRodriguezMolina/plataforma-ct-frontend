@@ -23,16 +23,17 @@ const TaskCard = props => {
 	}
 	return (
 		<div className='task-card-container'>
-			<div className="activities-container">
-				<h2>Contenedor de actividades</h2>
-				<div className="activities-visualization">
-					{items}
+			<div onClick={props.onPress}>
+				<div className="activities-container">
+					<h2>Contenedor de actividades</h2>
+					<div className="activities-visualization">
+						{items}
+					</div>
 				</div>
-
-			</div>
-			<div className="progress-visualization">
-				<h3><b>Progreso:</b> 9/12</h3>
-				<h3><b>Hasta:</b> 12/06/2021</h3>
+				<div className="progress-visualization">
+					<h3><b>Progreso:</b> 9/12</h3>
+					<h3><b>Hasta:</b> 12/06/2021</h3>
+				</div>
 			</div>
 			<Link to='/' className="btn btn-primary edit-button" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
 			<button className="btn btn-danger delete-button" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
