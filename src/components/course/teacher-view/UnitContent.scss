@@ -36,6 +36,41 @@
 	}
 }
 
+.task-manage-container {
+	padding: 2em 1em 0 1em;
+	margin-bottom: 50px;
+
+	.shadow {
+		filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+	}
+
+	.activities-container {
+		padding-top: 1em;
+	}
+
+	.btn-add-activities {
+		position: sticky;
+		bottom: 2em;
+		margin-left: 100%;
+		transform: translateX(-110px);
+		height: 60px;
+		width: 110px;
+		background-color: #4caf50;
+		&:hover {
+			background-color: #388e3c;
+		}
+		&:active {
+			background-color: #a5d6a7;
+		}
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	.task-manage-container {
+		padding: 2em 0 0 0;
+	}
+}
+
 @media only screen and (min-width: 1366px) {
 	.unit-content-container {
 		width: 60em;

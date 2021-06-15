@@ -23,7 +23,7 @@ const TaskCard = props => {
 	}
 	return (
 		<div className='task-card-container'>
-			<div onClick={props.onPress}>
+			<div onClick={props.onPress} className="task-card">
 				<div className="activities-container">
 					<h2>Contenedor de actividades</h2>
 					<div className="activities-visualization">

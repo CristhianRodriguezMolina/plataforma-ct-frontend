@@ -49,7 +49,7 @@ export default function CourseInformation({ course, setCourse }) {
     }
 
     // Funcion para actualizar los datos basicos de un curso como Nombre, Descripcion y Tema
-    const updateChanges = async(e) => {
+    const updateChanges = async (e) => {
         e.preventDefault();
 
         try {
@@ -58,24 +58,24 @@ export default function CourseInformation({ course, setCourse }) {
 
             const response = await api.put(`/api/course/${course._id}`, {
                 name,
-                description, 
+                description,
                 topic
-            }, {headers: {'x-access-token':localStorage.getItem('token')}});
+            }, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
             const { updatedCourse, message } = response.data;
 
-            if(updatedCourse){
+            if (updatedCourse) {
                 setCourse(prevState => {
-                    return { ...prevState, ...{name, description, topic} }
+                    return { ...prevState, ...{ name, description, topic } }
                 });
 
                 setProcess(false);
                 setProcessMessage('');
 
                 showSuccess(message);
-            }else{
+            } else {
                 showError(message);
-            }            
+            }
         } catch (error) {
             setProcess(false);
             setProcessMessage('');
@@ -86,19 +86,19 @@ export default function CourseInformation({ course, setCourse }) {
 
     return (
         <div className="course-information container pt-4 px-5">
-            {success?
+            {success ?
                 <Alert severity="success">{successMessage}</Alert>
                 : ""
             }
-            {error?
+            {error ?
                 <Alert severity="error">{errorMessage}</Alert>
                 : ""
             }
-            {process?
+            {process ?
                 <Alert severity="info">{processMessage}</Alert>
                 : ""
             }
-            <h1 className="h4">Edit Course Information</h1>            
+            <h1 className="h4">Edit Course Information</h1>
             <form onSubmit={updateChanges}>
                 <div className="form-group">
                     <div>
@@ -109,7 +109,7 @@ export default function CourseInformation({ course, setCourse }) {
                 <div className="form-group">
                     <div>
                         <label className="form-label">Course description</label>
-                        <textarea className="form-control" rows="3" onChange={evt => setDescription(evt.target.value)} value={description}/>
+                        <textarea className="form-control" rows="3" onChange={evt => setDescription(evt.target.value)} value={description} />
                     </div>
                 </div>
                 <div className="form-group">
@@ -119,7 +119,7 @@ export default function CourseInformation({ course, setCourse }) {
                     </div>
                 </div>
                 <div className="form-group">
-                    <button type="submit" className="btn btn-info mt-3">Actualizar cambios</button>
+                    <button type="submit" className="btn btn-info mt-3">Guardar cambios</button>
                 </div>
             </form>
         </div>
