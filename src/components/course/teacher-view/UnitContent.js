@@ -109,7 +109,7 @@ const UnitContent = props => {
 			</div>
 			<div className="cards-container">
 				<TaskCard onPress={() => redirect()} />
-				<TaskCard />
+				<TaskCard className="animate__animated animate__bounce" />
 				<TaskCard />
 				<TaskCard />
 				<TaskCard />

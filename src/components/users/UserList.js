@@ -124,7 +124,9 @@ export default function UserList({ type }) {
 				{
 					users && users.length > 0 ?
 						users.map(user => (
-							<UserCard key={user._id} user={user} setUsers={setUsers} type={type} />
+							<>
+								<UserCard key={user._id} user={user} setUsers={setUsers} type={type} />
+							</>
 						))
 						:
 						<>

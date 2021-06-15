@@ -11,6 +11,8 @@ import './course.scss';
 
 // COMPONENTS
 
+import { Animated } from "react-animated-css";
+
 // Title card
 import TitleCard from '../common/TitleCard';
 

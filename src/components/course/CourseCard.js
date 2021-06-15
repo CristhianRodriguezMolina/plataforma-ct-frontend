@@ -6,7 +6,13 @@ import api from '../../services/api';
 // SCSS
 import './course.scss';
 
+// animate.css package
+import 'animate.css/animate.min.css';
+
 // COMPONENTS
+
+// Animation
+import { Animated } from "react-animated-css";
 
 // Modal de confirmación 
 import AlertModal from '../common/AlertModal';
@@ -36,6 +42,9 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     // Variable de estado para el modal
     const [open, setOpen] = useState(false);
 
+    // Visibility for the components animation
+    const [visible, setVisible] = useState(true);
+
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
         setError(true);   //Se cambia el estado de mensaje de error a verdadero
@@ -58,6 +67,8 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
 
     // Funcion para eliminar el curso asociado a este componente
     const deleteCourse = async () => {
+        // Toggle for the animation
+        setVisible(false);
         try {
             setProcess(true);
             setProcessMessage('El curso se esta borrando...');
@@ -82,57 +93,66 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                 showError('Error inesperado en el servidor');
             }
         } catch (error) {
-            showError('Error inesperado en el servidor');
-            console.log(`Ha ocurrido un error: ${error}`);
+            if (error.response) {
+                showError('Error inesperado en el servidor');
+                console.log(error.response.data.message);
+            } else {
+                showError('Error inesperado en el servidor');
+                console.log(`Error inesperado en el servidor`);
+            }
         }
+        // Toggle for the animation
+        setVisible(true);
         setProcess(false);
         setProcessMessage('');
     }
 
     return (
-        <div className="course-card my-3 mx-2 p-3" >
-            <div onClick={onPress}>
-                <div className="d-flex justify-content-between align-items-center">
-                    <h1 className="h5 text-left m-0 p-0">{course.name}</h1>
+        <Animated animationIn="bounceInUp" animationOut="bounceOutDown" animationOutDuration={2000} isVisible={visible}>
+            <div className="course-card my-3 mx-2 p-3" >
+                <div onClick={onPress}>
+                    <div className="d-flex justify-content-between align-items-center">
+                        <h1 className="h5 text-left m-0 p-0">{course.name}</h1>
+                    </div>
+                    <hr className="mx-2 my-1" />
+                    <img src={image} alt="CourseImage" loading="lazy" />
+                    <div className="info mt-3">
+                        {
+                            course.actual_unit ?
+                                <p className="text-left m-0">Vas en la <b>{course.actual_unit}</b> y vence <b>{course.due_date}</b></p>
+                                :
+                                <p className="text-left m-0"><b>Aún no hay unidades</b></p>
+                        }
+                        <p className="text-left m-0">Tiene <b>{course.students}</b> estudiantes</p>
+                        {success ?
+                            <Alert severity="success">{successMessage}</Alert>
+                            : ""
+                        }
+                        {error ?
+                            <Alert severity="error">{errorMessage}</Alert>
+                            : ""
+                        }
+                        {process ?
+                            <Alert severity="info">{processMessage}</Alert>
+                            : ""
+                        }
+                    </div>
                 </div>
-                <hr className="mx-2 my-1" />
-                <img src={image} alt="CourseImage" loading="lazy" />
-                <div className="info mt-3">
-                    {
-                        course.actual_unit ?
-                            <p className="text-left m-0">Vas en la <b>{course.actual_unit}</b> y vence <b>{course.due_date}</b></p>
-                            :
-                            <p className="text-left m-0"><b>Aún no hay unidades</b></p>
-                    }
-                    <p className="text-left m-0">Tiene <b>{course.students}</b> estudiantes</p>
-                    {success ?
-                        <Alert severity="success">{successMessage}</Alert>
-                        : ""
-                    }
-                    {error ?
-                        <Alert severity="error">{errorMessage}</Alert>
-                        : ""
-                    }
-                    {process ?
-                        <Alert severity="info">{processMessage}</Alert>
-                        : ""
-                    }
+                <div className="text-right">
+                    <Tooltip title="Borrar" aria-label="delete">
+                        <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
                 </div>
+                <AlertModal
+                    type="delete"
+                    open={open}
+                    handleClose={() => setOpen(!open)}
+                    message='¿Esta seguro que quiere eliminar este curso?'
+                    action={deleteCourse}
+                />
             </div>
-            <div className="text-right">
-                <Tooltip title="Borrar" aria-label="delete">
-                    <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
-                        <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
-            </div>
-            <AlertModal
-                type="delete"
-                open={open}
-                handleClose={() => setOpen(!open)}
-                message='¿Esta seguro que quiere eliminar este curso?'
-                action={deleteCourse}
-            />
-        </div>
+        </Animated>
     )
 }
