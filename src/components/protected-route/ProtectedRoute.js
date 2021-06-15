@@ -13,10 +13,10 @@ export default function ProtectedRoute({ component, type, ...options }) {
 
     const { isLoggedIn, isAdmin, isTeacher, isStudent, logoutHandler } = useContext(UserContext);
 
-    const created_at = localStorage.getItem('created_at');
-    if (created_at) {
+    const expire_at = localStorage.getItem('expire_at');
+    if (expire_at) {
         const now = Date.now().valueOf() / 1000;
-        if (now > parseInt(created_at)) {
+        if (now > parseInt(expire_at)) {
             logoutHandler();
             return (
                 <Redirect to="/" />

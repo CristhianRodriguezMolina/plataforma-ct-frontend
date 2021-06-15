@@ -34,7 +34,7 @@ import { Link } from '@material-ui/core';
 export default function CourseView({ history }) {
 
     // Datos del contexto de usuario
-    const { isAdmin, isTeacher } = useContext(UserContext);
+    const { isAdmin, isTeacher, changeColor } = useContext(UserContext);
 
     // Datos que vienen como parametros en la ruta para este componente
     const { type, id, view } = useParams();
@@ -44,7 +44,7 @@ export default function CourseView({ history }) {
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
-        localStorage.setItem('navbar-color', '#dcedc8')
+        changeColor('#dcedc8');
     });
 
     useEffect(() => {

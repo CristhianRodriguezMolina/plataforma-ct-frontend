@@ -42,52 +42,23 @@ const useStyles = makeStyles(theme => ({
 
 function NavBar() {
 
-	const { logoutHandler } = useContext(UserContext);
+	const { logoutHandler, navbarColor } = useContext(UserContext);
 
 	// Estilos de material UI
 	const classes = useStyles();
-
-	// Color basico de la navbar
-	const [color, setColor] = useState('#424242');
-
-	// Objeto de la ruta actual
-	const router = useLocation();
-	const [currentLocation, setCurrentLocation] = useState(router.pathname);
-	const [currentColor, setCurrentColor] = useState(localStorage.getItem('navbar-color'))
-
-	// UseEffect para cambiar el color de la navbar
-	useEffect(() => {
-		console.log(localStorage.getItem('navbar-color'));
-		setColor(localStorage.getItem('navbar-color'));
-
-		const changeColor = () => {
-			if (currentLocation !== router.pathname) {
-				setCurrentColor(localStorage.getItem('navbar-color'));
-				setCurrentLocation(router.pathname);
-				return true;
-			} else {
-				return false;
-			}
-		}
-		changeColor();
-	}, [currentColor]);
-
-	useEffect(() => {
-		setCurrentColor(localStorage.getItem('navbar-color'));
-	})
 
 	return (
 		<>
 			{
 				localStorage.getItem('token') ?
 					<div>
-						<AppBar className="" style={{ backgroundColor: color }}>
+						<AppBar className="" style={{ backgroundColor: navbarColor }}>
 							<Toolbar>
 								<Container maxWidth="lg" className="d-flex justify-content-between align-items-center">
 									<Typography variant="h6">
 										<IconButton>
 											APP
-									</IconButton>
+										</IconButton>
 									</Typography>
 									<div className="d-flex align-items-center">
 										<Typography variant="h6" color="textSecondary" className="welcome-word">Bienvenido</Typography>

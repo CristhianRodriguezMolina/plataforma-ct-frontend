@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
 
 import './MyActivities.scss';
 import '../common/alert-message.scss';
@@ -21,6 +24,9 @@ import Alert from '@material-ui/lab/Alert';
 import AlertModal from '../common/AlertModal';
 
 const MyActivities = props => {
+
+	// Variables del contexto
+	const { changeColor } = useContext(UserContext);
 
 	const [activities, setActivities] = useState(null);
 	const [showFetchButton, setShowFetchButton] = useState(true);
@@ -51,7 +57,8 @@ const MyActivities = props => {
 
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
-		localStorage.setItem('navbar-color', '#f8bbd0')
+		changeColor('#f8bbd0');
+		// localStorage.setItem('navbar-color', '#f8bbd0')
 	});
 
 	// Funcion para mostrar una alerta de error dado un mensaje

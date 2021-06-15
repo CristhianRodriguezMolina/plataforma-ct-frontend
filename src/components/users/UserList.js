@@ -109,11 +109,11 @@ export default function UserList({ type }) {
 	return (
 		<div className="mt-4">
 			{success ?
-				<Alert severity="success">{successMessage}</Alert>
+				<Alert className="alert-message" severity="success">{successMessage}</Alert>
 				: ""
 			}
 			{error ?
-				<Alert severity="error">{errorMessage}</Alert>
+				<Alert className="alert-message" severity="error">{errorMessage}</Alert>
 				: ""
 			}
 			{process ?

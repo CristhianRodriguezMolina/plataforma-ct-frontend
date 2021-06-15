@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom';
+
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
 
 // API
 import api from '../../services/api';
@@ -19,6 +22,9 @@ import Container from '@material-ui/core/Container';
 import Alert from '@material-ui/lab/Alert';
 
 export default function CreateUser({ history }) {
+
+	// Datos del contexto
+	const { changeColor } = useContext(UserContext);
 
 	// Datos que vienen como parametros en la ruta para este componente
 	const { type, action, ID } = useParams();
@@ -43,11 +49,11 @@ export default function CreateUser({ history }) {
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
 		if (type === "teachers") {
-			localStorage.setItem('navbar-color', '#ffe0b2')
+			changeColor('#ffe0b2');
 		} else if (type === "students") {
-			localStorage.setItem('navbar-color', '#bbdefb')
+			changeColor('#bbdefb');
 		}
-	}, [type, localStorage.getItem('navbar-color')]);
+	}, [type]);
 
 	useEffect(() => {
 		if (ID) { // En caso de que llegue una ID de usuario por la ruta            

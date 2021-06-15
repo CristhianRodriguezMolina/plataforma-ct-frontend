@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useEffect, useContext } from 'react'
+
+// CONTEXT
+import UserContext from '../../../context/user/UserContext';
 
 // COMPONENTS
 
@@ -6,6 +9,15 @@ import React from 'react'
 import TitleCard from '../../common/TitleCard';
 
 export default function ManageTask() {
+
+	// Variables del cotexto
+	const { changeColor } = useContext(UserContext);
+
+	// UseEffect para cambiar el color de la barra de navegación
+	useEffect(() => {
+		changeColor('#dcedc8');
+	});
+
 	return (
 		<div>
 			<TitleCard

@@ -1,5 +1,8 @@
-import React, { useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
+
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
 
 // SCSS
 import './user.scss';
@@ -17,18 +20,18 @@ import Container from '@material-ui/core/Container';
 
 export default function UserManage({ history }) {
 
+    // Variables del cotexto
+    const { changeColor } = useContext(UserContext);
+
     // Datos que vienen como parametros en la ruta para este componente
     const { type } = useParams();
-
-    // Actual location
-    let location = useLocation();
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
         if (type === "teachers") {
-            localStorage.setItem('navbar-color', '#ffe0b2')
+            changeColor('#ffe0b2');
         } else if (type === "students") {
-            localStorage.setItem('navbar-color', '#bbdefb')
+            changeColor('#bbdefb');
         }
     }, [type]);
 

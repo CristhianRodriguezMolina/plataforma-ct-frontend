@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 
 import UserReducer from './UserReducer';
 import UserContext from './UserContext';
@@ -90,9 +90,16 @@ const UserState = (props) => {
         isStudent: isStudentHandler()
     };
 
+    const [navbarColor, setNavbarColor] = useState('#ffcdd2')
     const [state, dispatch] = useReducer(UserReducer, initialState);
 
+    const changeColor = (color) => {
+        setNavbarColor(color);
+    }
+
     const user = {
+        navbarColor,
+        changeColor,
         signinHandler,
         logoutHandler,
         env: state.env,

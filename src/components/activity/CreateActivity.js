@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
-//SCSS
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
+
+// SCSS
 import './CreateActivity.scss';
 import '../common/alert-message.scss';
 
@@ -15,6 +18,9 @@ import Alert from '@material-ui/lab/Alert';
 
 
 const CreateActivity = (props) => {
+
+	// Variables del cotexto
+	const { changeColor } = useContext(UserContext);
 
 	const [name, setName] = useState(''); //Save the data registered in name field
 	const [description, setDescription] = useState(''); //Save the data registered in description field
@@ -44,9 +50,10 @@ const CreateActivity = (props) => {
 			setProcessMessage("");
 		}, 2000)
 	}
+
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
-		localStorage.setItem('navbar-color', '#f8bbd0')
+		changeColor('#f8bbd0');
 	});
 
 	const handleSubmit = (e) => {

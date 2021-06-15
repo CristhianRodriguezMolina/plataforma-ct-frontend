@@ -23,7 +23,8 @@ import { AccountCircleOutlined, Lock, Copyright, Devices, ImportContacts } from 
 
 export default function Login({ history }) {
 
-    const { signinHandler } = useContext(UserContext);
+    // Variables del contexto
+    const { signinHandler, changeColor } = useContext(UserContext);
 
     // Datos del inicio de sesion
     const [id, setId] = useState('')
@@ -37,7 +38,7 @@ export default function Login({ history }) {
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
-        localStorage.setItem('navbar-color', '#ffcdd2')
+        changeColor('#ffcdd2');
 
         if (localStorage.getItem('token')) {
             return history.push('/course/mycourses')
@@ -63,7 +64,7 @@ export default function Login({ history }) {
 
             const response = await api.post('/api/auth/signin', { id, password });
 
-            const { user_name, user_id, user_role, user_image, token, created_at, message } = response.data;
+            const { user_name, user_id, user_role, user_image, token, expire_at, message } = response.data;
 
             if (user_id && token) {
                 localStorage.setItem('user_name', user_name);
@@ -71,8 +72,8 @@ export default function Login({ history }) {
                 localStorage.setItem('user_role', user_role);
                 localStorage.setItem('user_image', user_image);
                 localStorage.setItem('token', token);
-                localStorage.setItem('created_at', created_at);
-                console.log(created_at)
+                localStorage.setItem('expire_at', expire_at);
+                console.log(expire_at)
 
                 signinHandler();
 

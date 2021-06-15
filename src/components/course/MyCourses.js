@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
 
 // CONTEXT
 import UserContext from '../../context/user/UserContext';
@@ -24,10 +23,7 @@ import Alert from '@material-ui/lab/Alert';
 export default function MyCourses({ history }) {
 
 	// Datos del contexto de usuario
-	const { isAdmin, isTeacher, isStudent } = useContext(UserContext);
-
-	// Actual location
-    let location = useLocation();
+	const { isAdmin, isTeacher, isStudent, changeColor } = useContext(UserContext);
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -46,7 +42,7 @@ export default function MyCourses({ history }) {
 
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
-		localStorage.setItem('navbar-color', '#dcedc8')
+		changeColor('#dcedc8');
 	});
 
 	useEffect(() => {
@@ -77,15 +73,15 @@ export default function MyCourses({ history }) {
 				showError(message);
 			}
 		} catch (error) {
-			if(error.response){
-                console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
-                showError(error.response.data.message);                
-            }else{
-                console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
-                showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
-            }
-            setProcess(false);
-            setProcessMessage('');
+			if (error.response) {
+				console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
+				showError(error.response.data.message);
+			} else {
+				console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
+				showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
+			}
+			setProcess(false);
+			setProcessMessage('');
 		}
 	}
 

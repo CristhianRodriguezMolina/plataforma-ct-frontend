@@ -1,4 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
+
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
 
 // SCSS
 import './error.scss';
@@ -10,6 +13,14 @@ import Link from '@material-ui/core/Link';
 
 export default function Error404() {
 
+    // Variables del contexto
+    const { changeColor } = useContext(UserContext);
+
+    // UseEffect para cambiar el color de la barra de navegación
+    useEffect(() => {
+        changeColor('#575757');
+    });
+
     return (
         <div className="error404">
             <div className="body">
@@ -19,9 +30,9 @@ export default function Error404() {
                     <main>
                         <h1>Sorry!</h1>
                         <p>
-                        No eres suficientemente cool para visitar esta pagina o no existe <em>. . . como tu vida social.</em>
+                            No eres suficientemente cool para visitar esta pagina o no existe <em>. . . como tu vida social.</em>
                         </p>
-                        <Link className='btn btn404' href={localStorage.getItem('token')?'/course/mycourses':'/'}>Ya puedes irte!</Link>
+                        <Link className='btn btn404' href={localStorage.getItem('token') ? '/course/mycourses' : '/'}>Ya puedes irte!</Link>
                     </main>
                 </div>
             </div>
