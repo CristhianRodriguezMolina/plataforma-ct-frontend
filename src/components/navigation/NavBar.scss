@@ -1,8 +1,27 @@
 .navbar-user-options {
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
-    border: 1px solid #858585;    
+    border: 1px solid #858585;
     font-size: 1.5em;
+    width: 13em;
+    font-weight: bold;
     //background-color: #eeeeee;
+    .navbar-user-options-header {
+        display: flex;
+        align-items: center;
+        padding: 0.5em 2em 0 2em;
+        margin: 0;
+    }
+    .dropdown-divider {
+        margin-left: 1em;
+        margin-right: 1em;
+        border-color: #bdbdbd;
+    }
+    .dropdown-item {
+        &:hover {
+            background-color: rgb(194, 194, 194);
+        }
+    }
 }
 
 .welcome-word {
@@ -15,5 +34,12 @@
     }
     .navbar-user-options {
         font-size: 1em;
+        width: 17em;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .navbar-user-options {
+        width: 19em;
     }
 }

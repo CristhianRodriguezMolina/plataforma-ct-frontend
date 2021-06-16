@@ -64,10 +64,11 @@ export default function Login({ history }) {
 
             const response = await api.post('/api/auth/signin', { id, password });
 
-            const { user_name, user_id, user_role, user_image, token, expire_at, message } = response.data;
+            const { user_name, user_last_name, user_id, user_role, user_image, token, expire_at, message } = response.data;
 
             if (user_id && token) {
                 localStorage.setItem('user_name', user_name);
+                localStorage.setItem('user_last_name', user_last_name);
                 localStorage.setItem('user_id', user_id);
                 localStorage.setItem('user_role', user_role);
                 localStorage.setItem('user_image', user_image);

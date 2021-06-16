@@ -113,7 +113,7 @@ export default function StudentCard(props) {
 
 	return (
 		<Animated animationIn="rubberBand" animationInDuration={1000} animationOut="bounceOutRight" animationOutDuration={1000} isVisible={visible}>
-			<div className="course-user">
+			<div id={student._id} className="course-user">
 				<div className="student-course-card">
 					<Avatar className="student-avatar mr-2" src="https://picsum.photos/200/300" />
 					<div className="mr-auto">
