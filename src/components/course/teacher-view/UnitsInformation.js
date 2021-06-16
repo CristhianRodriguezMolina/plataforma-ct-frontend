@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
 // Components for the tab bar
-import { AppBar, Box, Button, Container, Tab, Tabs, Typography } from '@material-ui/core'
+import { AppBar, Box, Button, Tab, Tabs, Typography } from '@material-ui/core'
 
 // Alert
 import { Alert } from '@material-ui/lab'
@@ -26,7 +26,11 @@ import { ControlPoint } from '@material-ui/icons';
 // Colors
 import { red, lightGreen } from '@material-ui/core/colors';
 
+// Unit content
 import UnitContent from './UnitContent';
+
+// Scroll
+import { animateScroll as scroll } from 'react-scroll'
 
 /* TEACHER */
 function TabPanel(props) {
@@ -72,11 +76,22 @@ const useStyles = makeStyles((theme) => ({
 	bar: {
 		backgroundColor: 'white',
 		color: 'white',
-		width: "100%"
+		width: "100%",
+		borderRadius: "10px"
+	},
+	indicator: {
+		backgroundColor: 'yellowgreen',
+	},
+	selected: {
+		color: '#558b2f',
+		fontWeight: 'bold'
+	},
+	notSelected: {
+		fontWeight: 'bold'
 	}
 }));
 
-export default function UnitsInformation({ course, setCourse, history }) {
+export default function UnitsInformation({ course, setCourse }) {
 
 	const classes = useStyles();
 
@@ -93,6 +108,9 @@ export default function UnitsInformation({ course, setCourse, history }) {
 	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+	// Visibility for the components animation
+	const [visible, setVisible] = useState(true);
 
 	// UseEffect para cambiar la pestaña actual a la pestaña que se cree nueva
 	useEffect(() => {
@@ -121,6 +139,13 @@ export default function UnitsInformation({ course, setCourse, history }) {
 			setSuccessMessage("");
 		}, 2000)
 	};
+
+	// Method to do a smooth scroll
+	const scrollTo = () => {
+		scroll.scrollTo(0, {
+			duration: 500,
+		})
+	}
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
@@ -167,6 +192,8 @@ export default function UnitsInformation({ course, setCourse, history }) {
 			setProcessMessage('Borrando una nueva unidad...');
 
 			const response = await api.delete(`/api/course/unit/${course._id}/${unitId}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
+
+			scrollTo();
 
 			const { updatedCourse, message } = response.data;
 
@@ -226,22 +253,25 @@ export default function UnitsInformation({ course, setCourse, history }) {
 							onChange={handleChange}
 							variant="scrollable"
 							scrollButtons="on"
-							indicatorColor="secondary"
-							textColor="secondary"
+							classes={{
+								indicator: classes.indicator,
+								textColor: classes.textColor
+							}}
+							textColor="inherit"
 							aria-label="scrollable force tabs example"
 							className="units-bar"
 						>
 							{/* TABS FOR EACH UNIT IN THE COURSE */}
 							{
 								course.units.map((unit, index) => (
-									<Tab key={index} label={`Unidad ${index + 1}`} {...a11yProps(index)} />
+									<Tab className={value === index ? classes.selected : classes.notSelected} key={index} label={`Unidad ${index + 1}`} {...a11yProps(index)} />
 								))
 							}
 							{course.units[0] ? <div className="divider bg-white"></div> : ""}
 						</Tabs>
 						{course.units[0] ? <div className="divider"></div> : ""}.
 						{/* BUTTON TO ADD NEW UNITS */}
-						<Button onClick={() => addUnit()} color="secondary" className="px-3 ml-2"><ControlPoint /> Añadir unidad</Button>
+						<Button onClick={() => addUnit()} className={classes.selected}><ControlPoint /> Añadir unidad</Button>
 					</div>
 				</Typography>
 				{success ?
@@ -265,7 +295,6 @@ export default function UnitsInformation({ course, setCourse, history }) {
 					</TabPanel>
 				))
 			}
-
 		</div>
 	)
 }

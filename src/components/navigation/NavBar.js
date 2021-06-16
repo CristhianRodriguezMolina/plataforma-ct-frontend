@@ -33,6 +33,9 @@ import Container from '@material-ui/core/Container'
 // Make styles
 import { makeStyles } from '@material-ui/core/styles'
 
+// Icons
+import { Close, People, PeopleOutline, LibraryBooks, LibraryAdd, Computer } from '@material-ui/icons';
+
 const useStyles = makeStyles(theme => ({
 	navbar: {
 		backgroundColor: localStorage.getItem('navbar-color')
@@ -42,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 
 function NavBar() {
 
-	const { logoutHandler, navbarColor } = useContext(UserContext);
+	const { logoutHandler, navbarColor, isAdmin, isTeacher, isStudent } = useContext(UserContext);
 
 	// Estilos de material UI
 	const classes = useStyles();
@@ -73,19 +76,45 @@ function NavBar() {
 												<Avatar src={`${process.env.REACT_APP_API_URL}/profile/img1.jpg`} />
 											</IconButton>
 											<ul className="navbar-user-options dropdown-menu shadow" aria-labelledby="dropdownProfileMenu">
-												{/* <Typography variant="subtitle2"> */}
-												<li><Link className="dropdown-item" to="">Perfil</Link></li>
-												<li><Link className="dropdown-item" to="/">Login</Link></li>
-												<div className="dropdown-divider"></div>
-												<li><Link className="dropdown-item" to="/user/teachers">Gestion de profesores</Link></li>
-												<li><Link className="dropdown-item" to="/user/students">Gestión de estudiantes</Link></li>
-												<div className="dropdown-divider"></div>
-												<li><Link className="dropdown-item" to="/course/mycourses">Mis cursos</Link></li>
-												<li><Link className="dropdown-item" to="/activity/myactivities">Mis actividades</Link></li>
-												<li><Link className="dropdown-item" to="/activity/create">Crear actividad</Link></li>
-												<div className="dropdown-divider"></div>
-												<li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/">Cerrar sesión</Link></li>
-												{/* </Typography> */}
+												<Typography variant="subtitle1">
+													<li>
+														<div className="navbar-user-options-header">
+															<Avatar className="mr-3" src={`${process.env.REACT_APP_API_URL}/profile/img1.jpg`} />
+															<div className="d-flex flex-column">
+																<p className="m-0 p-0">{localStorage.getItem('user_name')} {localStorage.getItem('user_last_name')}</p>
+																<Link className="" to="/profile">Perfil</Link>
+															</div>
+														</div>
+													</li>
+													{
+														isAdmin || isTeacher ?
+															<>
+																<div className="dropdown-divider"></div>
+																{
+																	isAdmin ?
+																		<li><Link className="dropdown-item" to="/user/teachers"><People className="mr-2" color="action" /> Gestion de profesores</Link></li>
+																		:
+																		""
+																}
+																<li><Link className="dropdown-item" to="/user/students"><PeopleOutline className="mr-2" color="action" /> Gestión de estudiantes</Link></li>
+															</>
+															:
+															""
+													}
+													<div className="dropdown-divider"></div>
+													<li><Link className="dropdown-item" to="/course/mycourses"><Computer className="mr-2" color="action" /> Mis cursos</Link></li>
+													{
+														isAdmin || isTeacher ?
+															<>
+																<li><Link className="dropdown-item" to="/activity/myactivities"><LibraryBooks className="mr-2" color="action" /> Mis actividades</Link></li>
+																<li><Link className="dropdown-item" to="/activity/create"><LibraryAdd className="mr-2" color="action" /> Crear actividad</Link></li>
+																<div className="dropdown-divider"></div>
+															</>
+															:
+															""
+													}
+													<li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/"><Close className="mr-2" color="action" /> Cerrar sesión</Link></li>
+												</Typography>
 											</ul>
 										</div>
 									</div>

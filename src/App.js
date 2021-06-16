@@ -69,6 +69,9 @@ const CreateUser = React.lazy(() => import('./components/users/CreateUser'));
 // Login
 const Login = React.lazy(() => import('./components/login/Login'));
 
+// Profile
+const Profile = React.lazy(() => import('./components/profile/Profile'));
+
 // Error 404
 const Error404 = React.lazy(() => import('./components/error/Error404'));
 
@@ -102,6 +105,9 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
+
+                {/* PROFILE */}
+                <ProtectedRoute path='/profile' exact component={Profile} />
 
                 {/* INDEX/LOGIN */}
                 <Route path="/unauthorized" exact component={Error404} />

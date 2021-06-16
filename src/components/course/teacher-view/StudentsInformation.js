@@ -20,6 +20,9 @@ import Container from '@material-ui/core/Container';
 // Student card
 import StudentCard from '../student-card/StudentCard';
 
+// Scroll
+import { Element, animateScroll as scroll } from 'react-scroll'
+
 /* TECAHER */
 export default function StudentsInformation(props) {
 
@@ -71,6 +74,13 @@ export default function StudentsInformation(props) {
         }, 2000);
     };
 
+    // Method to do a smooth scroll
+    const scrollTo = () => {
+        scroll.scrollTo(250, {
+            duration: 500,
+        })
+    }
+
     const fetchStudents = async () => {
         try {
             setProcess(true);
@@ -84,6 +94,9 @@ export default function StudentsInformation(props) {
 
             if (students) {
                 setStudents(students);
+                if (isAddingStudents) {
+                    scrollTo();
+                }
                 showSuccess(message);
             }
         } catch (error) {
@@ -96,7 +109,7 @@ export default function StudentsInformation(props) {
             }
         }
         setProcess(false);
-        setErrorMessage('')
+        setErrorMessage('');
     }
 
     return (
@@ -118,7 +131,7 @@ export default function StudentsInformation(props) {
                 </form>
                 {students && students.length > 0 ?
                     students.map(student => (
-                        <StudentCard key={student._id} student={student} setStudents={setStudents} setIsAddingStudents={setIsAddingStudents} course={course} />
+                        <StudentCard id={student._id} key={student._id} student={student} setStudents={setStudents} setIsAddingStudents={setIsAddingStudents} course={course} />
                     ))
                     :
                     <>
