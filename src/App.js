@@ -26,6 +26,9 @@ import theme from './themeConfig';
 // Ruta protegida
 import ProtectedRoute from './components/protected-route/ProtectedRoute';
 
+// animate.css package
+import 'animate.css/animate.min.css';
+
 // COMPONENTS ---------------------------------------------------------
 
 // Router

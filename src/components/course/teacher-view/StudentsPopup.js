@@ -25,7 +25,7 @@ import Alert from "@material-ui/lab/Alert";
 
 export default function StudentsPopup(props) {
 	// Props for the modal
-	const { course, isOpen, toggle, setCourseStudents, isAddingStudents, setIsAddingStudents } = props;
+	const { course, isOpen, toggle, isAddingStudents, setIsAddingStudents } = props;
 
 	// MENSAJES DEL MODAL
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -116,7 +116,6 @@ export default function StudentsPopup(props) {
 	// Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
 	const addStudents = async () => {
 		try {
-			setIsAddingStudents(true); // This flag activate the fetch users in the StudentsInformation view
 			setProcess(true);
 			setProcessMessage("Añadiendo estudiantes...");
 
@@ -126,6 +125,7 @@ export default function StudentsPopup(props) {
 				headers: { "x-access-token": localStorage.getItem("token") },
 			});
 
+			setIsAddingStudents(true); // This flag activate the fetch users in the StudentsInformation view
 			const { acceptedStudents, deniedStudents, message } = response.data;
 
 

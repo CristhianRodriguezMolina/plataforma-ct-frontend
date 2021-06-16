@@ -11,6 +11,9 @@ import './StudentCard.scss';
 
 // COMPONENTS
 
+// Animation
+import { Animated } from "react-animated-css";
+
 // Avatar
 import Avatar from '@material-ui/core/Avatar';
 
@@ -47,6 +50,9 @@ export default function StudentCard(props) {
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
 
+	// Visibility for the components animation
+	const [visible, setVisible] = useState(true);
+
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
 		setError(true);   //Se cambia el estado de mensaje de error a verdadero
@@ -68,22 +74,25 @@ export default function StudentCard(props) {
 	}
 
 	const deleteStundentFromCourse = async () => {
+		// Toggle for the animation of the component
+		setVisible(false);
 		try {
-			setIsAddingStudents(true);
 			setProcess(true);
 			setProcessMessage('Borrando usuario...');
 
 			const response = await api.delete(`/api/course/students/${course._id}/${student._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
+			setIsAddingStudents(true);
 			const { message } = response.data;
 
 			showSuccess(message);
 
 			// Eliminacion del estudiante de la lista de estudiantes del curso
 			setStudents(prevValues => {
-				if (prevValues.length === 1) {
-					return null;
-				}
+				console.log(prevValues);
+				// if (prevValues.length === 1) {
+				// 	return null;
+				// }
 				return prevValues.filter(value => value !== student)
 			});
 		} catch (error) {
@@ -95,57 +104,61 @@ export default function StudentCard(props) {
 				console.log(`Ha ocurrido un error: ${error}`);
 			}
 		}
+		// Toggle for the animation of the component
+		setVisible(false);
 		setProcess(false);
 		setProcessMessage('');
 		setIsAddingStudents(false);
 	}
 
 	return (
-		<div className="course-user">
-			<div className="student-course-card">
-				<Avatar className="student-avatar mr-2" src="https://picsum.photos/200/300" />
-				<div className="mr-auto">
-					<Typography component="h1">
-						{student.first_name} {student.last_name}
-						<br />
-						<p className="text-muted d-inline">ID: {student.id}</p>
-						<br />
-						<p className="text-muted d-inline">Edad: {util.getAge(student.birth_date)}</p>
-					</Typography>
-				</div>
-				{success ?
-					<Alert severity="success">{successMessage}</Alert>
-					: ""
-				}
-				{error ?
-					<Alert severity="error">{errorMessage}</Alert>
-					: ""
-				}
-				{process ?
-					<Alert severity="info">{processMessage}</Alert>
-					: ""
-				}
-				<Typography variant="subtitle1">
-					<div className="btn-group-sm btn-group-vertical">
-						<Tooltip title="Borrar del curso" aria-label="delete">
-							<button onClick={() => setOpen(!open)} className="btn btn-danger"><Delete /></button>
-						</Tooltip>
-						<Tooltip title="Editar" aria-label="edit">
-							<Link to={`/user/students/edit/${student._id}`} className="btn btn-info"><Edit /></Link>
-						</Tooltip>
-						<Tooltip title="Progreso" aria-label="progress">
-							<Link to="progress" className="btn btn-success"><Cached /></Link>
-						</Tooltip>
+		<Animated animationIn="rubberBand" animationInDuration={1000} animationOut="bounceOutRight" animationOutDuration={1000} isVisible={visible}>
+			<div className="course-user">
+				<div className="student-course-card">
+					<Avatar className="student-avatar mr-2" src="https://picsum.photos/200/300" />
+					<div className="mr-auto">
+						<Typography component="h1">
+							{student.first_name} {student.last_name}
+							<br />
+							<p className="text-muted d-inline">ID: {student.id}</p>
+							<br />
+							<p className="text-muted d-inline">Edad: {util.getAge(student.birth_date)}</p>
+						</Typography>
 					</div>
-				</Typography>
-				<AlertModal
-					type="delete"
-					open={open}
-					handleClose={() => setOpen(!open)}
-					message='¿Esta seguro que quiere quitar este estudiante del curso?'
-					action={deleteStundentFromCourse}
-				/>
+					{success ?
+						<Alert severity="success">{successMessage}</Alert>
+						: ""
+					}
+					{error ?
+						<Alert severity="error">{errorMessage}</Alert>
+						: ""
+					}
+					{process ?
+						<Alert severity="info">{processMessage}</Alert>
+						: ""
+					}
+					<Typography variant="subtitle1">
+						<div className="btn-group-sm btn-group-vertical">
+							<Tooltip title="Borrar del curso" aria-label="delete">
+								<button onClick={() => setOpen(!open)} className="btn btn-danger"><Delete /></button>
+							</Tooltip>
+							<Tooltip title="Editar" aria-label="edit">
+								<Link to={`/user/students/edit/${student._id}`} className="btn btn-info"><Edit /></Link>
+							</Tooltip>
+							<Tooltip title="Progreso" aria-label="progress">
+								<Link to="progress" className="btn btn-success"><Cached /></Link>
+							</Tooltip>
+						</div>
+					</Typography>
+					<AlertModal
+						type="delete"
+						open={open}
+						handleClose={() => setOpen(!open)}
+						message='¿Esta seguro que quiere quitar este estudiante del curso?'
+						action={deleteStundentFromCourse}
+					/>
+				</div>
 			</div>
-		</div>
+		</Animated>
 	)
 }

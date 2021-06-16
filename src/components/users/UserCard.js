@@ -11,6 +11,9 @@ import * as util from '../../util/util';
 
 // COMPONENTS
 
+// Animation
+import { Animated } from "react-animated-css";
+
 // Modal de confirmacion de borrado
 import AlertModal from '../common/AlertModal';
 
@@ -42,6 +45,9 @@ export default function UserCard({ user, setUsers, history, type }) {
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
 
+	// Visibility for the components animation
+	const [visible, setVisible] = useState(true);
+
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
 		setError(true);   //Se cambia el estado de mensaje de error a verdadero
@@ -63,6 +69,8 @@ export default function UserCard({ user, setUsers, history, type }) {
 	}
 
 	const deleteUser = async () => {
+		// Toggle for the animation of the component
+		setVisible(false);
 		try {
 			setProcess(true);
 			setProcessMessage('Borrando usuario...');
@@ -96,53 +104,59 @@ export default function UserCard({ user, setUsers, history, type }) {
 				console.log(`Ha ocurrido un error en el servidor`);
 			}
 		}
+		// Toggle for the animation of the component
+		setVisible(true);
+		setProcess(false);
+		setProcessMessage('');
 	}
 
 	return (
-		<div className="user-card d-flex justify-content-between mb-4">
-			<div className="card d-flex justify-content-center align-items-left mr-3">
-				<div className="d-flex align-items-center px-4">
-					<Avatar className="mr-2" src="https://i.pinimg.com/originals/32/a3/69/32a3690fe66a73adcb98922874eb8b8a.jpg" />
-					<div className="ml-2 mr-5">
-						<p className="m-0">{user.first_name} {user.last_name}</p>
-						<p className="m-0 text-muted">ID: {user.id}</p>
-						<p className="m-0 text-muted">Edad: {util.getAge(user.birth_date)} años</p>
+		<Animated animationIn="rubberBand" animationInDuration={1000} animationOut="bounceOutRight" animationOutDuration={1000} isVisible={visible}>
+			<div className="user-card d-flex justify-content-between mb-4">
+				<div className="card d-flex justify-content-center align-items-left mr-3">
+					<div className="d-flex align-items-center px-4">
+						<Avatar className="mr-2" src="https://i.pinimg.com/originals/32/a3/69/32a3690fe66a73adcb98922874eb8b8a.jpg" />
+						<div className="ml-2 mr-5">
+							<p className="m-0">{user.first_name} {user.last_name}</p>
+							<p className="m-0 text-muted">ID: {user.id}</p>
+							<p className="m-0 text-muted">Edad: {util.getAge(user.birth_date)} años</p>
+						</div>
+						{success ?
+							<Alert severity="success">{successMessage}</Alert>
+							: ""
+						}
+						{error ?
+							<Alert severity="error">{errorMessage}</Alert>
+							: ""
+						}
+						{process ?
+							<Alert severity="info">{processMessage}</Alert>
+							: ""
+						}
 					</div>
-					{success ?
-						<Alert severity="success">{successMessage}</Alert>
-						: ""
-					}
-					{error ?
-						<Alert severity="error">{errorMessage}</Alert>
-						: ""
-					}
-					{process ?
-						<Alert severity="info">{processMessage}</Alert>
-						: ""
-					}
+				</div>
+				<div className="d-flex flex-column">
+					<div className="icon-buttons button-group btn-group-vertical">
+						<Tooltip title="Editar" aria-label="edit">
+							<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
+						</Tooltip>
+						<Tooltip title="Borrar" aria-label="delete">
+							<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
+						</Tooltip>
+					</div>
+					<div className="group-buttons button-group btn-group-vertical">
+						<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>
+						<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>
+					</div>
+					<AlertModal
+						type="delete"
+						open={open}
+						handleClose={() => setOpen(!open)}
+						message={type === "teachers" ? '¿Esta seguro que quiere borrar este profesor de la plataforma?' : '¿Esta seguro que quiere borrar este estudiante de la plataforma?'}
+						action={deleteUser}
+					/>
 				</div>
 			</div>
-			<div className="d-flex flex-column">
-				<div className="icon-buttons button-group btn-group-vertical">
-					<Tooltip title="Editar" aria-label="edit">
-						<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
-					</Tooltip>
-					<Tooltip title="Borrar" aria-label="delete">
-						<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
-					</Tooltip>
-				</div>
-				<div className="group-buttons button-group btn-group-vertical">
-					<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>
-					<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>
-				</div>
-				<AlertModal
-					type="delete"
-					open={open}
-					handleClose={() => setOpen(!open)}
-					message={type === "teachers" ? '¿Esta seguro que quiere borrar este profesor de la plataforma?' : '¿Esta seguro que quiere borrar este estudiante de la plataforma?'}
-					action={deleteUser}
-				/>
-			</div>
-		</div>
+		</Animated>
 	)
 }

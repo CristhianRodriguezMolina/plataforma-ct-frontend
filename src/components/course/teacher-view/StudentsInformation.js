@@ -39,6 +39,7 @@ export default function StudentsInformation(props) {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
 
+    // Students of the course
     const [students, setStudents] = useState(null);
 
     // UseEffect para obtener los alumnos del curso o en dado caso que se agreguen nuevos alumnos al curso se vuelvan a obtener
@@ -115,7 +116,7 @@ export default function StudentsInformation(props) {
                         </button>
                     </div>
                 </form>
-                {students ?
+                {students && students.length > 0 ?
                     students.map(student => (
                         <StudentCard key={student._id} student={student} setStudents={setStudents} setIsAddingStudents={setIsAddingStudents} course={course} />
                     ))
@@ -128,7 +129,7 @@ export default function StudentsInformation(props) {
                 }
             </div>
 
-            <Button className="btn-modal-add-student" variant="contained" color="secondary" onClick={toggle}>Agregar alumnos</Button>
+            <Button className="btn btn-success btn-modal-add-student" variant="contained" onClick={toggle}>Agregar alumnos</Button>
             <StudentsPopup course={course} isOpen={isOpen} toggle={toggle} setCourseStudents={setStudents} isAddingStudents={isAddingStudents} setIsAddingStudents={setIsAddingStudents} />
         </div>
     )
