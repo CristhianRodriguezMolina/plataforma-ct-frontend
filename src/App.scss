@@ -13,25 +13,30 @@
 	position: fixed;
 	bottom: 1em;
 	left: 1em;
-	display: inline-flex;
-	width: 90%;
+	display: inline-block;
+	width: 95%;
+	align-self: center;
 	z-index: 100000;
+	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
-@media only screen and (min-width: 350px) {
+@media only screen and (min-width: 690px) {
 	.alert-message {
-		width: 93%;
+		left: 7em;
+		width: 80%;
 	}
 }
 
-@media only screen and (min-width: 675px) {
+@media only screen and (min-width: 940px) {
 	.alert-message {
-		width: 95%;
+		left: 20em;
+		width: 50%;
 	}
 }
 
 @media only screen and (min-width: 1200px) {
 	.alert-message {
-		width: 98%;
+		left: 35em;
+		width: 50%;
 	}
 }

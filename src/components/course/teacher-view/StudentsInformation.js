@@ -129,7 +129,7 @@ export default function StudentsInformation(props) {
                 }
             </div>
 
-            <Button className="btn-modal-add-student" variant="contained" color="secondary" onClick={toggle}>Agregar alumnos</Button>
+            <Button className="btn btn-success btn-modal-add-student" variant="contained" onClick={toggle}>Agregar alumnos</Button>
             <StudentsPopup course={course} isOpen={isOpen} toggle={toggle} setCourseStudents={setStudents} isAddingStudents={isAddingStudents} setIsAddingStudents={setIsAddingStudents} />
         </div>
     )

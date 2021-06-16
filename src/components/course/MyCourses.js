@@ -22,6 +22,9 @@ import CourseCard from './CourseCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+// Button
+import Button from '@material-ui/core/Button';
+
 export default function MyCourses({ history }) {
 
 	// Datos del contexto de usuario
@@ -164,7 +167,7 @@ export default function MyCourses({ history }) {
 				: ""
 			}
 			{process ?
-				<Alert severity="info">{processMessage}</Alert>
+				<Alert className="alert-message" severity="info">{processMessage}</Alert>
 				: ""
 			}
 			{
@@ -193,7 +196,7 @@ export default function MyCourses({ history }) {
 			}
 			{
 				isTeacher || isAdmin ?
-					<button className="btn btn-success btn-create-course" onClick={() => createCourse()}>Crear curso</button>
+					<Button className="btn btn-success btn-create-course" onClick={() => createCourse()}>Crear curso</Button>
 					:
 					""
 			}

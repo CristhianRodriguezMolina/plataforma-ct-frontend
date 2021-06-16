@@ -119,7 +119,7 @@ export default function ManageTask() {
 							}}
 						/>
 					</div>
-					<Button variant="contained" color="secondary" className="btn-add-activities">Agregar actividades</Button>
+					<Button variant="contained" className="btn btn-success btn-add-activities">Agregar actividades</Button>
 				</div>
 			</Container>
 		</div>
