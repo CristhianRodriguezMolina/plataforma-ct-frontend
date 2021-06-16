@@ -69,19 +69,21 @@ export default function CourseInformation({ course, setCourse }) {
                     return { ...prevState, ...{ name, description, topic } }
                 });
 
-                setProcess(false);
-                setProcessMessage('');
-
                 showSuccess(message);
             } else {
                 showError(message);
             }
         } catch (error) {
-            setProcess(false);
-            setProcessMessage('');
-            showError('Error inesperado en el servidor');
-            console.log(`Ha ocurrido un error: ${error}`);
+            if (error.response) {
+                showError(error.response.data.message);
+                console.log(error.response.data.message);
+            } else {
+                showError('Error inesperado en el servidor');
+                console.log(`Ha ocurrido un error: ${error}`);
+            }
         }
+        setProcess(false);
+        setProcessMessage('');
     }
 
     return (

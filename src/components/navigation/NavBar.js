@@ -113,7 +113,7 @@ function NavBar() {
 															:
 															""
 													}
-													<li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/"><Close className="mr-2" color="action" /> Cerrar sesión</Link></li>
+													<li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/"><Close className="mr-2" color="error" /> Cerrar sesión</Link></li>
 												</Typography>
 											</ul>
 										</div>

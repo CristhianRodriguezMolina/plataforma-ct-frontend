@@ -130,12 +130,17 @@ export default function StudentsInformation(props) {
                     </div>
                 </form>
                 {students && students.length > 0 ?
-                    students.map(student => (
-                        <StudentCard id={student._id} key={student._id} student={student} setStudents={setStudents} setIsAddingStudents={setIsAddingStudents} course={course} />
-                    ))
+                    <>
+                        <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
+                        {
+                            students.map((student, index) => (
+                                <StudentCard index={index} id={student._id} key={student._id} student={student} setStudents={setStudents} setIsAddingStudents={setIsAddingStudents} course={course} />
+                            ))
+                        }
+                    </>
                     :
                     <>
-                        <div>
+                        <div className="there-is-no-students-container">
                             <h3 className="there-is-no-students">Aún no hay alumnos en el curso</h3>
                         </div>
                     </>

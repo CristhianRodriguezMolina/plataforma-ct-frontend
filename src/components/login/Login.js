@@ -74,7 +74,6 @@ export default function Login({ history }) {
                 localStorage.setItem('user_image', user_image);
                 localStorage.setItem('token', token);
                 localStorage.setItem('expire_at', expire_at);
-                console.log(expire_at)
 
                 signinHandler();
 

@@ -103,27 +103,28 @@ export default function CreateUser({ history }) {
 				setGenre(user.genre);
 				setFirstName(user.first_name);
 				setLastName(user.last_name);
+				setPassword('');
+				setConfirmPassword('');
 
 				setUser(user);
-
-				setProcess(false);
-				setProcessMessage('');
-
-				console.log(birth_date)
-				console.log(new Date())
 			} else {
 				showError(message);
 			}
 		} catch (error) {
-			setProcess(false);
-			setProcessMessage('');
-
-			showError('Error inesperado en el servidor');
-			console.log(`Ha ocurrido un error: ${error}`);
+			if (error.response) {
+				showError(error.response.data.message);
+				console.log(error.response.data.message);
+			} else {
+				showError('Error inesperado en el servidor');
+				console.log(`Ha ocurrido un error: ${error}`);
+			}
 			history.push('/unauthorized');
 		}
+		setProcess(false);
+		setProcessMessage('');
 	}
 
+	// Metodo para crear o actualizar los datos basicos de un usuario (Nombre, apellido, fecha de nacimiento, genero, id)
 	const createUser = async (e) => {
 		e.preventDefault();
 
@@ -173,8 +174,6 @@ export default function CreateUser({ history }) {
 
 					const { savedUser, updatedUser, message } = response.data;
 
-					console.log(response.data)
-
 					if (savedUser || updatedUser) { //Se verifica si existe                 
 						setBirthDate(Date.now);
 						setId('');
@@ -198,12 +197,69 @@ export default function CreateUser({ history }) {
 				showError("Debes llenar todos los campos");
 			}
 		} catch (error) {
-			setProcess(false);
-			setProcessMessage('');
+			if (error.response) {
+				showError(error.response.data.message);
+				console.log(error.response.data.message);
+			} else {
+				showError('Error inesperado en el servidor');
+				console.log(`Ha ocurrido un error: ${error}`);
+			}
+		}
+		setProcess(false);
+		setProcessMessage('');
 
+	}
+
+	// Metodo para actualizar los datos de sesion de un usuario (Password)
+	const updateSesionData = async (e) => {
+		e.preventDefault();
+
+		try {
+			if (id === "") {
+				showError("Debes proporcionar un ID para poder modificar el usuario");
+			} else if (password !== "" && confirm_password !== "") { //Se verifica la existencia de todos los campos del formulario
+
+				setProcess(true);
+				setProcessMessage("Actualizando usuario...");
+
+				const response = await api.put(`/api/person/session/${user._id}`, { //Peticion post a la api para crear un usuario nuevo 
+					id,
+					password,                         //  PARAMETROS
+					confirm_password                 //  DE LA PETICION
+				}, {
+					headers: {
+						'x-access-token': localStorage.getItem('token')
+					}
+				});
+
+
+				const { updatedUser, message } = response.data;
+
+				if (updatedUser) { //Se verifica si existe                 
+					setBirthDate(Date.now());
+					setId('');
+					setGenre('');
+					setPassword('');
+					setConfirmPassword(''); // SE LIMPIAN LOS VALORES DEL FORMULARIO
+					setFirstName('');
+					setLastName('');
+
+					history.goBack();
+				} else {
+					showError(message);
+				}
+
+				setProcess(false);
+				setProcessMessage('');
+			} else {
+				showError("Debes llenar todos los campos");
+			}
+		} catch (error) {
 			showError('Error inesperado en el servidor');
 			console.log(`Ha ocurrido un error: ${error}`);
 		}
+		setProcess(false);
+		setProcessMessage('');
 	}
 
 	return (
@@ -212,7 +268,7 @@ export default function CreateUser({ history }) {
 				title={type === "teachers" ? "Gestión de profesores" : "Gestion de alumnos"}
 				color={type === "teachers" ? "#FFA552" : "#3C8AFF"}
 			/>
-			<Container className="mt-4" maxWidth="sm">
+			<Container className="form-create-user-container mt-4" maxWidth="sm">
 				<form onSubmit={evt => createUser(evt)} className="form-create-user">
 					<h1 className="h5">{action === "create" ? "Crear" : "Actualizar"} {type === "teachers" ? "profesor" : "alumno"}</h1>
 					<hr />
@@ -260,17 +316,37 @@ export default function CreateUser({ history }) {
 
 					}
 					{error ?
-						<Alert severity="error">{errorMessage}</Alert>
+						<Alert className="alert-message" severity="error">{errorMessage}</Alert>
 						: ""
 					}
 					{process ?
-						<Alert severity="info">{processMessage}</Alert>
+						<Alert className="alert-message" severity="info">{processMessage}</Alert>
 						: ""
 					}
 					<div className="form-group d-flex justify-content-center">
-						<button className={type === "teachers" ? "btn btn-warning form-control btn-create-user shadow mt-4" : "btn btn-primary form-control btn-create-user shadow mt-4"}>{action === "create" ? "Crear" : "Actualizar"}</button>
+						<button className={type === "teachers" ? "btn btn-warning form-control btn-create-user shadow mt-4" : "btn btn-primary form-control btn-create-user shadow mt-4"}>{action === "create" ? "Crear" : "Actualizar datos basicos"}</button>
 					</div>
 				</form>
+				{
+					action === "edit" ?
+						<form onSubmit={evt => updateSesionData(evt)} className="form-create-user">
+							<hr />
+							<p className=""><b>Datos de sesión</b></p>
+							<div className="form-group">
+								<label>Contraseña</label>
+								<input className="form-control shadow" type="password" minLength="4" onChange={evt => setPassword(evt.target.value)} value={password} label="Contrasena" name="contrasena" required />
+							</div>
+							<div className="form-group">
+								<label>Confirmar contraseña</label>
+								<input className="form-control shadow" type="password" onChange={evt => setConfirmPassword(evt.target.value)} value={confirm_password} label="Confirmar contrasena" name="confirmar_contrasena" required />
+							</div>
+							<div className="form-group d-flex justify-content-center">
+								<button className={type === "teachers" ? "btn btn-warning form-control btn-create-user shadow mt-4" : "btn btn-primary form-control btn-create-user shadow mt-4"}>Actualizar datos de sesión</button>
+							</div>
+						</form>
+						:
+						""
+				}
 			</Container>
 		</div>
 	)

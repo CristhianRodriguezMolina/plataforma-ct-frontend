@@ -37,7 +37,7 @@ import { Alert } from '@material-ui/lab';
 export default function StudentCard(props) {
 
 	// Datos que llegan por parametros del componente
-	const { student, course, setStudents, setIsAddingStudents, type } = props;
+	const { index, student, course, setStudents, setIsAddingStudents, type } = props;
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -115,6 +115,7 @@ export default function StudentCard(props) {
 		<Animated animationIn="rubberBand" animationInDuration={1000} animationOut="bounceOutRight" animationOutDuration={1000} isVisible={visible}>
 			<div id={student._id} className="course-user">
 				<div className="student-course-card">
+					<b>{index + 1}</b>
 					<Avatar className="student-avatar mr-2" src="https://picsum.photos/200/300" />
 					<div className="mr-auto">
 						<Typography component="h1">

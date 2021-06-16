@@ -49,15 +49,23 @@
 .students-container {
     margin-bottom: 100px;
     padding: 3em 1em 0 1em;
+
+    .students-counter {
+        font-size: 1.2em;
+        font-style: italic;
+    }
 }
 
-.there-is-no-students {
-    color: #575757;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    text-align: center;
-    transform: translate(-50%, -50%);
+.there-is-no-students-container {
+    height: 10em;
+    .there-is-no-students {
+        color: #575757;
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        text-align: center;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .btn-modal-add-student {

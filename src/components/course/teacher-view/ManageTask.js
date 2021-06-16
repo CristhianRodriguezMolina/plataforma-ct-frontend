@@ -106,7 +106,7 @@ export default function ManageTask() {
 						/>
 						<ActivityCard
 							activity={{
-								name: 'Laberinto del fauno',
+								name: 'Laberinto del fauno Laberinto del fauno Laberinto del fauno Laberinto del fauno Laberinto del fauno',
 								description: 'Descripción del fauno',
 								type: 'maze'
 							}}
