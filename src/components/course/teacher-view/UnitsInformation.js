@@ -115,12 +115,32 @@ const UnitsInformation = (props) => {
 	// Visibility for the components animation
 	const [visible, setVisible] = useState(true);
 
+	const [activities, setActivities] = useState(null);
+
 	// UseEffect para cambiar la pestaña actual a la pestaña que se cree nueva
 	useEffect(() => {
 		if (props.course.units.length > 0 && addingUnit) {
 			setValue(props.course.units.length - 1);
 			setAddingUnit(false);
 		}
+
+		if (props.course) {
+			api.get(`/api/course/task/activity/${props.course._id}`, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			})
+				.then((res) => {
+					setActivities(res.data.activities);
+				})
+				.catch(err => {
+					if (err.response) {
+						showError(err.response.data.message);
+					}
+					else {
+						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+					}
+				});
+		}
+
 	}, [props.course])
 
 	// Funcion para mostrar una alerta de error dado un mensaje
@@ -335,7 +355,7 @@ const UnitsInformation = (props) => {
 			{
 				props.course.units.map((unit, index) => (
 					<TabPanel value={value} key={index} index={index}>
-						<UnitContent course={props.course} unitValue={unit} onAddTask={handleAddTask} onUpdateChanges={handleUpdateUnit} onDeleteUnit={deleteUnit} onDeleteTask={handleDeleteTask} />
+						<UnitContent course={props.course} activities={activities} unitValue={unit} onAddTask={handleAddTask} onUpdateChanges={handleUpdateUnit} onDeleteUnit={deleteUnit} onDeleteTask={handleDeleteTask} />
 					</TabPanel>
 				))
 			}

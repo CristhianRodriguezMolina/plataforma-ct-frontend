@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './TaskCard.scss';
 
@@ -12,7 +12,18 @@ import { Delete, Edit } from '@material-ui/icons';
 import AlertModal from '../../common/AlertModal';
 
 const TaskCard = props => {
-	const activityNumber = 5;
+	const [activityNumber, setActivityNumber] = useState(0);
+	const [taskActivities, setTaskActivities] = useState(null);
+
+	useEffect(() => {
+		if (props.activities) {
+			if (!taskActivities) {
+				let tempActivities = props.activities.filter((activity) => activity.task === props.task._id);
+				setTaskActivities(tempActivities);
+				setActivityNumber(tempActivities.length);
+			}
+		}
+	}, [props.activities]);
 
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
@@ -38,7 +49,7 @@ const TaskCard = props => {
 				<div className="activities-container">
 					<h2>{props.task.name}</h2>
 					<div className="activities-visualization">
-						{items}
+						{items.length > 0 ? items : <p className="no-activities-label">No hay actividades</p>}
 					</div>
 				</div>
 				<div className="progress-visualization">

@@ -28,6 +28,8 @@ const UnitContent = props => {
 	const [unitDes, setUnitDes] = useState("");
 	const [visible, setVisible] = useState(false);
 
+	const [activities, setActivities] = useState(null);
+
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
 
@@ -46,6 +48,8 @@ const UnitContent = props => {
 			setVisible(props.unitValue.visible);
 		}
 	}, [props.unitValue]);
+
+
 
 	const nameInputStyle = {
 		width: "100%",
@@ -110,16 +114,18 @@ const UnitContent = props => {
 					/>
 				} />
 			</div>
-			<div className="cards-container">
-				{props.unitValue.tasks.map((task, i) => {
-					return <TaskCard key={i} courseId={props.course._id} unitId={props.unitValue._id} task={task} onDeleteTask={handleDeleteTask} />
-				})}
-				<div onClick={() => handleAddTask()} className="add-task-button">
-					<AddBoxIcon style={{ color: "rgb(200, 200, 200)", fontSize: 40 }} />
-					<p>Agregar nueva tarea</p>
+			{props.activities ?
+				<div className="cards-container">
+					{props.unitValue.tasks.map((task, i) => {
+						return <TaskCard key={i} activities={props.activities} courseId={props.course._id} unitId={props.unitValue._id} task={task} onDeleteTask={handleDeleteTask} />
+					})}
+					< div onClick={() => handleAddTask()} className="add-task-button">
+						<AddBoxIcon style={{ color: "rgb(200, 200, 200)", fontSize: 40 }} />
+						<p>Agregar nueva tarea</p>
+
+					</div>
 				</div>
-			</div>
-			{/* BUTTON TO DELETE A SPECIFIC UNIT */}
+				: ""}
 			<Button className="btn-delete ml-3" color="secondary" variant="contained" onClick={() => setOpen(!open)}>Borrar unidad</Button>
 			<AlertModal
 				type="delete"
@@ -128,7 +134,7 @@ const UnitContent = props => {
 				message='¿Esta seguro que quiere borrar esta unidad del curso?'
 				action={handleDeleteUnit}
 			/>
-		</div>
+		</div >
 	)
 };
 
