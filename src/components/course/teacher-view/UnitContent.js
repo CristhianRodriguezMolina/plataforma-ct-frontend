@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// WithRouter
-import { withRouter } from 'react-router-dom';
-
 // SCSS
 import './UnitContent.scss';
 
@@ -22,6 +19,8 @@ import Button from '@material-ui/core/Button';
 import AlertModal from '../../common/AlertModal';
 
 import PropTypes from 'prop-types';
+
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 const UnitContent = props => {
 
@@ -82,12 +81,16 @@ const UnitContent = props => {
 		});
 	};
 
-	const handleDeleteChanges = () => {
-		props.onDeleteChanges(props.unitValue._id);
+	const handleDeleteUnit = () => {
+		props.onDeleteUnit(props.unitValue._id);
 	}
 
-	const redirect = () => {
-		props.history.push(`/course/edit/${props.course._id}/units-info/${props.unitValue._id}`);
+	const handleAddTask = () => {
+		props.onAddTask(props.unitValue._id);
+	}
+
+	const handleDeleteTask = (taskId) => {
+		props.onDeleteTask(props.unitValue._id, taskId);
 	}
 
 	return (
@@ -108,12 +111,13 @@ const UnitContent = props => {
 				} />
 			</div>
 			<div className="cards-container">
-				<TaskCard onPress={() => redirect()} />
-				<TaskCard className="animate__animated animate__bounce" />
-				<TaskCard />
-				<TaskCard />
-				<TaskCard />
-				<TaskCard />
+				{props.unitValue.tasks.map((task, i) => {
+					return <TaskCard key={i} courseId={props.course._id} unitId={props.unitValue._id} task={task} onDeleteTask={handleDeleteTask} />
+				})}
+				<div onClick={() => handleAddTask()} className="add-task-button">
+					<AddBoxIcon style={{ color: "rgb(200, 200, 200)", fontSize: 40 }} />
+					<p>Agregar nueva tarea</p>
+				</div>
 			</div>
 			{/* BUTTON TO DELETE A SPECIFIC UNIT */}
 			<Button className="btn-delete ml-3" color="secondary" variant="contained" onClick={() => setOpen(!open)}>Borrar unidad</Button>
@@ -122,7 +126,7 @@ const UnitContent = props => {
 				open={open}
 				handleClose={() => setOpen(!open)}
 				message='¿Esta seguro que quiere borrar esta unidad del curso?'
-				action={handleDeleteChanges}
+				action={handleDeleteUnit}
 			/>
 		</div>
 	)
@@ -137,4 +141,4 @@ UnitContent.propTypes = {
 	onUpdateChanges: PropTypes.func
 }
 
-export default withRouter(UnitContent);
+export default UnitContent;

@@ -5,8 +5,11 @@
     object-fit: cover;
 }
 
-.upload-info-item
-{
+.container {
+    padding: 0.8em 0 0;
+}
+
+.upload-info-item {
     display: inline-flex;
     align-items: center;
     height: 7.5em;
@@ -22,8 +25,7 @@
     }
 }
 
-.upload-info-container
-{
+.upload-info-container {
     width: 100%;
     padding: 0.5em;
 }
@@ -39,8 +41,7 @@
     color: gray;
     margin-bottom: 1em;
 
-    .info{
-
+    .info {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -53,5 +54,4 @@
             margin: auto 0.5em;
         }
     }
-    
 }

@@ -92,7 +92,7 @@ const SequenceCard = SortableElement(({ value }) => {
             })
     }
     return (
-        <Tooltip title={value.name} aria-label="delete">
+        <Tooltip enterDelay={500} enterNextDelay={200} title={value.name} aria-label="delete">
             <div onClick={handleClick} className={`sequence-card-container ${selectedCard === value._id ? 'selected-card' : ''}`} >
                 {value.image ?
                     <img className="sequence-card-img" src={`${process.env.REACT_APP_API_URL}/i/${value.image}`} alt="default" /> :
@@ -111,11 +111,9 @@ const SequenceCard = SortableElement(({ value }) => {
                     <h1>{value.name}</h1>
                 </div>
                 <div className="manage-buttons-container">
-                    <Tooltip title="Borrar" aria-label="delete">
-                        <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
+                        <DeleteIcon />
+                    </IconButton>
                 </div>
                 <AlertModal
                     type="delete"
