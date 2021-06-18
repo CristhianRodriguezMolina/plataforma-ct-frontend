@@ -196,11 +196,11 @@ const UnitsInformation = (props) => {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(`Un error ha ocurrido creando una unidad: ${error}`);
+				console.log(`Un error ha ocurrido creando una unidad`);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido creando una unidad: ${error}`);
-				showError(`Un error ha ocurrido creando una unidad: ${error}`);
+				console.log(`Un error ha ocurrido creando una unidad`);
+				showError(`Un error ha ocurrido creando una unidad`);
 			}
 		} finally {
 			setProcess(false);
@@ -229,11 +229,11 @@ const UnitsInformation = (props) => {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
+				console.log(`Un error ha ocurrido borrando una unidad`);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
-				showError(`Un error ha ocurrido borrando una unidad: ${error}`);
+				console.log(`Un error ha ocurrido borrando una unidad`);
+				showError(`Un error ha ocurrido borrando una unidad`);
 			}
 		} finally {
 			setProcess(false);
