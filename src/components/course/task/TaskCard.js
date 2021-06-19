@@ -28,13 +28,18 @@ const TaskCard = props => {
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
 
-	const items = []
+	const items = [];
+
+	const handleRedirectToActivity = (activity) => {
+		console.log('activity');
+		console.log(activity);
+	};
 
 	for (let i = 0; i < activityNumber; i++) {
 		items.push(
-			<div key={i} className="activity-item">
+			<div key={i} className="activity-item" onClick={() => handleRedirectToActivity(taskActivities[i])}>
 				<h4>{i + 1}</h4>
-				<input type="radio"></input>
+				<div className="activity-task-view"></div>
 			</div>
 		);
 	}

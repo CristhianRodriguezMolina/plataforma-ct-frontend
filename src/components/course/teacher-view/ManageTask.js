@@ -3,6 +3,7 @@ import { useParams, Redirect } from "react-router-dom";
 
 // SCSS
 import './UnitContent.scss';
+import './ManageTask.scss';
 
 // CONTEXT
 import UserContext from '../../../context/user/UserContext';
@@ -21,6 +22,8 @@ import { Container, Typography, Button } from '@material-ui/core';
 // Alert
 import { Alert } from '@material-ui/lab'
 
+//ActivitiesPopup for add activities to the task
+import ActivitiesPopup from './ActivitiesPopup';
 
 
 // Activity card
@@ -38,6 +41,14 @@ export default function ManageTask() {
 	const [taskName, setTaskName] = useState("Task name");
 	const [taskDescription, setTaskDescription] = useState("Task description");
 	const [task, setTask] = useState(null);
+
+	//Activities
+	const [activities, setActivities] = useState(null);
+
+	// Variables para controlar la apertura y cierre del modal de estudiantes
+	const [isAddingActivities, setIsAddingActivities] = useState(false)
+	const [isOpen, setIsOpen] = useState(false);
+	const toggle = () => setIsOpen(!isOpen);
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -105,12 +116,38 @@ export default function ManageTask() {
 						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 					}
 				});
-		}
+		};
+
 
 		if (!task) {
 			fetch();
 		}
 	}, [task]);
+
+	const fecthActivities = () => {
+		api.get(`/api/course/tasks/${taskId}`, {
+			headers: { 'x-access-token': localStorage.getItem('token') }
+		})
+			.then((res) => {
+				if (res.data) {
+					setActivities(res.data.activities);
+				}
+			})
+			.catch(err => {
+				if (err.response) {
+					showError(err.response.data.message);
+				}
+				else {
+					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+				}
+			});
+	};
+
+	useEffect(() => {
+		if (!activities || isAddingActivities) {
+			fecthActivities();
+		}
+	}, [activities, isAddingActivities])
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -130,7 +167,7 @@ export default function ManageTask() {
 				else {
 					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 				}
-			})
+			});
 	}
 
 	return (
@@ -164,11 +201,24 @@ export default function ManageTask() {
 								<form onSubmit={evt => handleSubmit(evt)}>
 									<div className="form-group">
 										<label className="form-label">Nombre</label>
-										<input className="form-control shadow" type="text" onChange={evt => setTaskName(evt.target.value)} value={taskName} label="Nombre de la tarea" name="taskname" required />
+										<input
+											className="form-control shadow"
+											type="text"
+											onChange={evt => setTaskName(evt.target.value)}
+											value={taskName}
+											label="Nombre de la tarea"
+											name="taskname"
+											required />
 									</div>
 									<div className="form-group">
 										<label className="form-label">Descripcion</label>
-										<textarea className="form-control shadow" rows="3" onChange={evt => setTaskDescription(evt.target.value)} value={taskDescription} label="Descripcion de la tarea" name="taskdescription" required />
+										<textarea
+											className="form-control shadow"
+											rows="3"
+											onChange={evt => setTaskDescription(evt.target.value)}
+											value={taskDescription} label="Descripcion de la tarea"
+											name="taskdescription"
+											required />
 									</div>
 									<div className="form-group d-flex justify-content-start">
 										<button type="submit" className="btn btn-info btn-create-user shadow mt-4">Guardar cambios</button>
@@ -179,57 +229,30 @@ export default function ManageTask() {
 							<div>
 								<Typography variant="subtitle1" className="text-center">Actividades</Typography>
 								<div className="activities-container">
-									<ActivityCard
-										activity={{
-											name: 'Secuencia mamalona',
-											description: 'Descripción mamalona',
-											type: 'logic_sequence'
-										}}
-									/>
-									<ActivityCard
-										activity={{
-											name: 'Laberinto del fauno',
-											description: 'Descripción del fauno',
-											type: 'maze'
-										}}
-									/>
-									<ActivityCard
-										activity={{
-											name: 'ICFES',
-											description: 'Descripción',
-											type: 'questionnaire'
-										}}
-									/>
-									<ActivityCard
-										activity={{
-											name: 'Laberinto del fauno',
-											description: 'Descripción del fauno',
-											type: 'maze'
-										}}
-									/>
-									<ActivityCard
-										activity={{
-											name: 'ICFES',
-											description: 'Descripción',
-											type: 'questionnaire'
-										}}
-									/>
-									<ActivityCard
-										activity={{
-											name: 'Laberinto del fauno',
-											description: 'Descripción del fauno',
-											type: 'maze'
-										}}
-									/>
-									<ActivityCard
-										activity={{
-											name: 'ICFES',
-											description: 'Descripción',
-											type: 'questionnaire'
-										}}
-									/>
+									{activities && activities.length > 0 ?
+										activities.map(activity => (
+											<ActivityCard
+												setIsAddingActivities={setIsAddingActivities}
+												setActivities={setActivities}
+												task={task}
+												activity={activity}
+											/>
+										))
+										:
+										<div>
+											<h3 className="there-is-no-activities">Aún no hay alumnos en el curso</h3>
+										</div>
+									}
 								</div>
-								<Button variant="contained" className="btn btn-success btn-add-activities">Agregar actividades</Button>
+								<Button variant="contained" onClick={toggle} className="btn btn-success btn-add-activities">Agregar actividades</Button>
+								<ActivitiesPopup
+									task={task}
+									isOpen={isOpen}
+									toggle={toggle}
+									setTaskActivities={setActivities}
+									isAddingActivities={isAddingActivities}
+									setIsAddingActivities={setIsAddingActivities}
+								/>
 							</div>
 						</Container>
 					</div>
