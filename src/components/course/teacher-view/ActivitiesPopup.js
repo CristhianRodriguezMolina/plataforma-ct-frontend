@@ -43,8 +43,6 @@ export default function ActivitiesPopup(props) {
 
     useEffect(() => {
         if (!activities || isAddingActivities) {
-            console.log('isAddingActivities');
-            console.log(isAddingActivities);
             fetchActivities();
         }
     }, [activities, isAddingActivities]);
