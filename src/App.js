@@ -54,7 +54,7 @@ const ManageTask = React.lazy(() => import('./components/course/teacher-view/Man
 // My activities
 const MyActivities = React.lazy(() => import('./components/activity/MyActivities'));
 
-// My activities
+// Create activity
 const CreateActivity = React.lazy(() => import('./components/activity/CreateActivity'));
 
 // Logic sequence
@@ -97,7 +97,7 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/user/:type' exact component={UserManage} />
 
                 {/* COURSE */}
-                <ProtectedRoute type="admin, teacher" path='/course/edit/:courseId/units-info/:taskId' exact component={ManageTask} />
+                <ProtectedRoute type="admin, teacher" path='/course/edit/:courseId/units-info/:unitId/:taskId' exact component={ManageTask} />
                 <ProtectedRoute path='/course/:type/:id/:view' exact component={CourseView} />
                 <ProtectedRoute path='/course/mycourses' exact component={MyCourses} />
 
@@ -109,7 +109,7 @@ function App() {
                 {/* PROFILE */}
                 <ProtectedRoute path='/profile' exact component={Profile} />
 
-                {/* INDEX/LOGIN */}
+                {/* UNAUTHORIZED */}
                 <Route path="/unauthorized" exact component={Error404} />
 
                 {/* INDEX/LOGIN */}

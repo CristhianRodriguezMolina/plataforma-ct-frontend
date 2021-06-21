@@ -6,9 +6,9 @@ import { useDropzone } from 'react-dropzone';
 import "./DropzoneUploader.scss";
 
 import PropTypes from 'prop-types';
- 
+
 /**
- * Componente para subir imagenes de los usuarios al server
+ * Componente para arrastrar y seleccionar archivos
  * @param {*} props 
  */
 const DropzoneUploader = props => {
@@ -23,7 +23,7 @@ const DropzoneUploader = props => {
     const [filesToUpload, setFilesToUpload] = useState([]);
 
     useEffect(() => {
-        if(props.upload){
+        if (props.upload) {
             props.onFormSubmit(filesToUpload);
             setFilesToUpload([]);
         }
@@ -31,7 +31,7 @@ const DropzoneUploader = props => {
 
 
     useEffect(() => {
-        if(acceptedFiles.length > 0){
+        if (acceptedFiles.length > 0) {
             setFilesToUpload(prevValues => {
                 const filesAux = [...prevValues, ...acceptedFiles]
                 return filesAux.slice(filesAux.length - props.maxFiles, filesAux.length)
@@ -71,9 +71,9 @@ const DropzoneUploader = props => {
         (imageURL = urlCreator.createObjectURL(file)),
         <li key={file.path} className="upload-info-item d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-between align-items-center">
-                {isFileImage(file)?
+                {isFileImage(file) ?
                     <img className="img-preview align-self-center" src={imageURL} alt="upload image" />
-                :""
+                    : ""
                 }
                 <p className="align-self-center">{file.path} - {file.size} bytes</p>
             </div>
@@ -83,7 +83,7 @@ const DropzoneUploader = props => {
         </li>
     ));
 
-    
+
 
     const fileRejectionItems = fileRejections.map(({ file, errors }) => (
         <li key={file.path}>
@@ -108,18 +108,18 @@ const DropzoneUploader = props => {
                     </div>
                 </div>
                 <section>
-                    {filesToUpload.length > 0?
+                    {filesToUpload.length > 0 ?
                         [<h4 key="image">File(s)</h4>,
-                        <ul key="file-list"className="upload-info-container">{files}</ul>]
-                     :""   
+                        <ul key="file-list" className="upload-info-container">{files}</ul>]
+                        : ""
                     }
                     {fileRejections.length > 0 ?
                         [<h4 key="rejected-files">Rejected files</h4>,
                         <ul key="rejected-files-list">{fileRejectionItems}</ul>]
-                        :""
+                        : ""
                     }
                 </section>
-            </section>          
+            </section>
         </div>
     )
 };

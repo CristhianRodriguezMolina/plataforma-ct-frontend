@@ -30,7 +30,10 @@ import { red, lightGreen } from '@material-ui/core/colors';
 import UnitContent from './UnitContent';
 
 // Scroll
-import { animateScroll as scroll } from 'react-scroll'
+import { animateScroll as scroll } from 'react-scroll';
+
+// WithRouter
+import { withRouter } from 'react-router-dom';
 
 /* TEACHER */
 function TabPanel(props) {
@@ -91,11 +94,11 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function UnitsInformation({ course, setCourse }) {
+const UnitsInformation = (props) => {
 
 	const classes = useStyles();
 
-	// Valor actual referente a la pestaña actuala abierta
+	// Valor actual referente a la pestaña actual abierta
 	const [value, setValue] = useState(0);
 
 	// Auxiliar para llevar al cuenta de los datos
@@ -112,13 +115,33 @@ export default function UnitsInformation({ course, setCourse }) {
 	// Visibility for the components animation
 	const [visible, setVisible] = useState(true);
 
+	const [activities, setActivities] = useState(null);
+
 	// UseEffect para cambiar la pestaña actual a la pestaña que se cree nueva
 	useEffect(() => {
-		if (course.units.length > 0 && addingUnit) {
-			setValue(course.units.length - 1);
+		if (props.course.units.length > 0 && addingUnit) {
+			setValue(props.course.units.length - 1);
 			setAddingUnit(false);
 		}
-	}, [course])
+
+		if (props.course) {
+			api.get(`/api/course/task/activity/${props.course._id}`, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			})
+				.then((res) => {
+					setActivities(res.data.activities);
+				})
+				.catch(err => {
+					if (err.response) {
+						showError(err.response.data.message);
+					}
+					else {
+						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+					}
+				});
+		}
+
+	}, [props.course])
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -157,7 +180,7 @@ export default function UnitsInformation({ course, setCourse }) {
 			setProcess(true);
 			setProcessMessage('Creando una nueva unidad...');
 
-			const response = await api.post(`/api/course/unit/${course._id}`, {
+			const response = await api.post(`/api/course/unit/${props.course._id}`, {
 				name: "Nueva unidad",
 				description: "Añade una descripción"
 			}, { headers: { 'x-access-token': localStorage.getItem('token') } });
@@ -167,17 +190,17 @@ export default function UnitsInformation({ course, setCourse }) {
 			if (updatedCourse) {
 				showSuccess(message);
 				setAddingUnit(true);
-				setCourse(updatedCourse);
+				props.setCourse(updatedCourse);
 			} else {
 				showError(message);
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(`Un error ha ocurrido creando una unidad: ${error}`);
+				console.log(`Un error ha ocurrido creando una unidad`);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido creando una unidad: ${error}`);
-				showError(`Un error ha ocurrido creando una unidad: ${error}`);
+				console.log(`Un error ha ocurrido creando una unidad`);
+				showError(`Un error ha ocurrido creando una unidad`);
 			}
 		} finally {
 			setProcess(false);
@@ -191,7 +214,7 @@ export default function UnitsInformation({ course, setCourse }) {
 			setProcess(true);
 			setProcessMessage('Borrando una nueva unidad...');
 
-			const response = await api.delete(`/api/course/unit/${course._id}/${unitId}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
+			const response = await api.delete(`/api/course/unit/${props.course._id}/${unitId}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
 			scrollTo();
 
@@ -200,17 +223,17 @@ export default function UnitsInformation({ course, setCourse }) {
 			if (updatedCourse) {
 				showSuccess(message);
 				setAddingUnit(true);
-				setCourse(updatedCourse);
+				props.setCourse(updatedCourse);
 			} else {
 				showError(message);
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
+				console.log(`Un error ha ocurrido borrando una unidad`);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido borrando una unidad: ${error}`);
-				showError(`Un error ha ocurrido borrando una unidad: ${error}`);
+				console.log(`Un error ha ocurrido borrando una unidad`);
+				showError(`Un error ha ocurrido borrando una unidad`);
 			}
 		} finally {
 			setProcess(false);
@@ -220,14 +243,14 @@ export default function UnitsInformation({ course, setCourse }) {
 
 	const handleUpdateUnit = (unit) => {
 		if (unit.name.trim().localeCompare("") !== 0) {
-			api.put(`/api/course/unit/${course._id}/${unit._id}`, {
+			api.put(`/api/course/unit/${props.course._id}/${unit._id}`, {
 				unit
 			}, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then(res => {
 					showSuccess(res.data.message);
-					setCourse(res.data.updatedCourse);
+					props.setCourse(res.data.updatedCourse);
 				})
 				.catch(err => {
 					if (err.response.data.message) {
@@ -241,6 +264,47 @@ export default function UnitsInformation({ course, setCourse }) {
 		else {
 			showError("El nombre de la unidad es obligatorio");
 		}
+	};
+
+	const handleAddTask = (unitID) => {
+		api.post(`/api/course/task/${props.course._id}/${unitID}`, {
+			name: "Mi tarea",
+			description: "Esta es mi tarea"
+		}, {
+			headers: { 'x-access-token': localStorage.getItem('token') }
+		})
+			.then(res => {
+				let task = res.data.task;
+				props.history.push(`/course/edit/${props.course._id}/units-info/${unitID}/${task._id}`);
+			})
+			.catch(err => {
+				if (err.response) {
+					showError(err.response.data.message);
+				}
+				else {
+					console.log('err');
+					console.log(err);
+					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+				}
+			});
+	}
+
+	const handleDeleteTask = (unitId, taskId) => {
+		api.delete(`/api/course/task/${props.course._id}/${unitId}/${taskId}`, {
+			headers: { 'x-access-token': localStorage.getItem('token') }
+		})
+			.then((res) => {
+				showSuccess(res.data.message);
+				props.setCourse(res.data.updatedCourse);
+			})
+			.catch(err => {
+				if (err.response) {
+					showError(err.response.data.message);
+				}
+				else {
+					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+				}
+			})
 	};
 
 	return (
@@ -263,13 +327,13 @@ export default function UnitsInformation({ course, setCourse }) {
 						>
 							{/* TABS FOR EACH UNIT IN THE COURSE */}
 							{
-								course.units.map((unit, index) => (
+								props.course.units.map((unit, index) => (
 									<Tab className={value === index ? classes.selected : classes.notSelected} key={index} label={`Unidad ${index + 1}`} {...a11yProps(index)} />
 								))
 							}
-							{course.units[0] ? <div className="divider bg-white"></div> : ""}
+							{props.course.units[0] ? <div className="divider bg-white"></div> : ""}
 						</Tabs>
-						{course.units[0] ? <div className="divider"></div> : ""}.
+						{props.course.units[0] ? <div className="divider"></div> : ""}.
 						{/* BUTTON TO ADD NEW UNITS */}
 						<Button onClick={() => addUnit()} className={classes.selected}><ControlPoint /> Añadir unidad</Button>
 					</div>
@@ -289,12 +353,14 @@ export default function UnitsInformation({ course, setCourse }) {
 			</AppBar>
 			{/* COMPONENTS OF EACH UNIT IN THE COURSE */}
 			{
-				course.units.map((unit, index) => (
+				props.course.units.map((unit, index) => (
 					<TabPanel value={value} key={index} index={index}>
-						<UnitContent course={course} unitValue={unit} onUpdateChanges={handleUpdateUnit} onDeleteChanges={deleteUnit} />
+						<UnitContent course={props.course} activities={activities} unitValue={unit} onAddTask={handleAddTask} onUpdateChanges={handleUpdateUnit} onDeleteUnit={deleteUnit} onDeleteTask={handleDeleteTask} />
 					</TabPanel>
 				))
 			}
 		</div>
 	)
 }
+
+export default withRouter(UnitsInformation);

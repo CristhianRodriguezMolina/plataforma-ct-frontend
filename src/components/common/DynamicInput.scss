@@ -1,4 +1,4 @@
-.dynamic-input-container { 
+.dynamic-input-container {
     .dynamic-input {
         width: 30em;
         font-size: 1.2em;
@@ -11,6 +11,7 @@
     }
 
     .dynamic-label {
+        transition-duration: 0.2s;
         width: 30em;
         margin: 0.5em auto 0 auto;
         font-size: 1.2em;
@@ -19,7 +20,8 @@
         min-height: 2em;
     }
 
-    h1:hover  {
+    h1:hover {
         background-color: rgb(233, 233, 233);
+        transition-duration: 0.2s;
     }
 }

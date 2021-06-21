@@ -133,8 +133,14 @@ export default function StudentsInformation(props) {
                     <>
                         <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
                         {
-                            students.map((student, index) => (
-                                <StudentCard index={index} id={student._id} key={student._id} student={student} setStudents={setStudents} setIsAddingStudents={setIsAddingStudents} course={course} />
+                            students.map(student => (
+                                <StudentCard
+                                    id={student._id}
+                                    key={student._id}
+                                    student={student}
+                                    setStudents={setStudents}
+                                    setIsAddingStudents={setIsAddingStudents}
+                                    course={course} />
                             ))
                         }
                     </>
@@ -148,7 +154,13 @@ export default function StudentsInformation(props) {
             </div>
 
             <Button className="btn btn-success btn-modal-add-student" variant="contained" onClick={toggle}>Agregar alumnos</Button>
-            <StudentsPopup course={course} isOpen={isOpen} toggle={toggle} setCourseStudents={setStudents} isAddingStudents={isAddingStudents} setIsAddingStudents={setIsAddingStudents} />
+            <StudentsPopup
+                course={course}
+                isOpen={isOpen}
+                toggle={toggle}
+                setCourseStudents={setStudents}
+                isAddingStudents={isAddingStudents}
+                setIsAddingStudents={setIsAddingStudents} />
         </div>
     )
 }

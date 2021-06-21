@@ -23,6 +23,9 @@ import Alert from '@material-ui/lab/Alert';
 // Modal de confirmación 
 import AlertModal from '../common/AlertModal';
 
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
 const MyActivities = props => {
 
 	// Variables del contexto
@@ -35,9 +38,7 @@ const MyActivities = props => {
 	const [init, setInit] = useState(0);
 	const [fin, setFin] = useState(0);
 	const [count, setCount] = useState(0);
-	const range = 14;
-
-	const [isActive, setIsActive] = useState(false);
+	const range = Math.round((window.innerHeight - 240) / 48) - 1;
 
 	const [currentMenu, setCurrentMenu] = useState(false);
 
@@ -46,6 +47,7 @@ const MyActivities = props => {
 
 	// ID de la actividad actual a ser borrada
 	const [activityIdToDelete, setActivityIdToDelete] = useState(null);
+	const [anchorEl, setAnchorEl] = useState(null);
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -54,6 +56,7 @@ const MyActivities = props => {
 	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
 
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
@@ -131,11 +134,12 @@ const MyActivities = props => {
 
 	};
 
-	const handleEdit = (activity_id) => {
-		props.history.push(`/activity/logic-sequence/${activity_id}`);
+	const handleEdit = () => {
+		props.history.push(`/activity/logic-sequence/${currentMenu}`);
 	};
 
 	const handleDelete = (activity_id) => {
+		handleClose();
 		api.delete(`/api/activity/${activity_id}`, {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
@@ -153,37 +157,15 @@ const MyActivities = props => {
 				}
 			})
 	};
-	const pageClickEvent = (e) => {
-		setIsActive(!isActive);
+
+	const handleClick = (event, activity_id) => {
+		setCurrentMenu(activity_id);
+		setAnchorEl(event.currentTarget);
 	};
 
-	const showMenu = (activity_id) => {
-
-		setCurrentMenu(`menu${activity_id}`);
-
-		if (!isActive) {
-			setIsActive(true);
-		}
-		// else {
-		//     window.removeEventListener('click', pageClickEvent);
-		// }
+	const handleClose = () => {
+		setAnchorEl(null);
 	};
-
-	useEffect(() => {
-
-
-
-
-		// If the item is active (ie open) then listen for clicks
-		if (isActive) {
-			window.addEventListener('click', pageClickEvent);
-		}
-
-		return () => {
-			window.removeEventListener('click', pageClickEvent);
-		}
-
-	}, [isActive]);
 
 	return (
 
@@ -229,11 +211,18 @@ const MyActivities = props => {
 									<td>{activity.updatedAt.slice(0, 10)}</td>
 									<td>
 										<div className="drop-menu">
-											<button onClick={() => showMenu(activity._id)} className="dropbutton">...</button>
-											<div className={`dp-content ${isActive && currentMenu.localeCompare(`menu${activity._id}`) === 0 ? 'dp-content-active' : ''}`}>
-												<button onClick={() => handleEdit(activity._id)}>Editar</button>
-												<button onClick={() => { setOpen(!open); setActivityIdToDelete(activity._id); }}>Borrar</button>
-											</div >
+											<div onClick={(e) => handleClick(e, activity._id)} className="drop-button">...</div>
+											<Menu
+												elevation={1}
+												id="simple-menu"
+												anchorEl={anchorEl}
+												keepMounted
+												open={Boolean(anchorEl)}
+												onClose={handleClose}
+											>
+												<MenuItem onClick={() => handleEdit()}>Editar</MenuItem>
+												<MenuItem onClick={() => { setOpen(!open); setActivityIdToDelete(currentMenu); }}>Borrar</MenuItem>
+											</Menu>
 										</div >
 									</td >
 								</tr >
