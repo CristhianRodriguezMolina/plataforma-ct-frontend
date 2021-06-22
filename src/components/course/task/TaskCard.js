@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import './TaskCard.scss';
 
@@ -15,11 +15,17 @@ const TaskCard = props => {
 	const [activityNumber, setActivityNumber] = useState(0);
 	const [taskActivities, setTaskActivities] = useState(null);
 
+	const stateList = []
+
 	useEffect(() => {
 		if (props.activities) {
 			if (!taskActivities) {
 				let tempActivities = props.activities.filter((activity) => activity.task === props.task._id);
-				setTaskActivities(tempActivities);
+				const data = tempActivities.map((value) => {
+					const election = Math.random() > 0.5
+					return { ...value, state: election }
+				});
+				setTaskActivities(data);
 				setActivityNumber(tempActivities.length);
 			}
 		}
@@ -32,14 +38,14 @@ const TaskCard = props => {
 
 	const handleRedirectToActivity = (activity) => {
 		console.log('activity');
-		console.log(activity);
+		console.log(activity)
 	};
 
 	for (let i = 0; i < activityNumber; i++) {
 		items.push(
 			<div key={i} className="activity-item" onClick={() => handleRedirectToActivity(taskActivities[i])}>
 				<h4>{i + 1}</h4>
-				<div className="activity-task-view"></div>
+				<div className={`activity-task-view ${taskActivities[i].state ? 'active' : ''}`}></div>
 			</div>
 		);
 	}

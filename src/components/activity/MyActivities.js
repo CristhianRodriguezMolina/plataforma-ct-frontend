@@ -38,7 +38,7 @@ const MyActivities = props => {
 	const [init, setInit] = useState(0);
 	const [fin, setFin] = useState(0);
 	const [count, setCount] = useState(0);
-	const range = Math.round((window.innerHeight - 240) / 48) - 1;
+	const range = Math.round((window.innerHeight - 240) / 48);
 
 	const [currentMenu, setCurrentMenu] = useState(false);
 
