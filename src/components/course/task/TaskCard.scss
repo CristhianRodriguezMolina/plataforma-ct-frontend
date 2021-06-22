@@ -122,10 +122,10 @@ $card-radius: 4px;
 
 	.edit-button {
 		position: absolute;
-		width: 3em;
-		height: 2.5em;
-		bottom: 0.5em;
-		right: 4em;
+		// width: 3em;
+		// height: 2.5em;
+		bottom: 1em;
+		right: 3.5em;
 		border-radius: 4px;
 		justify-content: center;
 		align-items: center;
@@ -134,10 +134,10 @@ $card-radius: 4px;
 
 	.delete-button {
 		position: absolute;
-		bottom: 0.5em;
-		right: 0.5em;
-		width: 3em;
-		height: 2.5em;
+		bottom: 1em;
+		right: 1em;
+		// width: 3em;
+		// height: 2.5em;
 		border-radius: 4px;
 	}
 }

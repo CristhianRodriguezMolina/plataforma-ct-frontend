@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import TitleCard from '../../common/TitleCard';
 
 // Material UI components (Core)
-import { Container, Typography, Button, Switch, FormControlLabel, Breadcrumbs } from '@material-ui/core';
+import { Container, Typography, Switch, FormControlLabel, Breadcrumbs } from '@material-ui/core';
 
 // Alert
 import { Alert } from '@material-ui/lab'
@@ -233,7 +233,7 @@ export default function ManageTask() {
 									</div>
 									<div className="buttons-container d-flex justify-content-between">
 										<div className="form-group d-flex justify-content-start">
-											<button type="submit" className="btn btn-info btn-create-user mt-4">Guardar cambios</button>
+											<button type="submit" className="custom-btn custom-btn-info p-2 mt-4">Guardar cambios</button>
 										</div>
 										<FormControlLabel className="switcher" label="Visible" control={
 											<Switch
@@ -265,7 +265,7 @@ export default function ManageTask() {
 										</div>
 									}
 								</div>
-								<Button variant="contained" onClick={toggle} className="btn btn-success btn-add-activities">Agregar actividades</Button>
+								<button variant="contained" onClick={toggle} className="custom-btn custom-btn-success btn-add-activities">Agregar actividades</button>
 								<ActivitiesPopup
 									task={task}
 									isOpen={isOpen}

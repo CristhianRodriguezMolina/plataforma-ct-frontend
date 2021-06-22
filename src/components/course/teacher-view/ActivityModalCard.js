@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
+// SCSS
+import './teacherview.scss'
+
 // COMPONENTS
 
 // Avatar, Typografia, checkbox

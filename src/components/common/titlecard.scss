@@ -1,16 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+// Font Variables
+$fredoka-one: "Fredoka One", cursive;
+$roboto: "Roboto", sans-serif;
+
 .title-container {
     height: 140px;
     text-align: center;
     margin: auto 0;
     h1 {
-        width: 6em;
         font-size: 2em;
+        width: 6em;
     }
 }
 
 @media only screen and (min-width: 576px) {
     .title-container {
-        h1 {            
+        h1 {
             width: 100%;
             font-size: 3em;
         }

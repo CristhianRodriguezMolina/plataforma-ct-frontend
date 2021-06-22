@@ -174,7 +174,7 @@ export default function ActivitiesPopup(props) {
                             <input className="form-control text-center" />
                         </div>
                         <div className="form-group">
-                            <button type="submit" className="btn-search btn btn-primary">
+                            <button type="submit" className="btn-search custom-btn custom-btn-search">
                                 Buscar
                             </button>
                         </div>
@@ -198,17 +198,19 @@ export default function ActivitiesPopup(props) {
                     }
                 </ModalBody>
                 <ModalFooter>
-                    <Button
-                        variant="outlined"
-                        color="primary"
+                    <button
+                        className='custom-btn custom-btn-success p-2'
                         onClick={() => addActivities()}
                     >
                         Agregar
-                    </Button>
+                    </button>
                     <div></div>
-                    <Button variant="outlined" color="secondary" onClick={toggle}>
+                    <button
+                        className='custom-btn custom-btn-primary p-2'
+                        onClick={toggle}
+                    >
                         Cancelar
-                    </Button>
+                    </button>
                 </ModalFooter>
             </Modal>
         </div>

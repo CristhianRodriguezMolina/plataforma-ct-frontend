@@ -116,15 +116,15 @@ export default function ActivityCard(props) {
 			<div className="buttons-container">
 				<div className="icon-buttons btn-group-vertical">
 					<Tooltip title="Editar" aria-label="edit">
-						<Link to='' className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
+						<Link to='' className="custom-btn custom-btn-primary mb-2 p-2 d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
 					</Tooltip>
 					<Tooltip title="Borrar" aria-label="delete">
-						<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
+						<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete p-2" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
 					</Tooltip>
 				</div>
 				<div className="group-buttons btn-group-vertical">
-					<Link to='' className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>
-					<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>
+					<Link to='' className="custom-btn custom-btn-primary mb-2 p-2 d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>
+					<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete p-2" data-toggle="modal" data-target="#deleteUser">Borrar</button>
 				</div>
 			</div>
 			<AlertModal

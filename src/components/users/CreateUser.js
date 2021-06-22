@@ -267,6 +267,7 @@ export default function CreateUser({ history }) {
 			<TitleCard
 				title={type === "teachers" ? "Gestión de profesores" : "Gestion de alumnos"}
 				color={type === "teachers" ? "#FFA552" : "#3C8AFF"}
+				colorFont='#fff'
 			/>
 			<Container className="form-create-user-container mt-4" maxWidth="sm">
 				<form onSubmit={evt => createUser(evt)} className="form-create-user">
@@ -324,7 +325,7 @@ export default function CreateUser({ history }) {
 						: ""
 					}
 					<div className="form-group d-flex justify-content-center">
-						<button className={type === "teachers" ? "btn btn-warning form-control btn-create-user shadow mt-4" : "btn btn-primary form-control btn-create-user shadow mt-4"}>{action === "create" ? "Crear" : "Actualizar datos basicos"}</button>
+						<button className={type === "teachers" ? "custom-btn custom-btn-danger btn-create-user px-2" : "custom-btn custom-btn-primary btn-create-user px-2"}>{action === "create" ? "Crear" : "Actualizar datos basicos"}</button>
 					</div>
 				</form>
 				{
@@ -341,7 +342,7 @@ export default function CreateUser({ history }) {
 								<input className="form-control" type="password" onChange={evt => setConfirmPassword(evt.target.value)} value={confirm_password} label="Confirmar contrasena" name="confirmar_contrasena" required />
 							</div>
 							<div className="form-group d-flex justify-content-center">
-								<button className={type === "teachers" ? "btn btn-warning form-control btn-create-user shadow mt-4" : "btn btn-primary form-control btn-create-user shadow mt-4"}>Actualizar datos de sesión</button>
+								<button className={type === "teachers" ? "custom-btn custom-btn-danger btn-create-user px-2" : "custom-btn custom-btn-primary btn-create-user px-2 mb-5"}>Actualizar datos de sesión</button>
 							</div>
 						</form>
 						:

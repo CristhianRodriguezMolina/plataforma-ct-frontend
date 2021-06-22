@@ -209,7 +209,7 @@ export default function MyCourses({ history }) {
 			}
 			{
 				isTeacher || isAdmin ?
-					<Button className="btn btn-success btn-create-course" onClick={() => createCourse()}>Crear curso</Button>
+					<button className="custom-btn custom-btn-success btn-create-course" onClick={() => createCourse()}>Crear curso</button>
 					:
 					""
 			}

@@ -101,7 +101,7 @@ export default function CourseInformation({ course, setCourse }) {
                 : ""
             }
             <h1 className="h4">Editar Información del Curso</h1>
-            <form onSubmit={updateChanges}>
+            <form className='mb-5' onSubmit={updateChanges}>
                 <div className="form-group">
                     <div>
                         <label className="form-label">Course name</label>
@@ -121,7 +121,7 @@ export default function CourseInformation({ course, setCourse }) {
                     </div>
                 </div>
                 <div className="form-group">
-                    <button type="submit" className="btn btn-info mt-3">Guardar cambios</button>
+                    <button type="submit" className="custom-btn custom-btn-info px-2 py-2 mt-3">Guardar cambios</button>
                 </div>
             </form>
         </div>

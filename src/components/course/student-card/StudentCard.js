@@ -14,10 +14,8 @@ import './StudentCard.scss';
 // Animation
 import { Animated } from "react-animated-css";
 
-// Avatar
-import Avatar from '@material-ui/core/Avatar';
-
-import Typography from '@material-ui/core/Typography';
+// Material UI Core
+import { Modal, Fade, Avatar, Typography, Backdrop } from '@material-ui/core';
 
 // Modal de confirmacion de borrado
 import AlertModal from '../../common/AlertModal';
@@ -49,6 +47,9 @@ export default function StudentCard(props) {
 
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
+
+	// Variable de estado para el modal de datos del estudiante
+	const [openInfo, setOpenInfo] = useState(false);
 
 	// Visibility for the components animation
 	const [visible, setVisible] = useState(true);
@@ -144,23 +145,50 @@ export default function StudentCard(props) {
 								<Typography variant="subtitle1">
 									<div className="btn-group-sm btn-group-vertical">
 										<Tooltip title={<p className='text-center m-0 p-0'>Información< br />del< br />compañero</p>} aria-label="info">
-											<button onClick={() => console.log(`Nombre del estudiante: ${student.first_name}`)} className="btn btn-info"><Info /></button>
+											<button onClick={() => setOpenInfo(!openInfo)} className="custom-btn custom-btn-info"><Info /></button>
 										</Tooltip>
 									</div>
 								</Typography>
+								<Modal
+									aria-labelledby="transition-modal-title"
+									aria-describedby="transition-modal-description"
+									className='d-flex justify-content-center align-items-center'
+									open={openInfo}
+									onClose={() => setOpenInfo(!openInfo)}
+									closeAfterTransition
+									BackdropComponent={Backdrop}
+									BackdropProps={{
+										timeout: 500,
+									}}
+								>
+									<Fade in={openInfo}>
+										<div className='modal-student-info'>
+											<Typography variant='h4' className='mb-4'>{student.genre !== 'M' ? 'Información del compañero' : 'Información de la compañera'}</Typography>
+											<div className="d-flex justify-content-center align-items-center">
+												<Avatar className="modal-student-avatar mr-2" src="https://picsum.photos/200/300" />
+												<div>
+													<p className='m-0 ml-4 mb-2 p-0 text-white'><b>{student.first_name} {student.last_name}</b></p>
+													<p className='m-0 ml-4 mb-2 p-0'>Identificación: {student.id !== '' ? <b>{student.id}</b> : <b>No tiene Identificación :(</b>}</p>
+													<p className='m-0 ml-4 mb-2 p-0'>Edad: <b>{util.getAge(student.birth_date)}</b></p>
+													<p className='m-0 ml-4 mb-2 p-0'>Genero: {student.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
+												</div>
+											</div>
+										</div>
+									</Fade>
+								</Modal>
 							</>
 							:
 							<>
 								<Typography variant="subtitle1">
 									<div className="btn-group-sm btn-group-vertical">
 										<Tooltip title="Borrar del curso" aria-label="delete">
-											<button onClick={() => setOpen(!open)} className="btn btn-danger"><Delete /></button>
+											<Link onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete mb-2"><Delete /></Link>
 										</Tooltip>
 										<Tooltip title="Editar" aria-label="edit">
-											<Link to={`/user/students/edit/${student._id}`} className="btn btn-info"><Edit /></Link>
+											<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-info mb-2"><Edit /></Link>
 										</Tooltip>
 										<Tooltip title="Progreso" aria-label="progress">
-											<Link to="progress" className="btn btn-success"><Cached /></Link>
+											<Link to="progress" className="custom-btn custom-btn-success"><Cached /></Link>
 										</Tooltip>
 									</div>
 								</Typography>

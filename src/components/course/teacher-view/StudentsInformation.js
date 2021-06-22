@@ -18,7 +18,7 @@ import Alert from '@material-ui/lab/Alert';
 import StudentCard from '../student-card/StudentCard';
 
 // Scroll
-import { Element, animateScroll as scroll } from 'react-scroll'
+import { Element, animateScroll as scroll, Link } from 'react-scroll'
 
 /* TECAHER */
 export default function StudentsInformation(props) {
@@ -44,6 +44,7 @@ export default function StudentsInformation(props) {
 
     // UseEffect para obtener los alumnos del curso o en dado caso que se agreguen nuevos alumnos al curso se vuelvan a obtener
     useEffect(() => {
+        console.log(scroll)
         if (!students || isAddingStudents) {
             fetchStudents();
         }
@@ -73,8 +74,11 @@ export default function StudentsInformation(props) {
 
     // Method to do a smooth scroll
     const scrollTo = () => {
-        scroll.scrollTo(250, {
+        console.log('scroll')
+        scroll.scrollTo(500, {
             duration: 500,
+            smooth: true,
+            containerId: 'idScrollContainer'
         })
     }
 
@@ -87,10 +91,15 @@ export default function StudentsInformation(props) {
                 headers: { "x-access-token": localStorage.getItem("token") },
             })
 
-            const { students, message } = response.data;
+            const { students: newStudents, message } = response.data;
 
-            if (students) {
-                setStudents(students);
+            if (newStudents) {
+                if (students) {
+                    let intersection = students.filter(x => newStudents.includes(x));
+                    console.log(intersection)
+                }
+
+                setStudents(newStudents);
                 if (isAddingStudents) {
                     scrollTo();
                 }
@@ -121,7 +130,7 @@ export default function StudentsInformation(props) {
                         <input className="form-control text-center" />
                     </div>
                     <div className="form-group">
-                        <button type="submit" className="btn-search btn btn-primary">
+                        <button type="submit" className="btn-search custom-btn custom-btn-search">
                             Buscar
                         </button>
                     </div>
@@ -151,7 +160,7 @@ export default function StudentsInformation(props) {
                 }
             </div>
 
-            <Button className="btn btn-success btn-modal-add-student" variant="contained" onClick={toggle}>Agregar alumnos</Button>
+            <button className="custom-btn custom-btn-success btn-modal-add-student" onClick={toggle}>Agregar alumnos</button>
             <StudentsPopup
                 course={course}
                 isOpen={isOpen}

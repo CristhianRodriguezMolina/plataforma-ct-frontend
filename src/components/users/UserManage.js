@@ -18,9 +18,6 @@ import UserList from './UserList';
 // Container
 import Container from '@material-ui/core/Container';
 
-// Button
-import Button from '@material-ui/core/Button';
-
 export default function UserManage({ history }) {
 
     // Variables del cotexto
@@ -64,20 +61,20 @@ export default function UserManage({ history }) {
                         <input className="form-control text-center" />
                     </div>
                     <div className="form-group">
-                        <button type="submit" className="btn-search btn btn-primary">Buscar</button>
+                        <button type="submit" className="custom-btn custom-btn-search btn-search">Buscar</button>
                     </div>
                 </form>
                 <div className="" style={{ marginBottom: "100px" }}>
                     <UserList type={type} />
                 </div>
-                <Button onClick={redirectCreate} className={type === "teachers" ? "btn-create-teacher" : "btn-create-student"}>
+                <button onClick={redirectCreate} className={type === "teachers" ? "custom-btn custom-btn-danger btn-create-user" : "custom-btn custom-btn-primary btn-create-user"}>
                     {
                         type === "teachers" ?
                             "Crear profesor"
                             :
                             "Crear estudiante"
                     }
-                </Button>
+                </button>
             </Container>
         </div>
     )

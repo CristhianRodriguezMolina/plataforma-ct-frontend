@@ -104,7 +104,7 @@ const UnitContent = props => {
 				<DynamicInput dynamicInputValue={unitDes} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
 			</div>
 			<div className="buttons-container d-flex justify-content-between">
-				<button type="submit" onClick={handleUpdateChanges} className="btn btn-info m-2">Guardar cambios</button>
+				<button type="submit" onClick={handleUpdateChanges} className="custom-btn custom-btn-info p-2 m-2">Guardar cambios</button>
 				<FormControlLabel className="switcher" label="Visible" control={
 					<Switch
 						checked={visible}
@@ -126,7 +126,7 @@ const UnitContent = props => {
 					</div>
 				</div>
 				: ""}
-			<Button className="btn-delete ml-3" color="secondary" variant="contained" onClick={() => setOpen(!open)}>Borrar unidad</Button>
+			<button className="custom-btn custom-btn-delete p-2 ml-3" color="secondary" variant="contained" onClick={() => setOpen(!open)}>Borrar unidad</button>
 			<AlertModal
 				type="delete"
 				open={open}
