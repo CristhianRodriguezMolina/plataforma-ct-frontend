@@ -14,7 +14,7 @@ import Link from '@material-ui/core/Link';
 export default function Error404() {
 
     // Variables del contexto
-    const { changeColor } = useContext(UserContext);
+    const { changeColor, isTeacher } = useContext(UserContext);
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function Error404() {
                         <p>
                             No eres suficientemente cool para visitar esta pagina o no existe <em>. . . como tu vida social.</em>
                         </p>
-                        <Link className='btn btn404' href={localStorage.getItem('token') ? '/course/mycourses' : '/'}>Ya puedes irte!</Link>
+                        <Link className='btn btn404' href={localStorage.getItem('token') ? isTeacher ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}` : '/'}>Ya puedes irte!</Link>
                     </main>
                 </div>
             </div>

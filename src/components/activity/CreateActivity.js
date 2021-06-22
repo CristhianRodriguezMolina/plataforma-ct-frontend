@@ -92,6 +92,7 @@ const CreateActivity = (props) => {
 			<TitleCard
 				title="Gestión de actividades"
 				color="#FA61CD"
+				colorFont="#FFF"
 			/>
 
 			<div className="create-activity-container">

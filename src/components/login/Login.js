@@ -74,14 +74,17 @@ export default function Login({ history }) {
                 localStorage.setItem('user_image', user_image);
                 localStorage.setItem('token', token);
                 localStorage.setItem('expire_at', expire_at);
-                console.log(expire_at)
 
                 signinHandler();
 
                 setProcess(false);
                 setProcessMessage('');
 
-                history.push('/course/mycourses');
+                if (user_role === 'teacher' || user_role === 'admin') {
+                    history.push('/course/mycourses');
+                } else {
+                    history.push(`/course/mycourses/${user_name}`);
+                }
             } else {
                 setProcess(false);
                 setProcessMessage('');

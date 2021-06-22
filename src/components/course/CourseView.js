@@ -76,6 +76,8 @@ export default function CourseView({ history }) {
             setCourse(course);
         } catch (error) {
             console.log(`Ha ocurrido un error: ${error}`)
+
+            //En caso de que no se encuentre un curso se redirige a /unauthorized
             if (!course) {
                 history.push('/unauthorized');
             }

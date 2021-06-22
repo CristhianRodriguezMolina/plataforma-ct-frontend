@@ -99,7 +99,8 @@ function App() {
                 {/* COURSE */}
                 <ProtectedRoute type="admin, teacher" path='/course/edit/:courseId/units-info/:unitId/:taskId' exact component={ManageTask} />
                 <ProtectedRoute path='/course/:type/:id/:view' exact component={CourseView} />
-                <ProtectedRoute path='/course/mycourses' exact component={MyCourses} />
+                <ProtectedRoute path='/course/mycourses/:studentName' exact component={MyCourses} />
+                <ProtectedRoute type="admin, teacher" path='/course/mycourses' exact component={MyCourses} />
 
                 {/* ACTIVITY */}
                 <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />

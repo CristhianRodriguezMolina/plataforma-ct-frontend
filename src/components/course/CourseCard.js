@@ -121,7 +121,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                             course.actual_unit ?
                                 <p className="text-left m-0">Vas en la <b>{course.actual_unit}</b> y vence <b>{course.due_date}</b></p>
                                 :
-                                <p className="text-left m-0"><b>Aún no hay unidades</b></p>
+                                <p className="text-left m-0">{course.units.length > 0 ? <>El curso tiene <b>{course.units.length}</b> unidades</> : <b>Aún no hay unidades</b>}</p>
                         }
                         <p className="text-left m-0">Tiene <b>{course.students}</b> estudiantes</p>
                         {success ?
