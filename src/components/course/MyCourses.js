@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router';
 
 // CONTEXT
 import UserContext from '../../context/user/UserContext';
@@ -30,6 +31,9 @@ export default function MyCourses({ history }) {
 	// Datos del contexto de usuario
 	const { isAdmin, isTeacher, isStudent, changeColor } = useContext(UserContext);
 
+	// Parametros de la ruta del router dom
+	const { studentName } = useParams();
+
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
@@ -56,40 +60,6 @@ export default function MyCourses({ history }) {
 		}
 	}, [courses])
 
-	const getUserCourses = async () => {
-		try {
-			setProcess(true);
-			setProcessMessage('Obteniendo cursos...');
-
-			const response = await api.get(`/api/course/mycourses/${localStorage.getItem('user_id')}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
-
-			const { courses, message } = response.data;
-
-			if (courses) {
-				setCourses(courses);
-
-				setProcess(false);
-				setProcessMessage('');
-
-				showSuccess(message);
-			} else {
-				setProcess(false);
-				setProcessMessage('');
-				showError(message);
-			}
-		} catch (error) {
-			if (error.response) {
-				console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
-				showError(error.response.data.message);
-			} else {
-				console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
-				showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
-			}
-			setProcess(false);
-			setProcessMessage('');
-		}
-	}
-
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
 		setError(true);   //Se cambia el estado de mensaje de error a verdadero
@@ -110,6 +80,44 @@ export default function MyCourses({ history }) {
 		}, 2000)
 	}
 
+	const getUserCourses = async () => {
+		try {
+			setProcess(true);
+			setProcessMessage('Obteniendo cursos...');
+
+			var response = null;
+
+			if (!studentName || studentName === '') {
+				response = await api.get(`/api/course/mycourses/${localStorage.getItem('user_id')}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
+			} else {
+				console.log('hello')
+				response = await api.get(`/api/course/mycourses/student/${localStorage.getItem('user_id')}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
+			}
+
+			const { courses, message } = response.data;
+
+			console.log(courses)
+
+			if (courses) {
+				setCourses(courses);
+
+				showSuccess(message);
+			} else {
+				showError(message);
+			}
+		} catch (error) {
+			if (error.response) {
+				console.log(error.response.data.message);
+				showError(error.response.data.message);
+			} else {
+				console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
+				showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
+			}
+		}
+		setProcess(false);
+		setProcessMessage('');
+	}
+
 	// Funcion para redirigin a la pagina de edición de un curso en especifico con la history
 	const redirect = course => {
 		if (isAdmin || isTeacher) {
@@ -121,35 +129,40 @@ export default function MyCourses({ history }) {
 
 	// Funcion para crear un curso dados unos datos basicos
 	const createCourse = async () => {
-		setProcess(true);
-		setProcessMessage('The course is creating...');
+		try {
+			setProcess(true);
+			setProcessMessage('The course is creating...');
 
-		const response = await api.post('/api/course', {
-			name,
-			creator: localStorage.getItem('user_id'),
-			description,
-			topic,
-			visible: false
-		}, {
-			headers: {
-				'x-access-token': localStorage.getItem('token')
+			const response = await api.post('/api/course', {
+				name,
+				creator: localStorage.getItem('user_id'),
+				description,
+				topic,
+				visible: false
+			}, {
+				headers: {
+					'x-access-token': localStorage.getItem('token')
+				}
+			});
+
+			const { course, message } = response.data;
+
+			if (course) {
+				courses.push(course);
+
+				showSuccess(message);
 			}
-		});
-
-		const { course, message } = response.data;
-
-		if (course) {
-			setProcess(false);
-			setProcessMessage('');
-
-			courses.push(course);
-
-			showSuccess(message);
-		} else if (message) {
-			showError(message);
-		} else {
-			showError('Error inesperado en el servidor');
+		} catch (error) {
+			if (error.response) {
+				console.log(error.response.data.message);
+				showError(error.response.data.message);
+			} else {
+				console.log(`Un error ha ocurrido creando un curso: ${error}`);
+				showError(`Un error ha ocurrido creando un curso: ${error}`);
+			}
 		}
+		setProcess(false);
+		setProcessMessage('');
 	}
 
 	return (

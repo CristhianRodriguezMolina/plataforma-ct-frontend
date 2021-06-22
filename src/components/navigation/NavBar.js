@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useContext } from 'react';
 
 // CONTEXT
 import UserContext from '../../context/user/UserContext';
@@ -59,9 +58,11 @@ function NavBar() {
 							<Toolbar>
 								<Container maxWidth="lg" className="d-flex justify-content-between align-items-center">
 									<Typography variant="h6">
-										<IconButton>
-											APP
-										</IconButton>
+										<Link className="btn" to={isTeacher ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>
+											<IconButton>
+												App
+											</IconButton>
+										</Link>
 									</Typography>
 									<div className="d-flex align-items-center">
 										<Typography variant="h6" color="textSecondary" className="welcome-word">Bienvenido</Typography>
@@ -102,7 +103,7 @@ function NavBar() {
 															""
 													}
 													<div className="dropdown-divider"></div>
-													<li><Link className="dropdown-item" to="/course/mycourses"><Computer className="mr-2" color="action" /> Mis cursos</Link></li>
+													<li><Link className="dropdown-item" to={isTeacher ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}><Computer className="mr-2" color="action" /> Mis cursos</Link></li>
 													{
 														isAdmin || isTeacher ?
 															<>

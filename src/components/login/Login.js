@@ -80,7 +80,11 @@ export default function Login({ history }) {
                 setProcess(false);
                 setProcessMessage('');
 
-                history.push('/course/mycourses');
+                if (user_role === 'teacher' || user_role === 'admin') {
+                    history.push('/course/mycourses');
+                } else {
+                    history.push(`/course/mycourses/${user_name}`);
+                }
             } else {
                 setProcess(false);
                 setProcessMessage('');

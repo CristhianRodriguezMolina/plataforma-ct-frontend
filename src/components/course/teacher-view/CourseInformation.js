@@ -100,7 +100,7 @@ export default function CourseInformation({ course, setCourse }) {
                 <Alert severity="info">{processMessage}</Alert>
                 : ""
             }
-            <h1 className="h4">Edit Course Information</h1>
+            <h1 className="h4">Editar Información del Curso</h1>
             <form onSubmit={updateChanges}>
                 <div className="form-group">
                     <div>

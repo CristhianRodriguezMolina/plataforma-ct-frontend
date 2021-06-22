@@ -111,7 +111,7 @@ export default function UserCard({ user, setUsers, history, type }) {
 	}
 
 	return (
-		<Animated animationIn="rubberBand" animationInDuration={1000} animationOut="bounceOutRight" animationOutDuration={1000} isVisible={visible}>
+		<Animated animationIn="fadeIn" animationInDuration={100} animationOut="bounceOutRight" animationOutDuration={1000} isVisible={visible}>
 			<div className="user-card d-flex justify-content-between mb-4">
 				<div className="card d-flex justify-content-center align-items-left mr-3">
 					<div className="d-flex align-items-center px-4">

@@ -14,9 +14,6 @@ import Button from '@material-ui/core/Button';
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 
-// Container
-import Container from '@material-ui/core/Container';
-
 // Student card
 import StudentCard from '../student-card/StudentCard';
 
@@ -84,7 +81,7 @@ export default function StudentsInformation(props) {
     const fetchStudents = async () => {
         try {
             setProcess(true);
-            setErrorMessage('Obteniendo estudiantes...')
+            setProcessMessage('Obteniendo estudiantes...')
 
             const response = await api.get(`/api/course/students/${course._id}`, {
                 headers: { "x-access-token": localStorage.getItem("token") },
@@ -109,7 +106,7 @@ export default function StudentsInformation(props) {
             }
         }
         setProcess(false);
-        setErrorMessage('');
+        setProcessMessage('');
     }
 
     return (
@@ -133,8 +130,9 @@ export default function StudentsInformation(props) {
                     <>
                         <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
                         {
-                            students.map(student => (
+                            students.map((student, index) => (
                                 <StudentCard
+                                    index={index}
                                     id={student._id}
                                     key={student._id}
                                     student={student}

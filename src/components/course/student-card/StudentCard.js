@@ -29,7 +29,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { Link } from 'react-router-dom'
 
 // Icons
-import { Delete, Edit, Cached } from '@material-ui/icons'
+import { Delete, Edit, Cached, Info } from '@material-ui/icons'
 
 // Alert
 import { Alert } from '@material-ui/lab';
@@ -37,7 +37,7 @@ import { Alert } from '@material-ui/lab';
 export default function StudentCard(props) {
 
 	// Datos que llegan por parametros del componente
-	const { index, student, course, setStudents, setIsAddingStudents, type } = props;
+	const { index, student, course, setStudents, setIsAddingStudents, forStudent } = props;
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -112,7 +112,7 @@ export default function StudentCard(props) {
 	}
 
 	return (
-		<Animated animationIn="rubberBand" animationInDuration={1000} animationOut="bounceOutRight" animationOutDuration={1000} isVisible={visible}>
+		<Animated animationIn="fadeIn" animationInDuration={100} animationOut="bounceOutRight" animationOutDuration={1000} isVisible={visible}>
 			<div id={student._id} className="course-user">
 				<div className="student-course-card">
 					<b>{index + 1}</b>
@@ -138,26 +138,41 @@ export default function StudentCard(props) {
 						<Alert severity="info">{processMessage}</Alert>
 						: ""
 					}
-					<Typography variant="subtitle1">
-						<div className="btn-group-sm btn-group-vertical">
-							<Tooltip title="Borrar del curso" aria-label="delete">
-								<button onClick={() => setOpen(!open)} className="btn btn-danger"><Delete /></button>
-							</Tooltip>
-							<Tooltip title="Editar" aria-label="edit">
-								<Link to={`/user/students/edit/${student._id}`} className="btn btn-info"><Edit /></Link>
-							</Tooltip>
-							<Tooltip title="Progreso" aria-label="progress">
-								<Link to="progress" className="btn btn-success"><Cached /></Link>
-							</Tooltip>
-						</div>
-					</Typography>
-					<AlertModal
-						type="delete"
-						open={open}
-						handleClose={() => setOpen(!open)}
-						message='¿Esta seguro que quiere quitar este estudiante del curso?'
-						action={deleteStundentFromCourse}
-					/>
+					{
+						forStudent ?
+							<>
+								<Typography variant="subtitle1">
+									<div className="btn-group-sm btn-group-vertical">
+										<Tooltip title={<p className='text-center m-0 p-0'>Información< br />del< br />compañero</p>} aria-label="info">
+											<button onClick={() => console.log(`Nombre del estudiante: ${student.first_name}`)} className="btn btn-info"><Info /></button>
+										</Tooltip>
+									</div>
+								</Typography>
+							</>
+							:
+							<>
+								<Typography variant="subtitle1">
+									<div className="btn-group-sm btn-group-vertical">
+										<Tooltip title="Borrar del curso" aria-label="delete">
+											<button onClick={() => setOpen(!open)} className="btn btn-danger"><Delete /></button>
+										</Tooltip>
+										<Tooltip title="Editar" aria-label="edit">
+											<Link to={`/user/students/edit/${student._id}`} className="btn btn-info"><Edit /></Link>
+										</Tooltip>
+										<Tooltip title="Progreso" aria-label="progress">
+											<Link to="progress" className="btn btn-success"><Cached /></Link>
+										</Tooltip>
+									</div>
+								</Typography>
+								<AlertModal
+									type="delete"
+									open={open}
+									handleClose={() => setOpen(!open)}
+									message='¿Esta seguro que quiere quitar este estudiante del curso?'
+									action={deleteStundentFromCourse}
+								/>
+							</>
+					}
 				</div>
 			</div>
 		</Animated>

@@ -62,15 +62,22 @@ const TaskCard = props => {
 					<h3><b>Hasta:</b> 12/06/2021</h3>
 				</div>
 			</div>
-			<Link to={`/course/edit/${props.courseId}/units-info/${props.unitId}/${props.task._id}`} className="btn btn-primary edit-button"><Edit /></Link>
-			<button className="btn btn-danger delete-button" onClick={() => setOpen(!open)}><Delete /> </button>
-			<AlertModal
-				type="delete"
-				open={open}
-				handleClose={() => setOpen(!open)}
-				message='¿Esta seguro que quiere borrar esta unidad del curso?'
-				action={handleDeleteTask}
-			/>
+			{
+				!props.forStudent ?
+					<>
+						<Link to={`/course/edit/${props.courseId}/units-info/${props.unitId}/${props.task._id}`} className="btn btn-primary edit-button"><Edit /></Link>
+						<button className="btn btn-danger delete-button" onClick={() => setOpen(!open)}><Delete /> </button>
+						<AlertModal
+							type="delete"
+							open={open}
+							handleClose={() => setOpen(!open)}
+							message='¿Esta seguro que quiere borrar esta unidad del curso?'
+							action={handleDeleteTask}
+						/>
+					</>
+					:
+					''
+			}
 		</div >
 	)
 };

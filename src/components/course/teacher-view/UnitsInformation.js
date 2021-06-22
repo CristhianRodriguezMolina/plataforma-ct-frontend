@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 // COMPONENTS
 
-// MAterial UI Make Styles
+// Material UI Make Styles
 import { makeStyles } from '@material-ui/core/styles';
 
 // Components for the tab bar
@@ -22,9 +22,6 @@ import { Alert } from '@material-ui/lab'
 
 // Icons
 import { ControlPoint } from '@material-ui/icons';
-
-// Colors
-import { red, lightGreen } from '@material-ui/core/colors';
 
 // Unit content
 import UnitContent from './UnitContent';

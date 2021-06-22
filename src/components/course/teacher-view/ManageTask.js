@@ -13,18 +13,20 @@ import api from '../../../services/api';
 
 // COMPONENTS
 
+// Link
+import { Link } from 'react-router-dom';
+
 // Title card
 import TitleCard from '../../common/TitleCard';
 
 // Material UI components (Core)
-import { Container, Typography, Button } from '@material-ui/core';
+import { Container, Typography, Button, Switch, FormControlLabel, Breadcrumbs } from '@material-ui/core';
 
 // Alert
 import { Alert } from '@material-ui/lab'
 
 //ActivitiesPopup for add activities to the task
 import ActivitiesPopup from './ActivitiesPopup';
-
 
 // Activity card
 import ActivityCard from '../activity/ActivityCard';
@@ -60,6 +62,8 @@ export default function ManageTask() {
 
 	const [loading, setLoading] = useState(true);
 
+	const [visible, setVisible] = useState(false);
+
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -90,6 +94,10 @@ export default function ManageTask() {
 		}, 2000)
 	};
 
+	const handleVisible = () => {
+		setVisible(!visible);
+	};
+
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
 		changeColor('#dcedc8');
@@ -105,6 +113,7 @@ export default function ManageTask() {
 					setTask(taskTemp);
 					setTaskName(taskTemp.name);
 					setTaskDescription(taskTemp.description);
+					setVisible(taskTemp.visible);
 					setLoading(false);
 				})
 				.catch(err => {
@@ -153,7 +162,8 @@ export default function ManageTask() {
 		e.preventDefault();
 		api.put(`/api/course/task/${courseId}/${unitId}/${taskId}`, {
 			name: taskName,
-			description: taskDescription
+			description: taskDescription,
+			visible: visible
 		}, {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
@@ -188,13 +198,14 @@ export default function ManageTask() {
 							: ""
 						}
 						<TitleCard
-							title="My Course"
+							title={taskName}
 							color="#B6E768"
 						/>
 						<Container className="task-manage-container" maxWidth="sm">
-							<div>
-								<Typography><b>Unidad 1 | {taskName}</b></Typography>
-							</div>
+							<Breadcrumbs>
+								<Link className='text-muted' to={`/course/edit/${courseId}/units-info`}>Unidades</Link>
+								<Typography><b>{taskName}</b></Typography>
+							</Breadcrumbs>
 							<hr />
 							<div>
 								<Typography variant="subtitle1" className="text-center">Información de la tarea</Typography>
@@ -202,7 +213,7 @@ export default function ManageTask() {
 									<div className="form-group">
 										<label className="form-label">Nombre</label>
 										<input
-											className="form-control shadow"
+											className="form-control"
 											type="text"
 											onChange={evt => setTaskName(evt.target.value)}
 											value={taskName}
@@ -213,15 +224,25 @@ export default function ManageTask() {
 									<div className="form-group">
 										<label className="form-label">Descripcion</label>
 										<textarea
-											className="form-control shadow"
+											className="form-control"
 											rows="3"
 											onChange={evt => setTaskDescription(evt.target.value)}
 											value={taskDescription} label="Descripcion de la tarea"
 											name="taskdescription"
 											required />
 									</div>
-									<div className="form-group d-flex justify-content-start">
-										<button type="submit" className="btn btn-info btn-create-user shadow mt-4">Guardar cambios</button>
+									<div className="buttons-container d-flex justify-content-between">
+										<div className="form-group d-flex justify-content-start">
+											<button type="submit" className="btn btn-info btn-create-user mt-4">Guardar cambios</button>
+										</div>
+										<FormControlLabel className="switcher" label="Visible" control={
+											<Switch
+												checked={visible}
+												onChange={handleVisible}
+												name="visibilty"
+												color="primary"
+											/>
+										} />
 									</div>
 								</form>
 							</div>
@@ -240,7 +261,7 @@ export default function ManageTask() {
 										))
 										:
 										<div>
-											<h3 className="there-is-no-activities">Aún no hay alumnos en el curso</h3>
+											<h3 className="there-is-no-activities">Aún no hay tareas en la actividad</h3>
 										</div>
 									}
 								</div>
