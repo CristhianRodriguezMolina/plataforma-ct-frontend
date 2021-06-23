@@ -41,7 +41,11 @@ export default function Login({ history }) {
         changeColor('#ffcdd2');
 
         if (localStorage.getItem('token')) {
-            return history.push('/course/mycourses')
+            if (localStorage.getItem('user_role') === 'teacher' || localStorage.getItem('user_role') === 'admin') {
+                history.push('/course/mycourses');
+            } else {
+                history.push(`/course/mycourses/${localStorage.getItem('user_name')}`);
+            }
         }
     });
 

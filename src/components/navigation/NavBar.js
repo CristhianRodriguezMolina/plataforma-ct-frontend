@@ -58,7 +58,7 @@ function NavBar() {
 							<Toolbar>
 								<Container maxWidth="lg" className="d-flex justify-content-between align-items-center">
 									<Typography variant="h6">
-										<Link className="btn" to={isTeacher ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>
+										<Link className="btn" to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>
 											<IconButton>
 												App
 											</IconButton>
@@ -103,7 +103,7 @@ function NavBar() {
 															""
 													}
 													<div className="dropdown-divider"></div>
-													<li><Link className="dropdown-item" to={isTeacher ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}><Computer className="mr-2" color="action" /> Mis cursos</Link></li>
+													<li><Link className="dropdown-item" to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}><Computer className="mr-2" color="action" /> Mis cursos</Link></li>
 													{
 														isAdmin || isTeacher ?
 															<>

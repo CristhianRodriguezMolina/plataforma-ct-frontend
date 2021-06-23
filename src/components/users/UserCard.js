@@ -138,15 +138,15 @@ export default function UserCard({ user, setUsers, history, type }) {
 				<div className="d-flex flex-column">
 					<div className="icon-buttons button-group btn-group-vertical">
 						<Tooltip title="Editar" aria-label="edit">
-							<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
+							<Link to={`/user/${type}/edit/${user._id}`} className="custom-btn custom-btn-primary px-2 py-1 mb-2 d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
 						</Tooltip>
 						<Tooltip title="Borrar" aria-label="delete">
-							<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
+							<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete px-2 py-1" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
 						</Tooltip>
 					</div>
 					<div className="group-buttons button-group btn-group-vertical">
-						<Link to={`/user/${type}/edit/${user._id}`} className="btn btn-primary d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>
-						<button onClick={() => setOpen(!open)} className="btn btn-danger" data-toggle="modal" data-target="#deleteUser">Borrar</button>
+						<Link to={`/user/${type}/edit/${user._id}`} className="custom-btn custom-btn-primary px-2 py-1 mb-2 d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>
+						<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete px-2 py-1" data-toggle="modal" data-target="#deleteUser">Borrar</button>
 					</div>
 					<AlertModal
 						type="delete"

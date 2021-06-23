@@ -15,8 +15,8 @@ import './course.scss';
 // Tarjeta de titulo
 import TitleCard from '../common/TitleCard';
 
-// Boton de material UI
-import Button from '@material-ui/core/Button';
+// Material UI Core
+import { Breadcrumbs, Typography } from '@material-ui/core';
 
 // Course Information (Teacher view)
 import CourseInformationTeacher from './teacher-view/CourseInformation';
@@ -29,7 +29,7 @@ import ClassmatesInformation from './student-view/ClassmatesInformation';
 import UnitsInformationStudent from './student-view/UnitsInformation';
 
 // Link
-import { Link } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 export default function CourseView({ history }) {
 
@@ -103,9 +103,19 @@ export default function CourseView({ history }) {
             <div className="row p-0 m-0">
                 <div className="col-md-3 p-0 m-0">
                     <div className="pt-4 d-flex flex-column justify-content-center align-items-center">
-                        <Button onClick={() => redirect(`course-info`)} variant="contained" className="my-3 course-view-botton">Info del curso</Button>
-                        <Button onClick={() => redirect(`units-info`)} variant="contained" className="my-3 course-view-botton">Unidades</Button>
-                        <Button onClick={() => redirect(`students-info`)} variant="contained" className="my-3 course-view-botton">{type === "edit" ? "Estudiantes" : "Compañeros"}</Button>
+                        {
+                            course ?
+                                <Breadcrumbs>
+                                    <Link className='text-muted' to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>Mis cursos</Link>
+                                    <Typography><b>{course.name}</b></Typography>
+                                </Breadcrumbs>
+                                :
+                                ""
+                        }
+                        <hr />
+                        <button onClick={() => redirect(`course-info`)} className="custom-btn my-3 course-view-botton">Info del curso</button>
+                        <button onClick={() => redirect(`units-info`)} className="custom-btn my-3 course-view-botton">Unidades</button>
+                        <button onClick={() => redirect(`students-info`)} className="custom-btn my-3 course-view-botton">{type === "edit" ? "Estudiantes" : "Compañeros"}</button>
                     </div>
                 </div>
                 <div className="col-md-9 p-0 m-0">
