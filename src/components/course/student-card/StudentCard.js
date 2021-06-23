@@ -145,7 +145,7 @@ export default function StudentCard(props) {
 								<Typography variant="subtitle1">
 									<div className="btn-group-sm btn-group-vertical">
 										<Tooltip title={<p className='text-center m-0 p-0'>Información< br />del< br />compañero</p>} aria-label="info">
-											<button onClick={() => setOpenInfo(!openInfo)} className="custom-btn custom-btn-info"><Info /></button>
+											<button onClick={() => setOpenInfo(!openInfo)} className="custom-btn custom-btn-info btn-user-card"><Info /></button>
 										</Tooltip>
 									</div>
 								</Typography>
@@ -182,13 +182,13 @@ export default function StudentCard(props) {
 								<Typography variant="subtitle1">
 									<div className="btn-group-sm btn-group-vertical">
 										<Tooltip title="Borrar del curso" aria-label="delete">
-											<Link onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete mb-2"><Delete /></Link>
+											<Link onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></Link>
 										</Tooltip>
 										<Tooltip title="Editar" aria-label="edit">
-											<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-info mb-2"><Edit /></Link>
+											<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-info btn-user-card mb-2"><Edit /></Link>
 										</Tooltip>
 										<Tooltip title="Progreso" aria-label="progress">
-											<Link to="progress" className="custom-btn custom-btn-success"><Cached /></Link>
+											<Link to="progress" className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
 										</Tooltip>
 									</div>
 								</Typography>

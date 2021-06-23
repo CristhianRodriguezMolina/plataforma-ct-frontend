@@ -23,9 +23,6 @@ import CourseCard from './CourseCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
-// Button
-import Button from '@material-ui/core/Button';
-
 export default function MyCourses({ history }) {
 
 	// Datos del contexto de usuario

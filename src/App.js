@@ -39,6 +39,9 @@ import { ThemeProvider } from '@material-ui/core/styles'
 // Scroll
 import { Scrollbars } from 'react-custom-scrollbars'
 
+//Box
+import { Box } from "@material-ui/core"
+
 // Navigation
 import NavBar from './components/navigation/NavBar';
 
@@ -90,35 +93,37 @@ function App() {
             </div>
           }>
             <div className="app-container">
-              <Switch>
-                {/* USER */}
-                <ProtectedRoute type="admin, teacher" path='/user/:type/:action/:ID' exact component={CreateUser} />
-                <ProtectedRoute type="admin, teacher" path='/user/:type/:action/' exact component={CreateUser} />
-                <ProtectedRoute type="admin, teacher" path='/user/:type' exact component={UserManage} />
+              <Box my={9.2}>
+                <Switch>
+                  {/* USER */}
+                  <ProtectedRoute type="admin, teacher" path='/user/:type/:action/:ID' exact component={CreateUser} />
+                  <ProtectedRoute type="admin, teacher" path='/user/:type/:action/' exact component={CreateUser} />
+                  <ProtectedRoute type="admin, teacher" path='/user/:type' exact component={UserManage} />
 
-                {/* COURSE */}
-                <ProtectedRoute type="admin, teacher" path='/course/edit/:courseId/units-info/:unitId/:taskId' exact component={ManageTask} />
-                <ProtectedRoute path='/course/:type/:id/:view' exact component={CourseView} />
-                <ProtectedRoute path='/course/mycourses/:studentName' exact component={MyCourses} />
-                <ProtectedRoute type="admin, teacher" path='/course/mycourses' exact component={MyCourses} />
+                  {/* COURSE */}
+                  <ProtectedRoute type="admin, teacher" path='/course/edit/:courseId/units-info/:unitId/:taskId' exact component={ManageTask} />
+                  <ProtectedRoute path='/course/:type/:id/:view' exact component={CourseView} />
+                  <ProtectedRoute path='/course/mycourses/:studentName' exact component={MyCourses} />
+                  <ProtectedRoute type="admin, teacher" path='/course/mycourses' exact component={MyCourses} />
 
-                {/* ACTIVITY */}
-                <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
-                <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
-                <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
+                  {/* ACTIVITY */}
+                  <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
+                  <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
+                  <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
 
-                {/* PROFILE */}
-                <ProtectedRoute path='/profile' exact component={Profile} />
+                  {/* PROFILE */}
+                  <ProtectedRoute path='/profile' exact component={Profile} />
 
-                {/* UNAUTHORIZED */}
-                <Route path="/unauthorized" exact component={Error404} />
+                  {/* UNAUTHORIZED */}
+                  <Route path="/unauthorized" exact component={Error404} />
 
-                {/* INDEX/LOGIN */}
-                <Route path="/" component={Login} />
+                  {/* INDEX/LOGIN */}
+                  <Route path="/" component={Login} />
 
-                {/* ERRORS */}
-                <Route component={Error404} />
-              </Switch>
+                  {/* ERRORS */}
+                  <Route component={Error404} />
+                </Switch>
+              </Box>
             </div>
           </Suspense>
         </div>
