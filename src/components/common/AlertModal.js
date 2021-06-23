@@ -18,15 +18,15 @@ export default function AlertModal(props) {
 
 	const { message, open, handleClose, action, type } = props;
 
-	const [btnClass, setBtnClass] = useState('btn-delete ml-auto mr-2');
+	const [btnClass, setBtnClass] = useState('custom-btn custom-btn-delete ml-auto mr-2 p-2');
 
 	useEffect(() => {
 		if (type === 'delete') {
-			setBtnClass('btn-delete ml-auto mr-2');
+			setBtnClass('custom-btn custom-btn-delete ml-auto mr-2 p-2');
 		} else if (type === 'success') {
-			setBtnClass('btn-success ml-auto mr-2');
+			setBtnClass('custom-btn custom-btn-success ml-auto mr-2 p-2');
 		} else if (type === 'info') {
-			setBtnClass('btn-info ml-auto mr-2');
+			setBtnClass('custom-btn custom-btn-info ml-auto mr-2 p-2');
 		}
 	});
 
@@ -64,8 +64,8 @@ export default function AlertModal(props) {
 				<div className="alert-modal-footer">
 					<hr />
 					<div>
-						<Button onClick={executeAction} className={btnClass} color="secondary" variant="contained">{type === 'delete' ? 'Borrar' : 'Aceptar'}</Button>
-						<Button onClick={handleClose} color="primary" variant="contained">Cancelar</Button>
+						<button onClick={executeAction} className={btnClass} color="secondary" variant="contained">{type === 'delete' ? 'Borrar' : 'Aceptar'}</button>
+						<button onClick={handleClose} className='custom-btn custom-btn-primary p-2'>Cancelar</button>
 					</div>
 				</div>
 			</div>

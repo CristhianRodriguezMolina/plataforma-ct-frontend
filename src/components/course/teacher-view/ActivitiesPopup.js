@@ -25,7 +25,7 @@ import Alert from "@material-ui/lab/Alert";
 
 export default function ActivitiesPopup(props) {
     // Props for the modal
-    const { task, isOpen, toggle, isAddingActivities, setIsAddingActivities } = props;
+    const { task, unitId, isOpen, toggle, isAddingActivities, setIsAddingActivities } = props;
 
     // MENSAJES DEL MODAL
     const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -117,7 +117,7 @@ export default function ActivitiesPopup(props) {
             setProcess(true);
             setProcessMessage("Añadiendo actividades...");
 
-            const response = await api.post(`/api/course/task/activity/${task._id}`, {
+            const response = await api.post(`/api/course/task/activity/${unitId}/${task._id}`, {
                 activities: activitiesToAdd
             }, {
                 headers: { "x-access-token": localStorage.getItem("token") },
