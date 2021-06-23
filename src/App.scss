@@ -48,15 +48,15 @@ $roboto: "Roboto", sans-serif;
 
 	&:hover {
 		text-decoration: none;
-		background-color: #e0e0e0;
-		color: #757575;
+		background-color: #a8a8a8;
+		// color: #757575;
 	}
 
 	&:active {
-		background-color: #e0e0e0;
+		background-color: #a8a8a8;
 		box-shadow: none;
 		transform: translateY(4px);
-		color: #757575;
+		// color: #757575;
 	}
 }
 

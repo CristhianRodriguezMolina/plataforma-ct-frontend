@@ -268,6 +268,7 @@ export default function ManageTask() {
 								<button variant="contained" onClick={toggle} className="custom-btn custom-btn-success btn-add-activities">Agregar actividades</button>
 								<ActivitiesPopup
 									task={task}
+									unitId={unitId}
 									isOpen={isOpen}
 									toggle={toggle}
 									setTaskActivities={setActivities}
