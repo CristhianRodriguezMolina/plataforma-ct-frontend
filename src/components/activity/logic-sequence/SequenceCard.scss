@@ -11,16 +11,16 @@
     grid-template-columns: 15% 75% 10%;
     cursor: pointer;
     vertical-align: middle;
-    
-    
 
     .sequence-card-img {
         max-width: 100%;
         max-height: 100%;
         width: 55px;
         height: 55px;
+        margin: auto;
         border-radius: 2px;
     }
+
     .text-container {
         margin-left: 0.5em;
         display: flex;
@@ -31,22 +31,32 @@
             overflow: hidden;
             padding: 0.5em;
         }
-    }
 
+        //Text for stundet view
+        .text-student {
+            white-space: inherit;
+            margin: auto 0;
+            height: auto 0;
+        }
+    }
 
     .manage-buttons-container {
         display: flex;
         width: 100%;
         justify-content: center;
         align-items: center;
-        
     }
 
     .manage-buttons-container-1:hover {
         background-color: rgb(214, 214, 214);
-        
     }
-    
+}
+
+//Sequence card for student view
+.sequence-card-student {
+    display: grid;
+    grid-template-columns: 15% 85%;
+    height: auto;
 }
 
 .selected-card {

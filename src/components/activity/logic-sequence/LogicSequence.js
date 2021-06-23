@@ -37,7 +37,7 @@ const SortableList = SortableContainer(({ items }) => {
 	return (
 		<div>
 			{items.map((value, index) => (
-				<SequenceCard key={`item-${index}`} index={index} value={value} />
+				<SequenceCard key={`item-${index}`} forStudents={false} index={index} value={value} />
 			))}
 		</div>
 	);

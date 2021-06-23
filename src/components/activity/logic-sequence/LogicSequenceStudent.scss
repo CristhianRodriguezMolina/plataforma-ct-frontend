@@ -1,0 +1,60 @@
+.logic-sequence-student-container {
+    width: auto;
+    margin: 4em auto auto auto;
+
+    .sequence-cards-container {
+        width: auto;
+        margin: 1em;
+        background-color: rgb(233, 233, 233);
+        border-radius: 5px;
+
+        .create-card-button {
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        }
+    }
+
+    button {
+        margin: 1em auto;
+        display: flex;
+    }
+}
+
+@media only screen and (min-width: 850px) {
+    .logic-sequence-student-container {
+        margin: auto;
+        width: 30em;
+
+        .logic-sequence-alert {
+            width: 50em;
+        }
+        .panels {
+            margin: 0;
+            padding: 0;
+        }
+
+        hr {
+            margin: 0;
+            padding: 0;
+        }
+
+        .sequence-cards-container {
+            margin: 0;
+            padding: 0;
+            width: auto;
+        }
+
+        .hr-bar {
+            visibility: hidden;
+        }
+
+        .create-card-button {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

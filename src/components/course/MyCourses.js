@@ -90,13 +90,11 @@ export default function MyCourses({ history }) {
 			if (!studentName || studentName === '') {
 				response = await api.get(`/api/course/mycourses/${localStorage.getItem('user_id')}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 			} else {
-				console.log('hello')
 				response = await api.get(`/api/course/mycourses/student/${localStorage.getItem('user_id')}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 			}
 
 			const { courses, message } = response.data;
 
-			console.log(courses)
 
 			if (courses) {
 				setCourses(courses);

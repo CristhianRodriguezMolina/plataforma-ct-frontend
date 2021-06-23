@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import './TaskCard.scss';
 
+// WithRouter
+import { withRouter } from 'react-router-dom';
+
 // Link
 import Link from 'react-router-dom/Link';
 
@@ -37,8 +40,7 @@ const TaskCard = props => {
 	const items = [];
 
 	const handleRedirectToActivity = (activity) => {
-		console.log('activity');
-		console.log(activity)
+		props.history.push(`/activity/logic-sequence/student/${activity.activity}`);
 	};
 
 	for (let i = 0; i < activityNumber; i++) {
@@ -82,9 +84,9 @@ const TaskCard = props => {
 						/>
 					</>
 					:
-					''
+					<Link to={`/activity/logic-sequence/student/85479879`} className="custom-btn custom-btn-success do-button px-2">Realizar</Link>
 			}
 		</div >
 	)
 };
-export default TaskCard;
+export default withRouter(TaskCard);

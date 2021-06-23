@@ -30,7 +30,7 @@ import AlertModal from '../../common/AlertModal';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
-const SequenceCard = SortableElement(({ value }) => {
+const SequenceCard = SortableElement(({ value, forStudents }) => {
 
     const { env } = useContext(UserContext);
     const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted, selectedCard } = useContext(LogicSequenceContext);
@@ -67,7 +67,9 @@ const SequenceCard = SortableElement(({ value }) => {
     }
 
     const handleClick = () => {
-        setSelectedCard(value._id);
+        if (!forStudents) {
+            setSelectedCard(value._id);
+        }
     };
 
     const deleteCard = () => {
@@ -91,9 +93,19 @@ const SequenceCard = SortableElement(({ value }) => {
                 }
             })
     }
+
+    const renderMainContent = () => {
+        return
+    }
     return (
         <Tooltip enterDelay={500} enterNextDelay={200} title={value.name} aria-label="delete">
-            <div onClick={handleClick} className={`sequence-card-container ${selectedCard === value._id ? 'selected-card' : ''}`} >
+            <div
+                onClick={handleClick}
+                className={`sequence-card-container ${!forStudents ? (
+                    selectedCard === value._id ?
+                        'selected-card' : '')
+                    : "sequence-card-student"
+                    } `} >
                 {value.image ?
                     <img className="sequence-card-img" src={`${process.env.REACT_APP_API_URL}/i/${value.image}`} alt="default" /> :
                     <img className="sequence-card-img" src={'/default.png'} alt="default" />
@@ -108,20 +120,24 @@ const SequenceCard = SortableElement(({ value }) => {
                     : ""
                 }
                 <div className="text-container">
-                    <h1>{value.name}</h1>
+                    <h1 className={`${forStudents ? "text-student" : ""}`} > {value.name}</h1>
                 </div>
-                <div className="manage-buttons-container">
-                    <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
-                        <DeleteIcon />
-                    </IconButton>
-                </div>
-                <AlertModal
-                    type="delete"
-                    open={open}
-                    handleClose={() => setOpen(!open)}
-                    message='¿Esta seguro que quiere eliminar esta tarjeta?'
-                    action={deleteCard}
-                />
+                {!forStudents ?
+                    <>
+                        <div className="manage-buttons-container">
+                            <IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </div>
+                        <AlertModal
+                            type="delete"
+                            open={open}
+                            handleClose={() => setOpen(!open)}
+                            message='¿Esta seguro que quiere eliminar esta tarjeta?'
+                            action={deleteCard}
+                        />
+                    </>
+                    : ""}
             </div>
         </Tooltip>
     )

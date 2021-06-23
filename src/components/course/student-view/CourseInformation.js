@@ -32,7 +32,6 @@ export default function CourseInformation(props) {
             const { message, teacher } = response.data;
 
             if (teacher) {
-                console.log(message);
                 setTeacher(teacher);
             }
         } catch (error) {

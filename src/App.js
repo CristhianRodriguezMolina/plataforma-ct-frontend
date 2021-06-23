@@ -75,6 +75,9 @@ const Profile = React.lazy(() => import('./components/profile/Profile'));
 // Error 404
 const Error404 = React.lazy(() => import('./components/error/Error404'));
 
+//Logic sequence (student view)
+const LogicSequenceStudent = React.lazy(() => import('./components/activity/logic-sequence/LogicSequenceStudent'));
+
 function App() {
 
   return (
@@ -105,6 +108,7 @@ function App() {
                 {/* ACTIVITY */}
                 <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
+                <ProtectedRoute path='/activity/logic-sequence/student/:activityId' exact component={LogicSequenceStudent} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
 
                 {/* PROFILE */}
