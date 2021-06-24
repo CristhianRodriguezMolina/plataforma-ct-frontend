@@ -34,8 +34,8 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-    const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
-    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+    const [info, setInfo] = useState(false); //Variable flag de existencia de un proceso
+    const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
@@ -70,27 +70,20 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
         // Toggle for the animation
         setVisible(false);
         try {
-            setProcess(true);
-            setProcessMessage('El curso se esta borrando...');
+            setInfo(true);
+            setInfoMessage('El curso se esta borrando...');
 
             const response = await api.delete(`/api/course/${course._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
             const { deletedCourse, message } = response.data;
 
             if (deletedCourse) {
-                setProcess(false);
-                setProcessMessage('');
-
                 // Para quitar el curso que se elimino de la lista de cursos
                 setCourses(prevValues => {
                     return prevValues.filter(value => value !== course)
                 })
 
                 showSuccess(message);
-            } else if (message) {
-                showError(message);
-            } else {
-                showError('Error inesperado en el servidor');
             }
         } catch (error) {
             if (error.response) {
@@ -103,8 +96,8 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
         }
         // Toggle for the animation
         setVisible(true);
-        setProcess(false);
-        setProcessMessage('');
+        setInfo(false);
+        setInfoMessage('');
     }
 
     return (
@@ -115,7 +108,9 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                         <h1 className="h5 text-left m-0 p-0">{course.name}</h1>
                     </div>
                     <hr className="mx-2 my-1" />
-                    <img src={image} alt="CourseImage" loading="lazy" />
+                    <div className='img-wrapper'>
+                        <img src={`${process.env.REACT_APP_API_URL}/course-images/${course.image}`} alt="CourseImage" loading="lazy" />
+                    </div>
                     <div className="info mt-3">
                         {
                             course.actual_unit ?
@@ -123,7 +118,12 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                                 :
                                 <p className="text-left m-0">{course.units.length > 0 ? <>El curso tiene <b>{course.units.length}</b> unidades</> : <b>Aún no hay unidades</b>}</p>
                         }
-                        <p className="text-left m-0">Tiene <b>{course.students}</b> estudiantes</p>
+                        {
+                            course.students !== 0 ?
+                                <p className="text-left m-0">Tiene <b>{course.students}</b> estudiantes</p>
+                                :
+                                <p className="text-left m-0"><b>El curso aun no tiene estudiantes</b></p>
+                        }
                         {success ?
                             <Alert severity="success">{successMessage}</Alert>
                             : ""
@@ -132,8 +132,8 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                             <Alert severity="error">{errorMessage}</Alert>
                             : ""
                         }
-                        {process ?
-                            <Alert severity="info">{processMessage}</Alert>
+                        {info ?
+                            <Alert severity="info">{infoMessage}</Alert>
                             : ""
                         }
                     </div>

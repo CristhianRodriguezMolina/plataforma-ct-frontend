@@ -1,5 +1,26 @@
 .course-information {
     width: 100%;
+
+    .dropzone {
+        height: 160px;
+    }
+
+    .img-wrapper {
+        background-size: cover;
+        margin-top: 0.8em;
+        width: 45%;
+        max-height: 160px;
+        height: 160px;
+        border-radius: 10px;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
 }
 
 .units-bar {
