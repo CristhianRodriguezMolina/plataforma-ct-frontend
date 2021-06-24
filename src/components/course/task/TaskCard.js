@@ -21,34 +21,45 @@ const TaskCard = props => {
 	const stateList = []
 
 	useEffect(() => {
-		if (props.activities) {
+		if (props.taskActivities) {
+
 			if (!taskActivities) {
-				let tempActivities = props.activities.filter((activity) => activity.task === props.task._id);
-				const data = tempActivities.map((value) => {
-					const election = Math.random() > 0.5
-					return { ...value, state: election }
-				});
-				setTaskActivities(data);
+				let tempActivities = props.taskActivities.filter((taskActivity) => taskActivity.task === props.task._id);
+				setTaskActivities(tempActivities);
 				setActivityNumber(tempActivities.length);
 			}
 		}
-	}, [props.activities]);
+	}, [props.taskActivities]);
+
 
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
 
 	const items = [];
 
-	const handleRedirectToActivity = (activity) => {
-		props.history.push(`/activity/logic-sequence/student/${activity.activity}`);
+	const handleRedirectToActivity = (taskActivity) => {
+		if (props.forStudent) {
+			props.history.push(`/activity/logic-sequence/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
+		} else {
+			props.history.push(`/activity/logic-sequence/${taskActivity.activity}`);
+		}
 	};
 
 	for (let i = 0; i < activityNumber; i++) {
+		var studentActivity;
+		if (props.forStudent && props.studentActivities) {
+			studentActivity = props.studentActivities.filter((studentActivity) => studentActivity.activity === taskActivities[i].activity)[0];
+		}
 		items.push(
 			<div key={i} className="activity-item" onClick={() => handleRedirectToActivity(taskActivities[i])}>
 				<h4>{i + 1}</h4>
-				<div className={`activity-task-view ${taskActivities[i].state ? 'active' : ''}`}></div>
-			</div>
+				{studentActivity ?
+					<div className={`activity-task-view ${studentActivity.complete ? 'active' : ''}`}></div> :
+					props.forStudent ?
+						<div className="activity-task-view"></div> :
+						<div className="activity-task-view active"></div>}
+
+			</div >
 		);
 	}
 

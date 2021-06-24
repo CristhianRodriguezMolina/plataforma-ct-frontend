@@ -112,7 +112,7 @@ const UnitsInformation = (props) => {
 	// Visibility for the components animation
 	const [visible, setVisible] = useState(true);
 
-	const [activities, setActivities] = useState(null);
+	const [taskActivities, setTaskActivities] = useState(null);
 
 	// UseEffect para cambiar la pestaña actual a la pestaña que se cree nueva
 	useEffect(() => {
@@ -121,12 +121,14 @@ const UnitsInformation = (props) => {
 			setAddingUnit(false);
 		}
 
+
 		if (props.course) {
+			//Get all task-activity by courseId
 			api.get(`/api/course/task/activity/${props.course._id}`, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
-					setActivities(res.data.activities);
+					setTaskActivities(res.data.activities);
 				})
 				.catch(err => {
 					if (err.response) {
@@ -352,7 +354,7 @@ const UnitsInformation = (props) => {
 			{
 				props.course.units.map((unit, index) => (
 					<TabPanel value={value} key={index} index={index}>
-						<UnitContent course={props.course} activities={activities} unitValue={unit} onAddTask={handleAddTask} onUpdateChanges={handleUpdateUnit} onDeleteUnit={deleteUnit} onDeleteTask={handleDeleteTask} />
+						<UnitContent course={props.course} taskActivities={taskActivities} unitValue={unit} onAddTask={handleAddTask} onUpdateChanges={handleUpdateUnit} onDeleteUnit={deleteUnit} onDeleteTask={handleDeleteTask} />
 					</TabPanel>
 				))
 			}

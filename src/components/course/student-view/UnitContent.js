@@ -66,11 +66,18 @@ const UnitContent = props => {
 			</div>
 			<hr />
 			<h1 className="h5 text-center mb-4">Actividades</h1>
-			{props.activities ?
+			{props.taskActivities ?
 				<div className="cards-container">
 					{props.unitValue.tasks.map((task, i) => (
 						task.visible ?
-							<TaskCard key={i} forStudent={true} activities={props.activities} courseId={props.course._id} unitId={props.unitValue._id} task={task} />
+							<TaskCard
+								key={i}
+								forStudent={true}
+								studentActivities={props.studentActivities}
+								taskActivities={props.taskActivities}
+								courseId={props.course._id}
+								unitId={props.unitValue._id}
+								task={task} />
 							:
 							''
 					))}

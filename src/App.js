@@ -108,7 +108,7 @@ function App() {
                 {/* ACTIVITY */}
                 <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
-                <ProtectedRoute path='/activity/logic-sequence/student/:activityId' exact component={LogicSequenceStudent} />
+                <ProtectedRoute path='/activity/logic-sequence/student/:courseId/:unitId/:taskId/:activityId' exact component={LogicSequenceStudent} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
 
                 {/* PROFILE */}

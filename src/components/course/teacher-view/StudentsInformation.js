@@ -44,7 +44,6 @@ export default function StudentsInformation(props) {
 
     // UseEffect para obtener los alumnos del curso o en dado caso que se agreguen nuevos alumnos al curso se vuelvan a obtener
     useEffect(() => {
-        console.log(scroll)
         if (!students || isAddingStudents) {
             fetchStudents();
         }
