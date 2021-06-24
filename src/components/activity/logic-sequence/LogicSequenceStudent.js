@@ -183,25 +183,27 @@ const LogicSequenceStudent = props => {
             grade = 5;
         }
 
-        api.put(`/api/student-activity/${studentActivity._id}`, {
-            complete: true,
-            grade: grade
-        }, {
-            headers: {
-                'x-access-token': localStorage.getItem('token')
-            }
-        })
-            .then((res) => {
-                showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+        if (studentActivity) {
+            api.put(`/api/student-activity/${studentActivity._id}`, {
+                complete: true,
+                grade: grade
+            }, {
+                headers: {
+                    'x-access-token': localStorage.getItem('token')
+                }
             })
-            .catch((err) => {
-                if (err.response) {
-                    showError(err.response.data.message);
-                }
-                else {
-                    showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
-                }
-            });
+                .then((res) => {
+                    showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+                })
+                .catch((err) => {
+                    if (err.response) {
+                        showError(err.response.data.message);
+                    }
+                    else {
+                        showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+                    }
+                });
+        }
     };
 
     const nameInputStyle = {

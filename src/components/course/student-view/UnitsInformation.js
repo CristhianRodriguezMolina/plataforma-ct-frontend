@@ -113,8 +113,6 @@ export default function UnitsInformation(props) {
 					}, {
 						headers: { 'x-access-token': localStorage.getItem('token') }
 					}).then((res) => {
-						console.log('res.data');
-						console.log(res.data);
 						setStudentActivities(res.data.studentActivity);
 					}).catch(err => {
 						if (err.response) {

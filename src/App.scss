@@ -58,6 +58,22 @@ $roboto: "Roboto", sans-serif;
 		transform: translateY(4px);
 		// color: #757575;
 	}
+
+	&.disable-button {
+		cursor: default;
+		box-shadow: none;
+	}
+
+	&.disable-button:hover {
+		background-color: #9e9e9e;
+	}
+
+	&.disable-button:active {
+		background-color: #9e9e9e;
+		box-shadow: 0 4px none;
+		transform: initial;
+		color: whitesmoke;
+	}
 }
 
 .custom-btn-primary {
@@ -73,6 +89,22 @@ $roboto: "Roboto", sans-serif;
 		background-color: #64b5f6;
 		box-shadow: none;
 		transform: translateY(4px);
+		color: whitesmoke;
+	}
+
+	&.disable-button {
+		cursor: default;
+		box-shadow: none;
+	}
+
+	&.disable-button:hover {
+		background-color: #2196f3;
+	}
+
+	&.disable-button:active {
+		background-color: #2196f3;
+		box-shadow: 0 4px none;
+		transform: initial;
 		color: whitesmoke;
 	}
 }
@@ -92,6 +124,22 @@ $roboto: "Roboto", sans-serif;
 		transform: translateY(4px);
 		color: whitesmoke;
 	}
+
+	&.disable-button {
+		cursor: default;
+		box-shadow: none;
+	}
+
+	&.disable-button:hover {
+		background-color: #ff9800;
+	}
+
+	&.disable-button:active {
+		background-color: #ff9800;
+		box-shadow: 0 4px none;
+		transform: initial;
+		color: whitesmoke;
+	}
 }
 
 .custom-btn-search {
@@ -107,6 +155,22 @@ $roboto: "Roboto", sans-serif;
 		background-color: #9575cd;
 		box-shadow: none;
 		transform: translateY(4px);
+		color: whitesmoke;
+	}
+
+	&.disable-button {
+		cursor: default;
+		box-shadow: none;
+	}
+
+	&.disable-button:hover {
+		background-color: #673ab7;
+	}
+
+	&.disable-button:active {
+		background-color: #673ab7;
+		box-shadow: 0 4px none;
+		transform: initial;
 		color: whitesmoke;
 	}
 }
@@ -126,6 +190,22 @@ $roboto: "Roboto", sans-serif;
 		transform: translateY(4px);
 		color: whitesmoke;
 	}
+
+	&.disable-button {
+		cursor: default;
+		box-shadow: none;
+	}
+
+	&.disable-button:hover {
+		background-color: #f44336;
+	}
+
+	&.disable-button:active {
+		background-color: #f44336;
+		box-shadow: 0 4px none;
+		transform: initial;
+		color: whitesmoke;
+	}
 }
 
 .custom-btn-success {
@@ -143,6 +223,22 @@ $roboto: "Roboto", sans-serif;
 		transform: translateY(4px);
 		color: whitesmoke;
 	}
+
+	&.disable-button {
+		cursor: default;
+		box-shadow: none;
+	}
+
+	&.disable-button:hover {
+		background-color: #8bc34a;
+	}
+
+	&.disable-button:active {
+		background-color: #8bc34a;
+		box-shadow: 0 4px none;
+		transform: initial;
+		color: whitesmoke;
+	}
 }
 
 .custom-btn-info {
@@ -158,6 +254,22 @@ $roboto: "Roboto", sans-serif;
 		background-color: #4dd0e1;
 		box-shadow: none;
 		transform: translateY(4px);
+		color: whitesmoke;
+	}
+
+	&.disable-button {
+		cursor: default;
+		box-shadow: none;
+	}
+
+	&.disable-button:hover {
+		background-color: #00bcd4;
+	}
+
+	&.disable-button:active {
+		background-color: #00bcd4;
+		box-shadow: 0 4px none;
+		transform: initial;
 		color: whitesmoke;
 	}
 }

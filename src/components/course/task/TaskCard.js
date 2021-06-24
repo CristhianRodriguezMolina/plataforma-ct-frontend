@@ -15,8 +15,8 @@ import { Delete, Edit } from '@material-ui/icons';
 import AlertModal from '../../common/AlertModal';
 
 const TaskCard = props => {
-	const [activityNumber, setActivityNumber] = useState(0);
 	const [taskActivities, setTaskActivities] = useState(null);
+	const [disableButton, setDisableButton] = useState(false);
 
 	const stateList = []
 
@@ -26,11 +26,33 @@ const TaskCard = props => {
 			if (!taskActivities) {
 				let tempActivities = props.taskActivities.filter((taskActivity) => taskActivity.task === props.task._id);
 				setTaskActivities(tempActivities);
-				setActivityNumber(tempActivities.length);
 			}
 		}
 	}, [props.taskActivities]);
 
+	useEffect(() => {
+		if (props.studentActivities && props.taskActivities) {
+			let disableBtn = true;
+			for (let i = 0; i < taskActivities.length && disableBtn; i++) {
+				let nextActivity = props.studentActivities.filter(studentActivity => studentActivity.activity === taskActivities[i].activity);
+
+				//if the studentActivity exists
+				if (nextActivity.length > 0) {
+					if (!nextActivity[0].complete) {
+						disableBtn = false;
+					}
+				}
+				else {
+					disableBtn = false;
+				}
+			}
+
+			if (disableBtn) {
+				setDisableButton(disableBtn);
+			}
+
+		}
+	}, [props.studentActivities, props.taskActivities]);
 
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
@@ -45,26 +67,51 @@ const TaskCard = props => {
 		}
 	};
 
-	for (let i = 0; i < activityNumber; i++) {
-		var studentActivity;
-		if (props.forStudent && props.studentActivities) {
-			studentActivity = props.studentActivities.filter((studentActivity) => studentActivity.activity === taskActivities[i].activity)[0];
-		}
-		items.push(
-			<div key={i} className="activity-item" onClick={() => handleRedirectToActivity(taskActivities[i])}>
-				<h4>{i + 1}</h4>
-				{studentActivity ?
-					<div className={`activity-task-view ${studentActivity.complete ? 'active' : ''}`}></div> :
-					props.forStudent ?
-						<div className="activity-task-view"></div> :
-						<div className="activity-task-view active"></div>}
+	if (taskActivities) {
+		for (let i = 0; i < taskActivities.length; i++) {
+			var studentActivity;
+			if (props.forStudent && props.studentActivities) {
+				studentActivity = props.studentActivities.filter((studentActivity) => studentActivity.activity === taskActivities[i].activity)[0];
+			}
+			items.push(
+				<div key={i} className="activity-item" onClick={() => handleRedirectToActivity(taskActivities[i])}>
+					<h4>{i + 1}</h4>
+					{studentActivity ?
+						<div className={`activity-task-view ${studentActivity.complete ? 'active' : ''}`}></div> :
+						props.forStudent ?
+							<div className="activity-task-view"></div> :
+							<div className="activity-task-view active"></div>}
 
-			</div >
-		);
+				</div >
+			);
+		}
 	}
+
 
 	const handleDeleteTask = () => {
 		props.onDeleteTask(props.task._id);
+	};
+
+	const handleDoActivities = () => {
+
+		if (taskActivities) {
+			//Search the first incomplete activity
+			for (let i = 0; i < taskActivities.length; i++) {
+				let nextActivity = props.studentActivities.filter(studentActivity => studentActivity.activity === taskActivities[i].activity);
+
+				//if the studentActivity exists
+				if (nextActivity.length > 0) {
+					if (!nextActivity[0].complete) {
+						props.history.push(`/activity/logic-sequence/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
+						return;
+					}
+				}
+				else {
+					props.history.push(`/activity/logic-sequence/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
+					return;
+				}
+			}
+		}
 	};
 
 	return (
@@ -95,7 +142,9 @@ const TaskCard = props => {
 						/>
 					</>
 					:
-					<Link to={`/activity/logic-sequence/student/85479879`} className="custom-btn custom-btn-success do-button px-2">Realizar</Link>
+					!disableButton ?
+						<button onClick={() => handleDoActivities()} className="custom-btn custom-btn-success do-button px-2">Realizar</button> :
+						<button className="custom-btn custom-btn-success do-button px-2 disable-button" disabled={true}>Realizado</button>
 			}
 		</div >
 	)
