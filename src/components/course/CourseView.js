@@ -51,7 +51,7 @@ export default function CourseView({ history }) {
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
         if (course) {
-            changeColor(`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.8)`);
+            changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
         }
     }, [color]);
 
