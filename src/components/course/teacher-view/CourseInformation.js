@@ -11,6 +11,8 @@ import './teacherview.scss';
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 
+// Dropzone
+import DropzoneUploader from '../../common/DropzoneUploader';
 
 /* TEACHER */
 export default function CourseInformation({ course, setCourse }) {
@@ -23,10 +25,13 @@ export default function CourseInformation({ course, setCourse }) {
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-    const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
-    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+    const [info, setInfo] = useState(false); //Variable flag de existencia de un proceso
+    const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+    // Bool to active the upload image method
+    const [upload, setUpload] = useState(false);
 
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
@@ -48,13 +53,23 @@ export default function CourseInformation({ course, setCourse }) {
         }, 2000)
     }
 
+    // Funcion para mostrar una alerta de info dado un mensaje
+    const showInfo = (message) => {
+        setInfo(true);   //Se cambia el estado de mensaje de proceso a verdadero
+        setInfoMessage(message); //Se setea el mensaje de proceso 
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setInfo(false);
+            setInfoMessage("");
+        }, 2000)
+    }
+
     // Funcion para actualizar los datos basicos de un curso como Nombre, Descripcion y Tema
     const updateChanges = async (e) => {
         e.preventDefault();
 
         try {
-            setProcess(true);
-            setProcessMessage('El curso se esta actualizando...');
+            setInfo(true);
+            setInfoMessage('El curso se esta actualizando...');
 
             const response = await api.put(`/api/course/${course._id}`, {
                 name,
@@ -82,41 +97,90 @@ export default function CourseInformation({ course, setCourse }) {
                 console.log(`Ha ocurrido un error: ${error}`);
             }
         }
-        setProcess(false);
-        setProcessMessage('');
+        setInfo(false);
+        setInfoMessage('');
+    }
+
+    const handleUpload = () => {
+        setUpload(!upload);
+    }
+
+    const uploadImage = async (files) => {
+        try {
+            if (files.length > 0) {
+                setInfo(true);
+                setInfoMessage('Subiendo imagen del curso al servidor...');
+
+                const form = new FormData()
+                form.append('folder', 'course-images');
+                form.append('image', files[0]);
+
+                const config = {
+                    headers: {
+                        'content-type': 'multipart/form-data', //Para aceptar archivos binarios
+                        'content-type': 'application/json',
+                        'x-access-token': localStorage.getItem('token')
+                    }
+                }
+
+                const response = await api.post(`api/data/upload-img-course/${course._id}`, form, config);
+
+                const { updatedCourse, message } = response.data;
+
+                if (updatedCourse) {
+                    setCourse(prevValues => { return { ...prevValues, image: updatedCourse.image } });
+
+                    showSuccess(message);
+                }
+            } else {
+                console.log(files);
+                showInfo('Selecciona alguna imagen para agregar al curso')
+            }
+        } catch (error) {
+            if (error.response) {
+                console.log(error.response.data.message);
+                showError(error.response.data.message);
+            } else {
+                console.log('Error en el servidor');
+                showError('Error en el servidor');
+            }
+        }
+        setUpload(!upload);
+        setInfo(false);
+        setInfoMessage('');
     }
 
     return (
         <div className="course-information container pt-4 px-5">
             {success ?
-                <Alert severity="success">{successMessage}</Alert>
+                <Alert className='alert-message' severity="success">{successMessage}</Alert>
                 : ""
             }
             {error ?
-                <Alert severity="error">{errorMessage}</Alert>
+                <Alert className='alert-message' severity="error">{errorMessage}</Alert>
                 : ""
             }
-            {process ?
-                <Alert severity="info">{processMessage}</Alert>
+            {info ?
+                <Alert className='alert-message' severity="info">{infoMessage}</Alert>
                 : ""
             }
             <h1 className="h4">Editar Información del Curso</h1>
             <form className='mb-5' onSubmit={updateChanges}>
                 <div className="form-group">
                     <div>
-                        <label className="form-label">Course name</label>
+                        <label className="form-label">Nombre del Curso</label>
                         <input type="text" className="form-control" onChange={evt => setName(evt.target.value)} value={name} />
                     </div>
                 </div>
                 <div className="form-group">
                     <div>
-                        <label className="form-label">Course description</label>
+                        <label className="form-label">Descripción de Curso</label>
                         <textarea className="form-control" rows="3" onChange={evt => setDescription(evt.target.value)} value={description} />
                     </div>
                 </div>
                 <div className="form-group">
                     <div>
-                        <label className="form-label">Course topic</label>
+                        <label className="form-label">Tema del Curso</label>
                         <input type="text" className="form-control" onChange={evt => setTopic(evt.target.value)} value={topic} />
                     </div>
                 </div>
@@ -124,6 +188,28 @@ export default function CourseInformation({ course, setCourse }) {
                     <button type="submit" className="custom-btn custom-btn-info px-2 py-2 mt-3">Guardar cambios</button>
                 </div>
             </form>
+            <div>
+                <label className="form-label">Imagen del Curso</label>
+                <div className='d-flex justify-content-between align-items-start'>
+                    <DropzoneUploader
+                        onFormSubmit={uploadImage}
+                        upload={upload}
+                        type="image/jpeg, image/png, image/gif"
+                        maxFiles="1"
+                        className='w-50'
+                    />
+                    {
+                        course.image ?
+                            course.image !== '' ?
+                                <div className='img-wrapper'>
+                                    <img src={`${process.env.REACT_APP_API_URL}/course-images/${course.image}`} alt="CourseImage" loading="lazy" />
+                                </div>
+                                : ""
+                            : ""
+                    }
+                </div>
+                <button onClick={handleUpload} className="custom-btn custom-btn-info px-2 py-2 mt-3">Subir imagen</button>
+            </div>
         </div>
     )
 }

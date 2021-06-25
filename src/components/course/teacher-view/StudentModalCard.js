@@ -13,15 +13,15 @@ export default function StudentModalCard(props) {
     const [checked, setChecked] = useState(false);
 
     useEffect(() => {
-        if(checked){
+        if (checked) {
             setStudentsToAdd(prevValues => {
-                return [...prevValues, {_id: student._id}]
+                return [...prevValues, { _id: student._id }]
             });
-        }else{
+        } else {
             setStudentsToAdd(prevValues => {
                 return prevValues.filter(value => value._id !== student._id)
             });
-        } 
+        }
     }, [checked]);
 
     // Funcion para manejar el cambio del checkbox
@@ -36,17 +36,17 @@ export default function StudentModalCard(props) {
                 <div className="mr-auto">
                     <Typography component="h1">
                         {student.first_name} {student.last_name}
-                        <br/>
+                        <br />
                         ID: {student.id}
                     </Typography>
                 </div>
-                <Checkbox        
+                <Checkbox
                     checked={checked}
-                    onChange={handleChange}            
+                    onChange={handleChange}
                     color="primary"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
-            </div>            
+            </div>
         </div>
     )
 }

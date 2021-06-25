@@ -10,6 +10,8 @@ import api from '../../services/api';
 // SCSS
 import './course.scss';
 
+import { prominent, average } from 'color.js'
+
 // COMPONENTES
 
 // Tarjeta de titulo
@@ -34,7 +36,7 @@ import { Link } from 'react-router-dom';
 export default function CourseView({ history }) {
 
     // Datos del contexto de usuario
-    const { isAdmin, isTeacher, changeColor } = useContext(UserContext);
+    const { isAdmin, isTeacher, changeColor, changeFontColor } = useContext(UserContext);
 
     // Datos que vienen como parametros en la ruta para este componente
     const { type, id, view } = useParams();
@@ -42,10 +44,16 @@ export default function CourseView({ history }) {
     // Curso que se obtiene de la id que llega por parametro de la ruta
     const [course, setCourse] = useState(null);
 
+    // Colors for the navbar in base of the image of the course
+    const [color, setColor] = useState(null);
+    const [fontColor, setFontColor] = useState(null);
+
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
-        changeColor('#dcedc8');
-    });
+        if (course) {
+            changeColor(`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.8)`);
+        }
+    }, [color]);
 
     useEffect(() => {
         // Para verificar que los datos de la ruta sean nombres correctos
@@ -59,6 +67,13 @@ export default function CourseView({ history }) {
         // Si las verificaciones pasadas fueron aprobadas se busca el curso en cuestion para editar o ver
         else if (!course) {
             fetchData();
+        }
+
+        if (course) {
+            average(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, { sample: 10 }).then(color => {
+                console.log(color) // [241, 221, 63]
+                setColor(color)
+            })
         }
     }, [course])
 
@@ -96,6 +111,8 @@ export default function CourseView({ history }) {
                     <TitleCard
                         title={course.name}
                         color="#B6E768"
+                        colorFont='#fff'
+                        image={`${process.env.REACT_APP_API_URL}/course-images/${course.image}`}
                     />
                     :
                     ""

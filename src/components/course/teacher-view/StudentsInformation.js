@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react'
 // API
 import api from '../../../services/api';
 
+// Util
+import * as util from '../../../util/util';
+
 // COMPONENTS
 
 // Students popup
@@ -73,7 +76,6 @@ export default function StudentsInformation(props) {
 
     // Method to do a smooth scroll
     const scrollTo = () => {
-        console.log('scroll')
         scroll.scrollTo(500, {
             duration: 500,
             smooth: true,
@@ -93,15 +95,19 @@ export default function StudentsInformation(props) {
             const { students: newStudents, message } = response.data;
 
             if (newStudents) {
-                if (students) {
-                    let intersection = students.filter(x => newStudents.includes(x));
-                    console.log(intersection)
+                if (students && isAddingStudents) {
+                    const newStudentsAux = newStudents.map(x => x._id);
+                    const studentsAux = students.map(x => x._id);
+                    let difference = newStudentsAux.filter(x => studentsAux.indexOf(x) === -1)
+                    console.log(difference)
                 }
 
                 setStudents(newStudents);
+
                 if (isAddingStudents) {
                     scrollTo();
                 }
+
                 showSuccess(message);
             }
         } catch (error) {

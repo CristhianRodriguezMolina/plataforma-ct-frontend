@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
  * Componente para arrastrar y seleccionar archivos
  * @param {*} props 
  */
-const DropzoneUploader = props => {
+const DropzoneUploader = (props) => {
     const {
         acceptedFiles,
         fileRejections,
@@ -97,7 +97,7 @@ const DropzoneUploader = props => {
     ));
 
     return (
-        <div>
+        <div className={props.className}>
             <section className="container">
                 <div {...getRootProps({ className: 'dropzone' })}>
                     <input {...getInputProps()} />
@@ -109,7 +109,7 @@ const DropzoneUploader = props => {
                 </div>
                 <section>
                     {filesToUpload.length > 0 ?
-                        [<h4 key="image">File(s)</h4>,
+                        [<h4 key="image">Imagen</h4>,
                         <ul key="file-list" className="upload-info-container">{files}</ul>]
                         : ""
                     }

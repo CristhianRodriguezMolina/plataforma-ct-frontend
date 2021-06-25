@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 // SCSS
 import './titlecard.scss';
@@ -6,10 +6,28 @@ import './titlecard.scss';
 import PropTypes from 'prop-types';
 
 export default function TitleCard(props) {
+
+    //Variables que llegan por parametro
+    const { color, image, title, colorFont } = props;
+
     return (
-        <div className="title-container d-flex justify-content-center align-items-center" style={{ backgroundColor: props.color }}>
+        <div
+            className="title-container d-flex justify-content-center align-items-center"
+            style={
+                image ?
+                    {
+                        backgroundImage: `url(${image})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }
+                    :
+                    {
+                        backgroundColor: color
+                    }
+            }
+        >
             <div className="align-items-center" >
-                <h1 style={{ color: props.colorFont }}>{props.title}</h1>
+                <h1 style={{ color: colorFont }}>{title}</h1>
                 <hr />
             </div>
         </div>

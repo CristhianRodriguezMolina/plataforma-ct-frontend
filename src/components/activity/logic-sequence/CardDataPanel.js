@@ -114,6 +114,7 @@ const CardDataPanel = props => {
 		if (cardName && cardName.trim().localeCompare("") !== 0) {
 			if (files.length > 0) {
 				const formData = new FormData(); //Crea un formulario
+				formData.append('folder', 'i');
 				formData.append('image', files[0]); //Añade un nombre al formulario
 				formData.append('name', cardName);
 				const config = {
