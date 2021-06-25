@@ -31,7 +31,7 @@ const TaskCard = props => {
 	}, [props.taskActivities]);
 
 	useEffect(() => {
-		if (props.studentActivities && props.taskActivities) {
+		if (props.studentActivities && taskActivities) {
 			let disableBtn = true;
 			for (let i = 0; i < taskActivities.length && disableBtn; i++) {
 				let nextActivity = props.studentActivities.filter(studentActivity => studentActivity.activity === taskActivities[i].activity);

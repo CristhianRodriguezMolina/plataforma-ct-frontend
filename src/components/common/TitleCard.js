@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 // SCSS
 import './titlecard.scss';
@@ -12,7 +12,7 @@ export default function TitleCard(props) {
 
     return (
         <div
-            className="title-container d-flex justify-content-center align-items-center"
+            className="title-container"
             style={
                 image ?
                     {
@@ -26,9 +26,11 @@ export default function TitleCard(props) {
                     }
             }
         >
-            <div className="align-items-center" >
-                <h1 style={{ color: colorFont }}>{title}</h1>
-                <hr />
+            <div className={image ? 'title-overlay overlay' : 'title-overlay'}>
+                <div className="align-items-center" >
+                    <h1 style={{ color: colorFont }}>{title}</h1>
+                    <hr style={image ? { borderColor: colorFont } : {}} />
+                </div>
             </div>
         </div>
     )

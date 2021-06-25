@@ -9,9 +9,20 @@ $roboto: "Roboto", sans-serif;
     height: 140px;
     text-align: center;
     margin: auto 0;
+    .title-overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+    .overlay {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
     h1 {
         font-size: 2em;
         width: 6em;
+        min-width: 6em;
     }
 }
 
@@ -20,6 +31,7 @@ $roboto: "Roboto", sans-serif;
         h1 {
             width: 100%;
             font-size: 3em;
+            min-width: 6em;
         }
     }
 }
