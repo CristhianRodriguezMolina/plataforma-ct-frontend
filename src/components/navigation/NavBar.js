@@ -39,10 +39,7 @@ const useStyles = makeStyles(theme => ({
 	navbar: {
 		backgroundColor: localStorage.getItem('navbar-color')
 	},
-	offset: {
-		height: theme.mixins.toolbar,
-		backgroundColor: 'white'
-	}
+	offset: theme.mixins.toolbar
 }))
 
 function NavBar() {
@@ -55,12 +52,12 @@ function NavBar() {
 		<>
 			{
 				localStorage.getItem('token') ?
-					<div className='navbar-container'>
+					<div>
 						<AppBar className="" style={{ backgroundColor: navbarColor }}>
 							<Toolbar>
 								<Container maxWidth="lg" className="d-flex justify-content-between align-items-center">
-									<Typography variant="h6">
-										<Link className="btn" to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>
+									<Typography className='' variant="h6">
+										<Link className="link-app" to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>
 											<IconButton>
 												App
 											</IconButton>
@@ -124,7 +121,7 @@ function NavBar() {
 								</Container>
 							</Toolbar>
 						</AppBar>
-						{/* <div className={classes.offset}></div> */}
+						<div className={classes.offset}></div>
 					</div>
 					:
 					""
