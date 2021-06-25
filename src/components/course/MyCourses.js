@@ -93,8 +93,6 @@ export default function MyCourses({ history }) {
 
 			const { courses, message } = response.data;
 
-			console.log(courses)
-
 			if (courses) {
 				setCourses(courses);
 

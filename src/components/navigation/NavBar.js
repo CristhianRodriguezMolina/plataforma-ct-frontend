@@ -44,9 +44,8 @@ const useStyles = makeStyles(theme => ({
 
 function NavBar() {
 
-	const { logoutHandler, navbarColor, isAdmin, isTeacher, isStudent } = useContext(UserContext);
+	const { logoutHandler, navbarColor, isAdmin, isTeacher } = useContext(UserContext);
 
-	// Estilos de material UI
 	const classes = useStyles();
 
 	return (

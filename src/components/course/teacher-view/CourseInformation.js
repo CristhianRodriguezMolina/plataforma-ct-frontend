@@ -128,7 +128,7 @@ export default function CourseInformation({ course, setCourse }) {
                 const { updatedCourse, message } = response.data;
 
                 if (updatedCourse) {
-                    course.image = updatedCourse.image;
+                    setCourse(prevValues => { return { ...prevValues, image: updatedCourse.image } });
 
                     showSuccess(message);
                 }

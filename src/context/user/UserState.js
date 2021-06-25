@@ -91,15 +91,22 @@ const UserState = (props) => {
     };
 
     const [navbarColor, setNavbarColor] = useState('#ffcdd2')
+    const [navbarFontColor, setNavbarFontColor] = useState('#000')
     const [state, dispatch] = useReducer(UserReducer, initialState);
 
     const changeColor = (color) => {
         setNavbarColor(color);
     }
 
+    const changeFontColor = (color) => {
+        setNavbarFontColor(color);
+    }
+
     const user = {
         navbarColor,
+        navbarFontColor,
         changeColor,
+        changeFontColor,
         signinHandler,
         logoutHandler,
         env: state.env,

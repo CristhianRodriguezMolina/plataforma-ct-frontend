@@ -13,6 +13,7 @@
     "array-move": "^3.0.1",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "color.js": "^1.2.0",
     "dateformat": "^4.5.1",
     "dotenv": "^10.0.0",
     "jquery": "^3.6.0",

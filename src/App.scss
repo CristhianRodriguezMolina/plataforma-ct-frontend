@@ -129,17 +129,17 @@ $roboto: "Roboto", sans-serif;
 }
 
 .custom-btn-success {
-	background-color: #4caf50;
-	box-shadow: 0 4px #2e7d32;
+	background-color: #7cb342;
+	box-shadow: 0 4px #558b2f;
 	// color: black;
 
 	&:hover {
-		background-color: #81c784;
+		background-color: #9ccc65;
 		color: whitesmoke;
 	}
 
 	&:active {
-		background-color: #81c784;
+		background-color: #9ccc65;
 		box-shadow: none;
 		transform: translateY(4px);
 		color: whitesmoke;
