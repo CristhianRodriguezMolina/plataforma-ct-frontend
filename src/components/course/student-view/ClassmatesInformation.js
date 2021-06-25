@@ -97,7 +97,7 @@ export default function ClassmatesInformation(props) {
                         <input className="form-control text-center" />
                     </div>
                     <div className="form-group">
-                        <button type="submit" className="btn-search btn btn-primary">
+                        <button type="submit" className="custom-btn custom-btn-search px-3 py-1">
                             Buscar
                         </button>
                     </div>

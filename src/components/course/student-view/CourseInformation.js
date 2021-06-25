@@ -60,7 +60,6 @@ export default function CourseInformation(props) {
                                 <Avatar className="course-info-avatar" src="https://picsum.photos/200/300" />
                                 <div>
                                     <p className='m-0 ml-4 mb-2 p-0'><b>{teacher.first_name} {teacher.last_name}</b></p>
-                                    <p className='m-0 ml-4 mb-2 p-0 text-muted'>Identificación: {teacher.id !== '' ? <b>{teacher.id}</b> : <b>No tiene Identificación :(</b>}</p>
                                     <p className='m-0 ml-4 mb-2 p-0 text-muted'>Genero: {teacher.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
                                 </div>
                             </div>

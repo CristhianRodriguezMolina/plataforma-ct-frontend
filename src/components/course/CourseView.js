@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 
+//image-exists
+import imageExists from 'image-exists';
+
 // CONTEXT
 import UserContext from '../../context/user/UserContext';
 
@@ -51,7 +54,10 @@ export default function CourseView({ history }) {
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
         if (course) {
-            changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
+            if (color) {
+
+                changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
+            }
         }
     }, [color]);
 
@@ -70,10 +76,17 @@ export default function CourseView({ history }) {
         }
 
         if (course) {
-            average(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, { sample: 10 }).then(color => {
-                console.log(color) // [241, 221, 63]
-                setColor(color)
-            })
+            imageExists(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, (exists) => {
+                if (exists) {
+                    average(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, { sample: 10 }).then(color => {
+                        console.log(color) // [241, 221, 63]
+                        setColor(color)
+                    })
+                }
+                else {
+                    console.log("image not found");
+                }
+            });
         }
     }, [course])
 

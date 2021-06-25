@@ -122,9 +122,7 @@ export default function StudentCard(props) {
 						<Typography component="h1">
 							{student.first_name} {student.last_name}
 							<br />
-							<p className="text-muted d-inline">ID: {student.id}</p>
-							<br />
-							<p className="text-muted d-inline">Edad: {util.getAge(student.birth_date)}</p>
+							<p className="text-muted d-inline">Género: {student.genre}</p>
 						</Typography>
 					</div>
 					{success ?
@@ -168,8 +166,6 @@ export default function StudentCard(props) {
 												<Avatar className="modal-student-avatar mr-2" src="https://picsum.photos/200/300" />
 												<div>
 													<p className='m-0 ml-4 mb-2 p-0 text-white'><b>{student.first_name} {student.last_name}</b></p>
-													<p className='m-0 ml-4 mb-2 p-0'>Identificación: {student.id !== '' ? <b>{student.id}</b> : <b>No tiene Identificación :(</b>}</p>
-													<p className='m-0 ml-4 mb-2 p-0'>Edad: <b>{util.getAge(student.birth_date)}</b></p>
 													<p className='m-0 ml-4 mb-2 p-0'>Genero: {student.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
 												</div>
 											</div>

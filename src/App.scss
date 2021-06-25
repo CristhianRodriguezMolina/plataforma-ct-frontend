@@ -45,10 +45,12 @@ $roboto: "Roboto", sans-serif;
 	padding: 0.2em;
 	font-family: $roboto;
 	font-weight: 100;
+	transition-duration: 0.2s;
 
 	&:hover {
 		text-decoration: none;
 		background-color: #a8a8a8;
+		transition-duration: 0.2s;
 		// color: #757575;
 	}
 
@@ -231,11 +233,11 @@ $roboto: "Roboto", sans-serif;
 	}
 
 	&.disable-button:hover {
-		background-color: #8bc34a;
+		background-color: #7cb342;
 	}
 
 	&.disable-button:active {
-		background-color: #8bc34a;
+		background-color: #7cb342;
 		box-shadow: 0 4px none;
 		transform: initial;
 		color: whitesmoke;
