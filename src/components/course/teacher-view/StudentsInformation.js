@@ -8,9 +8,6 @@ import api from '../../../services/api';
 // Students popup
 import StudentsPopup from './StudentsPopup';
 
-// Button
-import Button from '@material-ui/core/Button';
-
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 

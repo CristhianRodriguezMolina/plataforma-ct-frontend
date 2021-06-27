@@ -10,6 +10,9 @@ import api from '../../services/api';
 // Date formater
 import dateFormat from 'dateformat';
 
+// SCSS
+import './user.scss';
+
 // COMPONENTS
 
 // Tarjeta de titulo
