@@ -158,7 +158,7 @@ export default function StudentCard(props) {
 											<Link onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></Link>
 										</Tooltip>
 										<Tooltip title="Editar" aria-label="edit">
-											<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-info btn-user-card"><Edit /></Link>
+											<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-primary btn-user-card"><Edit /></Link>
 										</Tooltip>
 									</div>
 									<div className="btn-group-sm btn-group-vertical ml-2">
