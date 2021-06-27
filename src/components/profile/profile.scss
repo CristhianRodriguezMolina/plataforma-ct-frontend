@@ -1,0 +1,137 @@
+.profile-container {
+	background-color: grey;
+	// box-sizing: border-box;
+	// height: 40em;
+	width: 100%;
+	margin: 0;
+	padding: 1em;
+	.profile {
+		background-color: white;
+		// box-sizing: border-box;
+		height: 100%;
+		width: 100%;
+		box-shadow: -2px 4px 20px 5px rgba(51, 51, 51, 0.7);
+
+		.pricipal-info-section {
+			background: rgb(99, 127, 226);
+			background: radial-gradient(
+				circle,
+				rgba(99, 127, 226, 1) 0%,
+				rgba(92, 147, 240, 1) 33%,
+				rgba(0, 112, 255, 1) 100%
+			);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			padding: 2em 0 2em 0;
+
+			.avatar-container {
+				position: relative;
+				.profile-avatar {
+					width: 8em;
+					height: 8em;
+				}
+				.edit-image-button {
+					position: absolute;
+					right: 0;
+					bottom: 0;
+					background-color: white;
+					border-radius: 50%;
+
+					&:hover,
+					&:active {
+						background-color: #cacaca;
+					}
+				}
+			}
+
+			h1 {
+				color: white;
+				font-weight: bold;
+			}
+			p {
+				color: whitesmoke;
+				margin: 0;
+			}
+		}
+
+		.data-section {
+			padding: 2em;
+
+			.profile-data-content {
+				min-height: 30em;
+				padding: 0 2em 0 2em;
+			}
+
+			label {
+				color: #979797;
+			}
+
+			h1 {
+				font-weight: bold;
+			}
+
+			hr {
+				width: 80%;
+				margin-top: 0;
+				margin-left: 0;
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 576px) {
+	.profile-container {
+		// box-sizing: border-box;
+		padding: 1em;
+		.profile {
+			.data-section {
+				.profile-data-content {
+					padding: 0 3em 0 3em;
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	.profile-container {
+		// box-sizing: border-box;
+		padding: 2em 2em 2em 3em;
+		.profile {
+			.data-section {
+				.profile-data-content {
+					padding: 0 2em 0 2em;
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 1367px) {
+	.profile-container {
+		// box-sizing: border-box;
+		padding: 2.5em;
+		.profile {
+			.data-section {
+				.profile-data-content {
+					padding: 0 7em 0 7em;
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (min-height: 900px) and (min-width: 768px) {
+	.profile-container {
+		padding: 2.5em;
+		.profile {
+			.data-section {
+				.profile-data-content {
+					min-height: 47em;
+				}
+			}
+		}
+	}
+}

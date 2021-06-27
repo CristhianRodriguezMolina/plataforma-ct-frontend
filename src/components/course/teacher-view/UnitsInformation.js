@@ -71,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		width: '100%',
 		margin: 0,
+		marginBottom: '6em',
 		padding: 0,
 	},
 	bar: {

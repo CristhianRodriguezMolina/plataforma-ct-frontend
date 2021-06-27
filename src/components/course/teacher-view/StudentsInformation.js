@@ -3,9 +3,6 @@ import React, { useEffect, useState } from 'react'
 // API
 import api from '../../../services/api';
 
-// Util
-import * as util from '../../../util/util';
-
 // COMPONENTS
 
 // Students popup
@@ -124,7 +121,7 @@ export default function StudentsInformation(props) {
     }
 
     return (
-        <div>
+        <div className='students-information'>
             {success ? <Alert className="alert-message mb-5" severity="success">{successMessage}</Alert> : ""}
             {error ? <Alert className="alert-message" severity="error">{errorMessage}</Alert> : ""}
             {process ? <Alert className="alert-message" severity="info">{processMessage}</Alert> : ""}

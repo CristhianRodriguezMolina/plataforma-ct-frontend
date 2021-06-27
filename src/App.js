@@ -116,7 +116,7 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
 
                 {/* PROFILE */}
-                <ProtectedRoute path='/profile' exact component={Profile} />
+                <ProtectedRoute path='/profile/:userId/:view' exact component={Profile} />
 
                 {/* UNAUTHORIZED */}
                 <Route path="/unauthorized" exact component={Error404} />

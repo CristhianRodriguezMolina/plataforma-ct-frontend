@@ -103,7 +103,7 @@ const DropzoneUploader = (props) => {
                     <input {...getInputProps()} />
                     <div className="info">
                         <p>Arrastra aqui o </p>
-                        <button className="btn btn-success">selecciona</button>
+                        <button className="custom-btn custom-btn-primary p-2">selecciona</button>
                         <p>una imagen</p>
                     </div>
                 </div>

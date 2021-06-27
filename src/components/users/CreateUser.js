@@ -16,7 +16,10 @@ import dateFormat from 'dateformat';
 import TitleCard from '../common/TitleCard';
 
 // Contenedor
-import Container from '@material-ui/core/Container';
+import { Container, Breadcrumbs, Typography } from '@material-ui/core';
+
+// Link
+import { Link } from 'react-router-dom';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
@@ -32,7 +35,7 @@ export default function CreateUser({ history }) {
 	const [first_name, setFirstName] = useState(''); //Primer nombre del usuario
 	const [last_name, setLastName] = useState(''); //Apellido del usuario
 	const [birth_date, setBirthDate] = useState(''); //Edad del usuario
-	const [genre, setGenre] = useState('Selecciona un genero'); //Genero del usuario
+	const [genre, setGenre] = useState('NA'); //Genero del usuario
 	const [id, setId] = useState(''); //Id del usuario
 	const [password, setPassword] = useState(''); //Contraseña del usuario
 	const [confirm_password, setConfirmPassword] = useState(''); //Comfirmación de contraseña del usuario
@@ -77,15 +80,6 @@ export default function CreateUser({ history }) {
 		}, 2000)
 	}
 
-	const getStringDate = () => {
-		const date = new Date();
-		const year = date.getFullYear();
-		const month = date.getMonth();
-		const day = date.getDate();
-
-		return `${year}-${month}-${day}`
-	}
-
 	// METODO PARA OBTENER LOS DATOS DE UN USUARIO EN DADO CASO DE QUE SE VAYA A EDITAR CON LA ID QUE LLEGA POR LA RUTA
 	const fetchUser = async () => {
 		try {
@@ -97,7 +91,6 @@ export default function CreateUser({ history }) {
 			const { user, message } = response.data;
 
 			if (user) {
-				console.log(getStringDate(user.birth_date))
 				setBirthDate(user.birth_date);
 				setId(user.id);
 				setGenre(user.genre);
@@ -107,8 +100,6 @@ export default function CreateUser({ history }) {
 				setConfirmPassword('');
 
 				setUser(user);
-			} else {
-				showError(message);
 			}
 		} catch (error) {
 			if (error.response) {
@@ -184,12 +175,7 @@ export default function CreateUser({ history }) {
 						setLastName('');
 
 						history.goBack();
-					} else {
-						showError(message);
 					}
-
-					setProcess(false);
-					setProcessMessage('');
 				} else {
 					showError("Debes llenar todos los campos");
 				}
@@ -232,7 +218,6 @@ export default function CreateUser({ history }) {
 					}
 				});
 
-
 				const { updatedUser, message } = response.data;
 
 				if (updatedUser) { //Se verifica si existe                 
@@ -270,6 +255,10 @@ export default function CreateUser({ history }) {
 				colorFont='#fff'
 			/>
 			<Container className="form-create-user-container mt-4" maxWidth="sm">
+				<Breadcrumbs>
+					<Link className='text-muted' onClick={() => history.goBack()}>Lista de {type === "teachers" ? "profesores" : "alumnos"}</Link>
+					<Typography><b>Editar {type === "teachers" ? "profesor" : "alumno"}</b></Typography>
+				</Breadcrumbs>
 				<form onSubmit={evt => createUser(evt)} className="form-create-user">
 					<h1 className="h5">{action === "create" ? "Crear" : "Actualizar"} {type === "teachers" ? "profesor" : "alumno"}</h1>
 					<hr />
@@ -289,6 +278,7 @@ export default function CreateUser({ history }) {
 					<div className="form-group">
 						<label>Genero</label>
 						<select className="form-control" onChange={evt => setGenre(evt.target.value)} value={genre} aria-label="Default select example" required>
+							<option value="NA" selected disabled>Selecciona un genero</option>
 							<option value="F">Femenino</option>
 							<option value="M">Masculino</option>
 							<option value="NB">No binario</option>
@@ -349,6 +339,6 @@ export default function CreateUser({ history }) {
 						""
 				}
 			</Container>
-		</div>
+		</div >
 	)
 }

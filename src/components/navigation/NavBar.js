@@ -48,6 +48,8 @@ function NavBar() {
 
 	const classes = useStyles();
 
+
+
 	return (
 		<>
 			{
@@ -73,16 +75,16 @@ function NavBar() {
 												data-toggle='dropdown'
 												aria-expanded='false'
 											>
-												<Avatar src={`${process.env.REACT_APP_API_URL}/profile/img1.jpg`} />
+												<Avatar src={`${process.env.REACT_APP_API_URL}/profile/${localStorage.getItem('user_image')}`} />
 											</IconButton>
 											<ul className="navbar-user-options dropdown-menu shadow" aria-labelledby="dropdownProfileMenu">
 												<Typography variant="subtitle1">
 													<li>
 														<div className="navbar-user-options-header">
-															<Avatar className="mr-3" src={`${process.env.REACT_APP_API_URL}/profile/img1.jpg`} />
+															<Avatar className="mr-3" src={`${process.env.REACT_APP_API_URL}/profile/${localStorage.getItem('user_image')}`} />
 															<div className="d-flex flex-column">
 																<p className="m-0 p-0">{localStorage.getItem('user_name')} {localStorage.getItem('user_last_name')}</p>
-																<Link className="" to="/profile">Perfil</Link>
+																<Link className="" to={`/profile/${localStorage.getItem('user_id')}/overview`}>Perfil</Link>
 															</div>
 														</div>
 													</li>

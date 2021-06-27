@@ -6,7 +6,7 @@ import './AlertModal.scss';
 // COMPONENTS
 
 // Modal
-import { Modal, Button } from '@material-ui/core';
+import { Modal } from '@material-ui/core';
 
 // Iconos
 import { Error, Info, CheckCircle } from '@material-ui/icons';
@@ -65,7 +65,7 @@ export default function AlertModal(props) {
 					<hr />
 					<div>
 						<button onClick={executeAction} className={btnClass} color="secondary" variant="contained">{type === 'delete' ? 'Borrar' : 'Aceptar'}</button>
-						<button onClick={handleClose} className='custom-btn custom-btn-primary p-2'>Cancelar</button>
+						<button onClick={handleClose} className='custom-btn p-2'>Cancelar</button>
 					</div>
 				</div>
 			</div>

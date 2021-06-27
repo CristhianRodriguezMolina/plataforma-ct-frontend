@@ -1,3 +1,4 @@
+// Date format
 import dateFormat from 'dateformat'
 
 export const getAge = (date) => {
@@ -35,4 +36,32 @@ export const arr_diff = (a1, a2) => {
     }
 
     return diff;
+}
+
+export const getRole = (role) => {
+    if (role === 'admin') {
+        return 'Administrador'
+    } else if (role === 'teacher') {
+        return 'Profesor'
+    } else if (role === 'student') {
+        return 'Estudiante'
+    }
+    return 'Error obteniendo el rol'
+}
+
+export const getGenre = (genre) => {
+    if (genre === 'M') {
+        return 'Masculino'
+    } else if (genre === 'F') {
+        return 'Femenino'
+    } else if (genre === 'NB') {
+        return 'No binario'
+    }
+    return 'Error obteniendo el genero'
+}
+
+export const getSpanishDate = (date) => {
+    const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+    const auxDate = new Date(dateFormat(new Date(date), "GMT:yyyy/mm/dd")) // Se ponen slashes para que javascript lo detecte como una fecha con zona horaria local
+    return `${auxDate.getDate()} de ${months[auxDate.getMonth()]} del ${auxDate.getFullYear()}`
 }
