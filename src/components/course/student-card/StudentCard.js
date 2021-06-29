@@ -162,7 +162,7 @@ export default function StudentCard(props) {
 										</Tooltip>
 									</div>
 									<div className="btn-group-sm btn-group-vertical ml-2">
-										<Tooltip title={<p className='text-center m-0 p-0'>Información< br />del< br />compañero</p>} aria-label="info">
+										<Tooltip title={<p className='text-center m-0 p-0'>Información< br />del< br />estudiante</p>} aria-label="info">
 											<button onClick={() => setOpenInfo(!openInfo)} className="custom-btn custom-btn-info btn-user-card mb-2"><Info /></button>
 										</Tooltip>
 										<Tooltip title="Progreso" aria-label="progress">

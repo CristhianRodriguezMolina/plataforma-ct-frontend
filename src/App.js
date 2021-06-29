@@ -45,6 +45,8 @@ import { Box } from "@material-ui/core"
 // Navigation
 import NavBar from './components/navigation/NavBar';
 
+const Maze = React.lazy(() => import('./components/activity/maze/Maze'));
+
 // My courses
 const MyCourses = React.lazy(() => import('./components/course/MyCourses'));
 
@@ -114,6 +116,8 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
                 <ProtectedRoute path='/activity/logic-sequence/student/:courseId/:unitId/:taskId/:activityId' exact component={LogicSequenceStudent} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
+
+                <ProtectedRoute type="admin, teacher" path='/activity/maze' exact component={Maze} />
 
                 {/* PROFILE */}
                 <ProtectedRoute path='/profile/:userId/:view' exact component={Profile} />

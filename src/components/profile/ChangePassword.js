@@ -92,12 +92,11 @@ function ChangePassword(props) {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(error)
 				showError(error.response.data.message);
 				console.log(error.response.data.message);
 			} else {
 				showError('Error inesperado en el servidor');
-				console.log(`Ha ocurrido un error: ${error}`);
+				console.log(`Error inesperado en el servidor`);
 			}
 		}
 		setProcess(false);

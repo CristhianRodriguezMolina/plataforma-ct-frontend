@@ -61,7 +61,6 @@ const MyActivities = props => {
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
 		changeColor('#f8bbd0');
-		// localStorage.setItem('navbar-color', '#f8bbd0')
 	});
 
 	// Funcion para mostrar una alerta de error dado un mensaje
