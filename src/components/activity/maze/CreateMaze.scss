@@ -1,0 +1,49 @@
+.create-maze-container {
+	.instructions-list-container {
+		background-color: red;
+		width: 25em;
+		.sorable-list-container {
+			background-color: rgb(233, 233, 233);
+			display: grid;
+			grid-template-columns: repeat(4, 5em);
+			gap: 1em;
+			padding: 1em;
+		}
+
+		.action-button-container {
+			float: right;
+			display: none;
+
+			button {
+				width: 2em;
+				height: 2em;
+				margin: 3px;
+				background-color: rgb(250, 250, 250);
+				box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+				border-radius: 3px;
+				padding: 5px;
+				transition-duration: 0.2s;
+				border: none;
+
+				&:hover {
+					background-color: rgb(240, 240, 240);
+					transition-duration: 0.2s;
+				}
+
+				&:active {
+					background-color: rgb(181, 209, 245);
+				}
+			}
+			&.show-action-button-container {
+				display: inline;
+			}
+		}
+	}
+
+	.instruction-buttons-container {
+		margin: 1em;
+		.instruction-card-container + .instruction-card-container {
+			margin-top: 1em;
+		}
+	}
+}

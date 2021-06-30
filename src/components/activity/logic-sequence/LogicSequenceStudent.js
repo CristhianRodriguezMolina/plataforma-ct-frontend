@@ -115,7 +115,7 @@ const LogicSequenceStudent = props => {
                 setOrderedSequenceList(logicSequenceRes.data.sequence_cards);
                 setSequenceList(shuffleArray(logicSequenceRes.data.sequence_cards, { 'copy': true }));
                 setActivity(logicSequenceRes.data.activity_id);
-                setLoading(false);
+
 
                 //GET student activity
                 const studentActivityRes = await api.post("/api/student-activity/foreign", {
@@ -133,7 +133,7 @@ const LogicSequenceStudent = props => {
                 if (studentActivityRes.data.studentActivity.length > 0) {
 
                     setStudentActivity(studentActivityRes.data.studentActivity[0]);
-
+                    setLoading(false);
                 } else {
                     const createStudentActivityRes = await api.post("/api/student-activity", {
                         studentId: localStorage.getItem("user_id"),
@@ -149,6 +149,7 @@ const LogicSequenceStudent = props => {
                         return;
                     }
                     setStudentActivity(createStudentActivityRes.data.savedStudentActivity);
+                    setLoading(false);
                 }
 
             }
@@ -243,7 +244,7 @@ const LogicSequenceStudent = props => {
                 : ""
             }
             {!loading ?
-                logicSequence ?
+                logicSequence && studentActivity ?
                     <div className="logic-sequence-student-container">
                         <div>
                             <h1 style={nameInputStyle} >{activity.name}</h1>

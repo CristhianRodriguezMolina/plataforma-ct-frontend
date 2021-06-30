@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState, useRef } from 'react';
+import { useParams, Redirect } from "react-router-dom";
 
 
 import './LogicSequence.scss';
@@ -9,7 +10,6 @@ import api from '../../../services/api';
 
 import SequenceCard from './SequenceCard';
 import CardDataPanel from './CardDataPanel';
-import { useParams, Redirect } from "react-router-dom";
 import arrayMove from 'array-move';
 
 import { SortableContainer } from 'react-sortable-hoc';

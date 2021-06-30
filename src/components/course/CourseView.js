@@ -79,8 +79,8 @@ export default function CourseView({ history }) {
             imageExists(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, (exists) => {
                 if (exists) {
                     average(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, { sample: 10 }).then(color => {
-                        console.log(color) // [241, 221, 63]
-                        setColor(color)
+                        console.log(color); // [241, 221, 63]
+                        setColor(color);
                     })
                 }
                 else {
