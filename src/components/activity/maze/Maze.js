@@ -41,8 +41,10 @@ export default function Maze() {
 	}
 
 	// Action to do something on the maze
-	// const [selectedAction, setSelectedActionReact] = useState(actions.BLOCK)
 	var selectedAction = actions.BLOCK;
+
+	// Current button pressed
+	const [currentButton, setCurrentButton] = useState(actions.BLOCK);
 
 	// P5 -----------------------------------------------------------------------------------------------------------------------
 
@@ -159,15 +161,15 @@ export default function Maze() {
 
 			// When displaing image
 			displayImg() {
-				if (this.draw_img === 0 && selectedAction !== actions.EMPTY) {
+				if (this.draw_img === 0 && selectedAction !== actions.EMPTY) { // If select a cell with the option not empty to render the image occording the option
 					this.current_type = selectedAction;
 					this.draw_img = 1;
-				} else if (this.draw_img === 1 && selectedAction !== actions.EMPTY && this.current_type === selectedAction) {
+				} else if (this.draw_img === 1 && selectedAction !== actions.EMPTY && this.current_type === selectedAction) { // If selelect  a cell with an option not empty that is rendered to derender
 					this.current_type = selectedAction;
 					this.draw_img = 0;
-				} else if (this.draw_img === 1 && selectedAction !== actions.EMPTY) {
+				} else if (this.draw_img === 1 && selectedAction !== actions.EMPTY && this.current_type !== selectedAction) { // If selelect a cell with an option not empty that is rendered with a diferent option to render the image according with the new option
 					this.current_type = selectedAction;
-				} else if (selectedAction === actions.EMPTY) {
+				} else if (selectedAction === actions.EMPTY) { // To render the empty option
 					this.current_type = selectedAction;
 					this.draw_img = 0;
 				}
@@ -204,21 +206,40 @@ export default function Maze() {
 
 		// Method to draw the P5 canvas ----------------------------------------------------- DRAW P5 METHOD ---------------------------------------
 		p.draw = () => {
-			let fps = p.frameRate();
-			let start = p.millis();
+			// let fps = p.frameRate();
+			// let start = p.millis();
 
 			// The maze itself, showing al the cells in the grid array
 			for (let i = 0; i < grid.length; i++) {
 				grid[i].show();
 			}
 
-			let end = p.millis();
-			let elapsed = end - start;
+			// The graphics with the image of the option that is selected that follows the mouse
+			// var pg = p.createGraphics(50, 50)
+
+			// if (selectedAction === actions.BLOCK) {
+			// 	pg.image(mazeBlockImg, 0, 0, 50, 50);
+			// } else if (selectedAction === actions.START) {
+			// 	pg.image(mazeStart, 0, 0, 50, 50);
+			// } else if (selectedAction === actions.END) {
+			// 	pg.image(mazeEnd, 0, 0, 50, 50);
+			// } else {
+			// 	pg.fill(p.color('#6CBAE3'));
+			// 	pg.rect(0, 0, 50, 50)
+			// }
+
+			// console.log(selectedAction)
+
+			// // It renders the graphics that follows the mouse
+			// p.image(pg, p.mouseX, p.mouseY);
+
+			// let end = p.millis();
+			// let elapsed = end - start;
 			// console.log("This took: " + elapsed + "ms.")
 
-			p.fill(255);
-			p.textSize(15);
-			p.text("FPS: " + fps.toFixed(2), 10, p.height - 10);
+			// p.fill(255);
+			// p.textSize(15);
+			// p.text("FPS: " + fps.toFixed(2), 10, p.height - 10);
 			// console.log("FPS: " + fps.toFixed(2))
 		};
 
@@ -262,13 +283,16 @@ export default function Maze() {
 		}
 	}
 
+	// JSX -----------------------------------------------------------------------------------------------------------------------
+
 	// DidMount 
 	useEffect(() => {
 		if (myP5) {
 			myP5.remove(); // If the p5 object exist then it removes to be renew 
 		}
 		myP5 = new p5(sketch, myRef.current); // Create the p5 object
-	}, []);
+		console.log(currentButton)
+	}, [currentButton]);
 
 	// WillUnmount
 	useEffect(() => {
@@ -277,21 +301,15 @@ export default function Maze() {
 		};
 	}, [])
 
-	// JSX -----------------------------------------------------------------------------------------------------------------------
-
 	const handleChangeAction = (action) => {
 		if (action === actions.BLOCK) {
-			selectedAction = action
-			// setSelectedActionReact(action)
+			selectedAction = action;
 		} else if (action === actions.EMPTY) {
-			selectedAction = action
-			// setSelectedActionReact(action)
+			selectedAction = action;
 		} else if (action === actions.START) {
-			selectedAction = action
-			// setSelectedActionReact(action)
+			selectedAction = action;
 		} else if (action === actions.END) {
-			selectedAction = action
-			// setSelectedActionReact(action)
+			selectedAction = action;
 		}
 	}
 
@@ -308,19 +326,19 @@ export default function Maze() {
 			</div>
 			<div className='options-palette-container'>
 				<div className='options-palette'>
-					<IconButton onClick={() => handleChangeAction(actions.BLOCK)} color='inherit'>
+					<IconButton onClick={() => { handleChangeAction(actions.BLOCK); setCurrentButton(actions.BLOCK) }} style={currentButton === actions.BLOCK ? { backgroundColor: '#919191' } : {}} color='inherit'>
 						<div className='d-flex flex-column align-items-center m-2'>
 							<ViewAgenda />
 							<h1 className='h4'>Block</h1>
 						</div>
 					</IconButton>
-					<IconButton onClick={() => handleChangeAction(actions.EMPTY)} color='inherit'>
+					<IconButton onClick={() => { handleChangeAction(actions.EMPTY); setCurrentButton(actions.EMPTY) }} style={currentButton === actions.EMPTY ? { backgroundColor: '#919191' } : {}} color='inherit'>
 						<div className='d-flex flex-column align-items-center m-2'>
 							<ViewAgenda />
 							<h1 className='h4'>Empty</h1>
 						</div>
 					</IconButton>
-					<IconButton onClick={() => handleChangeAction(actions.START)} color='inherit'>
+					<IconButton onClick={() => { handleChangeAction(actions.START); setCurrentButton(actions.START) }} style={currentButton === actions.START ? { backgroundColor: '#919191' } : {}} color='inherit'>
 						<div className='d-flex flex-column align-items-center m-2'>
 							<ViewAgenda />
 							<h1 className='h4'>Start</h1>
