@@ -98,8 +98,7 @@ export default function StudentsInformation(props) {
                 if (students && isAddingStudents) {
                     const newStudentsAux = newStudents.map(x => x._id);
                     const studentsAux = students.map(x => x._id);
-                    let difference = newStudentsAux.filter(x => studentsAux.indexOf(x) === -1)
-                    console.log(difference)
+                    let difference = newStudentsAux.filter(x => studentsAux.indexOf(x) === -1);
                 }
 
                 setStudents(newStudents);

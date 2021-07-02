@@ -219,10 +219,12 @@ export default function ManageTask() {
 							color="#B6E768"
 						/>
 						<Container className="task-manage-container" maxWidth="sm">
-							<Breadcrumbs>
-								<Link className='text-muted' to={`/course/edit/${courseId}/units-info`}>Unidades</Link>
-								<Typography><b>{taskName}</b></Typography>
-							</Breadcrumbs>
+							<div className="mt-4">
+								<Breadcrumbs>
+									<Link className='text-muted' to={`/course/edit/${courseId}/units-info`}>Unidades</Link>
+									<Typography><b>{taskName}</b></Typography>
+								</Breadcrumbs>
+							</div>
 							<hr />
 							<div>
 								<Typography variant="subtitle1" className="text-center">Información de la tarea</Typography>
@@ -265,7 +267,8 @@ export default function ManageTask() {
 											onChange={evt => setDueDate(new Date(evt.target.value))}
 											value={dateFormat(dueDate, 'GMT:yyyy-mm-dd')}
 											label="Fecha limite" name="fecha-limite"
-											disabled={!isDueDate} />
+											disabled={!isDueDate}
+											required />
 									</div>
 									<div className="buttons-container d-flex justify-content-between">
 										<div className="form-group d-flex justify-content-start">

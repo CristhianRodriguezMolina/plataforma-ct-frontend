@@ -83,9 +83,6 @@ export default function CourseView({ history }) {
                         setColor(color);
                     })
                 }
-                else {
-                    console.log("image not found");
-                }
             });
         }
     }, [course])

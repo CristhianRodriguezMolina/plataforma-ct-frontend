@@ -119,6 +119,7 @@ const UnitContent = props => {
 				<DynamicInput dynamicInputValue={unitName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
 				<DynamicInput dynamicInputValue={unitDes} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
 			</div>
+			<hr style={{ margin: '1em' }} />
 			<FormControlLabel className="switcher" labelPlacement="start" label="Definir fecha limite" control={
 				<Switch
 					checked={isDueDate}
@@ -135,7 +136,8 @@ const UnitContent = props => {
 				onChange={evt => setDueDate(new Date(evt.target.value))}
 				value={dateFormat(dueDate, 'GMT:yyyy-mm-dd')}
 				label="Fecha limite" name="fecha-limite"
-				disabled={!isDueDate} />
+				disabled={!isDueDate}
+				required />
 			<div className="buttons-container d-flex justify-content-between">
 				<button type="submit" onClick={handleUpdateChanges} className="custom-btn custom-btn-info p-2 m-2">Guardar cambios</button>
 				<FormControlLabel className="switcher" label="Visible" control={
@@ -147,6 +149,7 @@ const UnitContent = props => {
 					/>
 				} />
 			</div>
+			<hr style={{ margin: '1em' }} />
 			{props.taskActivities ?
 				<div className="cards-container">
 					{props.unitValue.tasks.map((task, i) => {
