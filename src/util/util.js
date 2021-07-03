@@ -23,7 +23,7 @@ export const arr_diff = (a1, a2) => {
         a[a1[i]] = true;
     }
 
-    for (var i = 0; i < a2.length; i++) {
+    for (i = 0; i < a2.length; i++) {
         if (a[a2[i]]) {
             delete a[a2[i]];
         } else {

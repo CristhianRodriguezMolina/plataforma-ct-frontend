@@ -15,7 +15,7 @@ import Alert from '@material-ui/lab/Alert';
 import UserCard from './UserCard';
 
 // Link and withRouter
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export default function UserList({ type }) {
 
@@ -124,9 +124,9 @@ export default function UserList({ type }) {
 				{
 					users && users.length > 0 ?
 						users.map(user => (
-							<>
-								<UserCard key={user._id} user={user} setUsers={setUsers} type={type} />
-							</>
+							<div key={user._id}>
+								<UserCard user={user} setUsers={setUsers} type={type} />
+							</div>
 						))
 						:
 						<>
