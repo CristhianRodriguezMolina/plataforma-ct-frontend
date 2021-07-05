@@ -29,7 +29,7 @@ export default function MazeTest() {
 		changeColor('#f8bbd0');
 	});
 
-	// VARIABLES DEL MAZE --------------------------------------------------
+	// VARIABLES DEL MAZE -------------------------------------------------------------------------------------------------
 
 	// Maze container reference
 	const myRef = useRef(null);
@@ -39,8 +39,8 @@ export default function MazeTest() {
 
 	const [mazeSize, setMazeSize] = useState(0)
 
-	const [cols, setCols] = useState(5); // Num of columns of the maze
-	const [rows, setRows] = useState(5); // Num of columns of the maze
+	const cols = 5; // Num of columns of the maze
+	const rows = 5; // Num of columns of the maze
 
 	var wX = mazeSize / cols; // Width of each cell
 	var wY = mazeSize / rows; // Height of each cell
@@ -68,15 +68,17 @@ export default function MazeTest() {
 			this.y = j * wY;
 			this.wX = wX;
 			this.wY = wY;
-			this.draw_img = 0; // Falg to see if some image is rendering
+			this.draw_img = false; // Falg to see if some image is rendering
 			this.current_type = actions.EMPTY; // The current draw over the cell
+			this.image = null;
+			this.selectedAction = actions.BLOCK;
 		}
 
 		getCell() {
 			return (
 				<div
 					key={`'${this.i}${this.j}'`}
-					onClick={handleClickCell}
+					onClick={() => this.handleClick(this)}
 					style={{
 						border: '1px solid white',
 						position: 'absolute',
@@ -84,11 +86,61 @@ export default function MazeTest() {
 						top: this.y,
 						width: this.wX,
 						height: this.wY,
-						zIndex: 1000000
-					}}>
-					Hello
+						alignContent: 'center',
+						justifyContent: 'center',
+						display: 'flex'
+					}}
+				>
+					{
+						this.draw_img && this.current_type !== actions.EMPTY ?
+							<div
+								style={{
+									backgroundImage: `url(${this.image})`,
+									backgroundSize: 'cover',
+									width: '90%',
+									height: '90%',
+									alignSelf: 'center'
+								}}
+							/>
+							:
+							''
+					}
 				</div>
 			)
+		}
+
+		setImage() {
+			if (this.current_type === actions.BLOCK) {
+				this.image = maze_block;
+			} else if (this.current_type === actions.START) {
+				this.image = maze_start;
+			} else if (this.current_type === actions.END) {
+				this.image = maze_end;
+			}
+		}
+
+		handleClick(cell) {
+			let index = mazeGrid.indexOf(this);
+
+			if (!this.draw_img && this.selectedAction !== actions.EMPTY) { // If select a cell with the option not empty to render the image occording the option
+				this.current_type = this.selectedAction;
+				this.draw_img = true;
+			} else if (this.draw_img && this.selectedAction !== actions.EMPTY && this.current_type === this.selectedAction) { // If selelect  a cell with an option not empty that is rendered to derender
+				this.current_type = this.selectedAction;
+				this.draw_img = false;
+			} else if (this.draw_img && this.selectedAction !== actions.EMPTY && this.current_type !== this.selectedAction) { // If selelect a cell with an option not empty that is rendered with a diferent option to render the image according with the new option
+				this.current_type = this.selectedAction;
+			} else if (this.selectedAction === actions.EMPTY) { // To render the empty option
+				this.current_type = this.selectedAction;
+				this.draw_img = false;
+			}
+
+			this.setImage();
+
+			setMazeGrid(mazeGrid.map((cell, i) => {
+				return i === index ? this : cell;
+			}))
+
 		}
 
 		// Update x and y variables
@@ -98,9 +150,13 @@ export default function MazeTest() {
 			this.x = this.i * this.wX;
 			this.y = this.j * this.wY;
 		}
+
+		updateSelectedAction(action) {
+			this.selectedAction = action;
+		}
 	}
 
-	// Use effects ----------------------------------------------------------------------------------------
+	// Use effects ----------------------------------------------------------------------------------------------------------------------------------
 
 	// Cambia en cada actualizacion el tamaño del maze
 	useEffect(() => {
@@ -129,7 +185,7 @@ export default function MazeTest() {
 		}
 	}, [])
 
-	// Metodo para inicializar o actualizar los valores de tamaño del maze ------------------------------------------
+	// Metodo para inicializar o actualizar los valores de tamaño del maze ---------------------------------------------------------------------------
 	const setUp = () => {
 		console.log(mazeSize)
 
@@ -157,17 +213,19 @@ export default function MazeTest() {
 		setMazeGrid(auxGrid);
 	}
 
-	const handleClickCell = () => {
-		console.log('Hello');
-	}
-
 	const handleChangeAction = (action) => {
 		setSelectedAction(action);
+
+		var auxGrid = mazeGrid;
+		for (let i = 0; i < auxGrid.length; i++) {
+			auxGrid[i].updateSelectedAction(action);
+		}
+		setMazeGrid(auxGrid);
 	}
 
 	return (
 		<div className='pb-5'>
-			<div className='row'>
+			<div className='row p-4 w-100'>
 				<div className='maze-container col-md-8' ref={myRef}>
 					<div className='maze' style={mazeStyle} >
 						{

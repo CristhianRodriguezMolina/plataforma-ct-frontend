@@ -1,20 +1,18 @@
 .maze-container {
+	width: 100%;
 	height: calc(100vh - 100px);
-	padding: 2em;
 
 	.maze {
 		position: relative;
 		background-color: #6cbae3;
 	}
-
-	.options-palette-container {
-		margin-top: 100px;
-		.options-palette {
-			position: sticky;
-			bottom: 0;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+}
+.options-palette-container {
+	.options-palette {
+		position: sticky;
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 }
