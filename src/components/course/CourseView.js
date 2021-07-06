@@ -143,6 +143,10 @@ export default function CourseView({ history }) {
                         <button onClick={() => redirect(`course-info`)} className="custom-btn my-3 course-view-botton">Info del curso</button>
                         <button onClick={() => redirect(`units-info`)} className="custom-btn my-3 course-view-botton">Unidades</button>
                         <button onClick={() => redirect(`students-info`)} className="custom-btn my-3 course-view-botton">{type === "edit" ? "Estudiantes" : "Compañeros"}</button>
+                        {type === "edit" ?
+                            <button onClick={() => redirect(`progress-info`)} className="custom-btn my-3 course-view-botton">Progreso</button>
+                            : ""}
+
                     </div>
                 </div>
                 <div className="col-md-9 p-0 m-0">
@@ -156,9 +160,12 @@ export default function CourseView({ history }) {
                                     <StudentsInformation course={course} setCourse={setCourse} />
                                     :
                                     view === "units-info" ?
-                                        <UnitsInformationTeacher course={course} setCourse={setCourse} />
+                                        <UnitsInformationTeacher course={course} setCourse={setCourse} progress={false} />
                                         :
-                                        <Redirect to="/unauthorized" />
+                                        view === "progress-info" ?
+                                            <UnitsInformationTeacher course={course} setCourse={setCourse} progress={true} />
+                                            :
+                                            <Redirect to="/unauthorized" />
                             /* Vistas de un curso para un estudiante */
                             :
                             type === "view" && course ?

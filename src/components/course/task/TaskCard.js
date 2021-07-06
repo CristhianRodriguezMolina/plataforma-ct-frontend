@@ -30,7 +30,6 @@ const TaskCard = props => {
 	}, [props.taskActivities]);
 
 	useEffect(() => {
-
 		if (props.studentActivities && taskActivities) {
 			let disableBtn = true;
 			let completedNumber = 0;

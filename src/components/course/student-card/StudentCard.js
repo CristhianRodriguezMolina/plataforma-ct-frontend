@@ -184,7 +184,7 @@ export default function StudentCard(props) {
 											<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-info btn-user-card mb-2"><Edit /></Link>
 										</Tooltip>
 										<Tooltip title="Progreso" aria-label="progress">
-											<Link to="progress" className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
+											<Link to={`/course/student/progress/${student._id}/${course._id}`} className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
 										</Tooltip>
 									</div>
 								</Typography>

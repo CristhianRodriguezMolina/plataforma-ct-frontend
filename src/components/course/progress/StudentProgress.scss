@@ -1,0 +1,43 @@
+.activity-item-progress {
+    margin-bottom: 0.5em;
+    width: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.3em;
+    margin-right: 0.3em;
+
+    input[type="radio"]:disabled {
+        display: none;
+    }
+
+    .activity-task-view-progress {
+        height: 10px;
+        width: 10px;
+        border-radius: 50%;
+        border: 1px solid green;
+        background-color: rgb(255, 255, 255);
+        position: relative;
+        transition-duration: 0.4s;
+
+        &.active::before {
+            content: "";
+            position: absolute;
+            height: 4px;
+            border-radius: 50%;
+            width: 4px;
+            top: 2px;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            background-color: green;
+            z-index: 10;
+        }
+    }
+}
+
+.student-progress-items-container {
+    display: flex;
+    flex-direction: row;
+}
