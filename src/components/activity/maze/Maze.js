@@ -46,7 +46,7 @@ export default function Maze() {
 	// var cols = 5; // Num of columns of the maze
 	// var rows = 5; // Num of columns of the maze
 	const [cols, setCols] = useState(5);
-	const [rows, setRows] = useState(4);
+	const [rows, setRows] = useState(5);
 	const [reformingMaze, setReformingMaze] = useState(true);
 
 	// var wX = mazeSize / cols; // Width of each cell
@@ -177,6 +177,7 @@ export default function Maze() {
 
 			this.setImage();
 
+			// With this the maze grid get updated
 			setMazeGrid(prevValues => {
 				return prevValues.map((cell, i) => {
 					return i === index ? this : cell;
@@ -209,7 +210,7 @@ export default function Maze() {
 	// Cada que el tamaño del maze cambia entonces actualiza los valores con base en el tamaño del maze
 	useEffect(() => {
 		setUp();
-	}, [mazeSize, reformingMaze])
+	}, [mazeSize, reformingMaze]) // Execute setUp if the mazeSize changes or if is reformingMaze
 
 	// Cambia el tamaño del maze cada que cambia el tamaño de la pagina
 	useEffect(() => {
@@ -281,8 +282,8 @@ export default function Maze() {
 	const setNewSize = (e) => {
 		e.preventDefault();
 
-		setCols(e.target[0].value)
-		setRows(e.target[1].value)
+		setRows(e.target[0].value)
+		setCols(e.target[1].value)
 
 		setReformingMaze(true); // Turn the reforming flag to true
 	}
@@ -294,24 +295,31 @@ export default function Maze() {
 					<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
 					<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
 					<hr />
-					<div className='d-flex justify-content-around'>
+					<div className='d-flex justify-content-around align-items-center'>
 						<div className='mr-4'>
 							<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
 							<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
-							<button className="custom-btn custom-btn-primary">Restablecer</button>
+							<button className="custom-btn custom-btn-primary p-2">Restablecer</button>
 						</div>
 						<div className="d-flex">
-							<form onSubmit={setNewSize} className="form-size d-flex justify-content-between">
-								<input type="number" className='form-control' label='Nombre Del Maze' name='activity_name' />
-								<input type="number" className='form-control' label='Descripcion Del Maze' name='activity_description' />
-								<button type="submit" className="custom-btn custom-btn-primary">Establecer tamaño</button>
+							<form onSubmit={setNewSize} className="form-size d-flex justify-content-between align-items-center">
+								<div>
+									<label className='m-0'>Filas</label>
+									<input type="number" value={rows} onChange={(evt) => setRows(evt.target.value)} className='form-control' label='Columnas Del Maze' name='cols' />
+								</div>
+								<label className='mx-3 mb-2 align-self-end'>X</label>
+								<div className='mr-3'>
+									<label className='m-0'>Cols</label>
+									<input type="number" value={cols} onChange={(evt) => setCols(evt.target.value)} className='form-control' label='Filas Del Maze' name='rows' />
+								</div>
+								<button type="submit" className="custom-btn custom-btn-primary p-2">Establecer tamaño</button>
 							</form>
 						</div>
 					</div>
 				</Container>
 			</div>
 			<div className='row p-4 w-100'>
-				<div className='col-md-8' >
+				<div className='col-md-6' >
 					<div className='maze-container' ref={myRef}>
 						<div className='maze' style={mazeStyle}>
 							{
@@ -333,7 +341,7 @@ export default function Maze() {
 						</div>
 					</div>
 				</div>
-				<div className='col-md-4 d-flex justify-content-center align-items-center'>
+				<div className='col-md-6 d-flex justify-content-center align-items-center'>
 					<h1>Your current selection<br />{selectedAction}</h1>
 				</div>
 			</div>
