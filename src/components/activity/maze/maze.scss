@@ -1,18 +1,33 @@
+.maze-header {
+	.btn-zoom {
+		border-radius: 50%;
+	}
+	.form-size {
+		input {
+			width: 4em;
+			margin-right: 1em;
+		}
+	}
+}
+
 .maze-container {
-	height: calc(100vh - 50px);
-	padding: 2em;
+	width: 100%;
+	height: calc(100vh - 100px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 	.maze {
-		height: 100%;
+		position: relative;
+		background-color: #6cbae3;
 	}
-
-	.options-palette-container {
-		.options-palette {
-			position: sticky;
-			bottom: 0;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+}
+.options-palette-container {
+	.options-palette {
+		position: sticky;
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 }

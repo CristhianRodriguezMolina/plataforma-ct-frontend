@@ -45,7 +45,7 @@ import { Box } from "@material-ui/core"
 // Navigation
 import NavBar from './components/navigation/NavBar';
 
-const Maze = React.lazy(() => import('./components/activity/maze/MazeTest'));
+const Maze = React.lazy(() => import('./components/activity/maze/Maze'));
 
 // My courses
 const MyCourses = React.lazy(() => import('./components/course/MyCourses'));
