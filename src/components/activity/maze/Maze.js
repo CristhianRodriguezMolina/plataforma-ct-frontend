@@ -49,8 +49,8 @@ export default function Maze() {
 	const [rows, setRows] = useState(5);
 	const [reformingMaze, setReformingMaze] = useState(true);
 
-	// var wX = mazeSize / cols; // Width of each cell
-	// var wY = mazeSize / rows; // Height of each cell
+	const [isStart, setIsStart] = useState(false);
+	const [isEnd, setIsEnd] = useState(false);
 
 	// Actions for render different things in the maze
 	const actions = {
@@ -89,14 +89,6 @@ export default function Maze() {
 		lineHeight: "1.2em",
 		fontWeight: "500",
 		minHeight: "2.5em"
-	};
-
-	const updateName = (value) => {
-		setActivityName(value);
-	};
-
-	const updateDes = (value) => {
-		setActivityDescription(value);
 	};
 
 	// Class for manage a cell object in the maze --------------------------------------- CELL CLASS -----------------------------------------------------
@@ -160,29 +152,69 @@ export default function Maze() {
 		}
 
 		handleClick() {
-			let index = mazeGrid.indexOf(this);
 
-			if (!this.draw_img && this.selectedAction !== actions.EMPTY) { // If select a cell with the option not empty to render the image occording the option
-				this.current_type = this.selectedAction;
-				this.draw_img = true;
-			} else if (this.draw_img && this.selectedAction !== actions.EMPTY && this.current_type === this.selectedAction) { // If selelect  a cell with an option not empty that is rendered to derender
-				this.current_type = this.selectedAction;
-				this.draw_img = false;
-			} else if (this.draw_img && this.selectedAction !== actions.EMPTY && this.current_type !== this.selectedAction) { // If selelect a cell with an option not empty that is rendered with a diferent option to render the image according with the new option
-				this.current_type = this.selectedAction;
-			} else if (this.selectedAction === actions.EMPTY) { // To render the empty option
-				this.current_type = this.selectedAction;
-				this.draw_img = false;
+			var flag = true;
+
+
+
+			if (flag) {
+				if (!this.draw_img && this.selectedAction !== actions.EMPTY) { // If select a cell with the option not empty to render the image occording the option
+					this.current_type = this.selectedAction;
+					this.draw_img = true;
+
+					// If the selectedAction is start or end then change that variables to true respectively
+					if (this.selectedAction === actions.START) {
+						setIsStart(true);
+					} else if (this.selectedAction === actions.END) {
+						setIsEnd(true);
+					}
+				} else if (this.draw_img && this.selectedAction !== actions.EMPTY && this.current_type === this.selectedAction) { // If selelect  a cell with an option not empty that is rendered to derender
+					// If the current type of the image is start or end then change that variables to false respectively
+					if (this.current_type === actions.START) {
+						setIsStart(false);
+					} else if (this.current_type === actions.END) {
+						setIsEnd(false);
+					}
+
+					this.current_type = this.selectedAction;
+					this.draw_img = false;
+				} else if (this.draw_img && this.selectedAction !== actions.EMPTY && this.current_type !== this.selectedAction) { // If selelect a cell with an option not empty that is rendered with a diferent option to render the image according with the new option
+					// If the current type of the image is start or end then change that variables to false respectively
+					if (this.current_type === actions.START) {
+						setIsStart(false);
+					} else if (this.current_type === actions.END) {
+						setIsEnd(false);
+					}
+
+					this.current_type = this.selectedAction;
+
+					// If the selectedAction is start or end then change that variables to true respectively
+					if (this.selectedAction === actions.START) {
+						setIsStart(true);
+					} else if (this.selectedAction === actions.END) {
+						setIsEnd(true);
+					}
+				} else if (this.selectedAction === actions.EMPTY) { // To render the empty option
+					// If the current type of the image is start or end then change that variables to false respectively
+					if (this.current_type === actions.START) {
+						setIsStart(false);
+					} else if (this.current_type === actions.END) {
+						setIsEnd(false);
+					}
+
+					this.current_type = this.selectedAction;
+					this.draw_img = false;
+				}
+
+				this.setImage();
+
+				// With this the maze grid get updated
+				setMazeGrid(prevValues => {
+					return prevValues.map((cell, i) => {
+						return cell;
+					})
+				});
 			}
-
-			this.setImage();
-
-			// With this the maze grid get updated
-			setMazeGrid(prevValues => {
-				return prevValues.map((cell, i) => {
-					return i === index ? this : cell;
-				})
-			});
 		}
 
 		// Update x and y variables
@@ -269,16 +301,27 @@ export default function Maze() {
 		setMazeGrid(auxGrid);
 	}
 
+	const updateName = (value) => {
+		setActivityName(value);
+	};
+
+	const updateDes = (value) => {
+		setActivityDescription(value);
+	};
+
+	// Method to zoomin the maze
 	const makeZoomIn = () => {
 		// setMazeOffset(mazeOffset + 20);
 		setMazeSize(mazeSize + 20);
 	}
 
+	// Method to zoomout the maze
 	const makeZoomOut = () => {
 		// setMazeOffset(mazeOffset - 20);
 		setMazeSize(mazeSize - 20);
 	}
 
+	// Method to change the cols and rows of the maze
 	const setNewSize = (e) => {
 		e.preventDefault();
 
@@ -292,16 +335,25 @@ export default function Maze() {
 		<div className='pb-5'>
 			<div className="maze-header">
 				<Container maxWidth='md'>
-					<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
-					<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
+					{/* GENERAL DATA OF THE MAZE */}
+					<div>
+						<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
+						<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
+					</div>
 					<hr />
 					<div className='d-flex justify-content-around align-items-center'>
-						<div className='mr-4'>
-							<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
-							<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
-							<button className="custom-btn custom-btn-primary p-2">Restablecer</button>
+						{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
+						<div className='d-flex flex-column'>
+							<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
+							<div>
+								<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
+								<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
+								<button className="custom-btn custom-btn-primary p-2">Restablecer</button>
+							</div>
 						</div>
-						<div className="d-flex">
+						{/* FORM TO CHANGE THE ROWS AND COLS */}
+						<div className="d-flex flex-column justify-content-between">
+							<h1 className='h4'>Cambiar filas y cols</h1>
 							<form onSubmit={setNewSize} className="form-size d-flex justify-content-between align-items-center">
 								<div>
 									<label className='m-0'>Filas</label>
@@ -320,6 +372,7 @@ export default function Maze() {
 			</div>
 			<div className='row p-4 w-100'>
 				<div className='col-md-6' >
+					{/* MAZE */}
 					<div className='maze-container' ref={myRef}>
 						<div className='maze' style={mazeStyle}>
 							{
