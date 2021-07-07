@@ -13,6 +13,9 @@ import maze_end from '../../../assets/maze-end.jpg'
 
 // COMPONENTS
 
+// Cell of the maze
+import Cell from './Cell';
+
 // Material UI core
 import { IconButton, Container } from '@material-ui/core';
 
@@ -37,17 +40,20 @@ export default function Maze() {
 	// Maze container reference
 	const myRef = useRef(null);
 
+	// The maze
+	const [maze, setMaze] = useState([]);
+
 	// Size of the maze
-	const [mazeGrid, setMazeGrid] = useState([]);
-
 	const [mazeSize, setMazeSize] = useState(0)
-	const [mazeOffset, setMazeOffset] = useState(0);
+	// const [mazeOffset, setMazeOffset] = useState(0);
 
-	// var cols = 5; // Num of columns of the maze
-	// var rows = 5; // Num of columns of the maze
-	const [cols, setCols] = useState(5);
-	const [rows, setRows] = useState(5);
-	const [reformingMaze, setReformingMaze] = useState(true);
+	const [cols, setCols] = useState(5); // Num of columns of the maze
+	const [rows, setRows] = useState(5); // Num of columns of the maze
+
+	const [reformingMaze, setReformingMaze] = useState(true); // Variable for reform the maze
+
+	const [wX, setWX] = useState(mazeSize / cols)
+	const [wY, setWY] = useState(mazeSize / rows)
 
 	const [isStart, setIsStart] = useState(false);
 	const [isEnd, setIsEnd] = useState(false);
@@ -91,145 +97,6 @@ export default function Maze() {
 		minHeight: "2.5em"
 	};
 
-	// Class for manage a cell object in the maze --------------------------------------- CELL CLASS -----------------------------------------------------
-	class Cell {
-		constructor(i, j, wX, wY) {
-			this.i = i;
-			this.j = j;
-			this.x = i * wX;
-			this.y = j * wY;
-			this.wX = wX;
-			this.wY = wY;
-			this.draw_img = false; // Falg to see if some image is rendering
-			this.current_type = actions.EMPTY; // The current draw over the cell
-			this.image = null;
-			this.selectedAction = actions.BLOCK;
-		}
-
-		getCell() {
-			return (
-				<div
-					key={`'${this.i}${this.j}'`}
-					onClick={() => this.handleClick(this)}
-					style={{
-						border: '1px solid white',
-						position: 'absolute',
-						left: this.x,
-						top: this.y,
-						width: this.wX,
-						height: this.wY,
-						alignContent: 'center',
-						justifyContent: 'center',
-						display: 'flex'
-					}}
-				>
-					{
-						this.draw_img && this.current_type !== actions.EMPTY ?
-							<div
-								style={{
-									backgroundImage: `url(${this.image})`,
-									backgroundSize: '100% 100%',
-									width: '90%',
-									height: '90%',
-									alignSelf: 'center'
-								}}
-							/>
-							:
-							''
-					}
-				</div>
-			)
-		}
-
-		setImage() {
-			if (this.current_type === actions.BLOCK) {
-				this.image = maze_block;
-			} else if (this.current_type === actions.START) {
-				this.image = maze_start;
-			} else if (this.current_type === actions.END) {
-				this.image = maze_end;
-			}
-		}
-
-		handleClick() {
-
-			var flag = true;
-
-
-
-			if (flag) {
-				if (!this.draw_img && this.selectedAction !== actions.EMPTY) { // If select a cell with the option not empty to render the image occording the option
-					this.current_type = this.selectedAction;
-					this.draw_img = true;
-
-					// If the selectedAction is start or end then change that variables to true respectively
-					if (this.selectedAction === actions.START) {
-						setIsStart(true);
-					} else if (this.selectedAction === actions.END) {
-						setIsEnd(true);
-					}
-				} else if (this.draw_img && this.selectedAction !== actions.EMPTY && this.current_type === this.selectedAction) { // If selelect  a cell with an option not empty that is rendered to derender
-					// If the current type of the image is start or end then change that variables to false respectively
-					if (this.current_type === actions.START) {
-						setIsStart(false);
-					} else if (this.current_type === actions.END) {
-						setIsEnd(false);
-					}
-
-					this.current_type = this.selectedAction;
-					this.draw_img = false;
-				} else if (this.draw_img && this.selectedAction !== actions.EMPTY && this.current_type !== this.selectedAction) { // If selelect a cell with an option not empty that is rendered with a diferent option to render the image according with the new option
-					// If the current type of the image is start or end then change that variables to false respectively
-					if (this.current_type === actions.START) {
-						setIsStart(false);
-					} else if (this.current_type === actions.END) {
-						setIsEnd(false);
-					}
-
-					this.current_type = this.selectedAction;
-
-					// If the selectedAction is start or end then change that variables to true respectively
-					if (this.selectedAction === actions.START) {
-						setIsStart(true);
-					} else if (this.selectedAction === actions.END) {
-						setIsEnd(true);
-					}
-				} else if (this.selectedAction === actions.EMPTY) { // To render the empty option
-					// If the current type of the image is start or end then change that variables to false respectively
-					if (this.current_type === actions.START) {
-						setIsStart(false);
-					} else if (this.current_type === actions.END) {
-						setIsEnd(false);
-					}
-
-					this.current_type = this.selectedAction;
-					this.draw_img = false;
-				}
-
-				this.setImage();
-
-				// With this the maze grid get updated
-				setMazeGrid(prevValues => {
-					return prevValues.map((cell, i) => {
-						return cell;
-					})
-				});
-			}
-		}
-
-		// Update x and y variables
-		updateXY(wX, wY) {
-			this.wX = wX;
-			this.wY = wY;
-			this.x = this.i * this.wX;
-			this.y = this.j * this.wY;
-		}
-
-		updateSelectedAction(action) {
-			this.selectedAction = action;
-		}
-	}
-
 	// Use effects ----------------------------------------------------------------------------------------------------------------------------------
 
 	// Cambia en cada actualizacion el tamaño del maze
@@ -263,42 +130,36 @@ export default function Maze() {
 	const setUp = () => {
 		console.log(mazeSize)
 
-		var wX = mazeSize / cols; // Width of each cell
-		var wY = mazeSize / rows; // Height of each cell
+		setWX(mazeSize / cols); // Width of each cell
+		setWY(mazeSize / rows); // Height of each cell
 
 		setMazeStyle({
 			width: `${mazeSize}px`,
 			height: `${mazeSize}px`
 		})
 
-		var auxGrid = mazeGrid;
-		if (mazeGrid.length <= 0 || reformingMaze) {
+		var auxGrid = maze;
+		if (maze.length <= 0 || reformingMaze) {
 			if (reformingMaze) auxGrid = []; // If the maze is reforming then the grid base turn empty
 			for (let i = 0; i < cols; i++) {
 				for (let j = 0; j < rows; j++) {
-					var cell = new Cell(i, j, mazeSize / cols, mazeSize / rows);
+					const cell = {
+						i,
+						j,
+						type: actions.EMPTY
+					}
 					auxGrid.push(cell);
 				}
 			}
+			console.log(auxGrid)
 			setReformingMaze(false); // Set the reforming flag to false
-		} else {
-			for (let i = 0; i < auxGrid.length; i++) {
-				auxGrid[i].updateXY(wX, wY);
-			}
 		}
-		setMazeGrid(auxGrid);
+		setMaze(auxGrid);
 	}
 
 	// Method to change the type of image to show in the cells
 	const handleChangeAction = (action) => {
 		setSelectedAction(action);
-
-		var auxGrid = mazeGrid;
-		for (let i = 0; i < auxGrid.length; i++) {
-			auxGrid[i].updateSelectedAction(action);
-		}
-
-		setMazeGrid(auxGrid);
 	}
 
 	const updateName = (value) => {
@@ -376,12 +237,25 @@ export default function Maze() {
 					<div className='maze-container' ref={myRef}>
 						<div className='maze' style={mazeStyle}>
 							{
-								mazeGrid.length > 0 ?
+								maze.length > 0 ?
 									<>
 										{
-											mazeGrid.map(cell => {
-												return cell.getCell();
-											})
+											maze.map(cell => (
+												<Cell
+													key={`'${cell.i}${cell.j}'`}
+													cell={cell}
+													wX={wX}
+													wY={wY}
+													maze={maze}
+													setMaze={setMaze}
+													selectedAction={selectedAction}
+													actions={actions}
+													isStart={isStart}
+													isEnd={isEnd}
+													setIsStart={setIsStart}
+													setIsEnd={setIsEnd}
+												/>
+											))
 										}
 									</>
 									:
