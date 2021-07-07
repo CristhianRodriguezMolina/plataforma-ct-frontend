@@ -7,9 +7,7 @@ import UserContext from '../../../context/user/UserContext';
 import './Maze.scss';
 
 // Images
-import maze_block from '../../../assets/maze-block.jpg'
-import maze_start from '../../../assets/maze-start.jpg'
-import maze_end from '../../../assets/maze-end.jpg'
+import robot from '../../../assets/robot.svg'
 
 // COMPONENTS
 
@@ -24,6 +22,10 @@ import { ViewAgenda, ZoomIn, ZoomOut } from '@material-ui/icons';
 
 // DynamicInput
 import DynamicInput from '../../common/DynamicInput';
+
+import { motion } from 'framer-motion'
+
+import { keyframes } from 'styled-components'
 
 export default function Maze() {
 
@@ -138,9 +140,18 @@ export default function Maze() {
 			height: `${mazeSize}px`
 		})
 
-		var auxGrid = maze;
+		setRobotStyle(prevStyle => {
+			return { ...prevStyle, width: mazeSize / cols, height: mazeSize / rows }
+		})
+
 		if (maze.length <= 0 || reformingMaze) {
+			var auxGrid = maze;
+
 			if (reformingMaze) auxGrid = []; // If the maze is reforming then the grid base turn empty
+
+			setIsStart(false);
+			setIsEnd(false);
+
 			for (let i = 0; i < cols; i++) {
 				for (let j = 0; j < rows; j++) {
 					const cell = {
@@ -153,8 +164,8 @@ export default function Maze() {
 			}
 			console.log(auxGrid)
 			setReformingMaze(false); // Set the reforming flag to false
+			setMaze(auxGrid);
 		}
-		setMaze(auxGrid);
 	}
 
 	// Method to change the type of image to show in the cells
@@ -190,6 +201,93 @@ export default function Maze() {
 		setCols(e.target[1].value)
 
 		setReformingMaze(true); // Turn the reforming flag to true
+	}
+
+	// ROBOT ANIMATION -------------------------------------------------------------------------------------------------------------------------
+
+	// Variables for the animation
+	const [keyFrames, setKeyFrames] = useState([]);
+	const [currentFrame, setCurrentFrame] = useState(0);
+	const [animate, setAnimate] = useState(false);
+	const [currentDirection, setCurrentDirection] = useState('UP');
+	const [currentGrades, setCurrentGrades] = useState(0);
+
+	const [robotStyle, setRobotStyle] = useState({
+		backgroundImage: `url(${robot})`,
+		backgroundSize: '100% 100%',
+		position: 'absolute',
+		left: 0,
+		top: 0,
+		width: 0,
+		height: 0,
+		alignSelf: 'center',
+		zIndex: 1000000,
+		transitionDuration: '1s'
+	});
+
+	const createAnimation = () => {
+		console.log('Changing the animation')
+
+		if (!animate) {
+			setKeyFrames(['RIGHT', 'FORWARD', 'RIGHT']);
+			setAnimate(true);
+		} else {
+			if (currentFrame + 1 > keyFrames.length) {
+				setAnimate(false);
+				setCurrentFrame(0);
+				setKeyFrames([]);
+				setRobotStyle({
+					backgroundImage: `url(${robot})`,
+					backgroundSize: '100% 100%',
+					position: 'absolute',
+					left: 0,
+					top: 0,
+					width: wX,
+					height: wY,
+					alignSelf: 'center',
+					zIndex: 1000000,
+					transitionDuration: '1s'
+				});
+				setCurrentGrades(0);
+				return;
+			}
+
+			const frame = keyFrames[currentFrame];
+
+			if (frame === 'FORWARD') {
+				if (currentDirection === 'UP') {
+					setRobotStyle(prevStyle => {
+						return { ...prevStyle, top: prevStyle.top - wY }
+					})
+				} else if (currentDirection === 'DOWN') {
+					setRobotStyle(prevStyle => {
+						return { ...prevStyle, top: prevStyle.top + wY }
+					})
+				} else if (currentDirection === 'RIGHT') {
+					setRobotStyle(prevStyle => {
+						return { ...prevStyle, left: prevStyle.left + wX }
+					})
+				} else if (currentDirection === 'LEFT') {
+					setRobotStyle(prevStyle => {
+						return { ...prevStyle, left: prevStyle.left - wX }
+					})
+				}
+			} else if (frame === 'RIGHT') {
+				setCurrentDirection('RIGHT');
+				setRobotStyle(prevStyle => {
+					return { ...prevStyle, transform: `rotate(${currentGrades + 90}deg)` }
+				})
+				setCurrentGrades(currentGrades + 90);
+			} else if (frame === 'LEFT') {
+				setCurrentDirection('DOWN');
+				setRobotStyle(prevStyle => {
+					return { ...prevStyle, transform: `rotate(${currentGrades - 90}deg)` }
+				})
+				setCurrentGrades(currentGrades - 90);
+			}
+
+			setCurrentFrame(currentFrame + 1);
+		}
 	}
 
 	return (
@@ -229,6 +327,9 @@ export default function Maze() {
 							</form>
 						</div>
 					</div>
+					<div className='mt-5'>
+						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2'>Probar maze</button>
+					</div>
 				</Container>
 			</div>
 			<div className='row p-4 w-100'>
@@ -265,6 +366,10 @@ export default function Maze() {
 										}
 									</>
 							}
+							{/* CHARACTER */}
+							<div
+								style={robotStyle}
+							/>
 						</div>
 					</div>
 				</div>

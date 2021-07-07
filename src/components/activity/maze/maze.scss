@@ -30,3 +30,20 @@
 		align-items: center;
 	}
 }
+
+.robot-maze {
+	animation-name: robot_test;
+	animation-iteration-count: infinite;
+}
+
+@keyframes robot_test {
+	from {
+		transform: rotate(0deg);
+	}
+	50% {
+		transform: rotate(180deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}

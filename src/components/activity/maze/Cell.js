@@ -32,8 +32,7 @@ export default function Cell(props) {
 		setX(i * wX);
 		setY(j * wY);
 		setCellType(cell.type);
-		console.log('something')
-	})
+	}, [wX, wY, cell])
 
 	const handleClick = () => {
 		// Get the index of the cell
@@ -125,7 +124,8 @@ export default function Cell(props) {
 							backgroundSize: '100% 100%',
 							width: '90%',
 							height: '90%',
-							alignSelf: 'center'
+							alignSelf: 'center',
+							zIndex: 999999
 						}}
 					/>
 					:
