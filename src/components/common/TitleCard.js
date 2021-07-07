@@ -5,6 +5,10 @@ import './titlecard.scss';
 
 import PropTypes from 'prop-types';
 
+
+//Tooltip
+import Tooltip from '@material-ui/core/Tooltip';
+
 export default function TitleCard(props) {
 
     //Variables que llegan por parametro
@@ -28,7 +32,9 @@ export default function TitleCard(props) {
         >
             <div className={image ? 'title-overlay overlay' : 'title-overlay'}>
                 <div className="align-items-center" >
-                    <h1 style={{ color: colorFont }}>{title}</h1>
+                    <Tooltip enterDelay={200} enterNextDelay={200} title={title} aria-label={`${title}`}>
+                        <h1 className="text-overflow-2" style={{ color: colorFont }}>{title}</h1>
+                    </Tooltip>
                     <hr style={image ? { borderColor: colorFont } : {}} />
                 </div>
             </div>

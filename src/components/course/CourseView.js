@@ -33,8 +33,12 @@ import CourseInformationStudent from './student-view/CourseInformation';
 import ClassmatesInformation from './student-view/ClassmatesInformation';
 import UnitsInformationStudent from './student-view/UnitsInformation';
 
+
 // Link
 import { Link } from 'react-router-dom';
+
+//Tooltip
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function CourseView({ history }) {
 
@@ -134,7 +138,10 @@ export default function CourseView({ history }) {
                             course ?
                                 <Breadcrumbs>
                                     <Link className='text-muted' to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>Mis cursos</Link>
-                                    <Typography><b>{course.name}</b></Typography>
+                                    <Tooltip enterDelay={500} enterNextDelay={200} title={course.name} aria-label={`${course.name}`}>
+                                        <Typography><b className="text-overflow-2">{course.name}</b></Typography>
+                                    </Tooltip>
+
                                 </Breadcrumbs>
                                 :
                                 ""

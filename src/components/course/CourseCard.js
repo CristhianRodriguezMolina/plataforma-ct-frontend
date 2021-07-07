@@ -105,7 +105,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
             <div className="course-card my-3 mx-2 p-3" >
                 <div onClick={onPress}>
                     <div className="d-flex justify-content-between align-items-center">
-                        <h1 className="h5 text-left m-0 p-0">{course.name}</h1>
+                        <h1 className="text-overflow-1 h5 text-left m-0 p-0">{course.name}</h1>
                     </div>
                     <hr className="mx-2 my-1" />
                     <div className='img-wrapper'>
