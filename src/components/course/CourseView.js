@@ -136,7 +136,7 @@ export default function CourseView({ history }) {
                     <div className="pt-4 d-flex flex-column justify-content-center align-items-center">
                         {
                             course ?
-                                <Breadcrumbs>
+                                <Breadcrumbs className="course-view-breadcrumbs">
                                     <Link className='text-muted' to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>Mis cursos</Link>
                                     <Tooltip enterDelay={500} enterNextDelay={200} title={course.name} aria-label={`${course.name}`}>
                                         <Typography><b className="text-overflow-2">{course.name}</b></Typography>
