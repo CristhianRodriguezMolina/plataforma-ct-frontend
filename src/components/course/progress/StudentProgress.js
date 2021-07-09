@@ -67,6 +67,9 @@ const StudentProgress = props => {
     const renderStudentProgress = (student, taskId) => {
         const items = [];
         let tempActivities = props.taskActivities.filter((taskActivity) => taskActivity.task === taskId);
+        tempActivities.sort((a, b) => {
+            return a.position - b.position;
+        });
         let tempStudentActivities = studentActivities.filter((studentActivity) => studentActivity.student === student._id);
 
         if (tempStudentActivities.length > 0) {

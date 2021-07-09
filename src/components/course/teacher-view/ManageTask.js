@@ -8,6 +8,9 @@ import './ManageTask.scss';
 // Date formater
 import dateFormat from 'dateformat';
 
+//Array move
+import arrayMove from 'array-move';
+
 // CONTEXT
 import UserContext from '../../../context/user/UserContext';
 
@@ -33,6 +36,25 @@ import ActivitiesPopup from './ActivitiesPopup';
 
 // Activity card
 import ActivityCard from '../activity/ActivityCard';
+
+import { SortableContainer } from 'react-sortable-hoc';
+
+const SortableList = SortableContainer(({ items, setIsAddingActivities, setActivities, task }) => {
+
+	return (
+		<div>
+			{items.map((activity, index) => (
+				<ActivityCard
+					key={`item-${index}`}
+					index={index}
+					activity={activity}
+					setIsAddingActivities={setIsAddingActivities}
+					setActivities={setActivities}
+					task={task} />
+			))}
+		</div>
+	);
+});
 
 export default function ManageTask() {
 
@@ -186,6 +208,23 @@ export default function ManageTask() {
 		})
 			.then((res) => {
 				showSuccess(res.data.message);
+
+				api.put(`/api/course/task/activity/${taskId}`, {
+					activities
+				}, {
+					headers: { 'x-access-token': localStorage.getItem('token') }
+				})
+					.then((res) => {
+						showSuccess(res.data.message);
+					})
+					.catch(err => {
+						if (err.response) {
+							showError(err.response.data.message);
+						}
+						else {
+							showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+						}
+					});
 			})
 			.catch(err => {
 				if (err.response) {
@@ -195,7 +234,16 @@ export default function ManageTask() {
 					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 				}
 			});
+
+
 	}
+
+	const onSortEnd = ({ oldIndex, newIndex }) => {
+
+		let arrayCopy = [...activities];
+		arrayCopy = arrayMove(arrayCopy, oldIndex, newIndex);
+		setActivities(arrayCopy);
+	};
 
 	return (
 		<div>
@@ -290,14 +338,20 @@ export default function ManageTask() {
 								<Typography variant="subtitle1" className="text-center">Actividades</Typography>
 								<div className="activities-container">
 									{activities && activities.length > 0 ?
-										activities.map(activity => (
-											<ActivityCard
-												setIsAddingActivities={setIsAddingActivities}
-												setActivities={setActivities}
-												task={task}
-												activity={activity}
-											/>
-										))
+										<SortableList
+											distance={1}
+											items={activities}
+											onSortEnd={onSortEnd}
+											setIsAddingActivities={setIsAddingActivities}
+											setActivities={setActivities}
+											task={task} />
+
+										// <ActivityCard
+										// 	setIsAddingActivities={setIsAddingActivities}
+										// 	setActivities={setActivities}
+										// 	task={task}
+										// 	activity={activity}
+										// />
 										:
 										<div>
 											<h3 className="there-is-no-activities">Aún no hay tareas en la actividad</h3>

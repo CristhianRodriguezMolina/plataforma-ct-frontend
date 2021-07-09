@@ -153,7 +153,13 @@ const UnitContent = props => {
 			{props.taskActivities ?
 				<div className="cards-container">
 					{props.unitValue.tasks.map((task, i) => {
-						return <TaskCard key={i} taskActivities={props.taskActivities} courseId={props.course._id} unitId={props.unitValue._id} task={task} onDeleteTask={handleDeleteTask} />
+						return <TaskCard
+							key={i}
+							taskActivities={props.taskActivities}
+							courseId={props.course._id}
+							unitId={props.unitValue._id}
+							task={task}
+							onDeleteTask={handleDeleteTask} />
 					})}
 					< div onClick={() => handleAddTask()} className="add-task-button">
 						<AddBoxIcon style={{ color: "rgb(200, 200, 200)", fontSize: 40 }} />

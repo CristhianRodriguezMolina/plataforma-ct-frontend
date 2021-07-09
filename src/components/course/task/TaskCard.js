@@ -24,6 +24,9 @@ const TaskCard = props => {
 
 			if (!taskActivities) {
 				let tempActivities = props.taskActivities.filter((taskActivity) => taskActivity.task === props.task._id);
+				tempActivities.sort((a, b) => {
+					return a.position - b.position;
+				});
 				setTaskActivities(tempActivities);
 			}
 		}
