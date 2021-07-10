@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import UserContext from '../../../context/user/UserContext';
 
 // SCSS
-import './Maze.scss';
+import './maze.scss';
 
 // Images
 import robot from '../../../assets/robot.svg'
