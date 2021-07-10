@@ -8,6 +8,9 @@ import './Maze.scss';
 
 // Images
 import robot from '../../../assets/robot.svg'
+import maze_block from '../../../assets/maze-block.jpg'
+import maze_start from '../../../assets/maze-start.jpg'
+import maze_end from '../../../assets/maze-end.jpg'
 
 // COMPONENTS
 
@@ -158,7 +161,6 @@ export default function Maze() {
 			console.log(myRef);
 			setMazeSize(myRef.current.clientWidth);
 			// setMazeSize(myRef.current.clientWidth > myRef.current.clientHeight ? myRef.current.clientHeight : myRef.current.clientWidth);
-			// setMazeSize(window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth);
 		}
 	}, [])
 
@@ -173,7 +175,6 @@ export default function Maze() {
 			console.log(myRef)
 			setMazeSize(myRef.current.clientWidth);
 			// setMazeSize(myRef.current.clientWidth > myRef.current.clientHeight ? myRef.current.clientHeight : myRef.current.clientWidth);
-			// setMazeSize(window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth);
 		}
 
 		window.addEventListener("beforeunload", setSize)
@@ -222,27 +223,29 @@ export default function Maze() {
 		setSelectedAction(action);
 	}
 
+	// Update the maze name
 	const updateName = (value) => {
 		setActivityName(value);
 	};
 
+	// Update the maze description
 	const updateDes = (value) => {
 		setActivityDescription(value);
 	};
 
 	// Method to zoomin the maze
 	const makeZoomIn = () => {
-		if (!(mazeSize + mazeSizeOffset + 20 > mazeSize)) {
+		if (!(mazeSize + mazeSizeOffset + 20 > mazeSize)) { // This if is to ensure that the maze doesnt grow bigger than the initial size
 			setMazeSizeOffset(mazeSizeOffset + 20);
 		}
 	}
 
 	// Method to zoomout the maze
 	const makeZoomOut = () => {
-		console.log(mazeSizeOffset)
 		setMazeSizeOffset(mazeSizeOffset - 20);
 	}
 
+	// Restore the initial size of the maze
 	const restoreSize = () => {
 		setMazeSizeOffset(0);
 	}
@@ -271,10 +274,16 @@ export default function Maze() {
 	const [robotY, setRobotY] = useState(0);
 	const [robotGrades, setRobotGrades] = useState(0)
 
-	// const [frameActions, setFrameActions] = useState(['RIGHT', 'FORWARD', 'RIGHT', 'FORWARD']);	// const [currentFrame, setCurrentFrame] = useState(0);
+	// Flag to set the animation state in the robot component as true
 	const [animate, setAnimate] = useState(false);
 
-	// Character Robot
+	// Refs of the button that control the robot in the maze
+	const btnProveMaze = useRef(null);
+	const btnShowRobot = useRef(null);
+
+	// const [frameActions, setFrameActions] = useState(['RIGHT', 'FORWARD', 'RIGHT', 'FORWARD']);	// const [currentFrame, setCurrentFrame] = useState(0);
+
+	// Character Robot, with styled-components
 	const Robot = styled.div`
 		background-image: url(${robot});
 		background-size: 100% 100%;
@@ -318,6 +327,10 @@ export default function Maze() {
 			showInfo('Primero active el Robot!!')
 			return;
 		}
+
+		// While the animation is excuting then the button to active the animation and the button to show the robot are disabled
+		btnProveMaze.current.disabled = true;
+		btnShowRobot.current.disabled = true;
 
 		// Activate the animation
 		// setAnimate(true);
@@ -588,6 +601,10 @@ export default function Maze() {
 
 					setAnimation(``);
 					setAnimate(false);
+
+					// When the animation ends then the button to prove the maze and the button to show the robot are activated
+					btnProveMaze.current.disabled = false;
+					btnShowRobot.current.disabled = false;
 				}, 6000)
 			}, animateDuration * 1000)
 		} else {
@@ -598,6 +615,10 @@ export default function Maze() {
 
 				setAnimation(``);
 				setAnimate(false);
+
+				// When the animation ends then the button to prove the maze and the button to show the robot are activated
+				btnProveMaze.current.disabled = false;
+				btnShowRobot.current.disabled = false;
 			}, animateDuration * 1000)
 		}
 
@@ -614,7 +635,7 @@ export default function Maze() {
 	}
 
 	return (
-		<div className='pb-5'>
+		<div className=''>
 			{success ?
 				<Alert className="alert-message" severity="success">{successMessage}</Alert>
 				: ""
@@ -661,10 +682,6 @@ export default function Maze() {
 								<button type="submit" className="custom-btn custom-btn-primary p-2">Establecer tamaño</button>
 							</form>
 						</div>
-					</div>
-					<div className='mt-5'>
-						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' >Probar maze</button>
-						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2'>Mostrar/Ocultar robot</button>
 					</div>
 				</Container>
 			</div>
@@ -720,32 +737,59 @@ export default function Maze() {
 					</div>
 				</div>
 				<div className='col-md-6 d-flex justify-content-center align-items-center'>
-					<h1>Your current selection<br />{selectedAction}</h1>
+					<div className='mt-5'>
+						<h1>Your current selection<br />{selectedAction}</h1>
+						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
+						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+					</div>
 				</div>
 			</div>
 			<div className='options-palette-container'>
 				<div className='options-palette'>
 					<IconButton onClick={() => { handleChangeAction(actions.BLOCK); }} color='inherit'>
-						<div className='d-flex flex-column align-items-center m-2'>
-							<ViewAgenda />
+						<div className='d-flex flex-column align-items-center m-1'>
+							<div
+								className='icon'
+								style={{
+									backgroundImage: `url(${maze_block})`,
+									backgroundSize: '100% 100%',
+								}}
+							/>
 							<h1 className='h4'>Block</h1>
 						</div>
 					</IconButton>
 					<IconButton onClick={() => { handleChangeAction(actions.EMPTY); }} color='inherit'>
-						<div className='d-flex flex-column align-items-center m-2'>
-							<ViewAgenda />
+						<div className='d-flex flex-column align-items-center m-1'>
+							<div
+								className='icon'
+								style={{
+									backgroundColor: '#6cbae3',
+								}}
+							/>
 							<h1 className='h4'>Empty</h1>
 						</div>
 					</IconButton>
 					<IconButton onClick={() => { handleChangeAction(actions.START); }} color='inherit'>
-						<div className='d-flex flex-column align-items-center m-2'>
-							<ViewAgenda />
+						<div className='d-flex flex-column align-items-center m-1'>
+							<div
+								className='icon'
+								style={{
+									backgroundImage: `url(${maze_start})`,
+									backgroundSize: '100% 100%',
+								}}
+							/>
 							<h1 className='h4'>Start</h1>
 						</div>
 					</IconButton>
 					<IconButton onClick={() => handleChangeAction(actions.END)} color='inherit'>
-						<div className='d-flex flex-column align-items-center m-2'>
-							<ViewAgenda />
+						<div className='d-flex flex-column align-items-center m-1'>
+							<div
+								className='icon'
+								style={{
+									backgroundImage: `url(${maze_end})`,
+									backgroundSize: '100% 100%',
+								}}
+							/>
 							<h1 className='h4'>End</h1>
 						</div>
 					</IconButton>

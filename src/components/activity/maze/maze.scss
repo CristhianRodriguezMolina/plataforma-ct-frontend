@@ -17,7 +17,6 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-left: 3em;
 
 	.maze {
 		position: relative;
@@ -25,12 +24,26 @@
 	}
 }
 .options-palette-container {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+
 	.options-palette {
+		background-color: rgb(48, 48, 48);
+		color: whitesmoke;
 		position: sticky;
 		bottom: 0;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		border-radius: 10px 10px 0 0;
+
+		.icon {
+			width: 3em;
+			height: 3em;
+			margin-bottom: 0.2em;
+		}
 	}
 }
 
