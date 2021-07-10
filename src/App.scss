@@ -81,6 +81,12 @@ $roboto: "Roboto", sans-serif;
 		transform: initial;
 		color: whitesmoke;
 	}
+
+	&[disable="true"] {
+		background-color: #a8a8a8;
+		box-shadow: none;
+		transform: translateY(4px);
+	}
 }
 
 .custom-btn-primary {

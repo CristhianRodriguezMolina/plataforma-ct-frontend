@@ -11,10 +11,13 @@
 
 .maze-container {
 	width: 100%;
-	height: calc(100vh - 100px);
+	max-width: calc(100vh - 200px);
+	height: fit-content;
+	max-height: calc(100vh - 200px);
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-left: 3em;
 
 	.maze {
 		position: relative;

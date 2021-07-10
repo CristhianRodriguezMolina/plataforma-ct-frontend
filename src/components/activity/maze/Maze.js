@@ -25,17 +25,58 @@ import DynamicInput from '../../common/DynamicInput';
 
 import { motion } from 'framer-motion'
 
-import { keyframes } from 'styled-components'
+// Styled-components
+import styled, { css, keyframes } from 'styled-components'
+
+// Alert
+import Alert from '@material-ui/lab/Alert';
 
 export default function Maze() {
 
 	// Variables del contexto
 	const { changeColor } = useContext(UserContext);
 
+	// MENSAJES DEL FORMULARIO
+	const [error, setError] = useState(false); //Variable flag de existencia de error
+	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+	const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
+	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
 		changeColor('#f8bbd0');
 	});
+
+	// Funcion para mostrar una alerta satisfactoria dado un mensaje
+	const showSuccess = (message) => {
+		setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setSuccess(false);
+			setSuccessMessage("");
+		}, 2000)
+	}
+
+	// Funcion para mostrar una alerta de error dado un mensaje
+	const showError = (message) => {
+		setError(true);   //Se cambia el estado de mensaje de error a verdadero
+		setErrorMessage(message); //Se setea el mensaje de error
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setError(false);
+			setErrorMessage("");
+		}, 2000)
+	}
+
+	const showInfo = (message) => {
+		setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setProcess(false);
+			setProcessMessage("");
+		}, 2000)
+	}
 
 	// VARIABLES DEL MAZE -------------------------------------------------------------------------------------------------
 
@@ -47,18 +88,21 @@ export default function Maze() {
 
 	// Size of the maze
 	const [mazeSize, setMazeSize] = useState(0)
-	// const [mazeOffset, setMazeOffset] = useState(0);
+	const [mazeSizeOffset, setMazeSizeOffset] = useState(0);
 
 	const [cols, setCols] = useState(5); // Num of columns of the maze
 	const [rows, setRows] = useState(5); // Num of columns of the maze
 
 	const [reformingMaze, setReformingMaze] = useState(true); // Variable for reform the maze
 
-	const [wX, setWX] = useState(mazeSize / cols)
-	const [wY, setWY] = useState(mazeSize / rows)
+	const [wX, setWX] = useState((mazeSize + mazeSizeOffset) / cols)
+	const [wY, setWY] = useState((mazeSize + mazeSizeOffset) / rows)
 
 	const [isStart, setIsStart] = useState(false);
 	const [isEnd, setIsEnd] = useState(false);
+
+	const [startX, setStartX] = useState(0);
+	const [startY, setStartY] = useState(0);
 
 	// Actions for render different things in the maze
 	const actions = {
@@ -101,23 +145,35 @@ export default function Maze() {
 
 	// Use effects ----------------------------------------------------------------------------------------------------------------------------------
 
+	// Si cambia la posicion del inicio se cambia la del robot y se reicinia la variable flag que muestra el robot
+	useEffect(() => {
+		setAnimate(false);
+		setRobotX(startX);
+		setRobotY(startY);
+	}, [startX, startY])
+
 	// Cambia en cada actualizacion el tamaño del maze
 	useEffect(() => {
 		if (myRef) {
-			setMazeSize(myRef.current.clientWidth > myRef.current.clientHeight ? myRef.current.clientHeight : myRef.current.clientWidth);
+			console.log(myRef);
+			setMazeSize(myRef.current.clientWidth);
+			// setMazeSize(myRef.current.clientWidth > myRef.current.clientHeight ? myRef.current.clientHeight : myRef.current.clientWidth);
+			// setMazeSize(window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth);
 		}
 	}, [])
 
 	// Cada que el tamaño del maze cambia entonces actualiza los valores con base en el tamaño del maze
 	useEffect(() => {
 		setUp();
-	}, [mazeSize, reformingMaze]) // Execute setUp if the mazeSize changes or if is reformingMaze
+	}, [mazeSize, mazeSizeOffset, reformingMaze]) // Execute setUp if the mazeSize changes or if is reformingMaze
 
 	// Cambia el tamaño del maze cada que cambia el tamaño de la pagina
 	useEffect(() => {
 		const setSize = () => {
 			console.log(myRef)
-			setMazeSize(myRef.current.clientWidth > myRef.current.clientHeight ? myRef.current.clientHeight : myRef.current.clientWidth);
+			setMazeSize(myRef.current.clientWidth);
+			// setMazeSize(myRef.current.clientWidth > myRef.current.clientHeight ? myRef.current.clientHeight : myRef.current.clientWidth);
+			// setMazeSize(window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth);
 		}
 
 		window.addEventListener("beforeunload", setSize)
@@ -130,18 +186,12 @@ export default function Maze() {
 
 	// Metodo para inicializar o actualizar los valores de tamaño del maze ---------------------------------------------------------------------------
 	const setUp = () => {
-		console.log(mazeSize)
-
-		setWX(mazeSize / cols); // Width of each cell
-		setWY(mazeSize / rows); // Height of each cell
+		setWX((mazeSize + mazeSizeOffset) / cols); // Width of each cell
+		setWY((mazeSize + mazeSizeOffset) / rows); // Height of each cell
 
 		setMazeStyle({
-			width: `${mazeSize}px`,
-			height: `${mazeSize}px`
-		})
-
-		setRobotStyle(prevStyle => {
-			return { ...prevStyle, width: mazeSize / cols, height: mazeSize / rows }
+			width: `${(mazeSize + mazeSizeOffset)}px`,
+			height: `${(mazeSize + mazeSizeOffset)}px`
 		})
 
 		if (maze.length <= 0 || reformingMaze) {
@@ -162,7 +212,6 @@ export default function Maze() {
 					auxGrid.push(cell);
 				}
 			}
-			console.log(auxGrid)
 			setReformingMaze(false); // Set the reforming flag to false
 			setMaze(auxGrid);
 		}
@@ -183,14 +232,19 @@ export default function Maze() {
 
 	// Method to zoomin the maze
 	const makeZoomIn = () => {
-		// setMazeOffset(mazeOffset + 20);
-		setMazeSize(mazeSize + 20);
+		if (!(mazeSize + mazeSizeOffset + 20 > mazeSize)) {
+			setMazeSizeOffset(mazeSizeOffset + 20);
+		}
 	}
 
 	// Method to zoomout the maze
 	const makeZoomOut = () => {
-		// setMazeOffset(mazeOffset - 20);
-		setMazeSize(mazeSize - 20);
+		console.log(mazeSizeOffset)
+		setMazeSizeOffset(mazeSizeOffset - 20);
+	}
+
+	const restoreSize = () => {
+		setMazeSizeOffset(0);
 	}
 
 	// Method to change the cols and rows of the maze
@@ -206,92 +260,373 @@ export default function Maze() {
 	// ROBOT ANIMATION -------------------------------------------------------------------------------------------------------------------------
 
 	// Variables for the animation
-	const [keyFrames, setKeyFrames] = useState([]);
-	const [currentFrame, setCurrentFrame] = useState(0);
-	const [animate, setAnimate] = useState(false);
-	const [currentDirection, setCurrentDirection] = useState('UP');
-	const [currentGrades, setCurrentGrades] = useState(0);
+	const [animation, setAnimation] = useState('');
 
-	const [robotStyle, setRobotStyle] = useState({
-		backgroundImage: `url(${robot})`,
-		backgroundSize: '100% 100%',
-		position: 'absolute',
-		left: 0,
-		top: 0,
-		width: 0,
-		height: 0,
-		alignSelf: 'center',
-		zIndex: 1000000,
-		transitionDuration: '1s'
-	});
+	// Animation parameters
+	const [animationDuration, setAnimationDuration] = useState('5s');
+	const [animationRepeat, setAnimationRepeat] = useState(1);
+
+	// Robot position and grades
+	const [robotX, setRobotX] = useState(0);
+	const [robotY, setRobotY] = useState(0);
+	const [robotGrades, setRobotGrades] = useState(0)
+
+	// const [frameActions, setFrameActions] = useState(['RIGHT', 'FORWARD', 'RIGHT', 'FORWARD']);	// const [currentFrame, setCurrentFrame] = useState(0);
+	const [animate, setAnimate] = useState(false);
+
+	// Character Robot
+	const Robot = styled.div`
+		background-image: url(${robot});
+		background-size: 100% 100%;
+		position: absolute;
+		left: ${robotX}px;
+		top: ${robotY}px;
+		transform: rotate(${robotGrades}deg);
+		width: ${wX}px;
+		height: ${wY}px;
+		align-self: center;
+		transition-duration: 1s;
+		z-index: 1000;
+		animation: ${props =>
+			props.animate &&
+			css`
+			  ${animation} ${props.animationDuration} linear ${props.animationRepeat}
+			`};
+	`
+
+	// To get a cell with the i j position given
+	const getCell = (i, j) => {
+		for (let index = 0; index < maze.length; index++) {
+			const cell = maze[index];
+			if (cell.i === i && cell.j === j) {
+				return cell;
+			}
+		}
+		return {
+			type: 'NOT_EXIST',
+		}
+	}
 
 	const createAnimation = () => {
-		console.log('Changing the animation')
+
+		if (!isStart || !isEnd) {
+			showError('No ha definido el inicio y el fin del laberinto!!')
+			return;
+		}
 
 		if (!animate) {
-			setKeyFrames(['RIGHT', 'FORWARD', 'RIGHT']);
-			setAnimate(true);
-		} else {
-			if (currentFrame + 1 > keyFrames.length) {
-				setAnimate(false);
-				setCurrentFrame(0);
-				setKeyFrames([]);
-				setRobotStyle({
-					backgroundImage: `url(${robot})`,
-					backgroundSize: '100% 100%',
-					position: 'absolute',
-					left: 0,
-					top: 0,
-					width: wX,
-					height: wY,
-					alignSelf: 'center',
-					zIndex: 1000000,
-					transitionDuration: '1s'
-				});
-				setCurrentGrades(0);
-				return;
-			}
+			showInfo('Primero active el Robot!!')
+			return;
+		}
 
-			const frame = keyFrames[currentFrame];
+		// Activate the animation
+		// setAnimate(true);
 
-			if (frame === 'FORWARD') {
+		// Reset the animation
+		setAnimationDuration('5s');
+		setAnimationRepeat(1);
+
+		// Reset the robot position
+		setRobotX(startX);
+		setRobotY(startY);
+		setRobotGrades(0);
+
+		// Actions passed for the user
+		const frameActions = ['LEFT', 'FORWARD', 'FORWARD', 'FORWARD', 'RIGHT', 'FORWARD', 'FORWARD', 'FORWARD', 'FORWARD', 'RIGHT', 'FORWARD', 'LEFT', 'FORWARD', 'RIGHT', 'FORWARD'];
+
+		// Start of the animation
+		var stringKeyFrame = `from{
+			left: ${startX}px;
+			top: ${startY}px;
+			transform: rotate(0deg)
+		}`;
+
+		var animateDuration = 5;
+
+		// Current direction and grades of the ROBOT
+		var currentDirection = 'UP';
+		var currentGrades = 0;
+
+		// Current percent of the animation and the offset 
+		const percentOffset = Math.floor(100 / frameActions.length);
+		var currentPercent = percentOffset;
+
+		// Current top (X) and left (Y) of the ROBOT
+		var currentLeft = startX;
+		var currentTop = startY;
+
+		// Flag to see if there is an error in the path of the maze
+		var isError = false;
+
+		// Message that gonna be show to the user if there is an error
+		var errorMessage = '';
+
+		// Flag to see if there is a win in the path of the maze
+		var isWin = false;
+
+		for (let i = 0; i < frameActions.length; i++) {
+
+			// Current action to be analized and processed
+			const action = frameActions[i];
+
+			if (action === 'FORWARD') { // IF THE ACTION IS GO FORWARD
 				if (currentDirection === 'UP') {
-					setRobotStyle(prevStyle => {
-						return { ...prevStyle, top: prevStyle.top - wY }
-					})
+					stringKeyFrame += `${currentPercent}% {
+						top: ${currentTop - wY}px;
+						left: ${currentLeft}px;
+						transform: rotate(${currentGrades}deg)
+					}`;
+					currentTop -= wY;
 				} else if (currentDirection === 'DOWN') {
-					setRobotStyle(prevStyle => {
-						return { ...prevStyle, top: prevStyle.top + wY }
-					})
+					stringKeyFrame += `${currentPercent}% {
+						top: ${currentTop + wY}px;
+						left: ${currentLeft}px;
+						transform: rotate(${currentGrades}deg)
+					}`;
+					currentTop += wY;
 				} else if (currentDirection === 'RIGHT') {
-					setRobotStyle(prevStyle => {
-						return { ...prevStyle, left: prevStyle.left + wX }
-					})
+					stringKeyFrame += `${currentPercent}% {
+						top: ${currentTop}px;
+						left: ${currentLeft + wX}px;
+						transform: rotate(${currentGrades}deg)
+					}`;
+					currentLeft += wX;
 				} else if (currentDirection === 'LEFT') {
-					setRobotStyle(prevStyle => {
-						return { ...prevStyle, left: prevStyle.left - wX }
-					})
+					stringKeyFrame += `${currentPercent}% {
+						top: ${currentTop}px;
+						left: ${currentLeft - wX}px;
+						transform: rotate(${currentGrades}deg)
+					}`;
+					currentLeft -= wX;
 				}
-			} else if (frame === 'RIGHT') {
-				setCurrentDirection('RIGHT');
-				setRobotStyle(prevStyle => {
-					return { ...prevStyle, transform: `rotate(${currentGrades + 90}deg)` }
-				})
-				setCurrentGrades(currentGrades + 90);
-			} else if (frame === 'LEFT') {
-				setCurrentDirection('DOWN');
-				setRobotStyle(prevStyle => {
-					return { ...prevStyle, transform: `rotate(${currentGrades - 90}deg)` }
-				})
-				setCurrentGrades(currentGrades - 90);
+			} else if (action === 'RIGHT') { // IF THE ACTION IS TURN RIGHT
+				if (currentDirection === 'UP') {
+					currentDirection = 'RIGHT';
+				} else if (currentDirection === 'RIGHT') {
+					currentDirection = 'DOWN';
+				} else if (currentDirection === 'DOWN') {
+					currentDirection = 'LEFT';
+				} else if (currentDirection === 'LEFT') {
+					currentDirection = 'UP';
+				}
+
+				stringKeyFrame += `${currentPercent}% {
+					top: ${currentTop}px;
+					left: ${currentLeft}px;
+					transform: rotate(${currentGrades + 90}deg)
+				}`;
+
+				currentGrades = currentGrades + 90;
+
+			} else if (action === 'LEFT') { // IF THE ACTION IS TURN LEFT
+				if (currentDirection === 'UP') {
+					currentDirection = 'LEFT';
+				} else if (currentDirection === 'RIGHT') {
+					currentDirection = 'UP';
+				} else if (currentDirection === 'DOWN') {
+					currentDirection = 'RIGHT';
+				} else if (currentDirection === 'LEFT') {
+					currentDirection = 'DOWN';
+				}
+
+				stringKeyFrame += `${currentPercent}% {
+					top: ${currentTop}px;
+					left: ${currentLeft}px;
+					transform: rotate(${currentGrades - 90}deg)
+				}`;
+
+				currentGrades = currentGrades - 90;
 			}
 
-			setCurrentFrame(currentFrame + 1);
+			// Increase the current percent with the offset
+			currentPercent += percentOffset;
+
+			// Current cell of the animation to be analized
+			const currentCell = getCell(Math.round(currentLeft / wX), Math.round(currentTop / wY));
+
+			// If the path is the END of the maze then set a win and comes out of the for
+			if (currentCell.type === actions.END) {
+				isWin = true;
+				animateDuration = Math.floor(((i + 1) / frameActions.length) * 5);
+				setAnimationDuration(`${animateDuration}s`);
+				break;
+			}
+
+			// If the path is blocked then set a error and comes out of the for
+			if (currentCell.type === actions.BLOCK || currentCell.type === 'NOT_EXIST' || i === frameActions.length - 1) {
+
+				if (currentCell.type === actions.BLOCK) {
+					errorMessage = 'El robot choco con una pared';
+				} else if (currentCell.type === 'NOT_EXIST') {
+					errorMessage = 'El robot se cayo del laberinto';
+				} else if (i === frameActions.length - 1) {
+					errorMessage = 'No se encontró el final del laberinto';
+				}
+
+				isError = true;
+				animateDuration = Math.floor(((i + 1) / frameActions.length) * 5);
+				setAnimationDuration(`${animateDuration}s`);
+				break;
+			}
+		}
+
+		// Final step of the animation
+		stringKeyFrame += `
+			to{
+				top: ${currentTop}px;
+				left: ${currentLeft}px;
+				transform: rotate(${currentGrades}deg);
+			}
+		`
+
+		const winAnimation = `
+			from{
+				top: ${currentTop}px;
+				left: ${currentLeft}px;
+				-webkit-transform: scale3d(1, 1, 1) rotate(${currentGrades}deg);
+				transform: scale3d(1, 1, 1) rotate(${currentGrades}deg);
+			}
+
+			50% {
+				top: ${currentTop}px;
+				left: ${currentLeft}px;
+				-webkit-transform: scale3d(1.5) rotate(${currentGrades + 180}deg);
+				transform: scale3d(1.5) rotate(${currentGrades + 180}deg);
+			}
+
+			to {
+				top: ${currentTop}px;
+				left: ${currentLeft}px;
+				-webkit-transform: scale3d(1, 1, 1) rotate(${currentGrades + 360}deg);
+				transform: scale3d(1, 1, 1) rotate(${currentGrades + 360}deg);
+			}
+		`
+
+		// Animation error for any crash or if the robot get out the maze
+		const errorAnimation = `
+		from {
+			top: ${currentTop}px;
+			left: ${currentLeft}px;
+			-webkit-transform: scale3d(1, 1, 1) rotate(${currentGrades}deg);
+			transform: scale3d(1, 1, 1) rotate(${currentGrades}deg);
+		  }
+		
+		  30% {
+			top: ${currentTop}px;
+			left: ${currentLeft}px;
+			-webkit-transform: scale3d(1.25, 0.75, 1) rotate(${currentGrades}deg);
+			transform: scale3d(1.25, 0.75, 1) rotate(${currentGrades}deg);
+		  }
+		
+		  40% {
+			top: ${currentTop}px;
+			left: ${currentLeft}px;
+			-webkit-transform: scale3d(0.75, 1.25, 1) rotate(${currentGrades}deg);
+			transform: scale3d(0.75, 1.25, 1) rotate(${currentGrades}deg);
+		  }
+		
+		  50% {
+			top: ${currentTop}px;
+			left: ${currentLeft}px;
+			-webkit-transform: scale3d(1.15, 0.85, 1) rotate(${currentGrades}deg);
+			transform: scale3d(1.15, 0.85, 1) rotate(${currentGrades}deg);
+		  }
+		
+		  65% {
+			top: ${currentTop}px;
+			left: ${currentLeft}px;
+			-webkit-transform: scale3d(0.95, 1.05, 1) rotate(${currentGrades}deg);
+			transform: scale3d(0.95, 1.05, 1) rotate(${currentGrades}deg);
+		  }
+		
+		  75% {
+			top: ${currentTop}px;
+			left: ${currentLeft}px;
+			-webkit-transform: scale3d(1.05, 0.95, 1) rotate(${currentGrades}deg);
+			transform: scale3d(1.05, 0.95, 1) rotate(${currentGrades}deg);
+		  }
+		
+		  to {
+			top: ${currentTop}px;
+			left: ${currentLeft}px;
+			-webkit-transform: scale3d(1, 1, 1) rotate(${currentGrades}deg);
+			transform: scale3d(1, 1, 1) rotate(${currentGrades}deg);
+		  }
+		`
+
+		// Set the created animation
+		setAnimation(keyframes`
+		  	${stringKeyFrame}
+		`);
+
+		setRobotX(currentLeft);
+		setRobotY(currentTop);
+		setRobotGrades(currentGrades);
+
+		if (isError || isWin) {
+			console.log('Hubo un error en el camino del maze')
+			setTimeout(() => {
+				if (isError) {
+					showError(errorMessage);
+				}
+
+				if (isWin) {
+					showSuccess('Felicidades completaste el laberinto')
+				}
+
+				setAnimationDuration('1s');
+				setAnimationRepeat(5);
+
+				setAnimation(keyframes`
+				  ${isWin ? winAnimation : errorAnimation}
+				`);
+
+				setTimeout(() => {
+					setRobotX(startX);
+					setRobotY(startY);
+					setRobotGrades(0);
+
+					setAnimation(``);
+					setAnimate(false);
+				}, 6000)
+			}, animateDuration * 1000)
+		} else {
+			setTimeout(() => {
+				setRobotX(startX);
+				setRobotY(startY);
+				setRobotGrades(0);
+
+				setAnimation(``);
+				setAnimate(false);
+			}, animateDuration * 1000)
+		}
+
+	}
+
+	const handleShowRobot = () => {
+		if (isStart && isEnd) {
+			console.log(animate)
+			setAnimate(!animate)
+		} else {
+			showError('No ha definido el inicio y el fin del laberinto!!');
+			setAnimate(false);
 		}
 	}
 
 	return (
 		<div className='pb-5'>
+			{success ?
+				<Alert className="alert-message" severity="success">{successMessage}</Alert>
+				: ""
+			}
+			{error ?
+				<Alert className="alert-message" severity="error">{errorMessage}</Alert>
+				: ""
+			}
+			{process ?
+				<Alert className="alert-message" severity="info">{processMessage}</Alert>
+				: ""
+			}
 			<div className="maze-header">
 				<Container maxWidth='md'>
 					{/* GENERAL DATA OF THE MAZE */}
@@ -307,7 +642,7 @@ export default function Maze() {
 							<div>
 								<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
 								<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
-								<button className="custom-btn custom-btn-primary p-2">Restablecer</button>
+								<button onClick={restoreSize} className="custom-btn custom-btn-primary p-2">Restablecer</button>
 							</div>
 						</div>
 						{/* FORM TO CHANGE THE ROWS AND COLS */}
@@ -328,7 +663,8 @@ export default function Maze() {
 						</div>
 					</div>
 					<div className='mt-5'>
-						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2'>Probar maze</button>
+						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' >Probar maze</button>
+						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2'>Mostrar/Ocultar robot</button>
 					</div>
 				</Container>
 			</div>
@@ -355,7 +691,10 @@ export default function Maze() {
 													isEnd={isEnd}
 													setIsStart={setIsStart}
 													setIsEnd={setIsEnd}
-												/>
+													setStartX={setStartX}
+													setStartY={setStartY}
+												>
+												</Cell>
 											))
 										}
 									</>
@@ -367,9 +706,16 @@ export default function Maze() {
 									</>
 							}
 							{/* CHARACTER */}
-							<div
-								style={robotStyle}
-							/>
+							{
+								isStart && isEnd && animate &&
+								<Robot
+									wX={wX}
+									wY={wY}
+									animate={animate}
+									animationDuration={animationDuration}
+									animationRepeat={animationRepeat}
+								/>
+							}
 						</div>
 					</div>
 				</div>
