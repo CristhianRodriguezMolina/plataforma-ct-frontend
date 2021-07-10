@@ -59,19 +59,27 @@ const CreateActivity = (props) => {
 	const handleSubmit = (e) => {
 		e.preventDefault(); //Prevent form reload the webside
 
+		console.log(type)
+
 		//Verifying fields
 		if (name.trim().localeCompare("") !== 0) {
 			//Making API calls
 			api.post('/api/activity', {
-				name,
-				description,
+				name: name.trim(),
+				description: description.trim(),
 				type,
 				creator: localStorage.getItem('user_id'),
 			}, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
-					props.history.push(`/activity/logic-sequence/${res.data.activity_id}`);
+					if (type === 'logic_sequence') {
+						props.history.push(`/activity/logic-sequence/${res.data.activity_id}`);
+					} else if (type === 'maze') {
+						props.history.push(`/activity/maze/${res.data.activity_id}`)
+					} else if (type === 'questionnaire') {
+
+					}
 				})
 				.catch(err => {
 					if (err.response) {

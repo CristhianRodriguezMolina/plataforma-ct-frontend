@@ -70,22 +70,6 @@ const CreateMaze = props => {
                     _id: "2",
                     name: "3"
                 },
-                {
-                    _id: "3",
-                    name: "4"
-                },
-                {
-                    _id: "4",
-                    name: "5"
-                },
-                {
-                    _id: "5",
-                    name: "6"
-                },
-                {
-                    _id: "6",
-                    name: "7"
-                },
             ]
 
             setInstructionsList(tempList);
@@ -133,35 +117,30 @@ const CreateMaze = props => {
     return (
         <CreateMazeContext.Provider value={{ instructionsToDelete, setInstructionsToDelete }}>
             <div className="create-maze-container">
-                {instructionsList ?
-                    <div className="instructions-list-container">
-                        <SortableList distance={1} items={instructionsList} onSortEnd={onSortEnd} axis='xy' showCheck={showCheck} />
-                        <div className={`action-button-container ${showCheck ? 'show-action-button-container' : ''}`}>
-                            <button onClick={() => setShowCheck(false)}><CloseIcon style={{ fontSize: 15, color: 'rgb(100, 100, 100)' }} /></button>
-                            <button onClick={handleDeleteCards}><DoneIcon style={{ fontSize: 15, color: 'rgb(100, 100, 100)' }} /></button>
+                <div className='d-flex justify-content-center align-items-center'>
+                    {instructionsList ?
+                        <div className="instructions-list-container">
+                            <SortableList distance={1} items={instructionsList} onSortEnd={onSortEnd} axis='xy' showCheck={showCheck} />
+                            <div className={`action-button-container ${showCheck ? 'show-action-button-container' : ''}`}>
+                                <button onClick={() => setShowCheck(false)}><CloseIcon style={{ fontSize: 15, color: 'rgb(100, 100, 100)' }} /></button>
+                                <button onClick={handleDeleteCards}><DoneIcon style={{ fontSize: 15, color: 'rgb(100, 100, 100)' }} /></button>
+                            </div>
                         </div>
-                    </div>
-                    : ""}
+                        : ""}
 
-                <div className="instruction-buttons-container">
-                    <div onClick={() => handleClick(1)} className="instruction-card-container">
-                        <h1>1</h1>
-                    </div>
-                    <div onClick={() => handleClick(2)} className="instruction-card-container">
-                        <h1>2</h1>
-                    </div>
-                    <div onClick={() => handleClick(3)} className="instruction-card-container">
-                        <h1>3</h1>
+                    <div className="instruction-buttons-container">
+                        <div onClick={() => handleClick(1)} className="instruction-card-container">
+                            <h1>1</h1>
+                        </div>
+                        <div onClick={() => handleClick(2)} className="instruction-card-container">
+                            <h1>2</h1>
+                        </div>
+                        <div onClick={() => handleClick(3)} className="instruction-card-container">
+                            <h1>3</h1>
+                        </div>
+                        <button onClick={showCheckMarks} className="custom-btn custom-btn-primary px-3 py-1 mt-2">Borrar</button>
                     </div>
                 </div>
-                <IconButton color="primary"><DoneIcon /></IconButton>
-                <IconButton color="primary"><CloseIcon /></IconButton>
-
-
-
-
-
-                <button onClick={showCheckMarks} className="custom-btn custom-btn-success px-3 py-1">Borrar</button>
             </div>
         </CreateMazeContext.Provider>
     )

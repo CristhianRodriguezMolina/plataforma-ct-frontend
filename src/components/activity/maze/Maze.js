@@ -1,7 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom';
 
 // CONTEXT
 import UserContext from '../../../context/user/UserContext';
+
+// API
+import api from '../../../services/api';
 
 // SCSS
 import './maze.scss';
@@ -14,6 +18,9 @@ import maze_end from '../../../assets/maze-end.jpg'
 
 // COMPONENTS
 
+// Instructions
+import CreateMaze from './CreateMaze';
+
 // Cell of the maze
 import Cell from './Cell';
 
@@ -21,12 +28,10 @@ import Cell from './Cell';
 import { IconButton, Container } from '@material-ui/core';
 
 // Icons
-import { ViewAgenda, ZoomIn, ZoomOut } from '@material-ui/icons';
+import { ZoomIn, ZoomOut } from '@material-ui/icons';
 
 // DynamicInput
 import DynamicInput from '../../common/DynamicInput';
-
-import { motion } from 'framer-motion'
 
 // Styled-components
 import styled, { css, keyframes } from 'styled-components'
@@ -83,11 +88,21 @@ export default function Maze() {
 
 	// VARIABLES DEL MAZE -------------------------------------------------------------------------------------------------
 
+	// GENERAL VARAIBLES 
+
+	// Param variables
+	const { activityId } = useParams();
+
+	// Loading component while the maze is being fetching 
+	const [loading, setLoading] = useState(true);
+
+	// MAZE VARIABLES
+
 	// Maze container reference
 	const myRef = useRef(null);
 
 	// The maze
-	const [maze, setMaze] = useState([]);
+	const [maze, setMaze] = useState(null);
 
 	// Size of the maze
 	const [mazeSize, setMazeSize] = useState(0)
@@ -148,6 +163,12 @@ export default function Maze() {
 
 	// Use effects ----------------------------------------------------------------------------------------------------------------------------------
 
+	useEffect(() => {
+		if (!maze) {
+			fetchMaze();
+		}
+	}, [maze])
+
 	// Si cambia la posicion del inicio se cambia la del robot y se reicinia la variable flag que muestra el robot
 	useEffect(() => {
 		setAnimate(false);
@@ -166,8 +187,11 @@ export default function Maze() {
 
 	// Cada que el tamaño del maze cambia entonces actualiza los valores con base en el tamaño del maze
 	useEffect(() => {
-		setUp();
-	}, [mazeSize, mazeSizeOffset, reformingMaze]) // Execute setUp if the mazeSize changes or if is reformingMaze
+		if (maze) {
+			console.log(maze)
+			setUp();
+		}
+	}, [maze, mazeSize, mazeSizeOffset, reformingMaze]) // Execute setUp if the mazeSize changes or if is reformingMaze
 
 	// Cambia el tamaño del maze cada que cambia el tamaño de la pagina
 	useEffect(() => {
@@ -185,7 +209,31 @@ export default function Maze() {
 		}
 	}, [])
 
-	// Metodo para inicializar o actualizar los valores de tamaño del maze ---------------------------------------------------------------------------
+	// Methods --------------------------------------------------------------------------------------------------------
+
+	// Fetch maze data
+	const fetchMaze = () => {
+		api.get(`/api/maze/${activityId}`, {
+			headers: { 'x-access-token': localStorage.getItem('token') }
+		})
+			.then((res) => {
+				setMaze(res.data);
+				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
+				setActivityDescription(res.data.activity_id.description);
+				setLoading(false);
+			})
+			.catch(err => {
+				setLoading(false);
+				if (err.response) {
+					showError(err.response.data.message);
+				}
+				else {
+					showError("¡No se han podido obtener el laberinto, por favor intentelo mas tarde!");
+				}
+			})
+	}
+
+	// Metodo para inicializar o actualizar los valores de tamaño del maze 
 	const setUp = () => {
 		setWX((mazeSize + mazeSizeOffset) / cols); // Width of each cell
 		setWY((mazeSize + mazeSizeOffset) / rows); // Height of each cell
@@ -195,8 +243,8 @@ export default function Maze() {
 			height: `${(mazeSize + mazeSizeOffset)}px`
 		})
 
-		if (maze.length <= 0 || reformingMaze) {
-			var auxGrid = maze;
+		if (maze.cells.length <= 0 || reformingMaze) {
+			var auxGrid = maze.cells;
 
 			if (reformingMaze) auxGrid = []; // If the maze is reforming then the grid base turn empty
 
@@ -214,7 +262,9 @@ export default function Maze() {
 				}
 			}
 			setReformingMaze(false); // Set the reforming flag to false
-			setMaze(auxGrid);
+			setMaze(prevMaze => {
+				return { ...prevMaze, cells: auxGrid }
+			});
 		}
 	}
 
@@ -305,8 +355,8 @@ export default function Maze() {
 
 	// To get a cell with the i j position given
 	const getCell = (i, j) => {
-		for (let index = 0; index < maze.length; index++) {
-			const cell = maze[index];
+		for (let index = 0; index < maze.cells.length; index++) {
+			const cell = maze.cells[index];
 			if (cell.i === i && cell.j === j) {
 				return cell;
 			}
@@ -332,9 +382,6 @@ export default function Maze() {
 		btnProveMaze.current.disabled = true;
 		btnShowRobot.current.disabled = true;
 
-		// Activate the animation
-		// setAnimate(true);
-
 		// Reset the animation
 		setAnimationDuration('5s');
 		setAnimationRepeat(1);
@@ -345,7 +392,7 @@ export default function Maze() {
 		setRobotGrades(0);
 
 		// Actions passed for the user
-		const frameActions = ['LEFT', 'FORWARD', 'FORWARD', 'FORWARD', 'RIGHT', 'FORWARD', 'FORWARD', 'FORWARD', 'FORWARD', 'RIGHT', 'FORWARD', 'LEFT', 'FORWARD', 'RIGHT', 'FORWARD'];
+		const frameActions = ['LEFT', 'FORWARD', 'FORWARD', 'FORWARD', 'FORWARD'];
 
 		// Start of the animation
 		var stringKeyFrame = `from{
@@ -360,13 +407,12 @@ export default function Maze() {
 		var currentDirection = 'UP';
 		var currentGrades = 0;
 
-		// Current percent of the animation and the offset 
-		const percentOffset = Math.floor(100 / frameActions.length);
-		var currentPercent = percentOffset;
-
 		// Current top (X) and left (Y) of the ROBOT
 		var currentLeft = startX;
 		var currentTop = startY;
+
+		// Number of cells that can be traveled
+		var usableCells = frameActions.length;
 
 		// Flag to see if there is an error in the path of the maze
 		var isError = false;
@@ -377,7 +423,39 @@ export default function Maze() {
 		// Flag to see if there is a win in the path of the maze
 		var isWin = false;
 
-		for (let i = 0; i < frameActions.length; i++) {
+		// for (let i = 0; i < frameActions.length; i++) {
+		// 	// Current cell of the animation to be analized
+		// 	const currentCell = getCell(Math.round(currentLeft / wX), Math.round(currentTop / wY));
+
+		// 	// If the path is the END of the maze then set a win and comes out of the for
+		// 	if (currentCell.type === actions.END) {
+		// 		usableCells = i + 1;
+		// 		isWin = true;
+		// 		break;
+		// 	}
+
+		// 	// If the path is blocked then set a error and comes out of the for
+		// 	if (currentCell.type === actions.BLOCK || currentCell.type === 'NOT_EXIST' || i === frameActions.length - 1) {
+		// 		usableCells = i + 1;
+
+		// 		if (currentCell.type === actions.BLOCK) {
+		// 			errorMessage = 'El robot choco con una pared';
+		// 		} else if (currentCell.type === 'NOT_EXIST') {
+		// 			errorMessage = 'El robot se cayo del laberinto';
+		// 		} else if (i === frameActions.length - 1) {
+		// 			errorMessage = 'No se encontró el final del laberinto';
+		// 		}
+
+		// 		isError = true;
+		// 		break;
+		// 	}
+		// }
+
+		// Current percent of the animation and the offset 
+		const percentOffset = Math.floor(100 / usableCells);
+		var currentPercent = percentOffset;
+
+		for (let i = 0; i < usableCells; i++) {
 
 			// Current action to be analized and processed
 			const action = frameActions[i];
@@ -636,165 +714,173 @@ export default function Maze() {
 
 	return (
 		<div className=''>
-			{success ?
-				<Alert className="alert-message" severity="success">{successMessage}</Alert>
-				: ""
-			}
-			{error ?
-				<Alert className="alert-message" severity="error">{errorMessage}</Alert>
-				: ""
-			}
-			{process ?
-				<Alert className="alert-message" severity="info">{processMessage}</Alert>
-				: ""
-			}
-			<div className="maze-header">
-				<Container maxWidth='md'>
-					{/* GENERAL DATA OF THE MAZE */}
-					<div>
-						<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
-						<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
-					</div>
-					<hr />
-					<div className='d-flex justify-content-around align-items-center'>
-						{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
-						<div className='d-flex flex-column'>
-							<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
+			{!loading ?
+				<>
+					{
+						success ?
+							<Alert className="alert-message" severity="success">{successMessage}</Alert>
+							: ""
+					}
+					{
+						error ?
+							<Alert className="alert-message" severity="error">{errorMessage}</Alert>
+							: ""
+					}
+					{
+						process ?
+							<Alert className="alert-message" severity="info">{processMessage}</Alert>
+							: ""
+					}
+					<div className="maze-header">
+						<Container maxWidth='md'>
+							{/* GENERAL DATA OF THE MAZE */}
 							<div>
-								<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
-								<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
-								<button onClick={restoreSize} className="custom-btn custom-btn-primary p-2">Restablecer</button>
+								<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
+								<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
+							</div>
+							<hr />
+							<div className='d-flex justify-content-around align-items-center'>
+								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
+								<div className='d-flex flex-column'>
+									<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
+									<div>
+										<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
+										<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
+										<button onClick={restoreSize} className="custom-btn custom-btn-primary p-2">Restablecer</button>
+									</div>
+								</div>
+								{/* FORM TO CHANGE THE ROWS AND COLS */}
+								<div className="d-flex flex-column justify-content-between">
+									<h1 className='h4'>Cambiar filas y cols</h1>
+									<form onSubmit={setNewSize} className="form-size d-flex justify-content-between align-items-center">
+										<div>
+											<label className='m-0'>Filas</label>
+											<input type="number" value={rows} onChange={(evt) => setRows(evt.target.value)} className='form-control' label='Columnas Del Maze' name='cols' />
+										</div>
+										<label className='mx-3 mb-2 align-self-end'>X</label>
+										<div className='mr-3'>
+											<label className='m-0'>Cols</label>
+											<input type="number" value={cols} onChange={(evt) => setCols(evt.target.value)} className='form-control' label='Filas Del Maze' name='rows' />
+										</div>
+										<button type="submit" className="custom-btn custom-btn-primary p-2">Establecer tamaño</button>
+									</form>
+								</div>
+							</div>
+						</Container>
+					</div>
+					<div className='row p-4 w-100'>
+						<div className='col-md-6' >
+							{/* MAZE */}
+							<div className='maze-container' ref={myRef}>
+								<div className='maze' style={mazeStyle}>
+									{
+										maze ?
+											<>
+												{
+													maze.cells.map(cell => (
+														<Cell
+															key={`'${cell.i}${cell.j}'`}
+															cell={cell}
+															wX={wX}
+															wY={wY}
+															maze={maze}
+															setMaze={setMaze}
+															selectedAction={selectedAction}
+															actions={actions}
+															isStart={isStart}
+															isEnd={isEnd}
+															setIsStart={setIsStart}
+															setIsEnd={setIsEnd}
+															setStartX={setStartX}
+															setStartY={setStartY}
+														>
+														</Cell>
+													))
+												}
+											</>
+											:
+											<>
+												{
+													console.log('No grid')
+												}
+											</>
+									}
+									{/* CHARACTER */}
+									{
+										isStart && isEnd && animate &&
+										<Robot
+											wX={wX}
+											wY={wY}
+											animate={animate}
+											animationDuration={animationDuration}
+											animationRepeat={animationRepeat}
+										/>
+									}
+								</div>
 							</div>
 						</div>
-						{/* FORM TO CHANGE THE ROWS AND COLS */}
-						<div className="d-flex flex-column justify-content-between">
-							<h1 className='h4'>Cambiar filas y cols</h1>
-							<form onSubmit={setNewSize} className="form-size d-flex justify-content-between align-items-center">
-								<div>
-									<label className='m-0'>Filas</label>
-									<input type="number" value={rows} onChange={(evt) => setRows(evt.target.value)} className='form-control' label='Columnas Del Maze' name='cols' />
-								</div>
-								<label className='mx-3 mb-2 align-self-end'>X</label>
-								<div className='mr-3'>
-									<label className='m-0'>Cols</label>
-									<input type="number" value={cols} onChange={(evt) => setCols(evt.target.value)} className='form-control' label='Filas Del Maze' name='rows' />
-								</div>
-								<button type="submit" className="custom-btn custom-btn-primary p-2">Establecer tamaño</button>
-							</form>
+						<div className='col-md-6 d-flex justify-content-center align-items-center'>
+							<CreateMaze />
 						</div>
 					</div>
-				</Container>
-			</div>
-			<div className='row p-4 w-100'>
-				<div className='col-md-6' >
-					{/* MAZE */}
-					<div className='maze-container' ref={myRef}>
-						<div className='maze' style={mazeStyle}>
-							{
-								maze.length > 0 ?
-									<>
-										{
-											maze.map(cell => (
-												<Cell
-													key={`'${cell.i}${cell.j}'`}
-													cell={cell}
-													wX={wX}
-													wY={wY}
-													maze={maze}
-													setMaze={setMaze}
-													selectedAction={selectedAction}
-													actions={actions}
-													isStart={isStart}
-													isEnd={isEnd}
-													setIsStart={setIsStart}
-													setIsEnd={setIsEnd}
-													setStartX={setStartX}
-													setStartY={setStartY}
-												>
-												</Cell>
-											))
-										}
-									</>
-									:
-									<>
-										{
-											console.log('No grid')
-										}
-									</>
-							}
-							{/* CHARACTER */}
-							{
-								isStart && isEnd && animate &&
-								<Robot
-									wX={wX}
-									wY={wY}
-									animate={animate}
-									animationDuration={animationDuration}
-									animationRepeat={animationRepeat}
-								/>
-							}
-						</div>
-					</div>
-				</div>
-				<div className='col-md-6 d-flex justify-content-center align-items-center'>
 					<div className='mt-5'>
 						<h1>Your current selection<br />{selectedAction}</h1>
 						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
 						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
 					</div>
-				</div>
-			</div>
-			<div className='options-palette-container'>
-				<div className='options-palette'>
-					<IconButton onClick={() => { handleChangeAction(actions.BLOCK); }} color='inherit'>
-						<div className='d-flex flex-column align-items-center m-1'>
-							<div
-								className='icon'
-								style={{
-									backgroundImage: `url(${maze_block})`,
-									backgroundSize: '100% 100%',
-								}}
-							/>
-							<h1 className='h4'>Block</h1>
+					<div className='options-palette-container'>
+						<div className='options-palette'>
+							<IconButton onClick={() => { handleChangeAction(actions.BLOCK); }} color='inherit'>
+								<div className='d-flex flex-column align-items-center m-1'>
+									<div
+										className='icon'
+										style={{
+											backgroundImage: `url(${maze_block})`,
+											backgroundSize: '100% 100%',
+										}}
+									/>
+									<h1 className='h4'>Block</h1>
+								</div>
+							</IconButton>
+							<IconButton onClick={() => { handleChangeAction(actions.EMPTY); }} color='inherit'>
+								<div className='d-flex flex-column align-items-center m-1'>
+									<div
+										className='icon'
+										style={{
+											backgroundColor: '#6cbae3',
+										}}
+									/>
+									<h1 className='h4'>Empty</h1>
+								</div>
+							</IconButton>
+							<IconButton onClick={() => { handleChangeAction(actions.START); }} color='inherit'>
+								<div className='d-flex flex-column align-items-center m-1'>
+									<div
+										className='icon'
+										style={{
+											backgroundImage: `url(${maze_start})`,
+											backgroundSize: '100% 100%',
+										}}
+									/>
+									<h1 className='h4'>Start</h1>
+								</div>
+							</IconButton>
+							<IconButton onClick={() => handleChangeAction(actions.END)} color='inherit'>
+								<div className='d-flex flex-column align-items-center m-1'>
+									<div
+										className='icon'
+										style={{
+											backgroundImage: `url(${maze_end})`,
+											backgroundSize: '100% 100%',
+										}}
+									/>
+									<h1 className='h4'>End</h1>
+								</div>
+							</IconButton>
 						</div>
-					</IconButton>
-					<IconButton onClick={() => { handleChangeAction(actions.EMPTY); }} color='inherit'>
-						<div className='d-flex flex-column align-items-center m-1'>
-							<div
-								className='icon'
-								style={{
-									backgroundColor: '#6cbae3',
-								}}
-							/>
-							<h1 className='h4'>Empty</h1>
-						</div>
-					</IconButton>
-					<IconButton onClick={() => { handleChangeAction(actions.START); }} color='inherit'>
-						<div className='d-flex flex-column align-items-center m-1'>
-							<div
-								className='icon'
-								style={{
-									backgroundImage: `url(${maze_start})`,
-									backgroundSize: '100% 100%',
-								}}
-							/>
-							<h1 className='h4'>Start</h1>
-						</div>
-					</IconButton>
-					<IconButton onClick={() => handleChangeAction(actions.END)} color='inherit'>
-						<div className='d-flex flex-column align-items-center m-1'>
-							<div
-								className='icon'
-								style={{
-									backgroundImage: `url(${maze_end})`,
-									backgroundSize: '100% 100%',
-								}}
-							/>
-							<h1 className='h4'>End</h1>
-						</div>
-					</IconButton>
-				</div>
-			</div>
-		</div>
+					</div>
+				</>
+				: ''}
+		</div >
 	)
 }

@@ -60,7 +60,7 @@ export default function Cell(props) {
 
 	const handleClick = () => {
 		// Get the index of the cell
-		var index = maze.indexOf(cell);
+		var index = maze.cells.indexOf(cell);
 
 		if (selectedAction !== actions.EMPTY && cellType !== selectedAction) {
 
@@ -116,10 +116,13 @@ export default function Cell(props) {
 		}
 
 		// With this the maze get updated
-		setMaze(prevValues => {
-			return prevValues.map((c, i) => {
-				return i === index ? cell : c;
-			})
+		setMaze(prevMaze => {
+			return {
+				...prevMaze,
+				cells: prevMaze.cells.map((c, i) => {
+					return i === index ? cell : c;
+				})
+			}
 		});
 	}
 

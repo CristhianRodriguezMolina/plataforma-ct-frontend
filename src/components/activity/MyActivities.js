@@ -90,6 +90,7 @@ const MyActivities = props => {
 					headers: { 'x-access-token': localStorage.getItem('token') }
 				})
 					.then((response) => {
+						console.log(response.data.activities)
 						setActivities(response.data.activities);
 						setCount(response.data.count);
 						if (response.data.count == 0) {
@@ -134,11 +135,12 @@ const MyActivities = props => {
 	};
 
 	const handleEdit = (type) => {
+		console.log(type)
 		if (type.localeCompare("logic_sequence") === 0) {
-			props.history.push(`/activity/logic-sequence/${currentMenu}`);
+			props.history.push(`/activity/logic-sequence/${currentMenu._id}`);
 		}
 		else if (type.localeCompare("maze") === 0) {
-			props.history.push(`/activity/maze/${currentMenu}`);
+			props.history.push(`/activity/maze/${currentMenu._id}`);
 		}
 		else {
 			console.log('type not valid');
@@ -165,8 +167,8 @@ const MyActivities = props => {
 			})
 	};
 
-	const handleClick = (event, activity_id) => {
-		setCurrentMenu(activity_id);
+	const handleClick = (event, activity) => {
+		setCurrentMenu(activity);
 		setAnchorEl(event.currentTarget);
 	};
 
@@ -201,41 +203,39 @@ const MyActivities = props => {
 				</thead>
 				<tbody>
 					{activities ?
-						(activities.slice(0, fin).map((activity, i) => {
-							return (
-								<tr key={i}>
-									<td className="activity-name">
-										{
-											activity.type.localeCompare("logic_sequence") === 0 ?
-												<AccountTreeIcon className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
-													<BorderVerticalIcon className="activity-icon" /> : <BallotIcon className="activity-icon" />
-										}
-										{activity.name}
-									</td>
-									<td className="activity-description">
-										{activity.description}
-									</td>
-									<td>{activity.updatedAt.slice(0, 10)}</td>
-									<td>
-										<div className="drop-menu">
-											<div onClick={(e) => handleClick(e, activity._id)} className="drop-button">...</div>
-											<Menu
-												elevation={1}
-												id="simple-menu"
-												anchorEl={anchorEl}
-												keepMounted
-												open={Boolean(anchorEl)}
-												onClose={handleClose}
-											>
-												<MenuItem onClick={() => handleEdit(activity.type)}>Editar</MenuItem>
-												<MenuItem onClick={() => { setOpen(!open); setActivityIdToDelete(currentMenu); }}>Borrar</MenuItem>
-											</Menu>
-										</div >
-									</td >
-								</tr >
+						(activities.slice(0, fin).map((activity, i) => (
+							<tr key={i}>
+								<td className="activity-name">
+									{
+										activity.type.localeCompare("logic_sequence") === 0 ?
+											<AccountTreeIcon className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
+												<BorderVerticalIcon className="activity-icon" /> : <BallotIcon className="activity-icon" />
+									}
+									{activity.name}
+								</td>
+								<td className="activity-description">
+									{activity.description}
+								</td>
+								<td>{activity.updatedAt.slice(0, 10)}</td>
+								<td>
+									<div className="drop-menu">
+										<div onClick={(e) => handleClick(e, activity)} className="drop-button">...</div>
+										<Menu
+											elevation={1}
+											id="simple-menu"
+											anchorEl={anchorEl}
+											keepMounted
+											open={Boolean(anchorEl)}
+											onClose={handleClose}
+										>
+											<MenuItem onClick={() => { handleEdit(currentMenu.type) }}>Editar</MenuItem>
+											<MenuItem onClick={() => { setOpen(!open); setActivityIdToDelete(currentMenu._id); }}>Borrar</MenuItem>
+										</Menu>
+									</div >
+								</td >
+							</tr >
 
-							)
-						}))
+						)))
 						: null
 					}
 
