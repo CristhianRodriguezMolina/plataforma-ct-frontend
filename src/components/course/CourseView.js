@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 
+//image-exists
+import imageExists from 'image-exists';
+
 // CONTEXT
 import UserContext from '../../context/user/UserContext';
 
@@ -30,8 +33,12 @@ import CourseInformationStudent from './student-view/CourseInformation';
 import ClassmatesInformation from './student-view/ClassmatesInformation';
 import UnitsInformationStudent from './student-view/UnitsInformation';
 
+
 // Link
 import { Link } from 'react-router-dom';
+
+//Tooltip
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function CourseView({ history }) {
 
@@ -51,7 +58,10 @@ export default function CourseView({ history }) {
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
         if (course) {
-            changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
+            if (color) {
+
+                changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
+            }
         }
     }, [color]);
 
@@ -70,10 +80,14 @@ export default function CourseView({ history }) {
         }
 
         if (course) {
-            average(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, { sample: 10 }).then(color => {
-                console.log(color) // [241, 221, 63]
-                setColor(color)
-            })
+            imageExists(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, (exists) => {
+                if (exists) {
+                    average(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, { sample: 10 }).then(color => {
+                        console.log(color); // [241, 221, 63]
+                        setColor(color);
+                    })
+                }
+            });
         }
     }, [course])
 
@@ -122,9 +136,12 @@ export default function CourseView({ history }) {
                     <div className="pt-4 d-flex flex-column justify-content-center align-items-center">
                         {
                             course ?
-                                <Breadcrumbs>
+                                <Breadcrumbs className="course-view-breadcrumbs">
                                     <Link className='text-muted' to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>Mis cursos</Link>
-                                    <Typography><b>{course.name}</b></Typography>
+                                    <Tooltip enterDelay={500} enterNextDelay={200} title={course.name} aria-label={`${course.name}`}>
+                                        <Typography><b className="text-overflow-2">{course.name}</b></Typography>
+                                    </Tooltip>
+
                                 </Breadcrumbs>
                                 :
                                 ""
@@ -133,6 +150,10 @@ export default function CourseView({ history }) {
                         <button onClick={() => redirect(`course-info`)} className="custom-btn my-3 course-view-botton">Info del curso</button>
                         <button onClick={() => redirect(`units-info`)} className="custom-btn my-3 course-view-botton">Unidades</button>
                         <button onClick={() => redirect(`students-info`)} className="custom-btn my-3 course-view-botton">{type === "edit" ? "Estudiantes" : "Compañeros"}</button>
+                        {type === "edit" ?
+                            <button onClick={() => redirect(`progress-info`)} className="custom-btn my-3 course-view-botton">Progreso</button>
+                            : ""}
+
                     </div>
                 </div>
                 <div className="col-md-9 p-0 m-0">
@@ -146,9 +167,12 @@ export default function CourseView({ history }) {
                                     <StudentsInformation course={course} setCourse={setCourse} />
                                     :
                                     view === "units-info" ?
-                                        <UnitsInformationTeacher course={course} setCourse={setCourse} />
+                                        <UnitsInformationTeacher course={course} setCourse={setCourse} progress={false} />
                                         :
-                                        <Redirect to="/unauthorized" />
+                                        view === "progress-info" ?
+                                            <UnitsInformationTeacher course={course} setCourse={setCourse} progress={true} />
+                                            :
+                                            <Redirect to="/unauthorized" />
                             /* Vistas de un curso para un estudiante */
                             :
                             type === "view" && course ?

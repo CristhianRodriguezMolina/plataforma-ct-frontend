@@ -46,6 +46,8 @@ export default function CreateUser({ history }) {
 	// Usuario en caso de que se vaya a editar
 	const [user, setUser] = useState(null);
 
+
+
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
@@ -276,7 +278,15 @@ export default function CreateUser({ history }) {
 					</div>
 					<div className="form-group">
 						<label>Edad</label>
-						<input className="form-control" type="date" min="1950-01-01" max={dateFormat(new Date(), 'yyyy-mm-dd')} onChange={evt => setBirthDate(new Date(evt.target.value))} value={dateFormat(birth_date, 'GMT:yyyy-mm-dd')} label="Fecha de cumpleaños" name="fechadecumpleaños" required />
+						<input
+							className="form-control"
+							type="date"
+							min="1950-01-01"
+							max={dateFormat(new Date(), 'yyyy-mm-dd')}
+							onChange={evt => setBirthDate(new Date(evt.target.value))}
+							value={dateFormat(birth_date, 'GMT:yyyy-mm-dd')}
+							label="Fecha de cumpleaños" name="fechadecumpleaños"
+							required />
 					</div>
 					<div className="form-group">
 						<label>Genero</label>

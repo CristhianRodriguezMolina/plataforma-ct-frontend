@@ -22,8 +22,11 @@ import { Alert } from '@material-ui/lab';
 // API
 import api from '../../../services/api';
 
+//Sortable Element
+import { SortableElement } from 'react-sortable-hoc';
 
-export default function ActivityCard(props) {
+
+const ActivityCard = SortableElement((props) => {
 
 	const { activity, task, setActivities, setIsAddingActivities } = props;
 
@@ -63,6 +66,8 @@ export default function ActivityCard(props) {
 	}
 
 	const deleteActivity = () => {
+
+		//Delete an activity from list
 		api.delete(`/api/course/task/activity/${task._id}/${activity._id}`, {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
@@ -136,4 +141,7 @@ export default function ActivityCard(props) {
 			/>
 		</div>
 	)
-}
+});
+
+
+export default ActivityCard;

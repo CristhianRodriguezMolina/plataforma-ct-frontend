@@ -17,14 +17,16 @@ import AlertModal from '../../common/AlertModal';
 const TaskCard = props => {
 	const [taskActivities, setTaskActivities] = useState(null);
 	const [disableButton, setDisableButton] = useState(false);
-
-	const stateList = []
+	const [completedActivitiesNumber, setCompletedActivitiesNumber] = useState(0);
 
 	useEffect(() => {
 		if (props.taskActivities) {
 
 			if (!taskActivities) {
 				let tempActivities = props.taskActivities.filter((taskActivity) => taskActivity.task === props.task._id);
+				tempActivities.sort((a, b) => {
+					return a.position - b.position;
+				});
 				setTaskActivities(tempActivities);
 			}
 		}
@@ -33,13 +35,20 @@ const TaskCard = props => {
 	useEffect(() => {
 		if (props.studentActivities && taskActivities) {
 			let disableBtn = true;
-			for (let i = 0; i < taskActivities.length && disableBtn; i++) {
+			let completedNumber = 0;
+			for (let i = 0; i < taskActivities.length; i++) {
+				//find if the student is linked to the especific activity
 				let nextActivity = props.studentActivities.filter(studentActivity => studentActivity.activity === taskActivities[i].activity);
 
 				//if the studentActivity exists
 				if (nextActivity.length > 0) {
+
 					if (!nextActivity[0].complete) {
 						disableBtn = false;
+					}
+					else {
+						//Count the number of the completed activities
+						completedNumber++;
 					}
 				}
 				else {
@@ -51,8 +60,10 @@ const TaskCard = props => {
 				setDisableButton(disableBtn);
 			}
 
+			setCompletedActivitiesNumber(completedNumber);
+
 		}
-	}, [props.studentActivities, props.taskActivities]);
+	});
 
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
@@ -123,10 +134,20 @@ const TaskCard = props => {
 						{items.length > 0 ? items : <p className="no-activities-label">No hay actividades</p>}
 					</div>
 				</div>
-				<div className="progress-visualization">
-					<h3><b>Progreso:</b> 9/12</h3>
-					<h3><b>Hasta:</b> 12/06/2021</h3>
-				</div>
+				{props.forStudent ?
+					taskActivities ?
+						<div className="progress-visualization">
+							<h3><b>Progreso:</b> {completedActivitiesNumber}/{taskActivities.length}</h3>
+							{props.task.is_due_date ?
+								<h3><b>Hasta:</b> {props.task.due_date.substring(0, 10)}</h3> :
+								<h3><b>Hasta:</b> Sin fecha limite</h3>}
+						</div> : ""
+					:
+					<div className="progress-visualization">
+						{props.task.is_due_date ?
+							<h3><b>Hasta:</b> {props.task.due_date.substring(0, 10)}</h3> :
+							<h3><b>Hasta:</b> Sin fecha limite</h3>}
+					</div>}
 			</div>
 			{
 				!props.forStudent ?

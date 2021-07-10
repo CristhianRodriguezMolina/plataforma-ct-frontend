@@ -65,6 +65,12 @@ const CreateActivity = React.lazy(() => import('./components/activity/CreateActi
 // Logic sequence
 const LogicSequence = React.lazy(() => import('./components/activity/logic-sequence/LogicSequence'));
 
+//Logic sequence (student view)
+const LogicSequenceStudent = React.lazy(() => import('./components/activity/logic-sequence/LogicSequenceStudent'));
+
+//Create maze
+const CreateMaze = React.lazy(() => import('./components/activity/maze/CreateMaze'));
+
 // Users manage
 const UserManage = React.lazy(() => import('./components/users/UserManage'));
 
@@ -79,9 +85,6 @@ const Profile = React.lazy(() => import('./components/profile/Profile'));
 
 // Error 404
 const Error404 = React.lazy(() => import('./components/error/Error404'));
-
-//Logic sequence (student view)
-const LogicSequenceStudent = React.lazy(() => import('./components/activity/logic-sequence/LogicSequenceStudent'));
 
 function App() {
 
@@ -116,8 +119,7 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
                 <ProtectedRoute path='/activity/logic-sequence/student/:courseId/:unitId/:taskId/:activityId' exact component={LogicSequenceStudent} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
-
-                <ProtectedRoute type="admin, teacher" path='/activity/maze' exact component={Maze} />
+                <ProtectedRoute type="admin, teacher" path='/activity/maze/:activityId' exact component={Maze} />
 
                 {/* PROFILE */}
                 <ProtectedRoute path='/profile/:userId/:view' exact component={Profile} />

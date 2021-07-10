@@ -5,6 +5,12 @@ import { useParams, Redirect } from "react-router-dom";
 import './UnitContent.scss';
 import './ManageTask.scss';
 
+// Date formater
+import dateFormat from 'dateformat';
+
+//Array move
+import arrayMove from 'array-move';
+
 // CONTEXT
 import UserContext from '../../../context/user/UserContext';
 
@@ -30,6 +36,25 @@ import ActivitiesPopup from './ActivitiesPopup';
 
 // Activity card
 import ActivityCard from '../activity/ActivityCard';
+
+import { SortableContainer } from 'react-sortable-hoc';
+
+const SortableList = SortableContainer(({ items, setIsAddingActivities, setActivities, task }) => {
+
+	return (
+		<div>
+			{items.map((activity, index) => (
+				<ActivityCard
+					key={`item-${index}`}
+					index={index}
+					activity={activity}
+					setIsAddingActivities={setIsAddingActivities}
+					setActivities={setActivities}
+					task={task} />
+			))}
+		</div>
+	);
+});
 
 export default function ManageTask() {
 
@@ -60,9 +85,17 @@ export default function ManageTask() {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+	//Wait for api fetching
 	const [loading, setLoading] = useState(true);
 
+	//Task visibility
 	const [visible, setVisible] = useState(false);
+
+	//Limit date to do a task
+	const [dueDate, setDueDate] = useState(null);
+
+	//To define and enable due date input
+	const [isDueDate, setIsDueDate] = useState(false);
 
 
 	// Funcion para mostrar una alerta de error dado un mensaje
@@ -114,6 +147,10 @@ export default function ManageTask() {
 					setTaskName(taskTemp.name);
 					setTaskDescription(taskTemp.description);
 					setVisible(taskTemp.visible);
+					setIsDueDate(taskTemp.is_due_date);
+					if (taskTemp.is_due_date) {
+						setDueDate(taskTemp.due_date);
+					}
 					setLoading(false);
 				})
 				.catch(err => {
@@ -163,12 +200,31 @@ export default function ManageTask() {
 		api.put(`/api/course/task/${courseId}/${unitId}/${taskId}`, {
 			name: taskName,
 			description: taskDescription,
-			visible: visible
+			visible: visible,
+			due_date: dueDate,
+			is_due_date: isDueDate
 		}, {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
 			.then((res) => {
 				showSuccess(res.data.message);
+
+				api.put(`/api/course/task/activity/${taskId}`, {
+					activities
+				}, {
+					headers: { 'x-access-token': localStorage.getItem('token') }
+				})
+					.then((res) => {
+						showSuccess(res.data.message);
+					})
+					.catch(err => {
+						if (err.response) {
+							showError(err.response.data.message);
+						}
+						else {
+							showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+						}
+					});
 			})
 			.catch(err => {
 				if (err.response) {
@@ -178,7 +234,16 @@ export default function ManageTask() {
 					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 				}
 			});
+
+
 	}
+
+	const onSortEnd = ({ oldIndex, newIndex }) => {
+
+		let arrayCopy = [...activities];
+		arrayCopy = arrayMove(arrayCopy, oldIndex, newIndex);
+		setActivities(arrayCopy);
+	};
 
 	return (
 		<div>
@@ -202,10 +267,12 @@ export default function ManageTask() {
 							color="#B6E768"
 						/>
 						<Container className="task-manage-container" maxWidth="sm">
-							<Breadcrumbs>
-								<Link className='text-muted' to={`/course/edit/${courseId}/units-info`}>Unidades</Link>
-								<Typography><b>{taskName}</b></Typography>
-							</Breadcrumbs>
+							<div className="mt-4">
+								<Breadcrumbs>
+									<Link className='text-muted' to={`/course/edit/${courseId}/units-info`}>Unidades</Link>
+									<Typography><b>{taskName}</b></Typography>
+								</Breadcrumbs>
+							</div>
 							<hr />
 							<div>
 								<Typography variant="subtitle1" className="text-center">Información de la tarea</Typography>
@@ -231,9 +298,29 @@ export default function ManageTask() {
 											name="taskdescription"
 											required />
 									</div>
+									<FormControlLabel className="switcher" labelPlacement="start" label="Definir fecha limite" control={
+										<Switch
+											checked={isDueDate}
+											onChange={() => setIsDueDate(!isDueDate)}
+											name="set-is-due-date"
+											color="primary"
+										/>
+									} />
+									<div className="form-group">
+										<input
+											className="form-control"
+											type="date"
+											min={dateFormat(new Date(), 'yyyy-mm-dd')}
+											max="2050-12-31"
+											onChange={evt => setDueDate(new Date(evt.target.value))}
+											value={dateFormat(dueDate, 'GMT:yyyy-mm-dd')}
+											label="Fecha limite" name="fecha-limite"
+											disabled={!isDueDate}
+											required />
+									</div>
 									<div className="buttons-container d-flex justify-content-between">
 										<div className="form-group d-flex justify-content-start">
-											<button type="submit" className="custom-btn custom-btn-info p-2 mt-4">Guardar cambios</button>
+											<button type="submit" className="custom-btn custom-btn-info p-2 mt-2">Guardar cambios</button>
 										</div>
 										<FormControlLabel className="switcher" label="Visible" control={
 											<Switch
@@ -251,14 +338,20 @@ export default function ManageTask() {
 								<Typography variant="subtitle1" className="text-center">Actividades</Typography>
 								<div className="activities-container">
 									{activities && activities.length > 0 ?
-										activities.map(activity => (
-											<ActivityCard
-												setIsAddingActivities={setIsAddingActivities}
-												setActivities={setActivities}
-												task={task}
-												activity={activity}
-											/>
-										))
+										<SortableList
+											distance={1}
+											items={activities}
+											onSortEnd={onSortEnd}
+											setIsAddingActivities={setIsAddingActivities}
+											setActivities={setActivities}
+											task={task} />
+
+										// <ActivityCard
+										// 	setIsAddingActivities={setIsAddingActivities}
+										// 	setActivities={setActivities}
+										// 	task={task}
+										// 	activity={activity}
+										// />
 										:
 										<div>
 											<h3 className="there-is-no-activities">Aún no hay tareas en la actividad</h3>

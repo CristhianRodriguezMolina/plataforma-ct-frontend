@@ -22,21 +22,12 @@ import PropTypes from 'prop-types';
 
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
+//CheckCircleIcon
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 const UnitContent = props => {
 
-	const [unitName, setUnitName] = useState("");
-	const [unitDes, setUnitDes] = useState("");
-	const [visible, setVisible] = useState(false);
-
-	const [activities, setActivities] = useState(null);
-
-	useEffect(() => {
-		if (props.unitValue) {
-			setUnitName(props.unitValue.name);
-			setUnitDes(props.unitValue.description);
-			setVisible(props.unitValue.visible);
-		}
-	}, [props.unitValue]);
+	const [isCompletedUnit, setCompletedUnit] = useState(false);
 
 	const nameInputStyle = {
 		width: "100%",
@@ -58,13 +49,53 @@ const UnitContent = props => {
 		minHeight: "2.5em"
 	};
 
+	useEffect(() => {
+		if (props.taskActivities && props.studentActivities && props.unitValue) {
+			let taskActivities = props.taskActivities.filter(taskActivity => taskActivity.unit === props.unitValue._id);
+			let disableBtn = true;
+			for (let i = 0; i < taskActivities.length && disableBtn; i++) {
+				//find if the student is linked to the especific activity
+				let nextActivity = props.studentActivities.filter(studentActivity => studentActivity.activity === taskActivities[i].activity);
+
+				//if the studentActivity exists
+				if (nextActivity.length > 0) {
+
+					if (!nextActivity[0].complete) {
+						disableBtn = false;
+					}
+				}
+				else {
+					disableBtn = false;
+				}
+			}
+
+			if (disableBtn) {
+				setCompletedUnit(disableBtn);
+			}
+		}
+	});
+
 	return (
 		<div className="unit-content-container">
-			<div className="unit-content-info">
-				<h1 className="h4 mb-4">{unitName}</h1>
-				<h1 className="h6">{unitDes}</h1>
+			<div className="unit-content-info mb-4">
+				<h1 className="h4 mb-4 mx-2">{props.unitValue.name}</h1>
+				<h1 className="h6 mx-2">{props.unitValue.description}</h1>
 			</div>
-			<hr />
+			{props.unitValue.is_due_date ?
+				<h3 className="h6 mx-3"><b>Hasta:</b> {props.unitValue.due_date.substring(0, 10)}</h3> :
+				<h3 className="h6 mx-3">Fecha limite de la unidad: Sin fecha limite</h3>}
+			<hr className="mx-3" />
+			{isCompletedUnit ?
+				<div className="completed-unit-message">
+					<div className="success-icon-container">
+						<CheckCircleIcon className="success-icon" />
+					</div>
+					<h2>¡Completada!</h2>
+					<hr />
+					<p>¡Felicitaciones!
+						Has completado todas las actividades de esta unidad</p>
+				</div> : ""}
+
 			<h1 className="h5 text-center mb-4">Actividades</h1>
 			{props.taskActivities ?
 				<div className="cards-container">

@@ -32,6 +32,9 @@ import { animateScroll as scroll } from 'react-scroll';
 // WithRouter
 import { withRouter } from 'react-router-dom';
 
+//Student Progress
+import StudentProgress from '../progress/StudentProgress';
+
 /* TEACHER */
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -114,6 +117,7 @@ const UnitsInformation = (props) => {
 	const [visible, setVisible] = useState(true);
 
 	const [taskActivities, setTaskActivities] = useState(null);
+	const [students, setStudents] = useState(null);
 
 	// UseEffect para cambiar la pestaña actual a la pestaña que se cree nueva
 	useEffect(() => {
@@ -139,9 +143,32 @@ const UnitsInformation = (props) => {
 						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 					}
 				});
+
+
 		}
 
 	}, [props.course])
+
+	useEffect(() => {
+		if (!students) {
+			//get students for show their progress
+			api.get(`/api/course/students/${props.course._id}`, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			})
+				.then((res) => {
+					setStudents(res.data.students);
+				})
+				.catch(err => {
+					if (err.response) {
+						showError(err.response.data.message);
+					}
+					else {
+						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+					}
+				});
+
+		}
+	}, [students]);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -333,9 +360,12 @@ const UnitsInformation = (props) => {
 							}
 							{props.course.units[0] ? <div className="divider bg-white"></div> : ""}
 						</Tabs>
-						{props.course.units[0] ? <div className="divider"></div> : ""}.
+						{props.course.units[0] ? <div className="divider"></div> : ""}
 						{/* BUTTON TO ADD NEW UNITS */}
-						<Button onClick={() => addUnit()} className={classes.selected}><ControlPoint /> Añadir unidad</Button>
+						{!props.progress ?
+							<Button onClick={() => addUnit()} className={classes.selected}><ControlPoint /> Añadir unidad</Button>
+							: ""
+						}
 					</div>
 				</Typography>
 				{success ?
@@ -355,7 +385,24 @@ const UnitsInformation = (props) => {
 			{
 				props.course.units.map((unit, index) => (
 					<TabPanel value={value} key={index} index={index}>
-						<UnitContent course={props.course} taskActivities={taskActivities} unitValue={unit} onAddTask={handleAddTask} onUpdateChanges={handleUpdateUnit} onDeleteUnit={deleteUnit} onDeleteTask={handleDeleteTask} />
+						{
+							!props.progress ?
+								<UnitContent
+									course={props.course}
+									taskActivities={taskActivities}
+									unitValue={unit}
+									onAddTask={handleAddTask}
+									onUpdateChanges={handleUpdateUnit}
+									onDeleteUnit={deleteUnit}
+									onDeleteTask={handleDeleteTask} />
+								:
+								students ?
+									<StudentProgress
+										course={props.course}
+										students={students}
+										unit={unit}
+										taskActivities={taskActivities} /> : ""
+						}
 					</TabPanel>
 				))
 			}

@@ -133,8 +133,16 @@ const MyActivities = props => {
 
 	};
 
-	const handleEdit = () => {
-		props.history.push(`/activity/logic-sequence/${currentMenu}`);
+	const handleEdit = (type) => {
+		if (type.localeCompare("logic_sequence") === 0) {
+			props.history.push(`/activity/logic-sequence/${currentMenu}`);
+		}
+		else if (type.localeCompare("maze") === 0) {
+			props.history.push(`/activity/maze/${currentMenu}`);
+		}
+		else {
+			console.log('type not valid');
+		}
 	};
 
 	const handleDelete = (activity_id) => {
@@ -219,7 +227,7 @@ const MyActivities = props => {
 												open={Boolean(anchorEl)}
 												onClose={handleClose}
 											>
-												<MenuItem onClick={() => handleEdit()}>Editar</MenuItem>
+												<MenuItem onClick={() => handleEdit(activity.type)}>Editar</MenuItem>
 												<MenuItem onClick={() => { setOpen(!open); setActivityIdToDelete(currentMenu); }}>Borrar</MenuItem>
 											</Menu>
 										</div >

@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 // SCSS
 import './UnitContent.scss';
 
+
+// Date formater
+import dateFormat from 'dateformat';
+
 // COMPONENTS
 
 import DynamicInput from '../../common/DynamicInput';
@@ -30,6 +34,12 @@ const UnitContent = props => {
 
 	const [activities, setActivities] = useState(null);
 
+	//Limit date to do a task
+	const [dueDate, setDueDate] = useState(null);
+
+	//To define and enable due date input
+	const [isDueDate, setIsDueDate] = useState(false);
+
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
 
@@ -46,6 +56,10 @@ const UnitContent = props => {
 			setUnitName(props.unitValue.name);
 			setUnitDes(props.unitValue.description);
 			setVisible(props.unitValue.visible);
+			setIsDueDate(props.unitValue.is_due_date);
+			if (props.unitValue.is_due_date) {
+				setDueDate(props.unitValue.due_date);
+			}
 		}
 	}, [props.unitValue]);
 
@@ -81,7 +95,9 @@ const UnitContent = props => {
 			visible: visible,
 			name: unitName,
 			description: unitDes,
-			tasks: props.unitValue.tasks
+			tasks: props.unitValue.tasks,
+			due_date: dueDate,
+			is_due_date: isDueDate
 		});
 	};
 
@@ -103,6 +119,25 @@ const UnitContent = props => {
 				<DynamicInput dynamicInputValue={unitName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
 				<DynamicInput dynamicInputValue={unitDes} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
 			</div>
+			<hr style={{ margin: '1em' }} />
+			<FormControlLabel className="switcher" labelPlacement="start" label="Definir fecha limite" control={
+				<Switch
+					checked={isDueDate}
+					onChange={() => setIsDueDate(!isDueDate)}
+					name="set-is-due-date"
+					color="primary"
+				/>
+			} />
+			<input
+				className="form-control due-date-input"
+				type="date"
+				min={dateFormat(new Date(), 'yyyy-mm-dd')}
+				max="2050-12-31"
+				onChange={evt => setDueDate(new Date(evt.target.value))}
+				value={dateFormat(dueDate, 'GMT:yyyy-mm-dd')}
+				label="Fecha limite" name="fecha-limite"
+				disabled={!isDueDate}
+				required />
 			<div className="buttons-container d-flex justify-content-between">
 				<button type="submit" onClick={handleUpdateChanges} className="custom-btn custom-btn-info p-2 m-2">Guardar cambios</button>
 				<FormControlLabel className="switcher" label="Visible" control={
@@ -114,10 +149,17 @@ const UnitContent = props => {
 					/>
 				} />
 			</div>
+			<hr style={{ margin: '1em' }} />
 			{props.taskActivities ?
 				<div className="cards-container">
 					{props.unitValue.tasks.map((task, i) => {
-						return <TaskCard key={i} taskActivities={props.taskActivities} courseId={props.course._id} unitId={props.unitValue._id} task={task} onDeleteTask={handleDeleteTask} />
+						return <TaskCard
+							key={i}
+							taskActivities={props.taskActivities}
+							courseId={props.course._id}
+							unitId={props.unitValue._id}
+							task={task}
+							onDeleteTask={handleDeleteTask} />
 					})}
 					< div onClick={() => handleAddTask()} className="add-task-button">
 						<AddBoxIcon style={{ color: "rgb(200, 200, 200)", fontSize: 40 }} />

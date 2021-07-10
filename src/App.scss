@@ -27,6 +27,20 @@ $roboto: "Roboto", sans-serif;
 	transform: translate(-50%, -50%);
 }
 
+.text-overflow-1 {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.text-overflow-2 {
+	overflow: hidden;
+	width: 150px;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+}
+
 .alert-message {
 	position: fixed;
 	bottom: 1em;
@@ -52,10 +66,12 @@ $roboto: "Roboto", sans-serif;
 	padding: 0.2em;
 	font-family: $roboto;
 	font-weight: 100;
+	transition-duration: 0.2s;
 
 	&:hover {
 		text-decoration: none;
 		background-color: #a8a8a8;
+		transition-duration: 0.2s;
 		// color: #757575;
 	}
 

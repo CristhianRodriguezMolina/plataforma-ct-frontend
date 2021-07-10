@@ -19,11 +19,11 @@ export const arr_diff = (a1, a2) => {
 
     var a = [], diff = [];
 
-    for (var i = 0; i < a1.length; i++) {
+    for (let i = 0; i < a1.length; i++) {
         a[a1[i]] = true;
     }
 
-    for (i = 0; i < a2.length; i++) {
+    for (let i = 0; i < a2.length; i++) {
         if (a[a2[i]]) {
             delete a[a2[i]];
         } else {
@@ -31,7 +31,7 @@ export const arr_diff = (a1, a2) => {
         }
     }
 
-    for (var k in a) {
+    for (let k in a) {
         diff.push(k);
     }
 
