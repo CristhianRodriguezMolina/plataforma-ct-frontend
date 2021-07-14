@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom';
 
 // CONTEXT
@@ -38,6 +38,17 @@ import styled, { css, keyframes } from 'styled-components'
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
+
+function useClientRect() {
+	const ref = useRef(null)
+	const setRef = useCallback(node => {
+		if (node) {
+			ref.current = node;
+		}
+
+	}, []);
+	return [ref, setRef];
+}
 
 export default function Maze() {
 
@@ -97,9 +108,6 @@ export default function Maze() {
 	const [loading, setLoading] = useState(true);
 
 	// MAZE VARIABLES
-
-	// Maze container reference
-	const myRef = useRef(null);
 
 	// The maze
 	const [maze, setMaze] = useState(null);
@@ -161,6 +169,21 @@ export default function Maze() {
 		minHeight: "2.5em"
 	};
 
+	// Maze container reference
+	const ref = useRef(null)
+	const setRef = useCallback(node => {
+		if (ref.current) {
+			// Make sure to cleanup any events/references added to the last instance
+		}
+
+		if (node) {
+			setMazeSize(node.clientWidth); // This executes when mounting
+		}
+
+		// Save a reference to the node
+		ref.current = node
+	}, []);
+
 	// Use effects ----------------------------------------------------------------------------------------------------------------------------------
 
 	useEffect(() => {
@@ -176,18 +199,9 @@ export default function Maze() {
 		setRobotY(startY);
 	}, [startX, startY])
 
-	// Cambia en cada actualizacion el tamaño del maze
-	useEffect(() => {
-		if (myRef.current) {
-			setMazeSize(myRef.current.clientWidth);
-			// setMazeSize(myRef.current.clientWidth > myRef.current.clientHeight ? myRef.current.clientHeight : myRef.current.clientWidth);
-		}
-	}, [])
-
 	// Cada que el tamaño del maze cambia entonces actualiza los valores con base en el tamaño del maze
 	useEffect(() => {
 		if (maze) {
-			console.log(maze)
 			setUp();
 		}
 	}, [maze, mazeSize, mazeSizeOffset, reformingMaze]) // Execute setUp if the mazeSize changes or if is reformingMaze
@@ -195,9 +209,8 @@ export default function Maze() {
 	// Cambia el tamaño del maze cada que cambia el tamaño de la pagina
 	useEffect(() => {
 		const setSize = () => {
-			console.log(myRef)
-			setMazeSize(myRef.current.clientWidth);
-			// setMazeSize(myRef.current.clientWidth > myRef.current.clientHeight ? myRef.current.clientHeight : myRef.current.clientWidth);
+			console.log(ref)
+			setMazeSize(ref.current.clientWidth);
 		}
 
 		window.addEventListener("beforeunload", setSize)
@@ -717,7 +730,6 @@ export default function Maze() {
 
 	const handleShowRobot = () => {
 		if (isStart && isEnd) {
-			console.log(animate)
 			setAnimate(!animate)
 		} else {
 			showError('No ha definido el inicio y el fin del laberinto!!');
@@ -784,7 +796,7 @@ export default function Maze() {
 					<div className='row p-4 w-100'>
 						<div className='col-md-6' >
 							{/* MAZE */}
-							<div className='maze-container' ref={myRef}>
+							<div className='maze-container' ref={setRef}>
 								<div className='maze' style={mazeStyle}>
 									{
 										maze ?
