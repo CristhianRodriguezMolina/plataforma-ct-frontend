@@ -48,8 +48,14 @@
 }
 
 .course-view {
-    .course-view-breadcrumbs {
-        margin: auto 2em;
+    .list-views {
+        .course-view-breadcrumbs {
+            width: 100%;
+            margin: auto 2em 2em 2em;
+        }
+        .item-view {
+            height: 0.6em;
+        }
     }
     .course-view-botton {
         width: 80%;

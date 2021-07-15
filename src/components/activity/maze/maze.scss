@@ -17,10 +17,12 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin: 0 auto;
 
 	.maze {
 		position: relative;
 		background-color: #6cbae3;
+		border-radius: 10px;
 	}
 }
 .options-palette-container {
@@ -39,10 +41,16 @@
 		align-items: center;
 		border-radius: 10px 10px 0 0;
 
-		.icon {
-			width: 3em;
-			height: 3em;
-			margin-bottom: 0.2em;
+		.option {
+			border-radius: 5px;
+			margin: 0.5em;
+			padding: 0.2em 0.2em 0 0.2em;
+			.icon {
+				width: 5em;
+				height: 5em;
+				margin-bottom: 0.2em;
+				border-radius: 5px;
+			}
 		}
 	}
 }

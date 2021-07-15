@@ -35,6 +35,9 @@ import InstructionCard from './InstructionCard';
 //Button Icon
 import IconButton from '@material-ui/core/IconButton';
 
+// Scrollbars
+import { Scrollbars } from 'react-custom-scrollbars';
+
 export const CreateMazeContext = createContext({
     instructionsToDelete: [],
     setInstructionsToDelete: null
@@ -53,7 +56,7 @@ const SortableList = SortableContainer(({ items, showCheck }) => {
 
 const Intructions = props => {
 
-    const [instructionsList, setInstructionsList] = useState([]);
+    const [instructionsList, setInstructionsList] = useState(props.maze.instructions);
 
     const [instructionsToDelete, setInstructionsToDelete] = useState([]);
 
@@ -71,6 +74,9 @@ const Intructions = props => {
         let arrayCopy = [...instructionsList];
         arrayCopy = arrayMove(arrayCopy, oldIndex, newIndex);
         setInstructionsList(arrayCopy);
+        props.setMaze(prevMaze => {
+            return { ...prevMaze, instructions: arrayCopy }
+        });
     };
 
     const handleClick = (value) => {
@@ -81,11 +87,21 @@ const Intructions = props => {
             _id: `${tempList.length}`
         });
         setInstructionsList(tempList);
+        props.setMaze(prevMaze => {
+            return { ...prevMaze, instructions: tempList }
+        });
     };
 
     const showCheckMarks = () => {
         setShowCheck(!showCheck);
     };
+
+    const cleanInstructions = () => {
+        setInstructionsList([]);
+        props.setMaze(prevMaze => {
+            return { ...prevMaze, instructions: [] }
+        });
+    }
 
     const handleDeleteCards = () => {
 
@@ -99,17 +115,26 @@ const Intructions = props => {
         }
 
         setInstructionsList(tempList);
+        props.setMaze(prevMaze => {
+            return { ...prevMaze, instructions: tempList }
+        });
         setInstructionsToDelete([]);
 
         setShowCheck(false);
     };
 
+    const handleUpdateInstructions = () => {
+        console.log('Updating instructions');
+    }
+
     return (
         <CreateMazeContext.Provider value={{ instructionsToDelete, setInstructionsToDelete }}>
-            <div className="create-maze-container">
+            <div className="instructions-maze-container">
                 {instructionsList ?
                     <div className="instructions-list-container">
-                        <SortableList distance={1} items={instructionsList} onSortEnd={onSortEnd} axis='xy' showCheck={showCheck} />
+                        <Scrollbars style={{ width: '100%', height: '100%' }}>
+                            <SortableList distance={1} items={instructionsList} onSortEnd={onSortEnd} axis='xy' showCheck={showCheck} />
+                        </Scrollbars>
                         <div className={`action-button-container ${showCheck ? 'show-action-button-container' : ''}`}>
                             <button onClick={() => setShowCheck(false)}><CloseIcon style={{ fontSize: 15, color: 'rgb(100, 100, 100)' }} /></button>
                             <button onClick={handleDeleteCards}><DoneIcon style={{ fontSize: 15, color: 'rgb(100, 100, 100)' }} /></button>
@@ -128,6 +153,7 @@ const Intructions = props => {
                                 backgroundSize: '100% 100%',
                                 width: '100%',
                                 height: '100%',
+                                borderRadius: '5px'
                             }}
                         />
                     </div>
@@ -141,6 +167,7 @@ const Intructions = props => {
                                 backgroundSize: '100% 100%',
                                 width: '100%',
                                 height: '100%',
+                                borderRadius: '5px'
                             }}
                         />
                     </div>
@@ -154,11 +181,18 @@ const Intructions = props => {
                                 backgroundSize: '100% 100%',
                                 width: '100%',
                                 height: '100%',
+                                borderRadius: '5px'
                             }}
                         />
                     </div>
-                    <button onClick={showCheckMarks} className="custom-btn custom-btn-primary px-3 py-1 mt-2">Borrar</button>
+                    <div className='d-flex flex-column'>
+                        <button onClick={showCheckMarks} className="custom-btn custom-btn-primary px-3 py-1 mt-2">Borrar</button>
+                        <button onClick={cleanInstructions} className="custom-btn custom-btn-primary px-3 py-1 mt-2">Limpiar</button>
+                    </div>
                 </div>
+            </div>
+            <div className='mt-3 '>
+                <button onClick={handleUpdateInstructions} className='custom-btn custom-btn-primary p-2' >Guardar instrucciones</button>
             </div>
         </CreateMazeContext.Provider>
     )

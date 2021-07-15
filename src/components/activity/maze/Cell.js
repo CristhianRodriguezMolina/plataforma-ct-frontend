@@ -161,6 +161,7 @@ export default function Cell(props) {
 								width: '90%',
 								height: '90%',
 								alignSelf: 'center',
+								borderRadius: '5px',
 								zIndex: 999
 							}}
 						>

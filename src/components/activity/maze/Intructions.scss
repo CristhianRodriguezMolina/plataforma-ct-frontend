@@ -1,23 +1,29 @@
-.create-maze-container {
+.instructions-maze-container {
 	width: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	.instructions-list-container {
 		background-color: grey;
+		height: 25em;
 		width: 100%;
 		display: flex;
 		justify-content: center;
+		border-radius: 10px;
+
 		.sorable-list-container {
 			background-color: rgb(233, 233, 233);
 			width: 100%;
+			min-height: 100%;
 			padding: 0.5em;
+			border-radius: 10px;
 			display: flex;
 			flex-wrap: wrap;
+			align-content: flex-start;
 		}
 
 		.action-button-container {
-			float: right;
+			// float: right;
 			display: none;
 
 			button {

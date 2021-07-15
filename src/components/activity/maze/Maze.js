@@ -25,7 +25,7 @@ import Intructions from './Intructions';
 import Cell from './Cell';
 
 // Material UI core
-import { IconButton, Container } from '@material-ui/core';
+import { Container, ButtonBase } from '@material-ui/core';
 
 // Icons
 import { ZoomIn, ZoomOut } from '@material-ui/icons';
@@ -294,9 +294,10 @@ export default function Maze() {
 					auxGrid.push(cell);
 				}
 			}
+
 			setReformingMaze(false); // Set the reforming flag to false
 			setMaze(prevMaze => {
-				return { ...prevMaze, cells: auxGrid }
+				return { ...prevMaze, cells: auxGrid, cols: cols, rows: rows }
 			});
 		}
 	}
@@ -336,6 +337,11 @@ export default function Maze() {
 	// Method to change the cols and rows of the maze
 	const setNewSize = (e) => {
 		e.preventDefault();
+
+		// If the size still equals just doesnt change anything
+		if (e.target[0].value === maze.rows && e.target[1].value === maze.cols) {
+			return;
+		}
 
 		setRows(e.target[0].value)
 		setCols(e.target[1].value)
@@ -411,6 +417,11 @@ export default function Maze() {
 			return;
 		}
 
+		if (maze.instructions.length <= 0) {
+			showInfo('Primero ponga alguna instrucción!!')
+			return;
+		}
+
 		// While the animation is excuting then the button to active the animation and the button to show the robot are disabled
 		btnProveMaze.current.disabled = true;
 		btnShowRobot.current.disabled = true;
@@ -425,8 +436,8 @@ export default function Maze() {
 		setRobotGrades(0);
 
 		// Actions passed for the user
-		const frameActions = ['LEFT', 'FORWARD', 'FORWARD', 'FORWARD', 'FORWARD'];
-
+		const frameActions = maze.instructions;
+		console.log(frameActions)
 		// Start of the animation
 		var stringKeyFrame = `from{
 			left: ${startX}px;
@@ -491,7 +502,7 @@ export default function Maze() {
 		for (let i = 0; i < usableCells; i++) {
 
 			// Current action to be analized and processed
-			const action = frameActions[i];
+			const action = frameActions[i].name;
 
 			if (action === 'FORWARD') { // IF THE ACTION IS GO FORWARD
 				if (currentDirection === 'UP') {
@@ -850,19 +861,23 @@ export default function Maze() {
 									}
 								</div>
 							</div>
+							<div className='mt-1 d-flex justify-content-center'>
+								<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
+								<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+							</div>
 						</div>
-						<div className='col-md-6 d-flex justify-content-center align-items-center'>
-							<Intructions />
+						<div className='col-md-6 mt-md-0 mt-4'>
+							<Intructions maze={maze} setMaze={setMaze} />
 						</div>
-					</div>
-					<div className='mt-5'>
-						<h1>Your current selection<br />{selectedAction}</h1>
-						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
-						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
 					</div>
 					<div className='options-palette-container'>
 						<div className='options-palette'>
-							<IconButton onClick={() => { handleChangeAction(actions.BLOCK); }} color='inherit'>
+							<ButtonBase
+								focusRipple
+								className='option'
+								onClick={() => { handleChangeAction(actions.BLOCK); }}
+								style={selectedAction === actions.BLOCK ? { backgroundColor: 'white', color: 'rgb(48, 48, 48)' } : {}}
+							>
 								<div className='d-flex flex-column align-items-center m-1'>
 									<div
 										className='icon'
@@ -873,8 +888,13 @@ export default function Maze() {
 									/>
 									<h1 className='h4'>Block</h1>
 								</div>
-							</IconButton>
-							<IconButton onClick={() => { handleChangeAction(actions.EMPTY); }} color='inherit'>
+							</ButtonBase>
+							<ButtonBase
+								focusRipple
+								className='option'
+								onClick={() => { handleChangeAction(actions.EMPTY); }}
+								style={selectedAction === actions.EMPTY ? { backgroundColor: 'white', color: 'rgb(48, 48, 48)' } : {}}
+							>
 								<div className='d-flex flex-column align-items-center m-1'>
 									<div
 										className='icon'
@@ -884,8 +904,13 @@ export default function Maze() {
 									/>
 									<h1 className='h4'>Empty</h1>
 								</div>
-							</IconButton>
-							<IconButton onClick={() => { handleChangeAction(actions.START); }} color='inherit'>
+							</ButtonBase>
+							<ButtonBase
+								focusRipple
+								className='option'
+								onClick={() => { handleChangeAction(actions.START); }}
+								style={selectedAction === actions.START ? { backgroundColor: 'white', color: 'rgb(48, 48, 48)' } : {}}
+							>
 								<div className='d-flex flex-column align-items-center m-1'>
 									<div
 										className='icon'
@@ -896,9 +921,16 @@ export default function Maze() {
 									/>
 									<h1 className='h4'>Start</h1>
 								</div>
-							</IconButton>
-							<IconButton onClick={() => handleChangeAction(actions.END)} color='inherit'>
-								<div className='d-flex flex-column align-items-center m-1'>
+							</ButtonBase>
+							<ButtonBase
+								focusRipple
+								className='option'
+								onClick={() => handleChangeAction(actions.END)}
+								style={selectedAction === actions.END ? { backgroundColor: 'white', color: 'rgb(48, 48, 48)' } : {}}
+							>
+								<div
+									className='d-flex flex-column align-items-center m-1'
+								>
 									<div
 										className='icon'
 										style={{
@@ -908,7 +940,7 @@ export default function Maze() {
 									/>
 									<h1 className='h4'>End</h1>
 								</div>
-							</IconButton>
+							</ButtonBase>
 						</div>
 					</div>
 				</>

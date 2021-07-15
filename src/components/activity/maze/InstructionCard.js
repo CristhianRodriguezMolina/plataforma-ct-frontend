@@ -78,6 +78,7 @@ const InstructionCard = SortableElement(({ value, showCheck, position }) => {
                     backgroundSize: '100% 100%',
                     width: '100%',
                     height: '100%',
+                    borderRadius: '5px'
                 }}
             >
             </div>

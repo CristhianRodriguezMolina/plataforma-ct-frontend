@@ -21,7 +21,10 @@ import { prominent, average } from 'color.js'
 import TitleCard from '../common/TitleCard';
 
 // Material UI Core
-import { Breadcrumbs, Typography } from '@material-ui/core';
+import { Breadcrumbs, List, ListItemIcon, ListItem, ListItemText, Typography, Tooltip, Divider, Container } from '@material-ui/core';
+
+// Icons
+import { SendSharp } from '@material-ui/icons';
 
 // Course Information (Teacher view)
 import CourseInformationTeacher from './teacher-view/CourseInformation';
@@ -33,12 +36,8 @@ import CourseInformationStudent from './student-view/CourseInformation';
 import ClassmatesInformation from './student-view/ClassmatesInformation';
 import UnitsInformationStudent from './student-view/UnitsInformation';
 
-
 // Link
 import { Link } from 'react-router-dom';
-
-//Tooltip
-import Tooltip from '@material-ui/core/Tooltip';
 
 export default function CourseView({ history }) {
 
@@ -53,7 +52,8 @@ export default function CourseView({ history }) {
 
     // Colors for the navbar in base of the image of the course
     const [color, setColor] = useState(null);
-    const [fontColor, setFontColor] = useState(null);
+
+    const [currentView, setCurrentView] = useState(0);
 
     // UseEffect para cambiar el color de la barra de navegación
     useEffect(() => {
@@ -114,7 +114,8 @@ export default function CourseView({ history }) {
     }
 
     // Metodo para redirigir dada una ruta que llega por parametro
-    const redirect = (route) => {
+    const redirect = (route, view) => {
+        setCurrentView(view);
         history.push(route);
     }
 
@@ -133,27 +134,57 @@ export default function CourseView({ history }) {
             }
             <div className="row p-0 m-0">
                 <div className="col-md-3 p-0 m-0">
-                    <div className="pt-4 d-flex flex-column justify-content-center align-items-center">
-                        {
-                            course ?
-                                <Breadcrumbs className="course-view-breadcrumbs">
-                                    <Link className='text-muted' to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>Mis cursos</Link>
-                                    <Tooltip enterDelay={500} enterNextDelay={200} title={course.name} aria-label={`${course.name}`}>
-                                        <Typography><b className="text-overflow-2">{course.name}</b></Typography>
-                                    </Tooltip>
+                    <div className="mt-4 mx-5 mx-md-0">
+                        <List
+                            component='div'
+                            className='list-views'
+                            subheader={
+                                course ?
+                                    <Breadcrumbs className="course-view-breadcrumbs">
+                                        <Link className='text-muted' to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>Mis cursos</Link>
+                                        <Tooltip enterDelay={500} enterNextDelay={200} title={course.name} aria-label={`${course.name}`}>
+                                            <Typography><b className="text-overflow-2">{course.name}</b></Typography>
+                                        </Tooltip>
 
-                                </Breadcrumbs>
-                                :
-                                ""
-                        }
-                        <hr />
-                        <button onClick={() => redirect(`course-info`)} className="custom-btn my-3 course-view-botton">Info del curso</button>
-                        <button onClick={() => redirect(`units-info`)} className="custom-btn my-3 course-view-botton">Unidades</button>
-                        <button onClick={() => redirect(`students-info`)} className="custom-btn my-3 course-view-botton">{type === "edit" ? "Estudiantes" : "Compañeros"}</button>
-                        {type === "edit" ?
-                            <button onClick={() => redirect(`progress-info`)} className="custom-btn my-3 course-view-botton">Progreso</button>
-                            : ""}
-
+                                    </Breadcrumbs>
+                                    :
+                                    ""
+                            }
+                        >
+                            <Typography variant='h1'>
+                                <ListItem className='item-view' onClick={() => redirect(`course-info`, 0)} selected={currentView === 0} button>
+                                    <ListItemIcon>
+                                        <SendSharp />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Info del curso" />
+                                </ListItem>
+                                <Divider variant="inset" component="li" />
+                                <ListItem className='item-view' onClick={() => redirect(`units-info`, 1)} selected={currentView === 1} button>
+                                    <ListItemIcon>
+                                        <SendSharp />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Unidades" />
+                                </ListItem>
+                                <Divider variant="inset" component="li" />
+                                <ListItem className='item-view' onClick={() => redirect(`students-info`, 2)} selected={currentView === 2} button>
+                                    <ListItemIcon>
+                                        <SendSharp />
+                                    </ListItemIcon>
+                                    <ListItemText primary={type === "edit" ? "Estudiantes" : "Compañeros"} />
+                                </ListItem>
+                                {type === "edit" ?
+                                    <>
+                                        <Divider variant="inset" component="li" />
+                                        <ListItem className='item-view' onClick={() => redirect(`progress-info`, 3)} selected={currentView === 3} button>
+                                            <ListItemIcon>
+                                                <SendSharp />
+                                            </ListItemIcon>
+                                            <ListItemText primary='Progreso' />
+                                        </ListItem>
+                                    </>
+                                    : ""}
+                            </Typography>
+                        </List>
                     </div>
                 </div>
                 <div className="col-md-9 p-0 m-0">
