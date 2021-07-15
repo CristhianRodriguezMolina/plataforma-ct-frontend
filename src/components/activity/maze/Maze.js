@@ -746,6 +746,15 @@ export default function Maze() {
 
 	}
 
+	const cancelAnimation = () => {
+		setAnimation(``);
+		setAnimate(false);
+		setAnimationDuration('0s');
+		setRobotX(startX);
+		setRobotY(startY);
+		setRobotGrades(0);
+	}
+
 	const handleShowRobot = () => {
 		if (isStart && isEnd) {
 			setAnimate(!animate)
@@ -863,11 +872,16 @@ export default function Maze() {
 							</div>
 							<div className='mt-1 d-flex justify-content-center'>
 								<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
-								<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+								<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+								<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 							</div>
 						</div>
 						<div className='col-md-6 mt-md-0 mt-4'>
-							<Intructions maze={maze} setMaze={setMaze} />
+							{
+								maze ?
+									<Intructions maze={maze} setMaze={setMaze} />
+									: ''
+							}
 						</div>
 					</div>
 					<div className='options-palette-container'>
