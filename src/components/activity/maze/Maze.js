@@ -19,7 +19,7 @@ import maze_end from '../../../assets/maze-end.jpg'
 // COMPONENTS
 
 // Instructions
-import CreateMaze from './CreateMaze';
+import Intructions from './Intructions';
 
 // Cell of the maze
 import Cell from './Cell';
@@ -213,11 +213,32 @@ export default function Maze() {
 			setMazeSize(ref.current.clientWidth);
 		}
 
+		var rtime;
+		var timeout = false;
+		var delta = 200;
+
+		const onResize = () => {
+			rtime = new Date();
+			if (timeout === false) {
+				timeout = true;
+				setTimeout(resizeend, delta);
+			}
+		}
+
+		function resizeend() {
+			if (new Date() - rtime < delta) {
+				setTimeout(resizeend, delta);
+			} else {
+				timeout = false;
+				setSize();
+			}
+		}
+
 		window.addEventListener("beforeunload", setSize)
-		window.addEventListener('resize', setSize)
+		window.addEventListener('resize', onResize)
 		return () => {
 			window.removeEventListener('beforeunload', setSize)
-			window.removeEventListener('resize', setSize)
+			window.removeEventListener('resize', onResize)
 		}
 	}, [])
 
@@ -780,7 +801,7 @@ export default function Maze() {
 						</Container>
 					</div>
 					<div className='row p-4 w-100'>
-						<div className='col-md-6' >
+						<div className='col-md-6'>
 							{/* MAZE */}
 							<div className='maze-container' ref={setRef}>
 								<div className='maze' style={mazeStyle}>
@@ -831,7 +852,7 @@ export default function Maze() {
 							</div>
 						</div>
 						<div className='col-md-6 d-flex justify-content-center align-items-center'>
-							<CreateMaze />
+							<Intructions />
 						</div>
 					</div>
 					<div className='mt-5'>

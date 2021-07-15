@@ -1,13 +1,19 @@
 .create-maze-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	.instructions-list-container {
-		background-color: red;
-		width: 25em;
+		background-color: grey;
+		width: 100%;
+		display: flex;
+		justify-content: center;
 		.sorable-list-container {
 			background-color: rgb(233, 233, 233);
-			display: grid;
-			grid-template-columns: repeat(4, 5em);
-			gap: 1em;
-			padding: 1em;
+			width: 100%;
+			padding: 0.5em;
+			display: flex;
+			flex-wrap: wrap;
 		}
 
 		.action-button-container {
@@ -26,7 +32,7 @@
 				border: none;
 
 				&:hover {
-					background-color: rgb(240, 240, 240);
+					background-color: rgb(209, 209, 209);
 					transition-duration: 0.2s;
 				}
 
