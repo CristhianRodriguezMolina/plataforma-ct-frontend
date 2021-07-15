@@ -320,15 +320,21 @@ export default function Maze() {
 
 		//setRows(e.target[0].value)
 		//setCols(e.target[1].value)
+		
+
 
 		//setReformingMaze(true); // Turn the reforming flag to true
-		console.log("hola");
 		try {
-			const res = await api.get(`/api/maze/resize/${maze._id}`, {
+			const res = await api.put(`/api/maze/resize/${maze._id}`, {
+				newCells: maze.cells,
+				columns: e.target[1].value,
+				rows: e.target[0].value
+			},{
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			});
 			if(res) {
-				console.log(res);
+				setMaze(res.data.maze);
+				
 			}
 		} catch (e) {
 			console.log(e);
