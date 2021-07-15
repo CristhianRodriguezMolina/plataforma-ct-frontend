@@ -325,8 +325,8 @@ export default function Maze() {
 
 		//setReformingMaze(true); // Turn the reforming flag to true
 		try {
-			const res = await api.put(`/api/maze/resize/${maze._id}`, {
-				newCells: maze.cells,
+			const res = await api.put(`/api/maze/resize/${activityId}`, {
+				cells: maze.cells,
 				columns: e.target[1].value,
 				rows: e.target[0].value
 			},{
