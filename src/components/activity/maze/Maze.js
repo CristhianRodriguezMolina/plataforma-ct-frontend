@@ -250,6 +250,8 @@ export default function Maze() {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
 			.then((res) => {
+				console.log("Maze")
+				console.log(res.data)
 				setMaze(res.data);
 				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
 				setActivityDescription(res.data.activity_id.description);
@@ -335,7 +337,7 @@ export default function Maze() {
 	}
 
 	// Method to change the cols and rows of the maze
-	const setNewSize = (e) => {
+	const setNewSize = async (e) => {
 		e.preventDefault();
 
 		// If the size still equals just doesnt change anything
@@ -347,6 +349,23 @@ export default function Maze() {
 		setCols(e.target[1].value)
 
 		setReformingMaze(true); // Turn the reforming flag to true
+
+		try {
+			const res = await api.put(`/api/maze/resize/${activityId}`, {
+				cells: maze.cells,
+				columns: e.target[1].value,
+				rows: e.target[0].value
+			}, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			});
+			if (res) {
+				setMaze(res.data.maze);
+
+			}
+		} catch (e) {
+			console.log(e);
+		}
+
 	}
 
 	// ROBOT ANIMATION -------------------------------------------------------------------------------------------------------------------------
