@@ -68,9 +68,6 @@ const LogicSequence = React.lazy(() => import('./components/activity/logic-seque
 //Logic sequence (student view)
 const LogicSequenceStudent = React.lazy(() => import('./components/activity/logic-sequence/LogicSequenceStudent'));
 
-//Create maze
-const CreateMaze = React.lazy(() => import('./components/activity/maze/CreateMaze'));
-
 // Users manage
 const UserManage = React.lazy(() => import('./components/users/UserManage'));
 

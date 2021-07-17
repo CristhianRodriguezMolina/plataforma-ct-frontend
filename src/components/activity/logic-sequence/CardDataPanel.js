@@ -197,7 +197,7 @@ const CardDataPanel = props => {
 					upload={upload}
 					type="image/jpeg, image/png, image/gif"
 					maxFiles="1" />
-				<button ref={saveButton} className="btn btn-primary" onClick={buttonHandler}>Guardar</button>
+				<button ref={saveButton} className="custom-btn custom-btn-primary p-2 px-3" onClick={buttonHandler}>Guardar</button>
 			</div>
 		</div>
 	)

@@ -1,13 +1,22 @@
 .instruction-card-container {
     width: 5em;
     height: 5em;
-    background-color: red;
+    background-color: whitesmoke;
+    margin: 0.5em;
+    border-radius: 5px;
 
     align-items: center;
     justify-content: center;
     display: flex;
     cursor: pointer;
     position: relative;
+
+    box-shadow: 0 4px #afafaf;
+
+    &:active {
+        box-shadow: none;
+        transform: translateY(4px);
+    }
 
     .hide-check {
         display: none;

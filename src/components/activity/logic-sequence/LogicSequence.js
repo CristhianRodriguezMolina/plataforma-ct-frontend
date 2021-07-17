@@ -289,8 +289,7 @@ const LogicSequence = props => {
 
 						</div>
 						<hr className="hr-bar"></hr>
-						<button className="save-button btn btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
-
+						<button className="save-button custom-btn custom-btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
 					</div>
 					:
 					<Redirect to="/unauthorized" />
