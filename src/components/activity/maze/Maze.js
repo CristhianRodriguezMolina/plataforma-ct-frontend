@@ -204,6 +204,7 @@ export default function Maze() {
 	// Cambia el tamaño del maze cada que cambia el tamaño de la pagina
 	useEffect(() => {
 		const setSize = () => {
+			cancelAnimation(); // It cancels the animation in case of reload or resize the page
 			setMazeSize(ref.current.clientWidth);
 		}
 
@@ -344,17 +345,20 @@ export default function Maze() {
 	// Method to zoomin the maze
 	const makeZoomIn = () => {
 		if (!(mazeSize + mazeSizeOffset + 20 > mazeSize)) { // This if is to ensure that the maze doesnt grow bigger than the initial size
+			cancelAnimation(); // Cancel any animation in case of resize the maze
 			setMazeSizeOffset(mazeSizeOffset + 20);
 		}
 	}
 
 	// Method to zoomout the maze
 	const makeZoomOut = () => {
+		cancelAnimation(); // Cancel any animation in case of resize the maze
 		setMazeSizeOffset(mazeSizeOffset - 20);
 	}
 
 	// Restore the initial size of the maze
 	const restoreSize = () => {
+		cancelAnimation(); // Cancel any animation in case of resize the maze
 		setMazeSizeOffset(0);
 	}
 
@@ -397,6 +401,7 @@ export default function Maze() {
 
 	}
 
+	// Update the data of the maze in the DB
 	const handleUpdateMaze = async () => {
 		try {
 			setProcess(true);
@@ -458,8 +463,12 @@ export default function Maze() {
 	const btnProveMaze = useRef(null);
 	const btnShowRobot = useRef(null);
 
-	var cancelingAnimation = false;
-	const abortController = new AbortController();
+	const [animationType, setAnimationType] = useState('NO_ANIMATION')
+
+	const [currentGrades, setCurrentGrades] = useState(0)
+	const [currentTop, setCurrentTop] = useState(startY)
+	const [currentLeft, setCurrentLeft] = useState(startX)
+	const [errorMazeMessage, setErrorMazeMessage] = useState('')
 
 	// Character Robot, with styled-components
 	const Robot = styled.div`
@@ -496,8 +505,10 @@ export default function Maze() {
 
 	// UseEffect for animation
 	useEffect(() => {
-
-	}, [])
+		if (animationType !== 'NO_ANIMATION') {
+			finishAnimation();
+		}
+	}, [animationType])
 
 	const createAnimation = async () => {
 
@@ -549,17 +560,17 @@ export default function Maze() {
 		var currentLeft = startX;
 		var currentTop = startY;
 
-		// Number of cells that can be traveled
-		var usableCells = frameActions.length;
+		// Message that gonna be show to the user if there is an error
+		var errorMazeMessage = '';
 
 		// Flag to see if there is an error in the path of the maze
 		var isError = false;
 
-		// Message that gonna be show to the user if there is an error
-		var errorMessage = '';
-
 		// Flag to see if there is a win in the path of the maze
 		var isWin = false;
+
+		// Number of cells that can be traveled
+		var usableCells = frameActions.length;
 
 		// for (let i = 0; i < frameActions.length; i++) {
 		// 	// Current cell of the animation to be analized
@@ -686,11 +697,11 @@ export default function Maze() {
 			if (currentCell.type === actions.BLOCK || currentCell.type === 'NOT_EXIST' || i === frameActions.length - 1) {
 
 				if (currentCell.type === actions.BLOCK) {
-					errorMessage = 'El robot choco con una pared';
+					errorMazeMessage = 'El robot choco con una pared';
 				} else if (currentCell.type === 'NOT_EXIST') {
-					errorMessage = 'El robot se cayo del laberinto';
+					errorMazeMessage = 'El robot se cayo del laberinto';
 				} else if (i === frameActions.length - 1) {
-					errorMessage = 'No se encontró el final del laberinto';
+					errorMazeMessage = 'No se encontró el final del laberinto';
 				}
 
 				isError = true;
@@ -700,6 +711,8 @@ export default function Maze() {
 			}
 		}
 
+		console.log(currentTop, currentLeft)
+
 		// Final step of the animation
 		stringKeyFrame += `
 			to{
@@ -708,6 +721,51 @@ export default function Maze() {
 				transform: rotate(${currentGrades}deg);
 			}
 		`
+
+		// Set the created animation
+		setAnimation(keyframes`
+		  	${stringKeyFrame}
+		`);
+
+		setRobotX(currentLeft);
+		setRobotY(currentTop);
+		setRobotGrades(currentGrades);
+
+		// ERROR AND WIN ANIMATION EXECUTIONS
+		setTimeout(() => {
+			if (animationType !== 'CANCELED') {
+				setCurrentTop(currentTop);
+				setCurrentLeft(currentLeft);
+				setCurrentGrades(currentGrades);
+				setErrorMazeMessage(errorMazeMessage);
+
+				if (isWin) {
+					setAnimationType('WIN');
+				} else if (isError) {
+					setAnimationType('ERROR');
+				}
+			}
+		}, animateDuration * 1000)
+	}
+
+	// This method executes the finish animation (Win, Error) when the animation throught the maze ends
+	const finishAnimation = () => {
+		// If the animation is canceled
+		if (animationType === 'CANCELED' || animate === false) {
+			showInfo('Animacion cancelada');
+			setAnimationType('NO_ANIMATION');
+			return;
+		}
+
+		if (animationType === 'ERROR') {
+			console.log('Hubo un error en el camino del maze')
+			showError(errorMazeMessage);
+		}
+
+		if (animationType === 'WIN') {
+			console.log('Felicidades completaste el laberinto')
+			showSuccess('Felicidades completaste el laberinto')
+		}
 
 		const winAnimation = `
 			from{
@@ -784,75 +842,44 @@ export default function Maze() {
 		  }
 		`
 
-		// Set the created animation
+		setAnimationDuration('1s');
+		setAnimationRepeat(5);
+
 		setAnimation(keyframes`
-		  	${stringKeyFrame}
-		`);
+					  ${animationType === 'WIN' ? winAnimation : errorAnimation}
+					`);
 
-		setRobotX(currentLeft);
-		setRobotY(currentTop);
-		setRobotGrades(currentGrades);
+		setTimeout(() => {
+			// Update the maze when executes any instructions
+			handleUpdateMaze();
 
-		// ERROR AND WIN ANIMATION EXECUTIONS
-		try {
-			await delay(animateDuration * 1000, { signal: abortController.signal }); // Delay
+			setRobotX(startX);
+			setRobotY(startY);
+			setRobotGrades(0);
 
-			if (cancelingAnimation) {
-				return;
-			}
+			setAnimation(``);
+			setAnimate(false);
 
-			console.log('delay')
+			// When the animation ends then the button to prove the maze and the button to show the robot are activated
+			btnProveMaze.current.disabled = false;
+			btnShowRobot.current.disabled = false;
+		}, 5000)
 
-			if (isError) {
-				console.log('Hubo un error en el camino del maze')
-				showError(errorMessage);
-			}
-
-			if (isWin) {
-				console.log('Felicidades completaste el laberinto')
-				showSuccess('Felicidades completaste el laberinto')
-			}
-
-			setAnimationDuration('1s');
-			setAnimationRepeat(5);
-
-			setAnimation(keyframes`
-						  ${isWin ? winAnimation : errorAnimation}
-						`);
-
-			setTimeout(() => {
-				setRobotX(startX);
-				setRobotY(startY);
-				setRobotGrades(0);
-
-				setAnimation(``);
-				setAnimate(false);
-
-				// When the animation ends then the button to prove the maze and the button to show the robot are activated
-				btnProveMaze.current.disabled = false;
-				btnShowRobot.current.disabled = false;
-			}, 5000)
-		} catch (error) {
-			showInfo('Animacion cancelada');
-		}
-	}
-
-	const finishAnimation = () => {
-
+		setAnimationType('NO_ANIMATION');
 	}
 
 	const cancelAnimation = () => {
 
-		cancelingAnimation = true;
+		if (animate) { // If there is an animation then cancel set the animation type to canceled, in other case just set the buttons to disabled = false, just in case
+			setAnimationType('CANCELED');
 
-		abortController.abort();
-
-		setAnimation(``);
-		setAnimate(false);
-		setAnimationDuration('0s');
-		setRobotX(startX);
-		setRobotY(startY);
-		setRobotGrades(0);
+			setAnimation(``);
+			setAnimate(false);
+			setAnimationDuration('0s');
+			setRobotX(startX);
+			setRobotY(startY);
+			setRobotGrades(0);
+		}
 
 		// When the animation ends then the button to prove the maze and the button to show the robot are activated
 		btnProveMaze.current.disabled = false;
