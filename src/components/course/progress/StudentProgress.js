@@ -87,6 +87,7 @@ const StudentProgress = props => {
                         );
                     }
                     else {
+
                         items.push(
                             <Tooltip enterDelay={200} enterNextDelay={200} title={i + 1} aria-label={`${i + 1}`}>
                                 <div className="activity-item-progress">
@@ -97,6 +98,7 @@ const StudentProgress = props => {
                     }
                 }
                 else {
+					
                     items.push(
                         <Tooltip enterDelay={200} enterNextDelay={200} title={i + 1} aria-label={`${i + 1}`}>
                             <div className="activity-item-progress">
@@ -108,6 +110,7 @@ const StudentProgress = props => {
             }
         }
         else {
+
             for (let i = 0; i < tempActivities.length; i++) {
                 items.push(
                     <Tooltip enterDelay={200} enterNextDelay={200} title={i + 1} aria-label={`${i + 1}`}>
@@ -132,6 +135,7 @@ const StudentProgress = props => {
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
+
                                 <Typography className={classes.heading}>{task.name}</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
@@ -145,11 +149,12 @@ const StudentProgress = props => {
                                                     <th>Completado</th>
                                                 </tr>
                                             </thead>
+
                                             <tbody>
                                                 {props.students ?
                                                     props.students.map((student) => {
                                                         return <tr>
-                                                            <td>{student.first_name} {student.last_name}</td>
+															<td className="name-field-overflow">{student.last_name} {student.first_name}</td>
                                                             <td>
                                                                 <div className="student-progress-items-container">
                                                                     {renderStudentProgress(student, task._id)}

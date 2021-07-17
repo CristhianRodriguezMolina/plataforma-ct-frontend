@@ -41,3 +41,19 @@
     display: flex;
     flex-direction: row;
 }
+
+.student-progress-container {
+
+	.student-progress-by-tasks {
+		display: grid;
+		grid-template-columns: 30% 60% 10%;
+		background-color: red;
+		.name-field-overflow {
+			overflow: hidden;
+			width: 150px;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+		}
+	}
+}
