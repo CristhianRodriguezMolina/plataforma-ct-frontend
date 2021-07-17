@@ -16,6 +16,9 @@ import maze_block from '../../../assets/maze-block.jpg'
 import maze_start from '../../../assets/maze-start.jpg'
 import maze_end from '../../../assets/maze-end.jpg'
 
+// Delay package
+import delay from 'delay';
+
 // COMPONENTS
 
 // Instructions
@@ -38,17 +41,6 @@ import styled, { css, keyframes } from 'styled-components'
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
-
-function useClientRect() {
-	const ref = useRef(null)
-	const setRef = useCallback(node => {
-		if (node) {
-			ref.current = node;
-		}
-
-	}, []);
-	return [ref, setRef];
-}
 
 export default function Maze() {
 
@@ -119,7 +111,7 @@ export default function Maze() {
 	const [cols, setCols] = useState(5); // Num of columns of the maze
 	const [rows, setRows] = useState(5); // Num of columns of the maze
 
-	const [reformingMaze, setReformingMaze] = useState(true); // Variable for reform the maze
+	const [reformingMaze, setReformingMaze] = useState(false); // Variable for reform the maze
 
 	const [wX, setWX] = useState((mazeSize + mazeSizeOffset) / cols)
 	const [wY, setWY] = useState((mazeSize + mazeSizeOffset) / rows)
@@ -189,6 +181,9 @@ export default function Maze() {
 	useEffect(() => {
 		if (!maze) {
 			fetchMaze();
+		} else {
+			setRows(maze.rows);
+			setCols(maze.cols);
 		}
 	}, [maze])
 
@@ -209,7 +204,6 @@ export default function Maze() {
 	// Cambia el tamaño del maze cada que cambia el tamaño de la pagina
 	useEffect(() => {
 		const setSize = () => {
-			console.log(ref)
 			setMazeSize(ref.current.clientWidth);
 		}
 
@@ -250,9 +244,8 @@ export default function Maze() {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
 			.then((res) => {
-				console.log("Maze")
-				console.log(res.data)
 				setMaze(res.data);
+				verifyStartEnd(res.data); // It verifies if the comming maze have start and/or end
 				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
 				setActivityDescription(res.data.activity_id.description);
 				setLoading(false);
@@ -278,30 +271,59 @@ export default function Maze() {
 			height: `${(mazeSize + mazeSizeOffset)}px`
 		})
 
-		if (maze.cells.length <= 0 || reformingMaze) {
-			var auxGrid = maze.cells;
+		if (reformingMaze) {
+			verifyStartEnd(maze);
+		}
+	}
 
-			if (reformingMaze) auxGrid = []; // If the maze is reforming then the grid base turn empty
+	// Verify if there is or not a start and/or an end
+	const verifyStartEnd = (maze) => {
+		// This flags are to verify if the new maze doesnt have start or end			
+		var isStart = false;
+		var isEnd = false;
 
-			setIsStart(false);
-			setIsEnd(false);
+		for (let i = 0; i < maze.cells.length; i++) {
+			var auxCell = maze.cells[i];
 
-			for (let i = 0; i < cols; i++) {
-				for (let j = 0; j < rows; j++) {
-					const cell = {
-						i,
-						j,
-						type: actions.EMPTY
-					}
-					auxGrid.push(cell);
-				}
+			if (auxCell.type === actions.START) {
+				isStart = true;
 			}
 
-			setReformingMaze(false); // Set the reforming flag to false
-			setMaze(prevMaze => {
-				return { ...prevMaze, cells: auxGrid, cols: cols, rows: rows }
-			});
+			if (auxCell.type === actions.END) {
+				isEnd = true;
+			}
 		}
+		// If the new maze doesnt have start then set IsStart to false
+		if (!isStart) {
+			setIsStart(false);
+		} else {
+			setIsStart(true);
+		}
+
+		// If the new maze doesnt have end then set IsEnd to false
+		if (!isEnd) {
+			setIsEnd(false);
+		} else {
+			setIsEnd(true);
+		}
+
+		setReformingMaze(false); // Set the reforming flag to false
+	}
+
+	// Method to clean the maze and set all cells to empty
+	const cleanMaze = () => {
+		setIsStart(false);
+		setIsEnd(false);
+
+		var auxGrid = maze.cells;
+
+		auxGrid = auxGrid.map(cell => {
+			return { ...cell, type: actions.EMPTY }
+		})
+
+		setMaze(prevMaze => {
+			return { ...prevMaze, cells: auxGrid }
+		});
 	}
 
 	// Method to change the type of image to show in the cells
@@ -344,12 +366,7 @@ export default function Maze() {
 		if (e.target[0].value === maze.rows && e.target[1].value === maze.cols) {
 			return;
 		}
-
-		setRows(e.target[0].value)
-		setCols(e.target[1].value)
-
-		setReformingMaze(true); // Turn the reforming flag to true
-
+		console.log(maze)
 		try {
 			const res = await api.put(`/api/maze/resize/${activityId}`, {
 				cells: maze.cells,
@@ -361,11 +378,63 @@ export default function Maze() {
 			if (res) {
 				setMaze(res.data.maze);
 
+				setRows(e.target[0].value);
+				setCols(e.target[1].value);
+
+				setReformingMaze(true); // Turn the reforming flag to true
+
+				console.log(res.data.maze);
 			}
 		} catch (e) {
-			console.log(e);
+			if (e.response.data) {
+				showError(e.response.data.message);
+				console.log(e.response.data.message);
+			} else {
+				showError('Error inesperado en el servidor');
+				console.log(`Ha ocurrido un error en el servidor`);
+			}
 		}
 
+	}
+
+	const handleUpdateMaze = async () => {
+		try {
+			setProcess(true);
+			setProcessMessage('Guardando cambios...');
+
+			const response = await api.put(`/api/activity/${activityId}`, {
+				activity: {
+					name: activityName,
+					description: activityDescription
+				},
+				child: {
+					cells: maze.cells,
+					instructions: maze.instructions,
+					columns: maze.cols,
+					rows: maze.rows,
+				}
+			}, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			});
+
+			const { updatedActivity, message } = response.data;
+
+			if (updatedActivity) {
+				verifyStartEnd(maze);
+
+				showSuccess(message);
+			}
+		} catch (error) {
+			if (error.response) {
+				console.log(error.response.data.message);
+				showError(error.response.data.message);
+			} else {
+				console.log(`Un error ha ocurrido actualizando el laberinto: ${error}`);
+				showError(`Un error ha ocurrido actualizando el laberinto: ${error}`);
+			}
+		}
+		setProcess(false);
+		setProcessMessage('');
 	}
 
 	// ROBOT ANIMATION -------------------------------------------------------------------------------------------------------------------------
@@ -389,7 +458,8 @@ export default function Maze() {
 	const btnProveMaze = useRef(null);
 	const btnShowRobot = useRef(null);
 
-	// const [frameActions, setFrameActions] = useState(['RIGHT', 'FORWARD', 'RIGHT', 'FORWARD']);	// const [currentFrame, setCurrentFrame] = useState(0);
+	var cancelingAnimation = false;
+	const abortController = new AbortController();
 
 	// Character Robot, with styled-components
 	const Robot = styled.div`
@@ -424,7 +494,12 @@ export default function Maze() {
 		}
 	}
 
-	const createAnimation = () => {
+	// UseEffect for animation
+	useEffect(() => {
+
+	}, [])
+
+	const createAnimation = async () => {
 
 		if (!isStart || !isEnd) {
 			showError('No ha definido el inicio y el fin del laberinto!!')
@@ -456,7 +531,7 @@ export default function Maze() {
 
 		// Actions passed for the user
 		const frameActions = maze.instructions;
-		console.log(frameActions)
+
 		// Start of the animation
 		var stringKeyFrame = `from{
 			left: ${startX}px;
@@ -515,13 +590,14 @@ export default function Maze() {
 		// }
 
 		// Current percent of the animation and the offset 
+
 		const percentOffset = Math.floor(100 / usableCells);
 		var currentPercent = percentOffset;
 
 		for (let i = 0; i < usableCells; i++) {
 
 			// Current action to be analized and processed
-			const action = frameActions[i].name;
+			const action = frameActions[i].type;
 
 			if (action === 'FORWARD') { // IF THE ACTION IS GO FORWARD
 				if (currentDirection === 'UP') {
@@ -717,38 +793,33 @@ export default function Maze() {
 		setRobotY(currentTop);
 		setRobotGrades(currentGrades);
 
-		if (isError || isWin) {
-			console.log('Hubo un error en el camino del maze')
-			setTimeout(() => {
-				if (isError) {
-					showError(errorMessage);
-				}
+		// ERROR AND WIN ANIMATION EXECUTIONS
+		try {
+			await delay(animateDuration * 1000, { signal: abortController.signal }); // Delay
 
-				if (isWin) {
-					showSuccess('Felicidades completaste el laberinto')
-				}
+			if (cancelingAnimation) {
+				return;
+			}
 
-				setAnimationDuration('1s');
-				setAnimationRepeat(5);
+			console.log('delay')
 
-				setAnimation(keyframes`
-				  ${isWin ? winAnimation : errorAnimation}
-				`);
+			if (isError) {
+				console.log('Hubo un error en el camino del maze')
+				showError(errorMessage);
+			}
 
-				setTimeout(() => {
-					setRobotX(startX);
-					setRobotY(startY);
-					setRobotGrades(0);
+			if (isWin) {
+				console.log('Felicidades completaste el laberinto')
+				showSuccess('Felicidades completaste el laberinto')
+			}
 
-					setAnimation(``);
-					setAnimate(false);
+			setAnimationDuration('1s');
+			setAnimationRepeat(5);
 
-					// When the animation ends then the button to prove the maze and the button to show the robot are activated
-					btnProveMaze.current.disabled = false;
-					btnShowRobot.current.disabled = false;
-				}, 6000)
-			}, animateDuration * 1000)
-		} else {
+			setAnimation(keyframes`
+						  ${isWin ? winAnimation : errorAnimation}
+						`);
+
 			setTimeout(() => {
 				setRobotX(startX);
 				setRobotY(startY);
@@ -760,18 +831,32 @@ export default function Maze() {
 				// When the animation ends then the button to prove the maze and the button to show the robot are activated
 				btnProveMaze.current.disabled = false;
 				btnShowRobot.current.disabled = false;
-			}, animateDuration * 1000)
+			}, 5000)
+		} catch (error) {
+			showInfo('Animacion cancelada');
 		}
+	}
+
+	const finishAnimation = () => {
 
 	}
 
 	const cancelAnimation = () => {
+
+		cancelingAnimation = true;
+
+		abortController.abort();
+
 		setAnimation(``);
 		setAnimate(false);
 		setAnimationDuration('0s');
 		setRobotX(startX);
 		setRobotY(startY);
 		setRobotGrades(0);
+
+		// When the animation ends then the button to prove the maze and the button to show the robot are activated
+		btnProveMaze.current.disabled = false;
+		btnShowRobot.current.disabled = false;
 	}
 
 	const handleShowRobot = () => {
@@ -817,7 +902,7 @@ export default function Maze() {
 									<div>
 										<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
 										<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
-										<button onClick={restoreSize} className="custom-btn custom-btn-primary p-2">Restablecer</button>
+										<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
 									</div>
 								</div>
 								{/* FORM TO CHANGE THE ROWS AND COLS */}
@@ -837,7 +922,14 @@ export default function Maze() {
 									</form>
 								</div>
 							</div>
+							<hr />
 						</Container>
+					</div>
+					<div className='mt-4 d-flex justify-content-center'>
+						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
+						<button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button>
+						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+						<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 					</div>
 					<div className='row p-4 w-100'>
 						<div className='col-md-6'>
@@ -888,11 +980,6 @@ export default function Maze() {
 										/>
 									}
 								</div>
-							</div>
-							<div className='mt-1 d-flex justify-content-center'>
-								<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
-								<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
-								<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 							</div>
 						</div>
 						<div className='col-md-6 mt-md-0 mt-4'>
@@ -976,6 +1063,7 @@ export default function Maze() {
 							</ButtonBase>
 						</div>
 					</div>
+					<button onClick={handleUpdateMaze} className='btn-save-maze custom-btn custom-btn-primary'>Guardar</button>
 				</>
 				: ''}
 		</div >

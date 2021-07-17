@@ -42,6 +42,18 @@ export default function Cell(props) {
 		setY(j * wY);
 		setCellType(cell.type);
 
+		// Change the image if the  type is diferent to empty
+		if (cell.type !== actions.EMPTY) {
+			setIsImage(true);
+			if (cell.type === actions.BLOCK) {
+				setImage(maze_block);
+			} else if (cell.type === actions.START) {
+				setImage(maze_start);
+			} else if (cell.type === actions.END) {
+				setImage(maze_end);
+			}
+		}
+
 		if (cell.type === actions.START) {
 			setStartX(i * wX);
 			setStartY(j * wY);

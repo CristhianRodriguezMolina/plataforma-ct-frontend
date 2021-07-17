@@ -32,11 +32,11 @@ const InstructionCard = SortableElement(({ value, showCheck, position }) => {
     const [image, setImage] = useState('');
 
     useEffect(() => {
-        if (value.name === instructions.FORWARD) {
+        if (value.type === instructions.FORWARD) {
             setImage(forward_img);
-        } else if (value.name === instructions.RIGHT) {
+        } else if (value.type === instructions.RIGHT) {
             setImage(right_img);
-        } else if (value.name === instructions.LEFT) {
+        } else if (value.type === instructions.LEFT) {
             setImage(left_img);
         }
     }, [value])
@@ -54,13 +54,13 @@ const InstructionCard = SortableElement(({ value, showCheck, position }) => {
                 checkBox.current.checked = !checkBox.current.checked;
                 if (checkBox.current.checked) {
                     let tempList = [...instructionsToDelete];
-                    tempList.push(value._id);
+                    tempList.push(value.num);
                     setInstructionsToDelete(tempList);
                 }
                 else {
                     let tempList = [...instructionsToDelete];
-                    let cardindex = tempList.indexOf(value._id);
-                    if (cardindex != -1) {
+                    let cardindex = tempList.indexOf(value.num);
+                    if (cardindex !== -1) {
                         tempList.splice(cardindex, 1);
                         setInstructionsToDelete(tempList);
                     }

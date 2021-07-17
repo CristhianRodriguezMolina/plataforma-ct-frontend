@@ -83,8 +83,8 @@ const Intructions = props => {
         let tempList = [...instructionsList];
 
         tempList.push({
-            name: `${value}`,
-            _id: `${tempList.length}`
+            type: `${value}`,
+            num: `${tempList.length}`
         });
         setInstructionsList(tempList);
         props.setMaze(prevMaze => {
@@ -108,7 +108,7 @@ const Intructions = props => {
         let tempList = [...instructionsList];
 
         for (let i = 0; i < instructionsToDelete.length; i++) {
-            let cardIndex = tempList.map((card) => { return card._id }).indexOf(instructionsToDelete[i]);
+            let cardIndex = tempList.map((card) => { return card.num }).indexOf(instructionsToDelete[i]);
             if (cardIndex !== -1) {
                 tempList.splice(cardIndex, 1);
             }
@@ -122,10 +122,6 @@ const Intructions = props => {
 
         setShowCheck(false);
     };
-
-    const handleUpdateInstructions = () => {
-        console.log('Updating instructions');
-    }
 
     return (
         <CreateMazeContext.Provider value={{ instructionsToDelete, setInstructionsToDelete }}>
@@ -187,12 +183,9 @@ const Intructions = props => {
                     </div>
                     <div className='d-flex flex-column'>
                         <button onClick={showCheckMarks} className="custom-btn custom-btn-primary px-3 py-1 mt-2">Borrar</button>
-                        <button onClick={cleanInstructions} className="custom-btn custom-btn-primary px-3 py-1 mt-2">Limpiar</button>
+                        <button onClick={cleanInstructions} className="custom-btn custom-btn-delete px-3 py-1 mt-2">Limpiar</button>
                     </div>
                 </div>
-            </div>
-            <div className='mt-3 '>
-                <button onClick={handleUpdateInstructions} className='custom-btn custom-btn-primary p-2' >Guardar instrucciones</button>
             </div>
         </CreateMazeContext.Provider>
     )

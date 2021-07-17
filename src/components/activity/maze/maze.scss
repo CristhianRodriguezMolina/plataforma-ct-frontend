@@ -25,6 +25,16 @@
 		border-radius: 10px;
 	}
 }
+
+.btn-save-maze {
+	position: fixed;
+	width: 80px;
+	height: 80px;
+	right: 40px;
+	bottom: 30px;
+	border-radius: 50%;
+}
+
 .options-palette-container {
 	position: relative;
 	display: flex;

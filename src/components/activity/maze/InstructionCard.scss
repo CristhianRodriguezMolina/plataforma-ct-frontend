@@ -11,6 +11,13 @@
     cursor: pointer;
     position: relative;
 
+    box-shadow: 0 4px #afafaf;
+
+    &:active {
+        box-shadow: none;
+        transform: translateY(4px);
+    }
+
     .hide-check {
         display: none;
     }
