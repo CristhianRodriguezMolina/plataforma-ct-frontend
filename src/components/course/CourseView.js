@@ -42,7 +42,7 @@ import { Link } from 'react-router-dom';
 export default function CourseView({ history }) {
 
     // Datos del contexto de usuario
-    const { isAdmin, isTeacher, changeColor, changeFontColor } = useContext(UserContext);
+    const { isAdmin, isTeacher, isSessionExpired, changeColor, changeFontColor } = useContext(UserContext);
 
     // Datos que vienen como parametros en la ruta para este componente
     const { type, id, view } = useParams();
@@ -59,7 +59,6 @@ export default function CourseView({ history }) {
     useEffect(() => {
         if (course) {
             if (color) {
-
                 changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
             }
         }
@@ -69,6 +68,10 @@ export default function CourseView({ history }) {
         // Para verificar que los datos de la ruta sean nombres correctos
         if (type !== 'edit' && type !== 'view' && view !== 'course-info' && view !== 'students-info' && view !== 'units-info') {
             history.push('/unauthorized');
+        }
+        // Para verificar que la sesion siga activa
+        else if (isSessionExpired) {
+            history.push('/session-expired');
         }
         // Para verificar que un usuario de role student no pueda acceder a la edición del curso
         else if (type === 'edit' && !isAdmin && !isTeacher) {
@@ -91,6 +94,10 @@ export default function CourseView({ history }) {
         }
     }, [course])
 
+    useEffect(() => {
+        setView();
+    }, [history.location])
+
     // Metodo para obtener los datos de un curso en especifico cuya id se especifica en la ruta
     const fetchData = async () => {
         try {
@@ -110,6 +117,21 @@ export default function CourseView({ history }) {
             if (!course) {
                 history.push('/unauthorized');
             }
+        }
+    }
+
+    const setView = () => {
+        const location = history.location.pathname.split('/');
+        const view = location[location.length - 1];
+
+        if (view === 'course-info') {
+            setCurrentView(0);
+        } else if (view === 'units-info') {
+            setCurrentView(1);
+        } else if (view === 'students-info') {
+            setCurrentView(2);
+        } else if (view === 'progress-info') {
+            setCurrentView(3);
         }
     }
 

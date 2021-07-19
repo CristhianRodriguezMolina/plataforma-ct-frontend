@@ -34,17 +34,12 @@ import 'animate.css/animate.min.css';
 // Router
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import { ThemeProvider } from '@material-ui/core/styles'
-
-// Scroll
-import { Scrollbars } from 'react-custom-scrollbars'
-
-//Box
-import { Box } from "@material-ui/core"
-
 // Navigation
 import NavBar from './components/navigation/NavBar';
 
+import ExpiredSessionConfirmation from './components/expired-session/ExpiredSessionConfirmation';
+
+// Maze
 const Maze = React.lazy(() => import('./components/activity/maze/Maze'));
 
 // My courses
@@ -120,6 +115,9 @@ function App() {
 
                 {/* PROFILE */}
                 <ProtectedRoute path='/profile/:userId/:view' exact component={Profile} />
+
+                {/* SESSION EXPIRED */}
+                <Route path="/session-expired" exact component={ExpiredSessionConfirmation} />
 
                 {/* UNAUTHORIZED */}
                 <Route path="/unauthorized" exact component={Error404} />

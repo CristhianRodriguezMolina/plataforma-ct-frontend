@@ -13,13 +13,13 @@ import '../common/alert-message.scss';
 // COMPONENTS
 
 // Topografia and textfield
-import { Container, Link, TextField, Typography, Button } from '@material-ui/core';
+import { Container, Link, TextField, Typography, Button, Input, InputAdornment, IconButton, FormControl } from '@material-ui/core';
 
 // Alerta
 import Alert from '@material-ui/lab/Alert';
 
 // Icons
-import { AccountCircleOutlined, Lock, Copyright, Devices, ImportContacts } from '@material-ui/icons'
+import { AccountCircleOutlined, Lock, Copyright, Devices, ImportContacts, Visibility, VisibilityOff } from '@material-ui/icons'
 
 export default function Login({ history }) {
 
@@ -29,6 +29,8 @@ export default function Login({ history }) {
     // Datos del inicio de sesion
     const [id, setId] = useState('')
     const [password, setPassword] = useState('')
+
+    const [showPassword, setShowPassword] = useState(false);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -105,6 +107,14 @@ export default function Login({ history }) {
         }
     }
 
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    }
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
     return (
         <div className="background-login">
             <div className="background-overlay">
@@ -124,8 +134,7 @@ export default function Login({ history }) {
                 </header>
                 <div className="login-card shadow row">
                     <div className="col-md-6 p-0">
-                        <div className="login-image">
-                        </div>
+                        <div className="login-image" />
                     </div>
                     <div className="col-md-6 px-3 pt-2 pb-4">
                         <div className="signin-side">
@@ -142,7 +151,27 @@ export default function Login({ history }) {
                                         </div>
                                         <div className="form-group my-4 d-flex align-items-center">
                                             <Lock className="align-self-end mr-2" />
-                                            <TextField color="secondary" className="form-control" type="password" minLength="4" onChange={evt => setPassword(evt.target.value)} value={password} label="Contraseña" name="contrasena" required />
+                                            <TextField
+                                                color="secondary"
+                                                type={showPassword ? "text" : "password"}
+                                                minLength="4"
+                                                onChange={evt => setPassword(evt.target.value)}
+                                                value={password} label="Contraseña"
+                                                name="contrasena"
+                                                required
+                                                InputProps={{
+                                                    endAdornment:
+                                                        <InputAdornment position="end">
+                                                            <IconButton
+                                                                aria-label="toggle password visibility"
+                                                                onClick={handleClickShowPassword}
+                                                                onMouseDown={handleMouseDownPassword}
+                                                            >
+                                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                }}
+                                            />
                                         </div>
                                         <div className="form-group d-flex justify-content-center">
                                             <Button type="submit" variant="outlined" color="secondary" className="btn btn-primary">Sign in</Button>

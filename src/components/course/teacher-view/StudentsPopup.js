@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // API
 import api from "../../../services/api";
@@ -16,9 +16,6 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 // User modal card
 import StudentModalCard from "./StudentModalCard";
-
-// Button
-import Button from "@material-ui/core/Button";
 
 // Alert
 import Alert from "@material-ui/lab/Alert";
@@ -41,16 +38,29 @@ export default function StudentsPopup(props) {
 	// List of student that will be added to the course
 	const [studentsToAdd, setStudentsToAdd] = useState([]);
 
+	// Refs of the button that add students
+	const btnAddStudents = useRef(null);
+
 	useEffect(() => {
 		if (!students || isAddingStudents) {
 			fetchStudents();
 		}
 	}, [students, isAddingStudents]);
 
+	// UseEffect to disable or activate the button to add students depending if there is students to add or not 
+	useEffect(() => {
+		if (btnAddStudents.current) {
+			if (studentsToAdd.length > 0) {
+				btnAddStudents.current.disabled = false;
+			} else {
+				btnAddStudents.current.disabled = true;
+			}
+		}
+	}, [studentsToAdd])
+
 	useEffect(() => {
 		if (isOpen) {
 			setStudentsToAdd([]);
-
 		}
 	}, [isOpen]);
 
@@ -128,9 +138,6 @@ export default function StudentsPopup(props) {
 			setIsAddingStudents(true); // This flag activate the fetch users in the StudentsInformation view
 			const { acceptedStudents, deniedStudents, message } = response.data;
 
-
-			setProcess(false);
-			setProcessMessage("");
 			if (acceptedStudents) {
 				fetchStudents();
 
@@ -144,8 +151,6 @@ export default function StudentsPopup(props) {
 				}
 			}
 		} catch (error) {
-			setProcess(false);
-			setProcessMessage("");
 			if (error.response) {
 				console.log(`Un error ha ocurrido en el servidor: ${error}`);
 				showError(error.response.data.message);
@@ -156,6 +161,8 @@ export default function StudentsPopup(props) {
 		}
 		setIsAddingStudents(false);
 		toggle();
+		setProcess(false);
+		setProcessMessage("");
 	};
 
 	return (
@@ -205,6 +212,7 @@ export default function StudentsPopup(props) {
 					<button
 						className="custom-btn custom-btn-primary p-2"
 						onClick={() => addStudents()}
+						ref={btnAddStudents}
 					>
 						Agregar
 					</button>

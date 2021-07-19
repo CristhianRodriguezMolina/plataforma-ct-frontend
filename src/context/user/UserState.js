@@ -10,6 +10,7 @@ const UserState = (props) => {
 
     const isLoggedInHandler = () => {
         const token = localStorage.getItem('token');
+
         if (token) return true;
 
         localStorage.removeItem('user_name');
@@ -17,7 +18,6 @@ const UserState = (props) => {
         localStorage.removeItem('user_role');
         localStorage.removeItem('user_image');
         localStorage.removeItem('token');
-        localStorage.removeItem('created_at');
 
         return false;
     }
@@ -46,6 +46,18 @@ const UserState = (props) => {
         return false;
     }
 
+    const isSessionExpiredHandler = () => {
+        const expire_at = localStorage.getItem('expire_at');
+        if (expire_at) {
+            const now = Date.now().valueOf() / 1000;
+            if (now > parseInt(expire_at)) {
+                localStorage.removeItem('expire_at');
+                return true;
+            }
+        }
+        return false;
+    }
+
     const signinHandler = () => {
         try {
             dispatch({
@@ -54,6 +66,7 @@ const UserState = (props) => {
                     isAdmin: isAdminHandler(),
                     isTeacher: isTeacherHandler(),
                     isStudent: isStudentHandler(),
+                    isSessionExpired: isSessionExpiredHandler(),
                 }
             });
         } catch (error) {
@@ -64,18 +77,19 @@ const UserState = (props) => {
     const logoutHandler = () => {
         try {
             localStorage.removeItem('user_name');
+            localStorage.removeItem('user_last_name');
             localStorage.removeItem('user_id');
             localStorage.removeItem('user_role');
             localStorage.removeItem('user_image');
             localStorage.removeItem('token');
-            localStorage.removeItem('created_at');
 
             dispatch({
                 type: LOGOUT, payload: {
                     isLoggedIn: false,
                     isAdmin: false,
                     isTeacher: false,
-                    isStudent: false
+                    isStudent: false,
+                    isSessionExpired: isSessionExpiredHandler(),
                 }
             });
         } catch (error) {
@@ -87,7 +101,8 @@ const UserState = (props) => {
         isLoggedIn: isLoggedInHandler(),
         isAdmin: isAdminHandler(),
         isTeacher: isTeacherHandler(),
-        isStudent: isStudentHandler()
+        isStudent: isStudentHandler(),
+        isSessionExpired: isSessionExpiredHandler(),
     };
 
     const [navbarColor, setNavbarColor] = useState('#ffcdd2')
@@ -109,11 +124,11 @@ const UserState = (props) => {
         changeFontColor,
         signinHandler,
         logoutHandler,
-        env: state.env,
         isLoggedIn: state.isLoggedIn,
         isAdmin: state.isAdmin,
         isTeacher: state.isTeacher,
-        isStudent: state.isStudent
+        isStudent: state.isStudent,
+        isSessionExpired: state.isSessionExpired
     };
 
     return (

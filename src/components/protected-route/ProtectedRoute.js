@@ -3,24 +3,22 @@ import React, { useContext } from 'react'
 // CONTEXT
 import UserContext from '../../context/user/UserContext'
 
+import delay from 'delay';
+
 // COMPONENTS
 
 // Route
 import { Route, Redirect } from 'react-router';
 
-
 export default function ProtectedRoute({ component, type, ...options }) {
 
-    const { isLoggedIn, isAdmin, isTeacher, isStudent, logoutHandler } = useContext(UserContext);
+    const { isLoggedIn, isAdmin, isTeacher, isStudent, isSessionExpired, logoutHandler } = useContext(UserContext);
 
     const expire_at = localStorage.getItem('expire_at');
     if (expire_at) {
         const now = Date.now().valueOf() / 1000;
         if (now > parseInt(expire_at)) {
             logoutHandler();
-            return (
-                <Redirect to="/" />
-            )
         }
     }
 
@@ -36,12 +34,18 @@ export default function ProtectedRoute({ component, type, ...options }) {
     typeMap.set('teacher', isTeacher && type.includes('teacher')); // En caso de que sea teacher y el tipo de ruta sea para teacher
     typeMap.set('student', isStudent && type.includes('student')); // En caso de que sea student y el tipo de ruta sea para student
 
-    if (isLoggedIn && (typeMap.get('admin') || typeMap.get('teacher') || typeMap.get('student'))) {
+    console.log(isSessionExpired)
+
+    if (isLoggedIn && (typeMap.get('admin') || typeMap.get('teacher') || typeMap.get('student')) && !isSessionExpired) {
         return (
             <Route {...options} component={component} />
         )
     } else {
-        if (isLoggedIn) {
+        if (isSessionExpired) {
+            return (
+                <Redirect to="/session-expired" />
+            )
+        } else if (isLoggedIn) {
             return (
                 <Redirect to="/unauthorized" />
             )

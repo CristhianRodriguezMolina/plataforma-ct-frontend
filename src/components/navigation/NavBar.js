@@ -48,8 +48,6 @@ function NavBar() {
 
 	const classes = useStyles();
 
-
-
 	return (
 		<>
 			{

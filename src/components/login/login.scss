@@ -1,7 +1,12 @@
 .background-login {
     //background: url('../../assets/login-wallpaper.jpg')no-repeat;
-    background: rgb(0,0,0);
-    background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(130,17,17,0.8) 30%, rgba(255,0,0,0.3169642857142857) 100%);
+    background: rgb(0, 0, 0);
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(130, 17, 17, 0.8) 30%,
+        rgba(255, 0, 0, 0.3169642857142857) 100%
+    );
     background-size: cover;
     position: absolute;
     top: 0;
@@ -50,7 +55,7 @@
     }
 }
 
-.login-card {    
+.login-card {
     position: absolute;
     background-color: #ffffff;
     min-width: 22em;
@@ -65,15 +70,16 @@
 
     .login-image {
         display: none;
-        background: url('../../assets/login-image.jpg')no-repeat;        
-        background-size: cover;
-        border-radius: 10px 0px 0px 10px;        
+        background: url("../../assets/login-image.jpg") no-repeat;
+        background-size: 100% 100%;
+        border-radius: 10px 0px 0px 10px;
         width: 100%;
         height: 100%;
+        overflow: hidden;
     }
 
     .btn-signin {
-        background-color: #ffcdd2;        
+        background-color: #ffcdd2;
     }
 }
 

@@ -147,31 +147,6 @@ export default function StudentCard(props) {
 										</Tooltip>
 									</div>
 								</Typography>
-								<Modal
-									aria-labelledby="transition-modal-title"
-									aria-describedby="transition-modal-description"
-									className='d-flex justify-content-center align-items-center'
-									open={openInfo}
-									onClose={() => setOpenInfo(!openInfo)}
-									closeAfterTransition
-									BackdropComponent={Backdrop}
-									BackdropProps={{
-										timeout: 500,
-									}}
-								>
-									<Fade in={openInfo}>
-										<div className='modal-student-info'>
-											<Typography variant='h4' className='mb-4'>{student.genre !== 'M' ? 'Información del compañero' : 'Información de la compañera'}</Typography>
-											<div className="d-flex justify-content-center align-items-center">
-												<Avatar className="modal-student-avatar mr-2" src="https://picsum.photos/200/300" />
-												<div>
-													<p className='m-0 ml-4 mb-2 p-0 text-white'><b>{student.first_name} {student.last_name}</b></p>
-													<p className='m-0 ml-4 mb-2 p-0'>Genero: {student.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
-												</div>
-											</div>
-										</div>
-									</Fade>
-								</Modal>
 							</>
 							:
 							<>
@@ -189,7 +164,7 @@ export default function StudentCard(props) {
 											<button onClick={() => setOpenInfo(!openInfo)} className="custom-btn custom-btn-info btn-user-card mb-2"><Info /></button>
 										</Tooltip>
 										<Tooltip title="Progreso" aria-label="progress">
-											<Link to={`/course/student/progress/${student._id}/${course._id}`} className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
+											<Link to={`progress-info`} className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
 										</Tooltip>
 									</div>
 								</Typography>
@@ -221,7 +196,13 @@ export default function StudentCard(props) {
 									<Avatar className="modal-student-avatar mr-2" src="https://picsum.photos/200/300" />
 									<div>
 										<p className='m-0 ml-4 mb-2 p-0 text-white'><b>{student.first_name} {student.last_name}</b></p>
-										<p className='m-0 ml-4 mb-2 p-0'>Identificación: {student.id !== '' ? <b>{student.id}</b> : <b>No tiene Identificación :(</b>}</p>
+										{
+											forStudent ?
+												''
+												:
+												<p className='m-0 ml-4 mb-2 p-0'>Identificación: {student.id !== '' ? <b>{student.id}</b> : <b>No tiene Identificación :(</b>}</p>
+										}
+										<p className='m-0 ml-4 mb-2 p-0'>{forStudent ? "Cumpleaños" : "Fecha de nacimiento"}: <b>{util.getSpanishDate(student.birth_date)}</b></p>
 										<p className='m-0 ml-4 mb-2 p-0'>Edad: <b>{util.getAge(student.birth_date)}</b></p>
 										<p className='m-0 ml-4 mb-2 p-0'>Genero: {student.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
 									</div>
