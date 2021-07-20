@@ -155,25 +155,27 @@ const StudentProgress = props => {
                                                 {props.students ?
                                                     props.students.map((student) => {
                                                         return <tr>
-															<td className="student-name-field-td">{student.last_name} {student.first_name}</td>
-                                                            <td className="student-tasks-view-td">
-                                                                <div className="student-progress-items-container scrollable">
-                                                                    {renderStudentProgress(student, task._id)}
-                                                                </div>
-                                                            </td>
-                                                            <td className="completed-field-td">completed</td>
-                                                        </tr>
-                                                    })
-                                                    : ""}
-                                            </tbody>
-                                        </table>
+															<Tooltip enterDelay={200} enterNextDelay={200} title={`${student.last_name} ${student.first_name}`} aria-label={`${student.last_name} ${student.first_name}`}>
+																<td className="student-name-field-td">{student.last_name} {student.first_name}</td>
+															</Tooltip>
+															<td className="student-tasks-view-td">
+																<div className="student-progress-items-container scrollable">
+																	{renderStudentProgress(student, task._id)}
+																</div>
+															</td>
+															<td className="completed-field-td">completed</td>
+														</tr>
+													})
+													: ""}
+											</tbody>
+										</table>
 
 
-                                    </div>
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                    </div>
+									</div>
+								</Typography>
+							</AccordionDetails>
+						</Accordion>
+					</div>
 
                 })
                 : ""}

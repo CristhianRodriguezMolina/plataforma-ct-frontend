@@ -25,6 +25,7 @@ import AlertModal from '../common/AlertModal';
 
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const MyActivities = props => {
 
@@ -35,11 +36,10 @@ const MyActivities = props => {
 	const [showFetchButton, setShowFetchButton] = useState(true);
 	const [loadingCourses, setLoadingCourses] = useState(true);
 
-	const [init, setInit] = useState(0);
-	const [fin, setFin] = useState(0);
-	const [count, setCount] = useState(0);
-	const range = Math.round((window.innerHeight - 240) / 48);
-
+	const [init, setInit] = useState(0); 
+	const [fin, setFin] = useState(0); // The end of the acvitivities range 
+	const [count, setCount] = useState(0); //The number of documents
+	const range = Math.round((window.innerHeight - 240) / 48); //Number of activities to show depends of windows height
 	const [currentMenu, setCurrentMenu] = useState(false);
 
 	// Variable de estado para el modal
@@ -90,7 +90,6 @@ const MyActivities = props => {
 					headers: { 'x-access-token': localStorage.getItem('token') }
 				})
 					.then((response) => {
-						console.log(response.data.activities)
 						setActivities(response.data.activities);
 						setCount(response.data.count);
 						if (response.data.count == 0) {
@@ -135,7 +134,6 @@ const MyActivities = props => {
 	};
 
 	const handleEdit = (type) => {
-		console.log(type)
 		if (type.localeCompare("logic_sequence") === 0) {
 			props.history.push(`/activity/logic-sequence/${currentMenu._id}`);
 		}
@@ -205,17 +203,22 @@ const MyActivities = props => {
 					{activities ?
 						(activities.slice(0, fin).map((activity, i) => (
 							<tr key={i}>
-								<td className="activity-name">
-									{
-										activity.type.localeCompare("logic_sequence") === 0 ?
-											<AccountTreeIcon className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
-												<BorderVerticalIcon className="activity-icon" /> : <BallotIcon className="activity-icon" />
-									}
-									{activity.name}
-								</td>
-								<td className="activity-description">
-									{activity.description}
-								</td>
+                        		<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
+									<td className="activity-name">
+										{
+											activity.type.localeCompare("logic_sequence") === 0 ?
+												<AccountTreeIcon className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
+													<BorderVerticalIcon className="activity-icon" /> : <BallotIcon className="activity-icon" />
+										}
+										{activity.name}
+									</td>
+								</Tooltip>
+								
+                        		<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
+									<td className="activity-description">
+										{activity.description}
+									</td>
+								</Tooltip>
 								<td>{activity.updatedAt.slice(0, 10)}</td>
 								<td>
 									<div className="drop-menu">
