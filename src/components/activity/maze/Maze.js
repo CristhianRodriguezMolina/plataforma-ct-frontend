@@ -575,36 +575,88 @@ export default function Maze() {
 		// Number of cells that can be traveled
 		var usableCells = frameActions.length;
 
-		// for (let i = 0; i < frameActions.length; i++) {
-		// 	// Current cell of the animation to be analized
-		// 	const currentCell = getCell(Math.round(currentLeft / wX), Math.round(currentTop / wY));
+		for (let i = 0; i < frameActions.length; i++) {
 
-		// 	// If the path is the END of the maze then set a win and comes out of the for
-		// 	if (currentCell.type === actions.END) {
-		// 		usableCells = i + 1;
-		// 		isWin = true;
-		// 		break;
-		// 	}
+			// Current action to be analized and processed
+			const action = frameActions[i].type;
 
-		// 	// If the path is blocked then set a error and comes out of the for
-		// 	if (currentCell.type === actions.BLOCK || currentCell.type === 'NOT_EXIST' || i === frameActions.length - 1) {
-		// 		usableCells = i + 1;
+			if (action === 'FORWARD') { // IF THE ACTION IS GO FORWARD
+				if (currentDirection === 'UP') {
+					currentTop -= wY;
+				} else if (currentDirection === 'DOWN') {
+					currentTop += wY;
+				} else if (currentDirection === 'RIGHT') {
+					currentLeft += wX;
+				} else if (currentDirection === 'LEFT') {
+					currentLeft -= wX;
+				}
+			} else if (action === 'RIGHT') { // IF THE ACTION IS TURN RIGHT
+				if (currentDirection === 'UP') {
+					currentDirection = 'RIGHT';
+				} else if (currentDirection === 'RIGHT') {
+					currentDirection = 'DOWN';
+				} else if (currentDirection === 'DOWN') {
+					currentDirection = 'LEFT';
+				} else if (currentDirection === 'LEFT') {
+					currentDirection = 'UP';
+				}
 
-		// 		if (currentCell.type === actions.BLOCK) {
-		// 			errorMessage = 'El robot choco con una pared';
-		// 		} else if (currentCell.type === 'NOT_EXIST') {
-		// 			errorMessage = 'El robot se cayo del laberinto';
-		// 		} else if (i === frameActions.length - 1) {
-		// 			errorMessage = 'No se encontró el final del laberinto';
-		// 		}
+				currentGrades = currentGrades + 90;
 
-		// 		isError = true;
-		// 		break;
-		// 	}
-		// }
+			} else if (action === 'LEFT') { // IF THE ACTION IS TURN LEFT
+				if (currentDirection === 'UP') {
+					currentDirection = 'LEFT';
+				} else if (currentDirection === 'RIGHT') {
+					currentDirection = 'UP';
+				} else if (currentDirection === 'DOWN') {
+					currentDirection = 'RIGHT';
+				} else if (currentDirection === 'LEFT') {
+					currentDirection = 'DOWN';
+				}
+
+				currentGrades = currentGrades - 90;
+			}
+
+			// Current cell of the animation to be analized
+			const currentCell = getCell(Math.round(currentLeft / wX), Math.round(currentTop / wY));
+
+			// If the path is the END of the maze then set a win and comes out of the for
+			if (currentCell.type === actions.END) {
+				usableCells = i + 1;
+				isWin = true;
+
+				animateDuration = (i + 1) * 0.5;
+				setAnimationDuration(`${animateDuration}s`);
+				break;
+			}
+
+			// If the path is blocked then set a error and comes out of the for
+			if (currentCell.type === actions.BLOCK || currentCell.type === 'NOT_EXIST' || i === frameActions.length - 1) {
+				usableCells = i + 1;
+
+				if (currentCell.type === actions.BLOCK) {
+					errorMazeMessage = 'El robot choco con una pared';
+				} else if (currentCell.type === 'NOT_EXIST') {
+					errorMazeMessage = 'El robot se cayo del laberinto';
+				} else if (i === frameActions.length - 1) {
+					errorMazeMessage = 'No se encontró el final del laberinto';
+				}
+
+				isError = true;
+
+				animateDuration = (i + 1) * 0.5;
+				setAnimationDuration(`${animateDuration}s`);
+				break;
+			}
+		}
+
+		// SET NEWLY THE VARIABLES CURRENT TOP, LEFT AND DIRECTION TO THE INITIAL VALUE
+		currentDirection = 'UP';
+		currentLeft = startX;
+		currentTop = startY;
+		currentGrades = 0;
 
 		// Current percent of the animation and the offset 
-
 		const percentOffset = Math.floor(100 / usableCells);
 		var currentPercent = percentOffset;
 
@@ -685,36 +737,34 @@ export default function Maze() {
 			// Increase the current percent with the offset
 			currentPercent += percentOffset;
 
-			// Current cell of the animation to be analized
-			const currentCell = getCell(Math.round(currentLeft / wX), Math.round(currentTop / wY));
+			// // Current cell of the animation to be analized
+			// const currentCell = getCell(Math.round(currentLeft / wX), Math.round(currentTop / wY));
 
-			// If the path is the END of the maze then set a win and comes out of the for
-			if (currentCell.type === actions.END) {
-				isWin = true;
-				animateDuration = Math.floor(((i + 1) / frameActions.length) * 5);
-				setAnimationDuration(`${animateDuration}s`);
-				break;
-			}
+			// // If the path is the END of the maze then set a win and comes out of the for
+			// if (currentCell.type === actions.END) {
+			// 	isWin = true;
+			// 	animateDuration = Math.floor(((i + 1) / frameActions.length) * 5);
+			// 	setAnimationDuration(`${animateDuration}s`);
+			// 	break;
+			// }
 
-			// If the path is blocked then set a error and comes out of the for
-			if (currentCell.type === actions.BLOCK || currentCell.type === 'NOT_EXIST' || i === frameActions.length - 1) {
+			// // If the path is blocked then set a error and comes out of the for
+			// if (currentCell.type === actions.BLOCK || currentCell.type === 'NOT_EXIST' || i === frameActions.length - 1) {
 
-				if (currentCell.type === actions.BLOCK) {
-					errorMazeMessage = 'El robot choco con una pared';
-				} else if (currentCell.type === 'NOT_EXIST') {
-					errorMazeMessage = 'El robot se cayo del laberinto';
-				} else if (i === frameActions.length - 1) {
-					errorMazeMessage = 'No se encontró el final del laberinto';
-				}
+			// 	if (currentCell.type === actions.BLOCK) {
+			// 		errorMazeMessage = 'El robot choco con una pared';
+			// 	} else if (currentCell.type === 'NOT_EXIST') {
+			// 		errorMazeMessage = 'El robot se cayo del laberinto';
+			// 	} else if (i === frameActions.length - 1) {
+			// 		errorMazeMessage = 'No se encontró el final del laberinto';
+			// 	}
 
-				isError = true;
-				animateDuration = Math.floor(((i + 1) / frameActions.length) * 5);
-				setAnimationDuration(`${animateDuration}s`);
-				break;
-			}
+			// 	isError = true;
+			// 	animateDuration = Math.floor(((i + 1) / frameActions.length) * 5);
+			// 	setAnimationDuration(`${animateDuration}s`);
+			// 	break;
+			// }
 		}
-
-		console.log(currentTop, currentLeft)
 
 		// Final step of the animation
 		stringKeyFrame += `
