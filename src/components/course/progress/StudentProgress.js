@@ -138,29 +138,30 @@ const StudentProgress = props => {
 
                                 <Typography className={classes.heading}>{task.name}</Typography>
                             </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography component="div">
-                                    <div>
-                                        <table>
+							<AccordionDetails>
+                                <Typography component="div" style={{width: '100%'}}>
+									<div>
+                                        <table className="student-progress-by-tasks">
                                             <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>Actividades</th>
-                                                    <th>Completado</th>
+                                                    <th className="name-field-th">Name</th>
+                                                    <th className="activities-field-th">Actividades</th>
+                                                    <th className="completed-field-th">Completado</th>
                                                 </tr>
                                             </thead>
 
-                                            <tbody>
+											<tbody>
+
                                                 {props.students ?
                                                     props.students.map((student) => {
                                                         return <tr>
-															<td className="name-field-overflow">{student.last_name} {student.first_name}</td>
-                                                            <td>
-                                                                <div className="student-progress-items-container">
+															<td className="student-name-field-td">{student.last_name} {student.first_name}</td>
+                                                            <td className="student-tasks-view-td">
+                                                                <div className="student-progress-items-container scrollable">
                                                                     {renderStudentProgress(student, task._id)}
                                                                 </div>
                                                             </td>
-                                                            <td>completed</td>
+                                                            <td className="completed-field-td">completed</td>
                                                         </tr>
                                                     })
                                                     : ""}
