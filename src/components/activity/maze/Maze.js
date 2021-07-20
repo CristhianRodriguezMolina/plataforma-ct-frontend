@@ -575,6 +575,7 @@ export default function Maze() {
 		// Number of cells that can be traveled
 		var usableCells = frameActions.length;
 
+		// In this for the cells are analyzed to define the broke or end number or iterations to create the animation
 		for (let i = 0; i < frameActions.length; i++) {
 
 			// Current action to be analized and processed
@@ -660,6 +661,7 @@ export default function Maze() {
 		const percentOffset = Math.floor(100 / usableCells);
 		var currentPercent = percentOffset;
 
+		// In this for the animation is created, having in count the before for to analize the cells
 		for (let i = 0; i < usableCells; i++) {
 
 			// Current action to be analized and processed
@@ -736,34 +738,6 @@ export default function Maze() {
 
 			// Increase the current percent with the offset
 			currentPercent += percentOffset;
-
-			// // Current cell of the animation to be analized
-			// const currentCell = getCell(Math.round(currentLeft / wX), Math.round(currentTop / wY));
-
-			// // If the path is the END of the maze then set a win and comes out of the for
-			// if (currentCell.type === actions.END) {
-			// 	isWin = true;
-			// 	animateDuration = Math.floor(((i + 1) / frameActions.length) * 5);
-			// 	setAnimationDuration(`${animateDuration}s`);
-			// 	break;
-			// }
-
-			// // If the path is blocked then set a error and comes out of the for
-			// if (currentCell.type === actions.BLOCK || currentCell.type === 'NOT_EXIST' || i === frameActions.length - 1) {
-
-			// 	if (currentCell.type === actions.BLOCK) {
-			// 		errorMazeMessage = 'El robot choco con una pared';
-			// 	} else if (currentCell.type === 'NOT_EXIST') {
-			// 		errorMazeMessage = 'El robot se cayo del laberinto';
-			// 	} else if (i === frameActions.length - 1) {
-			// 		errorMazeMessage = 'No se encontró el final del laberinto';
-			// 	}
-
-			// 	isError = true;
-			// 	animateDuration = Math.floor(((i + 1) / frameActions.length) * 5);
-			// 	setAnimationDuration(`${animateDuration}s`);
-			// 	break;
-			// }
 		}
 
 		// Final step of the animation
