@@ -16,9 +16,6 @@ import TaskCard from '../task/TaskCard';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-// Button
-import Button from '@material-ui/core/Button';
-
 // Modal de confirmacion de borrado
 import AlertModal from '../../common/AlertModal';
 

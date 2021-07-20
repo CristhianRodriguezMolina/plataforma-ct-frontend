@@ -70,7 +70,6 @@ const Intructions = props => {
     }
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
-
         let arrayCopy = [...instructionsList];
         arrayCopy = arrayMove(arrayCopy, oldIndex, newIndex);
         setInstructionsList(arrayCopy);

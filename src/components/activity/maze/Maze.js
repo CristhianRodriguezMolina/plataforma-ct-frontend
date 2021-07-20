@@ -16,9 +16,6 @@ import maze_block from '../../../assets/maze-block.jpg'
 import maze_start from '../../../assets/maze-start.jpg'
 import maze_end from '../../../assets/maze-end.jpg'
 
-// Delay package
-import delay from 'delay';
-
 // COMPONENTS
 
 // Instructions
@@ -28,7 +25,7 @@ import Intructions from './Intructions';
 import Cell from './Cell';
 
 // Material UI core
-import { Container, ButtonBase } from '@material-ui/core';
+import { Container, ButtonBase, FormControlLabel, Switch } from '@material-ui/core';
 
 // Icons
 import { ZoomIn, ZoomOut } from '@material-ui/icons';
@@ -98,6 +95,9 @@ export default function Maze() {
 
 	// Loading component while the maze is being fetching 
 	const [loading, setLoading] = useState(true);
+
+	// Verified activity 
+	const [verified, setVerified] = useState(false);
 
 	// MAZE VARIABLES
 
@@ -249,6 +249,7 @@ export default function Maze() {
 				verifyStartEnd(res.data); // It verifies if the comming maze have start and/or end
 				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
 				setActivityDescription(res.data.activity_id.description);
+				setVerified(res.data.activity_id.verified);
 				setLoading(false);
 			})
 			.catch(err => {
@@ -375,7 +376,8 @@ export default function Maze() {
 			const res = await api.put(`/api/maze/resize/${activityId}`, {
 				cells: maze.cells,
 				columns: e.target[1].value,
-				rows: e.target[0].value
+				rows: e.target[0].value,
+				verified: maze.verified
 			}, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			});
@@ -410,13 +412,14 @@ export default function Maze() {
 			const response = await api.put(`/api/activity/${activityId}`, {
 				activity: {
 					name: activityName,
-					description: activityDescription
+					description: activityDescription,
+					verified: verified
 				},
 				child: {
 					cells: maze.cells,
 					instructions: maze.instructions,
 					columns: maze.cols,
-					rows: maze.rows,
+					rows: maze.rows
 				}
 			}, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
@@ -758,11 +761,17 @@ export default function Maze() {
 		}
 
 		if (animationType === 'ERROR') {
+			setMaze(prevMaze => {
+				return { ...prevMaze, verified: false }
+			})
 			console.log('Hubo un error en el camino del maze')
 			showError(errorMazeMessage);
 		}
 
 		if (animationType === 'WIN') {
+			setMaze(prevMaze => {
+				return { ...prevMaze, verified: true }
+			})
 			console.log('Felicidades completaste el laberinto')
 			showSuccess('Felicidades completaste el laberinto')
 		}
@@ -920,6 +929,16 @@ export default function Maze() {
 							<div>
 								<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
 								<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
+								<div className='d-flex justify-content-end'>
+									<FormControlLabel className="switcher" label="Verificado" control={
+										<Switch
+											checked={verified}
+											onChange={() => setVerified(!verified)}
+											name="visibilty"
+											color="primary"
+										/>
+									} />
+								</div>
 							</div>
 							<hr />
 							<div className='d-flex justify-content-around align-items-center'>

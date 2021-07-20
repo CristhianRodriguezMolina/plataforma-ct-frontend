@@ -21,6 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
+import { FormControlLabel, Switch } from '@material-ui/core';
 
 export const LogicSequenceContext = createContext({
 	selectedCard: null,
@@ -56,6 +57,8 @@ const LogicSequence = props => {
 	const [cardName, setCardName] = useState("");
 
 	const [showInpNewCard, setShowInpNewCard] = useState(false);
+
+	const [verified, setVerified] = useState(false);
 
 	const { activityId } = useParams();
 
@@ -111,6 +114,7 @@ const LogicSequence = props => {
 					setSequenceList(res.data.sequence_cards);
 					setActivityName(res.data.activity_id.name);
 					setActivityDescription(res.data.activity_id.description);
+					setVerified(res.data.activity_id.verified);
 					setLoading(false);
 				})
 				.catch(err => {
@@ -162,7 +166,8 @@ const LogicSequence = props => {
 			api.put(`/api/activity/${activityId}`, {
 				activity: {
 					name: activityName,
-					description: activityDescription
+					description: activityDescription,
+					verified: verified
 				},
 				child: {
 					sequence_cards: sequenceList
@@ -258,6 +263,16 @@ const LogicSequence = props => {
 							<div className="logic-sequence-info">
 								<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
 								<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
+								<div className='d-flex justify-content-end'>
+									<FormControlLabel className="switcher" label="Verificado" control={
+										<Switch
+											checked={verified}
+											onChange={() => setVerified(!verified)}
+											name="visibilty"
+											color="primary"
+										/>
+									} />
+								</div>
 							</div>
 							:
 							<div>

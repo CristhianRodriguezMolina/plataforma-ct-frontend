@@ -133,7 +133,8 @@ export default function Cell(props) {
 				...prevMaze,
 				cells: prevMaze.cells.map((c, i) => {
 					return i === index ? cell : c;
-				})
+				}),
+				verified: false
 			}
 		});
 	}

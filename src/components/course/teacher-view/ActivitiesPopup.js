@@ -17,9 +17,6 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 // User modal card
 import ActivityModalCard from "./ActivityModalCard";
 
-// Button
-import Button from "@material-ui/core/Button";
-
 // Alert
 import Alert from "@material-ui/lab/Alert";
 
