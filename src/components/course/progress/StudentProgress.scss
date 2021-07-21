@@ -1,5 +1,8 @@
 .activity-item-progress {
-	margin: 0 0.5em 0.5em;
+	margin: 0.2em 0.5em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
     input[type="radio"]:disabled {
         display: none;
@@ -50,7 +53,10 @@
 
 		tr {
 			display: flex;
-			gap: 1em;
+		}
+
+		th, td {
+			border-bottom: 1px solid #ddd;
 		}
 
 		.student-tasks-view-td, 
@@ -75,7 +81,6 @@
 		}
 
 		.student-name-field-td {
-			height: 1.5em;
 			overflow: hidden;
 			display: -webkit-box;
 			-webkit-line-clamp: 1;
@@ -83,6 +88,14 @@
 		}
 
 		.completed-field-td	{
+		
+			.incompleted-task-icon {
+				color: red;
+			}
+
+			.completed-task-icon {
+				color: #3ec763;
+			}
 		}
 	}
 }

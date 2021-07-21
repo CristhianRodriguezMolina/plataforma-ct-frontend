@@ -19,6 +19,10 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+//Material ui icons
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
+
 //Tooltip
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -35,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const StudentProgress = props => {
 
     const [studentActivities, setStudentActivities] = useState(null);
-
+	
     const classes = useStyles();
 
     useEffect(async () => {
@@ -123,11 +127,27 @@ const StudentProgress = props => {
         }
         return items;
     }
+	const checkCompletedTask = (student, taskId) => {
+        let tempActivities = props.taskActivities.filter((taskActivity) => taskActivity.task === taskId);
+        let tempStudentActivities = studentActivities.filter(studentActivity => studentActivity.student === student._id && studentActivity.task === taskId && studentActivity.complete);
 
-    return (
-        <div className="student-progress-container">
-            {props.taskActivities && studentActivities ?
-                props.unit.tasks.map((task, index) => {
+		if (tempStudentActivities) {
+			if(tempStudentActivities.length !== tempActivities.length) {
+				return <CancelIcon className='incompleted-task-icon'/>
+			}
+			else {
+				return <CheckCircleIcon className='completed-task-icon'/>
+			}
+		}
+		else {
+			return <CancelIcon className='incompleted-task-icon'/>
+		}
+	}
+
+	return (
+		<div className="student-progress-container">
+			{props.taskActivities && studentActivities ?
+					props.unit.tasks.map((task) => {
                     return <div className={classes.root}>
                         <Accordion>
                             <AccordionSummary
@@ -163,7 +183,8 @@ const StudentProgress = props => {
 																	{renderStudentProgress(student, task._id)}
 																</div>
 															</td>
-															<td className="completed-field-td">completed</td>
+															
+															<td className="completed-field-td">{checkCompletedTask(student, task._id)}</td>
 														</tr>
 													})
 													: ""}

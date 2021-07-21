@@ -115,7 +115,7 @@ const LogicSequenceStudent = props => {
                 setOrderedSequenceList(logicSequenceRes.data.sequence_cards);
                 setSequenceList(shuffleArray(logicSequenceRes.data.sequence_cards, { 'copy': true }));
                 setActivity(logicSequenceRes.data.activity_id);
-
+				
 
                 //GET student activity
                 const studentActivityRes = await api.post("/api/student-activity/foreign", {
