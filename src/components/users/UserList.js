@@ -17,7 +17,7 @@ import UserCard from './UserCard';
 // Link and withRouter
 import { useLocation } from 'react-router-dom';
 
-export default function UserList({ type }) {
+export default function UserList({ type, filterText }) {
 
 	let location = useLocation();
 
@@ -29,7 +29,11 @@ export default function UserList({ type }) {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+	// Users of the platform (Teacher or Students)
 	const [users, setUsers] = useState(null)
+
+	// Usuarios filtrados
+	const [filteredUsers, setFilteredUsers] = useState(users);
 
 	const [actualType, setActualType] = useState(type);
 
@@ -37,10 +41,24 @@ export default function UserList({ type }) {
 		if (!users || actualType !== type) {
 			setSuccess(false);
 			setUsers(null);
+			setFilteredUsers(null);
 			setActualType(type);
 			fetchUsers();
 		}
 	}, [location]);
+
+	useEffect(() => {
+		if (filterText !== '') {
+			setFilteredUsers(users.filter(({ first_name, last_name, phone, id }) => (
+				first_name.toLowerCase().includes(filterText.toLowerCase()) ||
+				last_name.toLowerCase().includes(filterText.toLowerCase()) ||
+				phone.includes(filterText) ||
+				id.includes(filterText)
+			)));
+		} else {
+			setFilteredUsers(users);
+		}
+	}, [filterText]);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -80,6 +98,7 @@ export default function UserList({ type }) {
 			if (users) {
 				// Asignacion de los cursos de la base de datos
 				setUsers(users);
+				setFilteredUsers(users);
 
 				if (users.length > 0) {
 					showSuccess(message);
@@ -122,18 +141,14 @@ export default function UserList({ type }) {
 			}
 			<div>
 				{
-					users && users.length > 0 ?
-						users.map(user => (
+					filteredUsers && filteredUsers.length > 0 ?
+						filteredUsers.map(user => (
 							<div key={user._id}>
 								<UserCard user={user} setUsers={setUsers} type={type} />
 							</div>
 						))
 						:
-						<>
-							<div>
-								<h3 className="there-is-no-users">Aún no hay {type === "teachers" ? "profesores" : "alumnos"}</h3>
-							</div>
-						</>
+						<h3 className="there-is-no-users">No hay {type === "teachers" ? "profesores" : "alumnos"} para mostrar</h3>
 				}
 			</div>
 		</div>

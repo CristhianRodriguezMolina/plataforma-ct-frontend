@@ -197,7 +197,7 @@ export default function MyCourses({ history }) {
 					:
 					(
 						<div>
-							<h3 className="there-is-no-courses">Aún no hay cursos</h3>
+							<h3 className="there-is-no-courses text-center">Aún no hay cursos</h3>
 						</div>
 					)
 			}
