@@ -45,6 +45,7 @@ export default function StudentsInformation(props) {
     // Students of the course
     const [students, setStudents] = useState(null);
 
+    // Filtered students
     const [filteredStudents, setFilteredStudents] = useState(students);
 
     // Text of the filed that is used to filter the students list
@@ -117,8 +118,8 @@ export default function StudentsInformation(props) {
     };
 
     // Method to do a smooth scroll
-    const scrollTo = () => {
-        scroll.scrollTo(500, {
+    const scrollTo = (pos) => {
+        scroll.scrollTo(100 + (100 * pos), {
             duration: 500,
             smooth: true,
             containerId: 'idScrollContainer'
@@ -137,17 +138,21 @@ export default function StudentsInformation(props) {
             const { students: newStudents, message } = response.data;
 
             if (newStudents) {
+                // All this code above is to scroll the page to the first student that is added
+                let firstAddedStudentPosition = 0;
                 if (students && isAddingStudents) {
                     const newStudentsAux = newStudents.map(x => x._id);
                     const studentsAux = students.map(x => x._id);
-                    let difference = newStudentsAux.filter(x => studentsAux.indexOf(x) === -1);
+                    const difference = newStudentsAux.filter(x => studentsAux.indexOf(x) === -1);
+
+                    firstAddedStudentPosition = newStudentsAux.indexOf(difference[0]) + 1;
                 }
 
                 setStudents(newStudents);
                 setFilteredStudents(newStudents);
 
                 if (isAddingStudents) {
-                    scrollTo();
+                    scrollTo(firstAddedStudentPosition);
                 }
 
                 showSuccess(message);
