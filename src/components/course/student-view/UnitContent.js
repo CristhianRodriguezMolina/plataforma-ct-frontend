@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 // SCSS
 import './studentview.scss';
 
+// API
+import api from '../../../services/api';
+
 // COMPONENTS
 
 import DynamicInput from '../../common/DynamicInput';
@@ -11,6 +14,11 @@ import TaskCard from '../task/TaskCard';
 
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+// Activities icons
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import BallotIcon from '@material-ui/icons/Ballot';
+import BorderVerticalIcon from '@material-ui/icons/BorderVertical';
 
 // Button
 import Button from '@material-ui/core/Button';
@@ -28,6 +36,9 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 const UnitContent = props => {
 
 	const [isCompletedUnit, setCompletedUnit] = useState(false);
+
+	// save the information to show the continue the last task
+	const [lastActivityInfo, setLastActivityInfo] = useState(null);
 
 	const nameInputStyle = {
 		width: "100%",
@@ -75,6 +86,27 @@ const UnitContent = props => {
 		}
 	});
 
+	useEffect(async () => {
+		if(!isCompletedUnit) {
+			if(!lastActivityInfo) {
+				try {
+					const res = await api.get(`/api/course/students/last-activity/${localStorage.getItem('user_id')}/${props.course._id}/${props.unitValue._id}`, {
+						headers: {
+							'x-access-token': localStorage.getItem('token')
+						}
+					});
+					if(res) {
+						if(res.data.success) {
+							setLastActivityInfo(res.data.lastActivityInfo);
+						}
+					}
+				} catch (e) {
+					console.log(e);
+				}
+			}
+		}
+	}, [isCompletedUnit]);	
+
 	return (
 		<div className="unit-content-container">
 			<div className="unit-content-info mb-4">
@@ -93,8 +125,29 @@ const UnitContent = props => {
 					<h2>¡Completada!</h2>
 					<hr />
 					<p>¡Felicitaciones!
-						Has completado todas las actividades de esta unidad</p>
-				</div> : ""}
+						Has completado todas las actividades de esta unidad
+					</p>
+				</div> 
+				:
+				lastActivityInfo ?
+				<div>
+					<h1>¿Deseas continuar la última tarea?</h1>
+					<div className="last-activty-container">
+						<div className="task-info">
+							<h2>{ lastActivityInfo.taskName }</h2>
+							<p>{ lastActivityInfo.taskDes }</p>
+						</div>
+						<div className='last-activity-info'>
+							<AccountTreeIcon/>
+							<h3>{ lastActivityInfo.activityName }</h3>
+							<p>{ lastActivityInfo.activityDes }</p>
+							<p>{ lastActivityInfo.activityPos }</p>
+							<button className="custom-btn custom-btn-success px-2 py-1">Crear curso</button>
+						</div>
+					</div>
+				</div>
+				:""
+			}
 
 			<h1 className="h5 text-center mb-4">Actividades</h1>
 			{props.taskActivities ?
