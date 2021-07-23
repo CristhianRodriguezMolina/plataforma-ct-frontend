@@ -6,6 +6,9 @@ import './studentview.scss';
 // API
 import api from '../../../services/api';
 
+// WithRouter
+import { withRouter } from 'react-router-dom';
+
 // COMPONENTS
 
 import DynamicInput from '../../common/DynamicInput';
@@ -105,7 +108,13 @@ const UnitContent = props => {
 				}
 			}
 		}
-	}, [isCompletedUnit]);	
+	}, [isCompletedUnit]);
+
+	const redirectToActivity = () => {
+		if(lastActivityInfo) {
+			props.history.push(`/activity/logic-sequence/student/${props.course._id}/${props.unitValue._id}/${lastActivityInfo.taskId}/${lastActivityInfo.activityId}`);
+		}
+	}
 
 	return (
 		<div className="unit-content-container">
@@ -145,7 +154,7 @@ const UnitContent = props => {
 							<p className='activity-des-label'><span style={{color: '#aaa'}}>Descriptión: </span>{ lastActivityInfo.activityDes }</p>
 							<p className='activity-pos-label'><span style={{color: '#aaa'}}>Número: </span>{ (lastActivityInfo.activityPos + 1) }</p>
 							<div className='do-activity-button-container'>
-								<button className="custom-btn custom-btn-success px-2 py-1">Realizar actividad</button>
+								<button className="custom-btn custom-btn-success px-2 py-1" onClick={() => redirectToActivity()}>Realizar actividad</button>
 							</div>
 						</div>
 					</div>
@@ -185,4 +194,4 @@ UnitContent.propTypes = {
 	onUpdateChanges: PropTypes.func
 }
 
-export default UnitContent;
+export default withRouter(UnitContent);
