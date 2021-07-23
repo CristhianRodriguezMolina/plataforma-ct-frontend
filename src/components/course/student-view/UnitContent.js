@@ -130,25 +130,30 @@ const UnitContent = props => {
 				</div> 
 				:
 				lastActivityInfo ?
-				<div>
-					<h1>¿Deseas continuar la última tarea?</h1>
-					<div className="last-activty-container">
+				<div className="quick-access-container">
+					<h1 className="quick-access-label">Acceso rápido</h1>
+					<div className="last-activity-container">
 						<div className="task-info">
 							<h2>{ lastActivityInfo.taskName }</h2>
 							<p>{ lastActivityInfo.taskDes }</p>
 						</div>
 						<div className='last-activity-info'>
-							<AccountTreeIcon/>
-							<h3>{ lastActivityInfo.activityName }</h3>
-							<p>{ lastActivityInfo.activityDes }</p>
-							<p>{ lastActivityInfo.activityPos }</p>
-							<button className="custom-btn custom-btn-success px-2 py-1">Crear curso</button>
+							<div className='activity-icon'>
+								<AccountTreeIcon style={{ fontSize: 50 }}/>
+							</div>
+							<h3><span style={{color: '#aaa'}}>Nombre: </span>{ lastActivityInfo.activityName }</h3>
+							<p className='activity-des-label'><span style={{color: '#aaa'}}>Descriptión: </span>{ lastActivityInfo.activityDes }</p>
+							<p className='activity-pos-label'><span style={{color: '#aaa'}}>Número: </span>{ (lastActivityInfo.activityPos + 1) }</p>
+							<div className='do-activity-button-container'>
+								<button className="custom-btn custom-btn-success px-2 py-1">Realizar actividad</button>
+							</div>
 						</div>
 					</div>
 				</div>
 				:""
 			}
 
+			<hr className="mx-3" />
 			<h1 className="h5 text-center mb-4">Actividades</h1>
 			{props.taskActivities ?
 				<div className="cards-container">

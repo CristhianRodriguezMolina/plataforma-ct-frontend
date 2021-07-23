@@ -2,37 +2,137 @@
 	width: 5em;
 	height: 5em;
 }
+.unit-content-container {
+	.completed-unit-message {
+		margin: auto 1em 1em 1em;
+		padding: 1em;
 
-.completed-unit-message {
-	margin: auto 1em 1em 1em;
-	padding: 1em;
+		background-color: rgb(250, 250, 250);
+		border-radius: 5px;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 
-	background-color: rgb(250, 250, 250);
-	border-radius: 5px;
-	box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+			.success-icon-container {
+				display: flex;
+				align-items: center;
+				justify-content: center;
 
-	.success-icon-container {
-		display: flex;
-		align-items: center;
-		justify-content: center;
+				color: rgb(74, 194, 74);
 
-		color: rgb(74, 194, 74);
+				.success-icon {
+				font-size: 5em;
+			}
+		}
 
-		.success-icon {
-			font-size: 5em;
+		h2 {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.5em;
+		}
+
+		p {
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 	}
 
-	h2 {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.5em;
-	}
+	.quick-access-container {
 
-	p {
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		.quick-access-label {
+			margin: 0.7em;
+			font-size: 1.5em;
+			font-weight: 600;
+		}
+
+		.last-activity-container {
+			border-radius: 4px;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+			margin: 0.5em 1em 1em;
+		
+			.task-info {
+				padding: 1em;
+				border-radius: 4px 4px 0 0; 
+				border-color: rgb(214, 214, 214);
+				border-width: 0 0 1px 0;
+				border-style: solid;
+				
+				h2 {
+					font-size: 1.2em;
+					font-weight: 500;
+				}
+
+				p {
+					margin: 0em;
+					font-size: 1em;
+				}
+			
+			}
+	
+			.last-activity-info {
+				padding: 1em;
+				.activity-icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					margin: 0.5em;
+				}
+
+				h3 {
+					font-size: 1.2em;
+				}
+
+				p {
+					font-size: 1em;
+				}
+														  
+				.do-activity-button-container {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 0.5em;
+				}
+			}
+		}
 	}
 }
+
+@media only screen and (min-width: 768px) {
+
+	.unit-content-container {
+
+		.quick-access-container {
+			
+			.last-activity-container {
+
+				.task-info {
+					padding: 0.5em;
+				}
+				
+				.last-activity-info {
+					padding: 1em 0.5em;
+					display: grid;
+					grid-template-columns: 15% 65% 20%;
+
+					.activity-icon {
+						grid-row-start: 1;
+						grid-row-end: span 3;
+						grid-column-start: 1;
+						grid-column-end: 1;
+					}
+
+					.activity-pos-label {
+						margin: 0;
+					}
+															  
+					.do-activity-button-container {
+						grid-row-start: 1;
+						grid-row-end: span 3;
+						grid-column-start: 3;
+						grid-column-end: 3;
+					}
+				}
+			}
+		}
+	}
+} 
