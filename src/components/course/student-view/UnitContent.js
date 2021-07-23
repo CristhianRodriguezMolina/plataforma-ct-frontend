@@ -148,10 +148,15 @@ const UnitContent = props => {
 						</div>
 						<div className='last-activity-info'>
 							<div className='activity-icon'>
-								<AccountTreeIcon style={{ fontSize: 50 }}/>
+								{lastActivityInfo.activityType === 'logic_sequence' ?
+									<AccountTreeIcon style={{ fontSize: 50 }}/> :
+									lastActivityInfo.activityType === 'maze' ?
+									<BorderVerticalIcon style={{ fontSize: 50 }}/> :
+									<BallotIcon style={{ fontSize: 50 }}/>
+								}
 							</div>
 							<h3><span style={{color: '#aaa'}}>Nombre: </span>{ lastActivityInfo.activityName }</h3>
-							<p className='activity-des-label'><span style={{color: '#aaa'}}>Descriptión: </span>{ lastActivityInfo.activityDes }</p>
+							<p className='activity-des-label'><span style={{color: '#aaa'}}>Descripción: </span>{ lastActivityInfo.activityDes }</p>
 							<p className='activity-pos-label'><span style={{color: '#aaa'}}>Número: </span>{ (lastActivityInfo.activityPos + 1) }</p>
 							<div className='do-activity-button-container'>
 								<button className="custom-btn custom-btn-success px-2 py-1" onClick={() => redirectToActivity()}>Realizar actividad</button>
