@@ -175,8 +175,8 @@ export default function StudentsPopup(props) {
 				toggle={toggle}
 				className=""
 				size="lg"
-				scrollable="true"
-				centered="true"
+				scrollable={true}
+				centered={true}
 			>
 				<ModalHeader toggle={toggle}>Agregue alumnos a su curso</ModalHeader>
 				<ModalBody className="students-modal">

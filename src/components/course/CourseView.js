@@ -65,13 +65,13 @@ export default function CourseView({ history }) {
     }, [color]);
 
     useEffect(() => {
-        // Para verificar que los datos de la ruta sean nombres correctos
-        if (type !== 'edit' && type !== 'view' && view !== 'course-info' && view !== 'students-info' && view !== 'units-info') {
-            history.push('/unauthorized');
-        }
         // Para verificar que la sesion siga activa
-        else if (isSessionExpired) {
+        if (isSessionExpired) {
             history.push('/session-expired');
+        }
+        // Para verificar que los datos de la ruta sean nombres correctos
+        else if (type !== 'edit' && type !== 'view' && view !== 'course-info' && view !== 'students-info' && view !== 'units-info') {
+            history.push('/unauthorized');
         }
         // Para verificar que un usuario de role student no pueda acceder a la edición del curso
         else if (type === 'edit' && !isAdmin && !isTeacher) {

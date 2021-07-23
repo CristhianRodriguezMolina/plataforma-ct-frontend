@@ -54,6 +54,8 @@ const UserState = (props) => {
                 localStorage.removeItem('expire_at');
                 return true;
             }
+        } else {
+            return true;
         }
         return false;
     }
@@ -66,7 +68,7 @@ const UserState = (props) => {
                     isAdmin: isAdminHandler(),
                     isTeacher: isTeacherHandler(),
                     isStudent: isStudentHandler(),
-                    isSessionExpired: isSessionExpiredHandler(),
+                    isSessionExpired: false,
                 }
             });
         } catch (error) {
@@ -89,9 +91,21 @@ const UserState = (props) => {
                     isAdmin: false,
                     isTeacher: false,
                     isStudent: false,
-                    isSessionExpired: isSessionExpiredHandler(),
                 }
             });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const sessionExpiredHandler = () => {
+        try {
+            dispatch({
+                type: LOGOUT, payload: {
+                    isSessionExpired: true,
+                }
+            });
+            logoutHandler();
         } catch (error) {
             console.error(error);
         }
@@ -102,7 +116,7 @@ const UserState = (props) => {
         isAdmin: isAdminHandler(),
         isTeacher: isTeacherHandler(),
         isStudent: isStudentHandler(),
-        isSessionExpired: isSessionExpiredHandler(),
+        isSessionExpired: false,
     };
 
     const [navbarColor, setNavbarColor] = useState('#ffcdd2')
@@ -124,6 +138,7 @@ const UserState = (props) => {
         changeFontColor,
         signinHandler,
         logoutHandler,
+        sessionExpiredHandler,
         isLoggedIn: state.isLoggedIn,
         isAdmin: state.isAdmin,
         isTeacher: state.isTeacher,

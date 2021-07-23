@@ -16,6 +16,7 @@ import UserCard from './UserCard';
 
 // Link and withRouter
 import { useLocation } from 'react-router-dom';
+import { Pagination } from '@material-ui/lab';
 
 export default function UserList({ type, filterText }) {
 
@@ -35,7 +36,17 @@ export default function UserList({ type, filterText }) {
 	// Usuarios filtrados
 	const [filteredUsers, setFilteredUsers] = useState(users);
 
+	// Actual type of the view (teacher or student)
 	const [actualType, setActualType] = useState(type);
+
+	// Variable to manage the current page of the students list
+	const [page, setPage] = useState(1);
+
+	// Variable to set the number of pages there ir gonna be
+	const [numPages, setNumPages] = useState(5);
+
+	// Max number of students in one page
+	const maxUsers = 5;
 
 	useEffect(() => {
 		if (!users || actualType !== type) {
@@ -43,6 +54,7 @@ export default function UserList({ type, filterText }) {
 			setUsers(null);
 			setFilteredUsers(null);
 			setActualType(type);
+			setPage(1);
 			fetchUsers();
 		}
 	}, [location]);
@@ -57,8 +69,24 @@ export default function UserList({ type, filterText }) {
 			)));
 		} else {
 			setFilteredUsers(users);
+			setPage(1); // This line is for, when you clean the search input then put the page in 1
 		}
 	}, [filterText]);
+
+	// UseEffect to manage the current number of pages
+	useEffect(() => {
+		if (filteredUsers) {
+			const newNumPages = Math.ceil(filteredUsers.length / maxUsers);
+
+			// The number of pages is according with the number of students that are been shown 
+			setNumPages(newNumPages);
+
+			// If the current page is deleted cause a student is deleted then the current page is setted to the last
+			if (page > newNumPages) {
+				setPage(newNumPages);
+			}
+		}
+	}, [filteredUsers])
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -125,6 +153,11 @@ export default function UserList({ type, filterText }) {
 		setProcessMessage('');
 	}
 
+	// Method to handle the change of the page
+	const handleChangePage = (evt, page) => {
+		setPage(page);
+	}
+
 	return (
 		<div className="mt-4">
 			{success ?
@@ -142,11 +175,24 @@ export default function UserList({ type, filterText }) {
 			<div>
 				{
 					filteredUsers && filteredUsers.length > 0 ?
-						filteredUsers.map(user => (
-							<div key={user._id}>
-								<UserCard user={user} setUsers={setUsers} type={type} />
-							</div>
-						))
+						<>
+							{/* USES A SLICE TO JUST RENDER THE USERS IN THE CURRENT PAGE */}
+							{
+								filteredUsers.slice((page - 1) * maxUsers, ((page - 1) * maxUsers) + maxUsers).map(user => (
+									<div key={user._id}>
+										<UserCard user={user} setUsers={setUsers} type={type} />
+									</div>
+								))
+							}
+							{
+								filteredUsers.length > maxUsers ?
+									<div className='d-flex justify-content-center mt-4'>
+										<Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
+									</div>
+									:
+									''
+							}
+						</>
 						:
 						<h3 className="there-is-no-users">No hay {type === "teachers" ? "profesores" : "alumnos"} para mostrar</h3>
 				}

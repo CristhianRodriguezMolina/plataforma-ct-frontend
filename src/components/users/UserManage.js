@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 // CONTEXT
 import UserContext from '../../context/user/UserContext';
@@ -24,11 +24,16 @@ import { IconButton } from '@material-ui/core';
 
 export default function UserManage({ history }) {
 
+    let location = useLocation();
+
     // Variables del cotexto
     const { changeColor } = useContext(UserContext);
 
     // Datos que vienen como parametros en la ruta para este componente
     const { type } = useParams();
+
+    // Actual type of the view (teacher or student)
+    const [actualType, setActualType] = useState(type);
 
     // Text of the filed that is used to filter the students list
     const [searchInput, setSearchInput] = useState('');
@@ -56,6 +61,13 @@ export default function UserManage({ history }) {
             setFilterText('');
         }
     }, [searchInput])
+
+    useEffect(() => {
+        if (actualType !== type) {
+            setActualType(type);
+            setSearchInput('');
+        }
+    }, [location]);
 
     // Method to change the variable that filter the users in the list of users    
     const changeFilterText = (e) => {

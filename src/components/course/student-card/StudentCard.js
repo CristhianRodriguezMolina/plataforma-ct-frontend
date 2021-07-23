@@ -154,7 +154,7 @@ export default function StudentCard(props) {
 									<div className="d-flex">
 										<div className="btn-group-sm btn-group-vertical">
 											<Tooltip title="Borrar del curso" aria-label="delete">
-												<Link onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></Link>
+												<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></button>
 											</Tooltip>
 											<Tooltip title="Editar" aria-label="edit">
 												<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-primary btn-user-card"><Edit /></Link>

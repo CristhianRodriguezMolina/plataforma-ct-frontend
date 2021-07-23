@@ -38,8 +38,16 @@
 
 .search-form {
     .text-field {
+        position: relative;
         width: 100%;
         border-radius: 10px;
+        display: flex;
+        align-items: center;
+
+        .clear-button {
+            position: absolute;
+            right: 5px;
+        }
     }
     .btn-search {
         height: 35px;

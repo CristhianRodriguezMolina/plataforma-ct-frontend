@@ -12,15 +12,24 @@ import { Route, Redirect } from 'react-router';
 
 export default function ProtectedRoute({ component, type, ...options }) {
 
-    const { isLoggedIn, isAdmin, isTeacher, isStudent, isSessionExpired, logoutHandler } = useContext(UserContext);
+    const { isLoggedIn, isAdmin, isTeacher, isStudent, isSessionExpired, sessionExpiredHandler } = useContext(UserContext);
 
     const expire_at = localStorage.getItem('expire_at');
+    var expired = false;
     if (expire_at) {
         const now = Date.now().valueOf() / 1000;
         if (now > parseInt(expire_at)) {
-            logoutHandler();
+            console.log('Expirado protectedRoute')
+            sessionExpiredHandler();
+            expired = true;
+            return (
+                <Redirect to="/session-expired" />
+            )
         }
     }
+
+
+    console.log('paso')
 
     // En caso de que no se de el parametro de type, significa que cualquiera de los roles puede entrar a esta ruta
     // Por tanto se setea el type en los tres roles
@@ -34,14 +43,12 @@ export default function ProtectedRoute({ component, type, ...options }) {
     typeMap.set('teacher', isTeacher && type.includes('teacher')); // En caso de que sea teacher y el tipo de ruta sea para teacher
     typeMap.set('student', isStudent && type.includes('student')); // En caso de que sea student y el tipo de ruta sea para student
 
-    console.log(isSessionExpired)
-
-    if (isLoggedIn && (typeMap.get('admin') || typeMap.get('teacher') || typeMap.get('student')) && !isSessionExpired) {
+    if (isLoggedIn && (typeMap.get('admin') || typeMap.get('teacher') || typeMap.get('student')) && !expired) {
         return (
             <Route {...options} component={component} />
         )
     } else {
-        if (isSessionExpired) {
+        if (expired) {
             return (
                 <Redirect to="/session-expired" />
             )
@@ -51,7 +58,7 @@ export default function ProtectedRoute({ component, type, ...options }) {
             )
         } else {
             return (
-                <Redirect to='/unauthorized' />
+                <Redirect to='/' />
             )
         }
     }

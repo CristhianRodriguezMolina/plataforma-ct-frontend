@@ -46,8 +46,6 @@ export default function CreateUser({ history }) {
 	// Usuario en caso de que se vaya a editar
 	const [user, setUser] = useState(null);
 
-
-
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
@@ -127,7 +125,7 @@ export default function CreateUser({ history }) {
 		try {
 			if ((password !== "" && confirm_password !== "") || action === "edit") {
 				if (id !== "" && first_name !== "" && last_name !== ""  //Se verifica la existencia de todos los campos del formulario
-					&& birth_date !== Date.now && genre !== "") {
+					&& birth_date !== Date.now && genre !== "NA") {
 
 					setProcess(true);
 					setProcessMessage("Creando usuario...");

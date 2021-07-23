@@ -23,6 +23,9 @@ import { IconButton } from '@material-ui/core';
 // Icons
 import { Clear } from '@material-ui/icons';
 
+// Materia-ui lab
+import { Pagination } from '@material-ui/lab';
+
 /* TECAHER */
 export default function StudentsInformation(props) {
 
@@ -54,6 +57,15 @@ export default function StudentsInformation(props) {
     // Text that is used to filter the students list
     const [filterText, setFilterText] = useState('');
 
+    // Variable to manage the current page of the students list
+    const [page, setPage] = useState(1);
+
+    // Variable to set the number of pages there ir gonna be
+    const [numPages, setNumPages] = useState(1);
+
+    // Max number of students in one page
+    const maxStudents = 5;
+
     // UseEffect para obtener los alumnos del curso o en dado caso que se agreguen nuevos alumnos al curso se vuelvan a obtener
     useEffect(() => {
         if (!students || isAddingStudents) {
@@ -72,8 +84,24 @@ export default function StudentsInformation(props) {
             )));
         } else {
             setFilteredStudents(students);
+            setPage(1); // This line is for, when you clean the search input then put the page in 1
         }
     }, [filterText]);
+
+    // UseEffect to manage the current number of pages
+    useEffect(() => {
+        if (filteredStudents) {
+            const newNumPages = Math.ceil(filteredStudents.length / maxStudents);
+
+            // The number of pages is according with the number of students that are been shown 
+            setNumPages(newNumPages);
+
+            // If the current page is deleted cause a student is deleted then the current page is setted to the last
+            if (page > newNumPages) {
+                setPage(newNumPages);
+            }
+        }
+    }, [filteredStudents])
 
     // UseEffect to set the filter text to empty if the input is changed to empty
     useEffect(() => {
@@ -170,6 +198,11 @@ export default function StudentsInformation(props) {
         setProcessMessage('');
     }
 
+    // Method to handle the change of the page
+    const handleChangePage = (evt, page) => {
+        setPage(page);
+    }
+
     return (
         <div className='students-information'>
             {success ? <Alert className="alert-message mb-5" severity="success">{successMessage}</Alert> : ""}
@@ -198,10 +231,12 @@ export default function StudentsInformation(props) {
                 {filteredStudents && filteredStudents.length > 0 ?
                     <>
                         <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
+
+                        {/* USES A SLICE TO JUST RENDER THE STUDENTS IN THE CURRENT PAGE */}
                         {
-                            filteredStudents.map((student, index) => (
+                            filteredStudents.slice((page - 1) * maxStudents, ((page - 1) * maxStudents) + maxStudents).map((student, index) => (
                                 <StudentCard
-                                    index={index}
+                                    index={index + ((page - 1) * maxStudents)}
                                     id={student._id}
                                     key={student._id}
                                     student={student}
@@ -210,11 +245,19 @@ export default function StudentsInformation(props) {
                                     course={course} />
                             ))
                         }
+                        {
+                            filteredStudents.length > maxStudents ?
+                                <div className='d-flex justify-content-center mt-4'>
+                                    <Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
+                                </div>
+                                :
+                                ''
+                        }
                     </>
                     :
                     <>
                         <div className="there-is-no-students-container">
-                            <h3 className="there-is-no-students">Aún no hay alumnos en el curso</h3>
+                            <h3 className="there-is-no-students">No hay alumnos para mostrar</h3>
                         </div>
                     </>
                 }
