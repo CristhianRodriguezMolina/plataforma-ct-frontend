@@ -36,12 +36,18 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 //CheckCircleIcon
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
+//NoTasksMessage
+import NoTasksMessage from '../task/NoTasksMessage';
+
 const UnitContent = props => {
 
 	const [isCompletedUnit, setCompletedUnit] = useState(false);
 
 	// save the information to show the continue the last task
 	const [lastActivityInfo, setLastActivityInfo] = useState(null);
+
+	//show a message if the current unit has no task to show
+	const [foundTasks, setFoundTasks] = useState(true);
 
 	const nameInputStyle = {
 		width: "100%",
@@ -65,30 +71,35 @@ const UnitContent = props => {
 
 	useEffect(() => {
 		if (props.taskActivities && props.studentActivities && props.unitValue) {
-			let taskActivities = props.taskActivities.filter(taskActivity => taskActivity.unit === props.unitValue._id);
-			let disableBtn = true;
-			for (let i = 0; i < taskActivities.length && disableBtn; i++) {
-				//find if the student is linked to the especific activity
-				let nextActivity = props.studentActivities.filter(studentActivity => studentActivity.activity === taskActivities[i].activity);
+			if(props.unitValue.tasks.length > 0) {
+				let taskActivities = props.taskActivities.filter(taskActivity => taskActivity.unit === props.unitValue._id);
+				let disableBtn = true;
+				for (let i = 0; i < taskActivities.length && disableBtn; i++) {
+					//find if the student is linked to the especific activity
+					let nextActivity = props.studentActivities.filter(studentActivity => studentActivity.activity === taskActivities[i].activity);
 
-				//if the studentActivity exists
-				if (nextActivity.length > 0) {
+					//if the studentActivity exists
+					if (nextActivity.length > 0) {
 
-					if (!nextActivity[0].complete) {
+						if (!nextActivity[0].complete) {
+							disableBtn = false;
+						}
+					}
+					else {
 						disableBtn = false;
 					}
 				}
-				else {
-					disableBtn = false;
+			
+				if (disableBtn) {
+					setCompletedUnit(disableBtn);
 				}
-			}
 
-			if (disableBtn) {
-				setCompletedUnit(disableBtn);
+			} else {
+				setFoundTasks(false);
 			}
 		}
 	});
-
+	
 	useEffect(async () => {
 		if(!isCompletedUnit) {
 			if(!lastActivityInfo) {
@@ -169,6 +180,11 @@ const UnitContent = props => {
 
 			<hr className="mx-3" />
 			<h1 className="h5 text-center mb-4">Actividades</h1>
+
+			{!foundTasks ?
+				<NoTasksMessage />
+			: ""}
+
 			{props.taskActivities ?
 				<div className="cards-container">
 					{props.unitValue.tasks.map((task, i) => (
@@ -186,6 +202,7 @@ const UnitContent = props => {
 					))}
 				</div>
 				: ""}
+
 		</div >
 	)
 };

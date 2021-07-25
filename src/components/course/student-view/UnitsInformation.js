@@ -15,10 +15,13 @@ import UnitContent from './UnitContent';
 import { makeStyles } from '@material-ui/core/styles';
 
 // Components for the tab bar
-import { AppBar, Box, Button, Tab, Tabs, Typography } from '@material-ui/core'
+import { AppBar, Box, Button, Tab, Tabs, Typography } from '@material-ui/core';
 
 // Alert
-import { Alert } from '@material-ui/lab'
+import { Alert } from '@material-ui/lab';
+
+//NoTasksMessage
+import NoTasksMessage from '../task/NoTasksMessage';
 
 /* STUDENTS */
 function TabPanel(props) {
@@ -86,6 +89,9 @@ export default function UnitsInformation(props) {
 	// Valor actual referente a la pestaña actual abierta
 	const [value, setValue] = useState(0);
 
+	//show a message if the current unit has no task to show
+	const [foundTasks, setFoundTasks] = useState(true);
+
 	// MENSAJES DEL COMPONENTE
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
@@ -98,15 +104,16 @@ export default function UnitsInformation(props) {
 	const [taskActivities, setTaskActivities] = useState(null);
 	const [studentActivities, setStudentActivities] = useState(null);
 
-	// UseEffect para cambiar la pestaña actual a la pestaña que se cree nueva
 	useEffect(() => {
 		if (props.course) {
+			//Get activities all in the course
 			api.get(`/api/course/task/activity/${props.course._id}`, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
 					setTaskActivities(res.data.activities);
 
+					//Get the student progress information
 					api.post("/api/student-activity/foreign", {
 						student: localStorage.getItem("user_id"),
 						course: props.course._id
@@ -133,6 +140,10 @@ export default function UnitsInformation(props) {
 				});
 		}
 
+		if(props.course.units.length <= 0) {
+			setFoundTasks(false);
+		}	
+
 	}, [props.course]);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
@@ -158,7 +169,7 @@ export default function UnitsInformation(props) {
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
-
+	
 	return (
 		<div className={classes.root}>
 			<AppBar className={classes.bar} position="static">
@@ -214,6 +225,10 @@ export default function UnitsInformation(props) {
 						''
 				))
 			}
+
+			{!foundTasks ?
+				<NoTasksMessage />
+			: ""}
 		</div>
 	)
 }
