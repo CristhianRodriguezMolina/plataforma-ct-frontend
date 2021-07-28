@@ -22,9 +22,6 @@ export default function ProtectedRoute({ component, type, ...options }) {
             console.log('Expirado protectedRoute')
             sessionExpiredHandler();
             expired = true;
-            return (
-                <Redirect to="/session-expired" />
-            )
         }
     }
 
