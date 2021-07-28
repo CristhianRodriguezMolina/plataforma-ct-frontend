@@ -23,12 +23,14 @@
             white-space: nowrap;
             overflow: hidden;
             max-width: 10em;
+			text-overflow: ellipsis;
         }
 
         .activity-description {
             white-space: nowrap;
             overflow: hidden;
             max-width: 13em;
+			text-overflow: ellipsis;
         }
 
         .name-tag {

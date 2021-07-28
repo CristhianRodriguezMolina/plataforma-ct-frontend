@@ -124,12 +124,10 @@ export default function Profile(props) {
 			const response = await api.get(`/api/person/${userId}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
 			const { user, message } = response.data;
-			console.log(user)
 			if (user) {
 				setIsChangingData(false);
 
 				setUser(user);
-				console.log(message);
 			}
 		} catch (error) {
 			if (error.response) {

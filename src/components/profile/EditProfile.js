@@ -55,7 +55,6 @@ function EditProfile(props) {
 			setPhone(user.phone);
 			setEmail(user.email);
 			setAchievements(user.achievements);
-			console.log(user.achievements)
 		}
 	}, [user])
 
