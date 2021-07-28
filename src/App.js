@@ -53,6 +53,9 @@ const MyCourses = React.lazy(() => import('./components/course/MyCourses'));
 // Course view
 const CourseView = React.lazy(() => import('./components/course/CourseView'));
 
+//Individual Progress
+const IndividualProgress = React.lazy(() => import('./components/course/progress/IndividualProgress'));
+
 // Manage Task
 const ManageTask = React.lazy(() => import('./components/course/teacher-view/ManageTask'));
 
@@ -106,6 +109,7 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/user/:type' exact component={UserManage} />
 
                 {/* COURSE */}
+				<ProtectedRoute type='admin, teacher' path='/course/student/individual-progress/:studentId/:courseId' exact component={IndividualProgress} />
                 <ProtectedRoute type="admin, teacher" path='/course/edit/:courseId/units-info/:unitId/:taskId' exact component={ManageTask} />
                 <ProtectedRoute path='/course/:type/:id/:view' exact component={CourseView} />
                 <ProtectedRoute path='/course/mycourses/:studentName' exact component={MyCourses} />

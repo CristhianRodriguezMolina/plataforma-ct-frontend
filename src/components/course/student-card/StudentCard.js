@@ -189,7 +189,7 @@ export default function StudentCard(props) {
 											<button onClick={() => setOpenInfo(!openInfo)} className="custom-btn custom-btn-info btn-user-card mb-2"><Info /></button>
 										</Tooltip>
 										<Tooltip title="Progreso" aria-label="progress">
-											<Link to={`/course/student/progress/${student._id}/${course._id}`} className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
+											<Link to={`/course/student/individual-progress/${student._id}/${course._id}`} className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
 										</Tooltip>
 									</div>
 								</Typography>

@@ -227,7 +227,7 @@ export default function UnitsInformation(props) {
 			}
 
 			{!foundTasks ?
-				<NoTasksMessage />
+				<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'Al parecer estas de suerte porque aquí no hay nada que hacer'} />
 			: ""}
 		</div>
 	)

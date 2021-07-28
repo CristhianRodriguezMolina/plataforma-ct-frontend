@@ -11,8 +11,8 @@ const NoTasksMessage = (props) => {
 	return (
 		<div className='no-tasks-message-container'>
 			<InsertEmoticonIcon style={{ fontSize: 80, color: '#96BAFF' }}/>
-			<h1>Sin Tareas...</h1>
-			<p>Al parecer estas de suerte porque aquí no hay nada que hacer</p>
+			<h1>{props.messageTitle}</h1>
+			<p>{props.messageDes}</p>
 		</div>
 	)
 };
