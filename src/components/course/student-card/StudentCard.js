@@ -151,25 +151,6 @@ export default function StudentCard(props) {
 							:
 							<>
 								<Typography variant="subtitle1">
-<<<<<<< HEAD
-									<div className="d-flex">
-										<div className="btn-group-sm btn-group-vertical">
-											<Tooltip title="Borrar del curso" aria-label="delete">
-												<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></button>
-											</Tooltip>
-											<Tooltip title="Editar" aria-label="edit">
-												<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-primary btn-user-card"><Edit /></Link>
-											</Tooltip>
-										</div>
-										<div className="btn-group-sm btn-group-vertical ml-2">
-											<Tooltip title={<p className='text-center m-0 p-0'>Información< br />del< br />estudiante</p>} aria-label="info">
-												<button onClick={() => setOpenInfo(!openInfo)} className="custom-btn custom-btn-info btn-user-card mb-2"><Info /></button>
-											</Tooltip>
-											<Tooltip title="Progreso" aria-label="progress">
-												<Link to={`progress-info`} className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
-											</Tooltip>
-										</div>
-=======
 									<div className="btn-group-sm btn-group-vertical">
 										<Tooltip title="Borrar del curso" aria-label="delete">
 											<Link onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></Link>
@@ -185,7 +166,6 @@ export default function StudentCard(props) {
 										<Tooltip title="Progreso" aria-label="progress">
 											<Link to={`/course/student/individual-progress/${student._id}/${course._id}`} className="custom-btn custom-btn-success btn-user-card"><Cached /></Link>
 										</Tooltip>
->>>>>>> 54e6622c3d7ba7b7e2c9a3af32eee76261f09d64
 									</div>
 								</Typography>
 								<AlertModal
