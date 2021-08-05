@@ -146,7 +146,7 @@ export default function UserList({ type }) {
 	}
 
 	return (
-		<div>
+		<div className='mt-4'>
 			{success ?
 				<Alert className="alert-message" severity="success">{successMessage}</Alert>
 				: ""
@@ -159,7 +159,7 @@ export default function UserList({ type }) {
 				<Alert severity="info">{processMessage}</Alert>
 				: ""
 			}
-			<SearchUser users={users} filteredUsers={filteredUsers} setFilteredUsers={filteredUsers} setPage={setPage} />
+			<SearchUser users={users} filteredUsers={filteredUsers} setFilteredUsers={setFilteredUsers} setPage={setPage} />
 			<div className="mt-4">
 				{
 					filteredUsers && filteredUsers.length > 0 ?

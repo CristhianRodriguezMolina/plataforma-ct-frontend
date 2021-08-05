@@ -96,13 +96,13 @@ export default function MazeStudent() {
 	// Loading component while the maze is being fetching 
 	const [loading, setLoading] = useState(true);
 
-	// Verified activity 
-	const [verified, setVerified] = useState(false);
-
 	// MAZE VARIABLES
 
 	// The maze
 	const [maze, setMaze] = useState(null);
+
+	// Instructions to the animation
+	const [instructions, setInstructions] = useState([]);
 
 	// Size of the maze
 	const [mazeSize, setMazeSize] = useState(0)
@@ -111,16 +111,11 @@ export default function MazeStudent() {
 	const [cols, setCols] = useState(5); // Num of columns of the maze
 	const [rows, setRows] = useState(5); // Num of columns of the maze
 
-	const [reformingMaze, setReformingMaze] = useState(false); // Variable for reform the maze
-
 	const [wX, setWX] = useState((mazeSize + mazeSizeOffset) / cols)
 	const [wY, setWY] = useState((mazeSize + mazeSizeOffset) / rows)
 
-	const [isStart, setIsStart] = useState(false);
-	const [isEnd, setIsEnd] = useState(false);
-
-	const [startX, setStartX] = useState(0);
-	const [startY, setStartY] = useState(0);
+	const [startX, setStartX] = useState(0); // Position of the start cell
+	const [startY, setStartY] = useState(0); // Position of the end cell
 
 	// Actions for render different things in the maze
 	const actions = {
@@ -129,9 +124,6 @@ export default function MazeStudent() {
 		START: 'START',
 		END: 'END'
 	}
-
-	// Seleceted image to paint
-	const [selectedAction, setSelectedAction] = useState(actions.BLOCK);
 
 	// Style classes
 	const [mazeStyle, setMazeStyle] = useState({})
@@ -199,7 +191,7 @@ export default function MazeStudent() {
 		if (maze) {
 			setUp();
 		}
-	}, [maze, mazeSize, mazeSizeOffset, reformingMaze]) // Execute setUp if the mazeSize changes or if is reformingMaze
+	}, [maze, mazeSize, mazeSizeOffset]) // Execute setUp if the mazeSize changes
 
 	// Cambia el tamaño del maze cada que cambia el tamaño de la pagina
 	useEffect(() => {
@@ -246,10 +238,8 @@ export default function MazeStudent() {
 		})
 			.then((res) => {
 				setMaze(res.data);
-				verifyStartEnd(res.data); // It verifies if the comming maze have start and/or end
 				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
 				setActivityDescription(res.data.activity_id.description);
-				setVerified(res.data.activity_id.verified);
 				setLoading(false);
 			})
 			.catch(err => {
@@ -272,76 +262,7 @@ export default function MazeStudent() {
 			width: `${(mazeSize + mazeSizeOffset)}px`,
 			height: `${(mazeSize + mazeSizeOffset)}px`
 		})
-
-		if (reformingMaze) {
-			verifyStartEnd(maze);
-		}
 	}
-
-	// Verify if there is or not a start and/or an end
-	const verifyStartEnd = (maze) => {
-		// This flags are to verify if the new maze doesnt have start or end			
-		var isStart = false;
-		var isEnd = false;
-
-		for (let i = 0; i < maze.cells.length; i++) {
-			var auxCell = maze.cells[i];
-
-			if (auxCell.type === actions.START) {
-				isStart = true;
-			}
-
-			if (auxCell.type === actions.END) {
-				isEnd = true;
-			}
-		}
-		// If the new maze doesnt have start then set IsStart to false
-		if (!isStart) {
-			setIsStart(false);
-		} else {
-			setIsStart(true);
-		}
-
-		// If the new maze doesnt have end then set IsEnd to false
-		if (!isEnd) {
-			setIsEnd(false);
-		} else {
-			setIsEnd(true);
-		}
-
-		setReformingMaze(false); // Set the reforming flag to false
-	}
-
-	// Method to clean the maze and set all cells to empty
-	const cleanMaze = () => {
-		setIsStart(false);
-		setIsEnd(false);
-
-		var auxGrid = maze.cells;
-
-		auxGrid = auxGrid.map(cell => {
-			return { ...cell, type: actions.EMPTY }
-		})
-
-		setMaze(prevMaze => {
-			return { ...prevMaze, cells: auxGrid }
-		});
-	}
-
-	// Method to change the type of image to show in the cells
-	const handleChangeAction = (action) => {
-		setSelectedAction(action);
-	}
-
-	// Update the maze name
-	const updateName = (value) => {
-		setActivityName(value);
-	};
-
-	// Update the maze description
-	const updateDes = (value) => {
-		setActivityDescription(value);
-	};
 
 	// Method to zoomin the maze
 	const makeZoomIn = () => {
@@ -363,82 +284,25 @@ export default function MazeStudent() {
 		setMazeSizeOffset(0);
 	}
 
-	// Method to change the cols and rows of the maze
-	const setNewSize = async (e) => {
-		e.preventDefault();
-
-		// If the size still equals just doesnt change anything
-		if (e.target[0].value === maze.rows && e.target[1].value === maze.cols) {
-			return;
-		}
-		console.log(maze)
-		try {
-			const res = await api.put(`/api/maze/resize/${activityId}`, {
-				cells: maze.cells,
-				columns: e.target[1].value,
-				rows: e.target[0].value,
-				verified: maze.verified
-			}, {
-				headers: { 'x-access-token': localStorage.getItem('token') }
-			});
-			if (res) {
-				setMaze(res.data.maze);
-
-				setRows(e.target[0].value);
-				setCols(e.target[1].value);
-
-				setReformingMaze(true); // Turn the reforming flag to true
-
-				console.log(res.data.maze);
-			}
-		} catch (e) {
-			if (e.response.data) {
-				showError(e.response.data.message);
-				console.log(e.response.data.message);
-			} else {
-				showError('Error inesperado en el servidor');
-				console.log(`Ha ocurrido un error en el servidor`);
-			}
-		}
-
-	}
-
 	// Update the data of the maze in the DB
-	const handleUpdateMaze = async () => {
+	const handleCompleteActivity = async (grade) => {
 		try {
 			setProcess(true);
 			setProcessMessage('Guardando cambios...');
 
-			const response = await api.put(`/api/activity/${activityId}`, {
-				activity: {
-					name: activityName,
-					description: activityDescription,
-					verified: verified
-				},
-				child: {
-					cells: maze.cells,
-					instructions: maze.instructions,
-					columns: maze.cols,
-					rows: maze.rows
-				}
-			}, {
-				headers: { 'x-access-token': localStorage.getItem('token') }
-			});
+			// HERE GOES THE API REQUEST
 
-			const { updatedActivity, message } = response.data;
+			if (true) { // HERE GOES THE REQUEST 
 
-			if (updatedActivity) {
-				verifyStartEnd(maze);
-
-				showSuccess(message);
+				showSuccess(`Actividad realizada, su calificación es: ${grade}`);
 			}
 		} catch (error) {
 			if (error.response) {
 				console.log(error.response.data.message);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido actualizando el laberinto: ${error}`);
-				showError(`Un error ha ocurrido actualizando el laberinto: ${error}`);
+				console.log(`Un error ha ocurrido resolviendo el laberinto: ${error}`);
+				showError(`Un error ha ocurrido resolviendo el laberinto: ${error}`);
 			}
 		}
 		setProcess(false);
@@ -515,17 +379,12 @@ export default function MazeStudent() {
 
 	const createAnimation = async () => {
 
-		if (!isStart || !isEnd) {
-			showError('No ha definido el inicio y el fin del laberinto!!')
-			return;
-		}
-
 		if (!animate) {
 			showInfo('Primero active el Robot!!')
 			return;
 		}
 
-		if (maze.instructions.length <= 0) {
+		if (instructions.length <= 0) {
 			showInfo('Primero ponga alguna instrucción!!')
 			return;
 		}
@@ -544,7 +403,7 @@ export default function MazeStudent() {
 		setRobotGrades(0);
 
 		// Actions passed for the user
-		const frameActions = maze.instructions;
+		const frameActions = instructions;
 
 		// Start of the animation
 		var stringKeyFrame = `from{
@@ -884,7 +743,7 @@ export default function MazeStudent() {
 
 		setTimeout(() => {
 			// Update the maze when executes any instructions
-			handleUpdateMaze();
+			handleCompleteActivity(animationType === 'WIN' ? 5 : 0);
 
 			setRobotX(startX);
 			setRobotY(startY);
@@ -920,16 +779,11 @@ export default function MazeStudent() {
 	}
 
 	const handleShowRobot = () => {
-		if (isStart && isEnd) {
-			setAnimate(!animate)
-		} else {
-			showError('No ha definido el inicio y el fin del laberinto!!');
-			setAnimate(false);
-		}
+		setAnimate(!animate)
 	}
 
 	return (
-		<div className=''>
+		<div className='mb-5'>
 			{!loading ?
 				<>
 					{
@@ -951,23 +805,18 @@ export default function MazeStudent() {
 						<Container maxWidth='md'>
 							{/* GENERAL DATA OF THE MAZE */}
 							<div>
-								{/* <h1 style={nameInputStyle} >{activity.name}</h1>
-								<p style={desInputStyle} >{activity.description}</p> */}
-								<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
-								<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
-								<div className='d-flex justify-content-end'>
-									<FormControlLabel className="switcher" label="Verificado" control={
-										<Switch
-											checked={verified}
-											onChange={() => setVerified(!verified)}
-											name="visibilty"
-											color="primary"
-										/>
-									} />
-								</div>
+								<h1 style={nameInputStyle} >{activityName}</h1>
+								<p style={desInputStyle} >{activityDescription}</p>
 							</div>
 							<hr />
 							<div className='d-flex justify-content-around align-items-center'>
+								{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
+								<div className='mt-4 d-flex justify-content-center'>
+									<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
+									{/* <button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button> */}
+									<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+									<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
+								</div>
 								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
 								<div className='d-flex flex-column'>
 									<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
@@ -977,31 +826,9 @@ export default function MazeStudent() {
 										<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
 									</div>
 								</div>
-								{/* FORM TO CHANGE THE ROWS AND COLS */}
-								<div className="d-flex flex-column justify-content-between">
-									<h1 className='h4'>Cambiar filas y cols</h1>
-									<form onSubmit={setNewSize} className="form-size d-flex justify-content-between align-items-center">
-										<div>
-											<label className='m-0'>Filas</label>
-											<input type="number" value={rows} onChange={(evt) => setRows(evt.target.value)} className='form-control' label='Columnas Del Maze' name='cols' />
-										</div>
-										<label className='mx-3 mb-2 align-self-end'>X</label>
-										<div className='mr-3'>
-											<label className='m-0'>Cols</label>
-											<input type="number" value={cols} onChange={(evt) => setCols(evt.target.value)} className='form-control' label='Filas Del Maze' name='rows' />
-										</div>
-										<button type="submit" className="custom-btn custom-btn-primary p-2">Establecer tamaño</button>
-									</form>
-								</div>
 							</div>
 							<hr />
 						</Container>
-					</div>
-					<div className='mt-4 d-flex justify-content-center'>
-						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
-						<button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button>
-						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
-						<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 					</div>
 					<div className='row p-4 w-100'>
 						<div className='col-md-6'>
@@ -1018,14 +845,7 @@ export default function MazeStudent() {
 															cell={cell}
 															wX={wX}
 															wY={wY}
-															maze={maze}
-															setMaze={setMaze}
-															selectedAction={selectedAction}
 															actions={actions}
-															isStart={isStart}
-															isEnd={isEnd}
-															setIsStart={setIsStart}
-															setIsEnd={setIsEnd}
 															setStartX={setStartX}
 															setStartY={setStartY}
 														>
@@ -1042,7 +862,7 @@ export default function MazeStudent() {
 									}
 									{/* CHARACTER */}
 									{
-										isStart && isEnd && animate &&
+										animate &&
 										<Robot
 											wX={wX}
 											wY={wY}
@@ -1057,85 +877,11 @@ export default function MazeStudent() {
 						<div className='col-md-6 mt-md-0 mt-4'>
 							{
 								maze ?
-									<Intructions maze={maze} setMaze={setMaze} />
+									<Intructions instructions={instructions} setInstructions={setInstructions} />
 									: ''
 							}
 						</div>
 					</div>
-					<div className='options-palette-container'>
-						<div className='options-palette'>
-							<ButtonBase
-								focusRipple
-								className='option'
-								onClick={() => { handleChangeAction(actions.BLOCK); }}
-								style={selectedAction === actions.BLOCK ? { backgroundColor: 'white', color: 'rgb(48, 48, 48)' } : {}}
-							>
-								<div className='d-flex flex-column align-items-center m-1'>
-									<div
-										className='icon'
-										style={{
-											backgroundImage: `url(${maze_block})`,
-											backgroundSize: '100% 100%',
-										}}
-									/>
-									<h1 className='h4'>Block</h1>
-								</div>
-							</ButtonBase>
-							<ButtonBase
-								focusRipple
-								className='option'
-								onClick={() => { handleChangeAction(actions.EMPTY); }}
-								style={selectedAction === actions.EMPTY ? { backgroundColor: 'white', color: 'rgb(48, 48, 48)' } : {}}
-							>
-								<div className='d-flex flex-column align-items-center m-1'>
-									<div
-										className='icon'
-										style={{
-											backgroundColor: '#6cbae3',
-										}}
-									/>
-									<h1 className='h4'>Empty</h1>
-								</div>
-							</ButtonBase>
-							<ButtonBase
-								focusRipple
-								className='option'
-								onClick={() => { handleChangeAction(actions.START); }}
-								style={selectedAction === actions.START ? { backgroundColor: 'white', color: 'rgb(48, 48, 48)' } : {}}
-							>
-								<div className='d-flex flex-column align-items-center m-1'>
-									<div
-										className='icon'
-										style={{
-											backgroundImage: `url(${maze_start})`,
-											backgroundSize: '100% 100%',
-										}}
-									/>
-									<h1 className='h4'>Start</h1>
-								</div>
-							</ButtonBase>
-							<ButtonBase
-								focusRipple
-								className='option'
-								onClick={() => handleChangeAction(actions.END)}
-								style={selectedAction === actions.END ? { backgroundColor: 'white', color: 'rgb(48, 48, 48)' } : {}}
-							>
-								<div
-									className='d-flex flex-column align-items-center m-1'
-								>
-									<div
-										className='icon'
-										style={{
-											backgroundImage: `url(${maze_end})`,
-											backgroundSize: '100% 100%',
-										}}
-									/>
-									<h1 className='h4'>End</h1>
-								</div>
-							</ButtonBase>
-						</div>
-					</div>
-					<button onClick={handleUpdateMaze} className='btn-save-maze custom-btn custom-btn-primary'>Guardar</button>
 				</>
 				: ''}
 		</div >

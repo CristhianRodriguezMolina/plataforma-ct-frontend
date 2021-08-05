@@ -1133,6 +1133,7 @@ export default function Maze() {
 							</ButtonBase>
 						</div>
 					</div>
+					{/* BUTTON TO UPDATE THE MAZE DIRECTLY */}
 					<button onClick={handleUpdateMaze} className='btn-save-maze custom-btn custom-btn-primary'>Guardar</button>
 				</>
 				: ''}

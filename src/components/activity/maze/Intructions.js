@@ -32,9 +32,6 @@ import { SortableContainer } from 'react-sortable-hoc';
 //Instruction card
 import InstructionCard from './InstructionCard';
 
-//Button Icon
-import IconButton from '@material-ui/core/IconButton';
-
 // Scrollbars
 import { Scrollbars } from 'react-custom-scrollbars';
 
@@ -56,7 +53,7 @@ const SortableList = SortableContainer(({ items, showCheck }) => {
 
 const Intructions = props => {
 
-    const [instructionsList, setInstructionsList] = useState(props.maze.instructions);
+    const [instructionsList, setInstructionsList] = useState([]);
 
     const [instructionsToDelete, setInstructionsToDelete] = useState([]);
 
@@ -69,13 +66,31 @@ const Intructions = props => {
         LEFT: 'LEFT'
     }
 
+    useEffect(() => {
+        if (instructionsList === []) {
+            if (props.maze !== null && props.maze !== undefined) {
+                setInstructionsList(props.maze.instructions);
+            } else {
+                setInstructionsList(props.instructions);
+            }
+        }
+    }, [instructionsList])
+
+    const updateMazeInstructions = (newInstructions) => {
+        if (props.maze !== null && props.maze !== undefined) {
+            props.setMaze(prevMaze => {
+                return { ...prevMaze, instructions: newInstructions }
+            });
+        } else {
+            props.setInstructions(newInstructions);
+        }
+    }
+
     const onSortEnd = ({ oldIndex, newIndex }) => {
         let arrayCopy = [...instructionsList];
         arrayCopy = arrayMove(arrayCopy, oldIndex, newIndex);
         setInstructionsList(arrayCopy);
-        props.setMaze(prevMaze => {
-            return { ...prevMaze, instructions: arrayCopy }
-        });
+        updateMazeInstructions(arrayCopy);
     };
 
     const handleClick = (value) => {
@@ -86,9 +101,7 @@ const Intructions = props => {
             num: `${tempList.length}`
         });
         setInstructionsList(tempList);
-        props.setMaze(prevMaze => {
-            return { ...prevMaze, instructions: tempList }
-        });
+        updateMazeInstructions(tempList);
     };
 
     const showCheckMarks = () => {
@@ -97,9 +110,7 @@ const Intructions = props => {
 
     const cleanInstructions = () => {
         setInstructionsList([]);
-        props.setMaze(prevMaze => {
-            return { ...prevMaze, instructions: [] }
-        });
+        updateMazeInstructions([]);
     }
 
     const handleDeleteCards = () => {
@@ -114,9 +125,7 @@ const Intructions = props => {
         }
 
         setInstructionsList(tempList);
-        props.setMaze(prevMaze => {
-            return { ...prevMaze, instructions: tempList }
-        });
+        updateMazeInstructions(tempList);
         setInstructionsToDelete([]);
 
         setShowCheck(false);

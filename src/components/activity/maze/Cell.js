@@ -139,12 +139,6 @@ export default function Cell(props) {
 		});
 	}
 
-	// Update x and y variables
-	const updateXY = () => {
-		setX(i * wX);
-		setY(j * wY);
-	}
-
 	return (
 		<>
 			{error ?
@@ -152,7 +146,7 @@ export default function Cell(props) {
 				: ""
 			}
 			<div
-				onClick={handleClick}
+				onClick={maze !== null && maze !== undefined ? handleClick : console.log('Clickeando-ando')}
 				style={{
 					border: '1px solid white',
 					position: 'absolute',
