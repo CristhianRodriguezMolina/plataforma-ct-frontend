@@ -17,8 +17,9 @@ import UserCard from './UserCard';
 // Link and withRouter
 import { useLocation } from 'react-router-dom';
 import { Pagination } from '@material-ui/lab';
+import SearchUser from '../common/SearchUser';
 
-export default function UserList({ type, filterText }) {
+export default function UserList({ type }) {
 
 	let location = useLocation();
 
@@ -58,20 +59,6 @@ export default function UserList({ type, filterText }) {
 			fetchUsers();
 		}
 	}, [location]);
-
-	useEffect(() => {
-		if (filterText !== '') {
-			setFilteredUsers(users.filter(({ first_name, last_name, phone, id }) => (
-				first_name.toLowerCase().includes(filterText.toLowerCase()) ||
-				last_name.toLowerCase().includes(filterText.toLowerCase()) ||
-				phone.includes(filterText) ||
-				id.includes(filterText)
-			)));
-		} else {
-			setFilteredUsers(users);
-			setPage(1); // This line is for, when you clean the search input then put the page in 1
-		}
-	}, [filterText]);
 
 	// UseEffect to manage the current number of pages
 	useEffect(() => {
@@ -159,7 +146,7 @@ export default function UserList({ type, filterText }) {
 	}
 
 	return (
-		<div className="mt-4">
+		<div>
 			{success ?
 				<Alert className="alert-message" severity="success">{successMessage}</Alert>
 				: ""
@@ -172,7 +159,8 @@ export default function UserList({ type, filterText }) {
 				<Alert severity="info">{processMessage}</Alert>
 				: ""
 			}
-			<div>
+			<SearchUser users={users} filteredUsers={filteredUsers} setFilteredUsers={filteredUsers} setPage={setPage} />
+			<div className="mt-4">
 				{
 					filteredUsers && filteredUsers.length > 0 ?
 						<>

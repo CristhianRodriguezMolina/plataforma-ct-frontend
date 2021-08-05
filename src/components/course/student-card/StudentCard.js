@@ -83,7 +83,6 @@ export default function StudentCard(props) {
 
 			const response = await api.delete(`/api/course/students/${course._id}/${student._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
-			setIsAddingStudents(true);
 			const { message } = response.data;
 
 			showSuccess(message);
@@ -109,7 +108,6 @@ export default function StudentCard(props) {
 		setVisible(false);
 		setProcess(false);
 		setProcessMessage('');
-		setIsAddingStudents(false);
 	}
 
 	return (

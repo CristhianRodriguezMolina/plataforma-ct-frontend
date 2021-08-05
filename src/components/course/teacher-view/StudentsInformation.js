@@ -17,14 +17,9 @@ import StudentCard from '../student-card/StudentCard';
 // Scroll
 import { Element, animateScroll as scroll, Link } from 'react-scroll'
 
-// Material-UI Core
-import { IconButton } from '@material-ui/core';
-
-// Icons
-import { Clear } from '@material-ui/icons';
-
 // Materia-ui lab
 import { Pagination } from '@material-ui/lab';
+import SearchUser from '../../common/SearchUser';
 
 /* TECAHER */
 export default function StudentsInformation(props) {
@@ -51,12 +46,6 @@ export default function StudentsInformation(props) {
     // Filtered students
     const [filteredStudents, setFilteredStudents] = useState(students);
 
-    // Text of the filed that is used to filter the students list
-    const [searchInput, setSearchInput] = useState('');
-
-    // Text that is used to filter the students list
-    const [filterText, setFilterText] = useState('');
-
     // Variable to manage the current page of the students list
     const [page, setPage] = useState(1);
 
@@ -73,21 +62,6 @@ export default function StudentsInformation(props) {
         }
     }, [students, isAddingStudents])
 
-    // UseEffect to filter the student if the filter text changes
-    useEffect(() => {
-        if (filterText !== '') {
-            setFilteredStudents(students.filter(({ first_name, last_name, phone, id }) => (
-                first_name.toLowerCase().includes(filterText.toLowerCase()) ||
-                last_name.toLowerCase().includes(filterText.toLowerCase()) ||
-                phone.includes(filterText) ||
-                id.includes(filterText)
-            )));
-        } else {
-            setFilteredStudents(students);
-            setPage(1); // This line is for, when you clean the search input then put the page in 1
-        }
-    }, [filterText]);
-
     // UseEffect to manage the current number of pages
     useEffect(() => {
         if (filteredStudents) {
@@ -102,26 +76,6 @@ export default function StudentsInformation(props) {
             }
         }
     }, [filteredStudents])
-
-    // UseEffect to set the filter text to empty if the input is changed to empty
-    useEffect(() => {
-        if (searchInput === '') {
-            setFilterText('');
-        }
-    }, [searchInput])
-
-    // Method to change the variable that filter the users in the list of users    
-    const changeFilterText = (e) => {
-        e.preventDefault();
-
-        setFilterText(searchInput.trim()); // Change the text to filter 
-    }
-
-    // Method to empty to the search field
-    const handleClearSearchInput = () => {
-        setSearchInput(''); // Set the input to empty
-        setFilterText(''); // Set the text to filter to empty
-    }
 
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
@@ -174,6 +128,14 @@ export default function StudentsInformation(props) {
                     const difference = newStudentsAux.filter(x => studentsAux.indexOf(x) === -1);
 
                     firstAddedStudentPosition = newStudentsAux.indexOf(difference[0]) + 1;
+
+                    // To get the page of the first added student
+                    const firstAddedStudentPage = Math.ceil(firstAddedStudentPosition / maxStudents);
+
+                    console.log('queputas hace aqui papi')
+                    setPage(firstAddedStudentPage);
+
+                    firstAddedStudentPosition = firstAddedStudentPosition - ((firstAddedStudentPage - 1) * maxStudents);
                 }
 
                 setStudents(newStudents);
@@ -210,24 +172,7 @@ export default function StudentsInformation(props) {
             {process ? <Alert className="alert-message" severity="info">{processMessage}</Alert> : ""}
 
             <div className="students-container">
-                <form onSubmit={changeFilterText} className="search-form d-flex justify-content-between mb-3">
-                    <div className="text-field form-group mr-3">
-                        <input className="form-control text-center w-100" value={searchInput} onChange={evt => setSearchInput(evt.target.value)} />
-                        {
-                            searchInput !== '' ?
-                                <IconButton onClick={handleClearSearchInput} className='clear-button' size="sm">
-                                    <Clear />
-                                </IconButton>
-                                :
-                                ''
-                        }
-                    </div>
-                    <div className="form-group">
-                        <button type="submit" className="btn-search custom-btn custom-btn-search">
-                            Buscar
-                        </button>
-                    </div>
-                </form>
+                <SearchUser users={students} filteredUsers={filteredStudents} setFilteredUsers={setFilteredStudents} setPage={setPage} />
                 {filteredStudents && filteredStudents.length > 0 ?
                     <>
                         <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
