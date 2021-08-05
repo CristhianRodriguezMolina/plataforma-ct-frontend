@@ -42,6 +42,9 @@ import ExpiredSessionConfirmation from './components/expired-session/ExpiredSess
 // Maze
 const Maze = React.lazy(() => import('./components/activity/maze/Maze'));
 
+// Maze student view
+const MazeStudent = React.lazy(() => import('./components/activity/maze/MazeStudent'));
+
 // My courses
 const MyCourses = React.lazy(() => import('./components/course/MyCourses'));
 
@@ -116,6 +119,7 @@ function App() {
                 <ProtectedRoute path='/activity/logic-sequence/student/:courseId/:unitId/:taskId/:activityId' exact component={LogicSequenceStudent} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
                 <ProtectedRoute type="admin, teacher" path='/activity/maze/:activityId' exact component={Maze} />
+                <ProtectedRoute type="admin, teacher" path='/activity/maze/student/:activityId' exact component={MazeStudent} />
 
                 {/* PROFILE */}
                 <ProtectedRoute path='/profile/:userId/:view' exact component={Profile} />

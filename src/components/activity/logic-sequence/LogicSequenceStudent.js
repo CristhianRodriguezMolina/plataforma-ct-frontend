@@ -115,7 +115,7 @@ const LogicSequenceStudent = props => {
                 setOrderedSequenceList(logicSequenceRes.data.sequence_cards);
                 setSequenceList(shuffleArray(logicSequenceRes.data.sequence_cards, { 'copy': true }));
                 setActivity(logicSequenceRes.data.activity_id);
-				
+
 
                 //GET student activity
                 const studentActivityRes = await api.post("/api/student-activity/foreign", {
@@ -256,7 +256,6 @@ const LogicSequenceStudent = props => {
                                 {sequenceList ?
                                     <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
                             </div>
-
                         </div>
                         <hr className="hr-bar"></hr>
                         <button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
