@@ -202,7 +202,7 @@ export default function StudentCard(props) {
 										}
 										<p className='m-0 ml-4 mb-2 p-0'>{forStudent ? "Cumpleaños" : "Fecha de nacimiento"}: <b>{util.getSpanishDate(student.birth_date)}</b></p>
 										<p className='m-0 ml-4 mb-2 p-0'>Edad: <b>{util.getAge(student.birth_date)}</b></p>
-										<p className='m-0 ml-4 mb-2 p-0'>Genero: {student.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
+										<p className='m-0 ml-4 mb-2 p-0'>Genero: <b>{util.getGenre(student.genre)}</b></p>
 									</div>
 								</div>
 							</div>

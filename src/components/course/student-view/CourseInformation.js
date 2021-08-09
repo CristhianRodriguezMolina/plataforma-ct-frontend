@@ -9,7 +9,7 @@ import './studentview.scss';
 // COMPONENTS
 
 // Material UI components
-import { Container, Typography, Avatar } from '@material-ui/core';
+import { Typography, Avatar } from '@material-ui/core';
 
 /* STUDENT */
 export default function CourseInformation(props) {
@@ -66,7 +66,7 @@ export default function CourseInformation(props) {
                             <div className='mt-3'>
                                 <p className='m-0 mb-2 p-0'>Telefono: {teacher.phone !== '' ? <b>{teacher.phone}</b> : <b className='text-muted'>No tiene telefono :(</b>}</p>
                                 <p className='m-0 mb-2 p-0'>Email: {teacher.email !== '' ? <b>{teacher.email}</b> : <b className='text-muted'>No tiene email :(</b>}</p>
-                                <p className='m-0 mb-2 p-0'>Logros: {teacher.achievements !== '' ? <b>{teacher.achievements}</b> : <b className='text-muted'>No tiene logros :(</b>}</p>
+                                <p className='m-0 mb-2 p-0'>Descripción: {teacher.description !== '' ? <b>{teacher.description}</b> : <b className='text-muted'>No tiene descripción :(</b>}</p>
                             </div>
                         </>
                         :

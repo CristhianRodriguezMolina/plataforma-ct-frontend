@@ -70,36 +70,40 @@ export default function Overview(props) {
 			}
 			{
 				user ?
-					user.role === 'admin' || user.role === 'teacher' ?
-						<>
-							<h1 className='h5 mt-4 mb-4'>Datos de perfil</h1>
+					<>
+						<h1 className='h5 mt-4 mb-4'>Datos de perfil</h1>
 
-							<Grid container>
-								<Grid item xs={6}><label>Logros</label></Grid>
-								<Grid item xs={6}><p>{
-									user.achievements === '' ?
-										'Aún no tiene logros' :
-										<>
-											{
-												// This is to show the achievements considering the line breaks
-												user.achievements.split('\n').map(line =>
-													<>
-														<>{line}</>
-														<br />
-													</>
-												)
-											}
-										</>
-								}</p></Grid>
+						<Grid container>
+							{
+								user.role === 'admin' || user.role === 'teacher' ?
+									<>
+										<Grid item xs={12}><hr /></Grid>
 
-								<Grid item xs={12}><hr /></Grid>
+										<Grid item xs={6}><label>Email</label></Grid>
+										<Grid item xs={6}><p>{user.email === '' ? 'Aún no tiene email' : user.email}</p></Grid>
+									</>
+									:
+									''
+							}
 
-								<Grid item xs={6}><label>Email</label></Grid>
-								<Grid item xs={6}><p>{user.email === '' ? 'Aún no tiene email' : user.email}</p></Grid>
-							</Grid>
-						</>
-						:
-						''
+							<Grid item xs={6}><label>Descripción</label></Grid>
+							<Grid item xs={6}><p>{
+								user.description === '' ?
+									'Aún no tiene descripción' :
+									<>
+										{
+											// This is to show the description considering the line breaks
+											user.description.split('\n').map(line =>
+												<>
+													<>{line}</>
+													<br />
+												</>
+											)
+										}
+									</>
+							}</p></Grid>
+						</Grid>
+					</>
 					:
 					''
 			}

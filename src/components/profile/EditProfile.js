@@ -35,7 +35,7 @@ function EditProfile(props) {
 	const [id, setId] = useState(''); //Id del usuario
 	const [phone, setPhone] = useState(''); //Telefono del usuario
 	const [email, setEmail] = useState(''); //Email del usuario
-	const [achievements, setAchievements] = useState(''); //Logros del usuario
+	const [description, setDescription] = useState(''); //Descripcion del usuario
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -54,7 +54,7 @@ function EditProfile(props) {
 			setLastName(user.last_name);
 			setPhone(user.phone);
 			setEmail(user.email);
-			setAchievements(user.achievements);
+			setDescription(user.description);
 		}
 	}, [user])
 
@@ -97,7 +97,7 @@ function EditProfile(props) {
 					genre,                      //
 					phone,
 					email,
-					achievements
+					description
 				}, {
 					headers: {
 						'x-access-token': localStorage.getItem('token')
@@ -170,17 +170,24 @@ function EditProfile(props) {
 					<label>ID</label>
 					<input className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="ID" name="id" required />
 				</div>
+				{
+					user.role === 'admin' || user.role === 'teacher' ?
+						<>
+							<div className="form-group">
+								<label>Teléfono</label>
+								<input className="form-control" type="number" onChange={evt => setPhone(evt.target.value)} value={phone} label="Telefono" name="telefono" />
+							</div>
+							<div className="form-group">
+								<label>Email</label>
+								<input className="form-control" type="text" onChange={evt => setEmail(evt.target.value)} value={email} label="Email" name="email" />
+							</div>
+						</>
+						:
+						''
+				}
 				<div className="form-group">
-					<label>Teléfono</label>
-					<input className="form-control" type="number" onChange={evt => setPhone(evt.target.value)} value={phone} label="Telefono" name="telefono" />
-				</div>
-				<div className="form-group">
-					<label>Email</label>
-					<input className="form-control" type="text" onChange={evt => setEmail(evt.target.value)} value={email} label="Email" name="email" />
-				</div>
-				<div className="form-group">
-					<label>Logros</label>
-					<textarea className="form-control" type="text" rows="4" onChange={evt => setAchievements(evt.target.value)} value={achievements} label="Logros" name="logros" />
+					<label>Descripcion</label>
+					<textarea className="form-control" type="text" rows="4" onChange={evt => setDescription(evt.target.value)} value={description} label="Descripcion" name="Descripcion" />
 				</div>
 				<div className="form-group d-flex justify-content-end mt-4">
 					<button type='submit' className="custom-btn custom-btn-primary btn-create-user px-2 py-2">Guardar datos</button>
