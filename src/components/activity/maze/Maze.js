@@ -1136,7 +1136,13 @@ export default function Maze() {
 					{/* BUTTON TO UPDATE THE MAZE DIRECTLY */}
 					<button onClick={handleUpdateMaze} className='btn-save-maze custom-btn custom-btn-primary'>Guardar</button>
 				</>
-				: ''}
+				: 
+				<div className="spinner-loading">
+				  <div className="spinner-border" role="status">
+					<span className="sr-only">Loading...</span>
+				  </div>
+				</div>
+			}
 		</div >
 	)
 }

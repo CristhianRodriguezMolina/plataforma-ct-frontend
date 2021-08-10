@@ -1,12 +1,15 @@
 //React
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 
 //SCSS
 import './IndividualProgress.scss';
 
 // API
 import api from '../../../services/api';
+
+//Date format
+import dateFormat from 'dateformat';
 
 // CONTEXT
 import UserContext from '../../../context/user/UserContext';
@@ -126,6 +129,8 @@ const IndividualProgress = (props) => {
     // Colors for the navbar in base of the image of the course
     const [color, setColor] = useState(null);
 
+	const [loading, setLoading] = useState(true);
+
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
@@ -146,21 +151,22 @@ const IndividualProgress = (props) => {
 						studentActivities: res.data.studentActivities,
 						course: res.data.course,
 						taskActivities: res.data.tasksActivities,
-						student: res.data.student
+						student: res.data.student,
+						activities: res.data.activities
 					});
 
-					console.log(res.data.course)
 				}
 
+				setLoading(false);
+
 			} catch (e) {
-				console.log(e);
+				setLoading(false);
 			}
 		} else {
 			if (individualProgressInfo.course) {
 				imageExists(`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`, (exists) => {
 					if (exists) {
 						average(`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`, { sample: 10 }).then(color => {
-							console.log(color); // [241, 221, 63]
 							setColor(color);
 						})
 					}
@@ -203,6 +209,69 @@ const IndividualProgress = (props) => {
         }
     }, [color]);
 
+	const renderActivities = (activities, task) => {
+
+		var activitiesComponents = [];
+		var tempTaskActivities = individualProgressInfo.taskActivities.filter(taskActivity => taskActivity.task === task._id);
+		var tempActivities = []
+		for(let i = 0; i < activities.length; i++) {
+			for (let j = 0; j < tempTaskActivities.length; j++) {
+				if(activities[i]._id === tempTaskActivities[j].activity) {
+					tempActivities.push(activities[i]);
+				}
+			}
+		} 
+		
+		var completed = false;
+		tempActivities.map((activity, index) => {
+			var tempStudentActivity = individualProgressInfo.studentActivities.find(studentActivity => studentActivity.task === task._id && studentActivity.activity === activity._id);
+
+			var justInTime = 0;
+
+			if(tempStudentActivity) {
+				completed = tempStudentActivity.complete;
+			 
+				const due_date = new Date(dateFormat(task.due_date, 'GMT:yyyy-mm-dd'));
+				const realizationDate = new Date(dateFormat(tempStudentActivity.date, 'GMT:yyyy-mm-dd'));
+
+				if(due_date.getTime() >= realizationDate.getTime()) {
+					justInTime = 1;
+				}
+				else {
+					justInTime = -1;
+				}
+			}
+
+			activitiesComponents.push(<div>
+					<p><span style={{'color': '#ccc'}}>Nombre de la Actividad: </span>{activity.name}</p>
+					<p><span style={{'color': '#ccc'}}>Descripción de la Actividad: </span>{activity.description}</p>
+					<p><span style={{'color': '#ccc'}}>Completada: </span>{`${completed}`}</p>
+					
+					{tempStudentActivity ?
+						<>
+							<p><span style={{'color': '#ccc'}}>Fecha: </span>{`${tempStudentActivity.date}`}</p>
+							<p><span style={{'color': '#ccc'}}>Calificación: </span>{`${tempStudentActivity.grade}`}</p>
+							{justInTime === 1?
+								<p><span style={{'color': '#ccc'}}>Entregado a tiempo: </span>Entregado a tiempo</p>
+								:
+								justInTime === -1 ?
+									<p><span style={{'color': '#ccc'}}>Entregado a tiempo: </span>Entregado con retraso</p>
+									:
+									<p><span style={{'color': '#ccc'}}>Entregado a tiempo: </span>Sin fecha de entrega</p>
+							}
+						</>
+					:
+						<>
+							<p><span style={{'color': '#ccc'}}>Fecha: </span>Sin fecha</p>
+							<p><span style={{'color': '#ccc'}}>Calificación: </span>Sin calificación</p>
+							<p><span style={{'color': '#ccc'}}>Entregado a tiempo: </span>Sin fecha de entrega</p>
+						</>
+					}
+				</div>);
+		});
+
+		return activitiesComponents;
+	};
 
 	return (
 		<div>
@@ -265,37 +334,54 @@ const IndividualProgress = (props) => {
 				</AppBar>
 				{/* COMPONENTS OF EACH UNIT IN THE COURSE */}
 				{
-					individualProgressInfo && individualProgressInfo.course ?
-						individualProgressInfo.course.units.length > 0 ?
-						individualProgressInfo.course.units.map((unit, index) => {
-							return <TabPanel value={value} key={index} index={index}>
-								{unit.tasks.length > 0?
-									unit.tasks.map((task) => {
-										return <div className={classes.accordionRoot}>
-											<Accordion>
-												<AccordionSummary
-													expandIcon={<ExpandMoreIcon />}
-													aria-controls="panel1a-content"
-													id="panel1a-header"
-												>
+					!loading ?
+						individualProgressInfo && individualProgressInfo.course ?
+							individualProgressInfo.course.units.length > 0 ?
+							individualProgressInfo.course.units.map((unit, index) => {
+								return <TabPanel value={value} key={index} index={index}>
+									{unit.tasks.length > 0?
+										unit.tasks.map((task) => {
+											return <div className={classes.accordionRoot}>
+												<Accordion>
+													<AccordionSummary
+														expandIcon={<ExpandMoreIcon />}
+														aria-controls="panel1a-content"
+														id="panel1a-header"
+													>
 
-													<Typography className={classes.accordionHeading}>{task.name}</Typography>
-												</AccordionSummary>
-												<AccordionDetails>
-													<Typography component="div" style={{width: '100%'}}>
-														<div>
-															<h1>{task.name}</h1>
-														</div>
-													</Typography>
-												</AccordionDetails>
-											</Accordion>
-										</div>
-								}):
-								<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
-							</TabPanel>
-						}) : 
-						<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
-					: ""
+														<Typography className={classes.accordionHeading}>{task.name}</Typography>
+													</AccordionSummary>
+													<AccordionDetails>
+														<Typography component="div" style={{width: '100%'}}>
+															<div>
+																<p><span style={{ color: '#ccc' }} >Name: </span>{task.name}</p>
+																<p><span style={{ color: '#ccc' }} >Description: </span>{task.description}</p>
+																{task.is_due_date?
+																	<p><span style={{ color: '#ccc' }} >Fecha de entrega: </span>{task.due_date.substring(0, 10)}</p>
+																	:
+																	<p><span style={{ color: '#ccc' }} >Fecha de entrega: </span>Sin fecha de entrega</p>
+																}
+																<hr/>
+																<h2>Actividades</h2>
+																{renderActivities(individualProgressInfo.activities, task)}
+															</div>
+														</Typography>
+													</AccordionDetails>
+												</Accordion>
+											</div>
+									}):
+									<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
+								</TabPanel>
+							}) : 
+							<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
+						: 
+						<Redirect to='/unauthorized'/>
+					: 
+					<div className="spinner-loading">
+					  <div className="spinner-border" role="status">
+						<span className="sr-only">Loading...</span>
+					  </div>
+					</div>
 				}
 			</div>
 		</div>

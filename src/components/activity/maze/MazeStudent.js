@@ -883,7 +883,13 @@ export default function MazeStudent() {
 						</div>
 					</div>
 				</>
-				: ''}
+				:
+				<div className="spinner-loading">
+				  <div className="spinner-border" role="status">
+					<span className="sr-only">Loading...</span>
+				  </div>
+				</div>
+			}
 		</div >
 	)
 }
