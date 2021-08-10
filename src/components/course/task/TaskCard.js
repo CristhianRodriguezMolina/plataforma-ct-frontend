@@ -72,7 +72,8 @@ const TaskCard = props => {
 
 	const handleRedirectToActivity = (taskActivity) => {
 		if (props.forStudent) {
-			props.history.push(`/activity/logic-sequence/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
+			
+			props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
 		} else {
 			props.history.push(`/activity/logic-sequence/${taskActivity.activity}`);
 		}
@@ -113,12 +114,12 @@ const TaskCard = props => {
 				//if the studentActivity exists
 				if (nextActivity.length > 0) {
 					if (!nextActivity[0].complete) {
-						props.history.push(`/activity/logic-sequence/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
+						props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
 						return;
 					}
 				}
 				else {
-					props.history.push(`/activity/logic-sequence/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
+					props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
 					return;
 				}
 			}
@@ -149,7 +150,7 @@ const TaskCard = props => {
 							<h3><b>Hasta:</b> Sin fecha limite</h3>}
 					</div>}
 			</div>
-			{
+			{	
 				!props.forStudent ?
 					<>
 						<Link to={`/course/edit/${props.courseId}/units-info/${props.unitId}/${props.task._id}`} className="custom-btn custom-btn-primary edit-button"><Edit /></Link>
