@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import { withRouter, Redirect, useParams } from 'react-router-dom';
 
 //API
 import api from '../../services/api';
@@ -9,7 +9,7 @@ import LogicSequenceStudent from './logic-sequence/LogicSequenceStudent';
 import MazeStudent from './maze/MazeStudent';
 
 
-const StudentActivity = () => {
+const StudentActivity = (props) => {
 
 	const [activity, setActivity] = useState(null);
 	const [inheritedActivity, setInheritedActivity] = useState(null);
@@ -17,7 +17,7 @@ const StudentActivity = () => {
 
 	const [loading, setLoading] = useState(true);
 
-	const { courseId, unitId, taskId, activityId } = useParams(); 
+	const { view, courseId, unitId, taskId, activityId } = useParams(); 
 
     useEffect(() => {
 
@@ -80,45 +80,69 @@ const StudentActivity = () => {
                     }
                 });
 
-				console.log(studentActivityRes.data)
 				if (studentActivityRes) {
 					if(studentActivityRes.data.found) {
 
 						if (studentActivityRes.data.studentActivity.length > 0) {
 							setStudentActivity(studentActivityRes.data.studentActivity[0]);
 						} else {
-							console.log(1)
 							createStudentActivity();
 						}
 					}
 					else {
-						console.log(2);
 						createStudentActivity();
 					}
 				}
-				console.log(activityRes.data)
 				setLoading(false);
         };
 
-        if (!activity) {
-            fetch();
-        }
+		if (!activity) {
+			fetch();
+		}
+		else {
+
+			if(view === 'teacher') {
+				if(activity.type === 'logic_sequence') {
+					//Redirect to maze view for teachers or admins
+					props.history.push(`/activity/logic-sequence/${activityId}`);
+				}
+				else if(activity.type === 'maze') {
+					//Redirect to maze view for teachers or admins
+					props.history.push(`/activity/maze/${activityId}`);
+				}
+				else if(activity.type === 'questionnaire') {
+					//Redirect to questionnaire view for teacher or admins
+				}
+			}
+		}
+
     }, [activity]);
 
 	return (
 		<div>
 			{!loading ?
-				activity && inheritedActivity && studentActivity?
 
-					activity.type === 'logic_sequence' ?
+				view === 'teacher' || view === 'student' ?
 
-						<LogicSequenceStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity}/>
+					view === 'student' ?
+
+						activity && inheritedActivity && studentActivity?
+
+							activity.type === 'logic_sequence' ?
+
+								<LogicSequenceStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity}/>
+								:
+								activity.type === 'maze' ?
+
+									<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity}/>
+									:
+									<Redirect to='/unauthorized'/>
+
 						:
-						activity.type === 'maze' ?
+						<Redirect to='/unauthorized'/>
 
-							<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity}/>
-							:
-							<Redirect to='/unauthorized'/>
+					:
+					""
 
 				:
 				<Redirect to="/unauthorized" />
@@ -128,4 +152,4 @@ const StudentActivity = () => {
 	)
 };
 
-export default StudentActivity;
+export default withRouter(StudentActivity);

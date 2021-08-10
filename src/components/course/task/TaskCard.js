@@ -75,7 +75,7 @@ const TaskCard = props => {
 			
 			props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
 		} else {
-			props.history.push(`/activity/logic-sequence/${taskActivity.activity}`);
+			props.history.push(`/activity/teacher/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
 		}
 	};
 
