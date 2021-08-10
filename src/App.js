@@ -67,7 +67,7 @@ const CreateActivity = React.lazy(() => import('./components/activity/CreateActi
 const LogicSequence = React.lazy(() => import('./components/activity/logic-sequence/LogicSequence'));
 
 //Logic sequence (student view)
-const LogicSequenceStudent = React.lazy(() => import('./components/activity/logic-sequence/LogicSequenceStudent'));
+const StudentActivity = React.lazy(() => import('./components/activity/StudentActivity'));
 
 // Users manage
 const UserManage = React.lazy(() => import('./components/users/UserManage'));
@@ -114,9 +114,9 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/course/mycourses' exact component={MyCourses} />
 
                 {/* ACTIVITY */}
+                <ProtectedRoute path='/activity/student/:courseId/:unitId/:taskId/:activityId' exact component={StudentActivity} />
                 <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
-                <ProtectedRoute path='/activity/logic-sequence/student/:courseId/:unitId/:taskId/:activityId' exact component={LogicSequenceStudent} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
                 <ProtectedRoute type="admin, teacher" path='/activity/maze/:activityId' exact component={Maze} />
                 <ProtectedRoute type="admin, teacher" path='/activity/maze/student/:activityId' exact component={MazeStudent} />

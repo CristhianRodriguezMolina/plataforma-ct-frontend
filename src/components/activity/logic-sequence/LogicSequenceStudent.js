@@ -51,7 +51,6 @@ const LogicSequenceStudent = props => {
     const [sequenceList, setSequenceList] = useState(null);
     const [logicSequence, setLogicSequence] = useState(null);
     const [activity, setActivity] = useState(null);
-    const [loading, setLoading] = useState(true);
 
     //Obtiene el progreso del estudiante
     const [studentActivity, setStudentActivity] = useState(null);
@@ -97,78 +96,15 @@ const LogicSequenceStudent = props => {
         setSequenceList(arrayCopy);
     };
 
-
-
-    useEffect(() => {
-
-        const fetch = async () => {
-            try {
-                const logicSequenceRes = await api.get(`/api/logic-sequence/${activityId}`, {
-                    headers: { 'x-access-token': localStorage.getItem('token') }
-                });
-
-                if (!logicSequenceRes) {
-                    console.log('logic sequence not found');
-                    return;
-                }
-                setLogicSequence(logicSequenceRes.data);
-                setOrderedSequenceList(logicSequenceRes.data.sequence_cards);
-                setSequenceList(shuffleArray(logicSequenceRes.data.sequence_cards, { 'copy': true }));
-                setActivity(logicSequenceRes.data.activity_id);
-
-
-                //GET student activity
-                const studentActivityRes = await api.post("/api/student-activity/foreign", {
-                    student: localStorage.getItem("user_id"),
-                    course: courseId,
-                    unit: unitId,
-                    task: taskId,
-                    activity: activityId
-                }, {
-                    method: 'GET',
-                    headers: {
-                        'x-access-token': localStorage.getItem('token')
-                    }
-                });
-                if (studentActivityRes.data.studentActivity.length > 0) {
-
-                    setStudentActivity(studentActivityRes.data.studentActivity[0]);
-                    setLoading(false);
-                } else {
-                    const createStudentActivityRes = await api.post("/api/student-activity", {
-                        studentId: localStorage.getItem("user_id"),
-                        courseId: courseId,
-                        unitId: unitId,
-                        taskId: taskId,
-                        activityId: activityId
-                    }, {
-                        headers: { 'x-access-token': localStorage.getItem('token') }
-                    });
-
-                    if (!createStudentActivityRes) {
-                        return;
-                    }
-                    setStudentActivity(createStudentActivityRes.data.savedStudentActivity);
-                    setLoading(false);
-                }
-
-            }
-            catch (err) {
-                setLoading(false);
-                if (err.response) {
-                    showError(err.response.data.message);
-                }
-                else {
-                    showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
-                }
-            }
-        };
-
-        if (!logicSequence) {
-            fetch();
-        }
-    }, [logicSequence]);
-
+	useEffect(() => {
+		if(props.activity && props.inheritedActivity && props.studentActivity) {
+			setLogicSequence(props.inheritedActivity);
+			setOrderedSequenceList(props.inheritedActivity.sequence_cards);
+			setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
+			setActivity(props.activity);
+			setStudentActivity(props.studentActivity);
+		}
+	}, [props.activity, props.inheritedActivity, props.studentActivity]);
 
     const handleCompleteActivity = () => {
 
@@ -243,27 +179,24 @@ const LogicSequenceStudent = props => {
                 <Alert className="alert-message" severity="success">{successMessage}</Alert>
                 : ""
             }
-            {!loading ?
-                logicSequence && studentActivity ?
-                    <div className="logic-sequence-student-container">
-                        <div>
-                            <h1 style={nameInputStyle} >{activity.name}</h1>
-                            <p style={desInputStyle} >{activity.description}</p>
-                        </div>
-                        <hr className="hr-bar"></hr>
-                        <div className="panels">
-                            <div className="sequence-cards-container">
-                                {sequenceList ?
-                                    <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
-                            </div>
-                        </div>
-                        <hr className="hr-bar"></hr>
-                        <button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
+			{ logicSequence && studentActivity ?
+				<div className="logic-sequence-student-container">
+					<div>
+						<h1 style={nameInputStyle} >{activity.name}</h1>
+						<p style={desInputStyle} >{activity.description}</p>
+					</div>
+					<hr className="hr-bar"></hr>
+					<div className="panels">
+						<div className="sequence-cards-container">
+							{sequenceList ?
+								<SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
+						</div>
+					</div>
+					<hr className="hr-bar"></hr>
+					<button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
 
-                    </div>
-                    :
-                    <Redirect to="/unauthorized" />
-                : ""}
+				</div>
+			: ''}
         </>
     )
 };
