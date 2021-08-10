@@ -17,9 +17,9 @@ const StudentActivity = () => {
 
 	const [loading, setLoading] = useState(true);
 
-	const { courseId, unitId, taskId, activityId } = useParams(); 
+	const { courseId, unitId, taskId, activityId } = useParams();
 
-    useEffect(() => {
+	useEffect(() => {
 
 		const createStudentActivity = async () => {
 			try {
@@ -41,89 +41,89 @@ const StudentActivity = () => {
 				setStudentActivity(createStudentActivityRes.data.savedStudentActivity);
 
 			}
-            catch (err) {
-                if (err.response) {
-                    console.log(err.response.data.message);
-                }
-                else {
+			catch (err) {
+				if (err.response) {
+					console.log(err.response.data.message);
+				}
+				else {
 					console.log('No encontrado')
-                }
-            }
+				}
+			}
 		};
 
-        const fetch = async () => {
+		const fetch = async () => {
 
-				//Get logic sequence activity
-                const activityRes = await api.get(`/api/activity/${activityId}`, {
-                    headers: { 'x-access-token': localStorage.getItem('token') }
-                });
+			//Get logic sequence activity
+			const activityRes = await api.get(`/api/activity/${activityId}`, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			});
 
-                if (!activityRes) {
-                    console.log('activity not found');
-                    return;
-                }
-                setActivity(activityRes.data.activity);
-				setInheritedActivity(activityRes.data.inheritedActivity);
+			if (!activityRes) {
+				console.log('activity not found');
+				return;
+			}
+			setActivity(activityRes.data.activity);
+			setInheritedActivity(activityRes.data.inheritedActivity);
 
 
-                //GET student activity
-                const studentActivityRes = await api.post("/api/student-activity/foreign", {
-                    student: localStorage.getItem("user_id"),
-                    course: courseId,
-                    unit: unitId,
-                    task: taskId,
-                    activity: activityId
-                }, {
-                    method: 'GET',
-                    headers: {
-                        'x-access-token': localStorage.getItem('token')
-                    }
-                });
+			//GET student activity
+			const studentActivityRes = await api.post("/api/student-activity/foreign", {
+				student: localStorage.getItem("user_id"),
+				course: courseId,
+				unit: unitId,
+				task: taskId,
+				activity: activityId
+			}, {
+				method: 'GET',
+				headers: {
+					'x-access-token': localStorage.getItem('token')
+				}
+			});
 
-				console.log(studentActivityRes.data)
-				if (studentActivityRes) {
-					if(studentActivityRes.data.found) {
+			console.log(studentActivityRes.data)
+			if (studentActivityRes) {
+				if (studentActivityRes.data.found) {
 
-						if (studentActivityRes.data.studentActivity.length > 0) {
-							setStudentActivity(studentActivityRes.data.studentActivity[0]);
-						} else {
-							console.log(1)
-							createStudentActivity();
-						}
-					}
-					else {
-						console.log(2);
+					if (studentActivityRes.data.studentActivity.length > 0) {
+						setStudentActivity(studentActivityRes.data.studentActivity[0]);
+					} else {
+						console.log(1)
 						createStudentActivity();
 					}
 				}
-				console.log(activityRes.data)
-				setLoading(false);
-        };
+				else {
+					console.log(2);
+					createStudentActivity();
+				}
+			}
+			console.log(activityRes.data)
+			setLoading(false);
+		};
 
-        if (!activity) {
-            fetch();
-        }
-    }, [activity]);
+		if (!activity) {
+			fetch();
+		}
+	}, [activity]);
 
 	return (
 		<div>
 			{!loading ?
-				activity && inheritedActivity && studentActivity?
+				activity && inheritedActivity && studentActivity ?
 
 					activity.type === 'logic_sequence' ?
 
-						<LogicSequenceStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity}/>
+						<LogicSequenceStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 						:
 						activity.type === 'maze' ?
 
-							<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity}/>
+							<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 							:
-							<Redirect to='/unauthorized'/>
+							<Redirect to='/unauthorized' />
 
+					:
+					<Redirect to="/unauthorized" />
 				:
-				<Redirect to="/unauthorized" />
-			 :
-			''}
+				''}
 		</div>
 	)
 };

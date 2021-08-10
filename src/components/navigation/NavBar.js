@@ -113,8 +113,6 @@ function NavBar() {
 															:
 															""
 													}
-													<li><Link className="dropdown-item" to="/activity/maze/student/60ea16e70a9a78290c27465e">Mazesito</Link></li>
-													<div className="dropdown-divider"></div>
 													<li><Link onClick={() => logoutHandler()} className="dropdown-item" to="/"><Close className="mr-2" color="error" /> Cerrar sesión</Link></li>
 												</Typography>
 											</ul>
