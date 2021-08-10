@@ -14,11 +14,17 @@ import PropTypes from "prop-types";
 // Modal components
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
+// Materia-ui lab
+import { Pagination } from '@material-ui/lab';
+
 // User modal card
 import StudentModalCard from "./StudentModalCard";
 
 // Alert
 import Alert from "@material-ui/lab/Alert";
+
+// Search user component
+import SearchUser from '../../common/SearchUser';
 
 export default function StudentsPopup(props) {
 	// Props for the modal
@@ -35,11 +41,23 @@ export default function StudentsPopup(props) {
 	// List of students that can be added to the course
 	const [students, setStudents] = useState(null);
 
+	// Filtered students
+	const [filteredStudents, setFilteredStudents] = useState(null);
+
 	// List of student that will be added to the course
 	const [studentsToAdd, setStudentsToAdd] = useState([]);
 
 	// Refs of the button that add students
 	const btnAddStudents = useRef(null);
+
+	// Variable to manage the current page of the students list
+	const [page, setPage] = useState(1);
+
+	// Variable to set the number of pages there ir gonna be
+	const [numPages, setNumPages] = useState(1);
+
+	// Max number of students in one page
+	const maxStudents = 5;
 
 	useEffect(() => {
 		if (!students || isAddingStudents) {
@@ -63,6 +81,21 @@ export default function StudentsPopup(props) {
 			setStudentsToAdd([]);
 		}
 	}, [isOpen]);
+
+	// UseEffect to manage the current number of pages
+	useEffect(() => {
+		if (filteredStudents) {
+			const newNumPages = Math.ceil(filteredStudents.length / maxStudents);
+
+			// The number of pages is according with the number of students that are been shown 
+			setNumPages(newNumPages);
+
+			// If the current page is deleted cause a student is deleted then the current page is setted to the last
+			if (page > newNumPages) {
+				setPage(newNumPages);
+			}
+		}
+	}, [filteredStudents])
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -103,6 +136,7 @@ export default function StudentsPopup(props) {
 			if (students) {
 				// Asignacion de los cursos de la base de datos
 				setStudents(students);
+				setFilteredStudents(students);
 
 				if (students.length > 0) {
 					showSuccess(message);
@@ -165,6 +199,11 @@ export default function StudentsPopup(props) {
 		setProcessMessage("");
 	};
 
+	// Method to handle the change of the page
+	const handleChangePage = (evt, page) => {
+		setPage(page);
+	}
+
 	return (
 		<div>
 			{success ? <Alert className="alert-message mb-5" severity="success">{successMessage}</Alert> : ""}
@@ -180,30 +219,34 @@ export default function StudentsPopup(props) {
 			>
 				<ModalHeader toggle={toggle}>Agregue alumnos a su curso</ModalHeader>
 				<ModalBody className="students-modal">
-					<form className="search-form d-flex justify-content-between mt-4 ml-4 mb-3">
-						<div className="text-field form-group mr-3">
-							<input className="form-control text-center" />
-						</div>
-						<div className="form-group">
-							<button type="submit" className="btn-search custom-btn custom-btn-search">
-								Buscar
-							</button>
-						</div>
-					</form>
-					{students
-						? students.map((student) => (
-							<div key={student._id} className="d-flex justify-content-start align-items-center">
-								<h5 className="mr-3">{students.indexOf(student) + 1}</h5>
-								<StudentModalCard
-									student={student}
-									setStudentsToAdd={setStudentsToAdd}
-								/>
-							</div>
-						))
+					<SearchUser users={students} filteredUsers={filteredStudents} setFilteredUsers={setFilteredStudents} setPage={setPage} />
+					{filteredStudents && filteredStudents.length > 0
+						?
+						<>
+							{
+								filteredStudents.slice((page - 1) * maxStudents, ((page - 1) * maxStudents) + maxStudents).map((student) => (
+									<div key={student._id} className="d-flex justify-content-start align-items-center">
+										<h5 className="mr-3">{students.indexOf(student) + 1}</h5>
+										<StudentModalCard
+											student={student}
+											setStudentsToAdd={setStudentsToAdd}
+										/>
+									</div>
+								))
+							}
+							{
+								filteredStudents.length > maxStudents ?
+									<div className='d-flex justify-content-center mt-4'>
+										<Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
+									</div>
+									:
+									''
+							}
+						</>
 						:
 						<>
-							<div>
-								<h3 className="there-is-no-students">Ya estan todos los alumnos agregados al curso<br />O aún no hay alumnos en la plataforma</h3>
+							<div className="there-is-no-students-container">
+								<h3 className="there-is-no-students">No hay alumnos para mostrar</h3>
 							</div>
 						</>
 					}

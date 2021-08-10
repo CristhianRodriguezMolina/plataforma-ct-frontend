@@ -143,7 +143,7 @@ export default function SearchUser(props) {
 					</select>
 				</div>
 				{
-					searchInput !== '' || filterGenre !== 'NA' ?
+					filterGenre !== 'NA' ?
 						<IconButton onClick={handleClearFilters} className='clear-button' size="small">
 							<Clear />
 						</IconButton>
