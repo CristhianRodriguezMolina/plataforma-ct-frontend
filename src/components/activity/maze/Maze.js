@@ -371,7 +371,7 @@ export default function Maze() {
 		if (e.target[0].value === maze.rows && e.target[1].value === maze.cols) {
 			return;
 		}
-		console.log(maze)
+
 		try {
 			const res = await api.put(`/api/maze/resize/${activityId}`, {
 				cells: maze.cells,
@@ -437,7 +437,7 @@ export default function Maze() {
 				console.log(error.response.data.message);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido actualizando el laberinto: ${error}`);
+				console.log('Un error ha ocurrido actualizando el laberinto');
 				showError(`Un error ha ocurrido actualizando el laberinto: ${error}`);
 			}
 		}
