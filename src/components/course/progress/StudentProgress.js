@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const StudentProgress = props => {
 
     const [studentActivities, setStudentActivities] = useState(null);
-	
+
     const classes = useStyles();
 
     useEffect(async () => {
@@ -102,7 +102,7 @@ const StudentProgress = props => {
                     }
                 }
                 else {
-					
+
                     items.push(
                         <Tooltip enterDelay={200} enterNextDelay={200} title={i + 1} aria-label={`${i + 1}`}>
                             <div className="activity-item-progress">
@@ -127,27 +127,27 @@ const StudentProgress = props => {
         }
         return items;
     }
-	const checkCompletedTask = (student, taskId) => {
+    const checkCompletedTask = (student, taskId) => {
         let tempActivities = props.taskActivities.filter((taskActivity) => taskActivity.task === taskId);
         let tempStudentActivities = studentActivities.filter(studentActivity => studentActivity.student === student._id && studentActivity.task === taskId && studentActivity.complete);
 
-		if (tempStudentActivities) {
-			if(tempStudentActivities.length !== tempActivities.length) {
-				return <CancelIcon className='incompleted-task-icon'/>
-			}
-			else {
-				return <CheckCircleIcon className='completed-task-icon'/>
-			}
-		}
-		else {
-			return <CancelIcon className='incompleted-task-icon'/>
-		}
-	}
+        if (tempStudentActivities) {
+            if (tempStudentActivities.length !== tempActivities.length) {
+                return <CancelIcon className='incompleted-task-icon' />
+            }
+            else {
+                return <CheckCircleIcon className='completed-task-icon' />
+            }
+        }
+        else {
+            return <CancelIcon className='incompleted-task-icon' />
+        }
+    }
 
-	return (
-		<div className="student-progress-container">
-			{props.taskActivities && studentActivities ?
-					props.unit.tasks.map((task) => {
+    return (
+        <div className="student-progress-container">
+            {props.taskActivities && studentActivities ?
+                props.unit.tasks.map((task) => {
                     return <div className={classes.root}>
                         <Accordion>
                             <AccordionSummary
@@ -158,45 +158,45 @@ const StudentProgress = props => {
 
                                 <Typography className={classes.heading}>{task.name}</Typography>
                             </AccordionSummary>
-							<AccordionDetails>
-                                <Typography component="div" style={{width: '100%'}}>
-									<div>
+                            <AccordionDetails>
+                                <Typography component="div" style={{ width: '100%' }}>
+                                    <div>
                                         <table className="student-progress-by-tasks">
                                             <thead>
                                                 <tr>
-                                                    <th className="name-field-th">Name</th>
+                                                    <th className="name-field-th">Estudiante</th>
                                                     <th className="activities-field-th">Actividades</th>
                                                     <th className="completed-field-th">Completado</th>
                                                 </tr>
                                             </thead>
 
-											<tbody>
+                                            <tbody>
 
                                                 {props.students ?
                                                     props.students.map((student) => {
                                                         return <tr>
-															<Tooltip enterDelay={200} enterNextDelay={200} title={`${student.last_name} ${student.first_name}`} aria-label={`${student.last_name} ${student.first_name}`}>
-																<td className="student-name-field-td">{student.last_name} {student.first_name}</td>
-															</Tooltip>
-															<td className="student-tasks-view-td">
-																<div className="student-progress-items-container scrollable">
-																	{renderStudentProgress(student, task._id)}
-																</div>
-															</td>
-															
-															<td className="completed-field-td">{checkCompletedTask(student, task._id)}</td>
-														</tr>
-													})
-													: ""}
-											</tbody>
-										</table>
+                                                            <Tooltip enterDelay={200} enterNextDelay={200} title={`${student.last_name} ${student.first_name}`} aria-label={`${student.last_name} ${student.first_name}`}>
+                                                                <td className="student-name-field-td">{student.last_name} {student.first_name}</td>
+                                                            </Tooltip>
+                                                            <td className="student-tasks-view-td">
+                                                                <div className="student-progress-items-container scrollable">
+                                                                    {renderStudentProgress(student, task._id)}
+                                                                </div>
+                                                            </td>
+
+                                                            <td className="completed-field-td">{checkCompletedTask(student, task._id)}</td>
+                                                        </tr>
+                                                    })
+                                                    : ""}
+                                            </tbody>
+                                        </table>
 
 
-									</div>
-								</Typography>
-							</AccordionDetails>
-						</Accordion>
-					</div>
+                                    </div>
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                    </div>
 
                 })
                 : ""}

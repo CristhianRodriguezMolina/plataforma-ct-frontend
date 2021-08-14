@@ -245,6 +245,7 @@ export default function Maze() {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
 			.then((res) => {
+				console.log(res.data)
 				setMaze(res.data);
 				verifyStartEnd(res.data); // It verifies if the comming maze have start and/or end
 				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
