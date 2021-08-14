@@ -111,6 +111,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	accordionRoot: {
 		width: '100%',
+		marginTop: '0.5em',
+		marginBottom: '0.5em',
 	},
 	accordionHeading: {
 		fontSize: theme.typography.pxToRem(15),
@@ -135,6 +137,8 @@ const IndividualProgress = (props) => {
 
 	// Colors for the navbar in base of the image of the course
 	const [color, setColor] = useState(null);
+
+	const [infoStudentBGColor, setInfoStudentBGColor] = useState(`rgba(${255}, ${255}, ${255})`)
 
 	const [loading, setLoading] = useState(true);
 
@@ -211,6 +215,7 @@ const IndividualProgress = (props) => {
 		if (individualProgressInfo && individualProgressInfo.course) {
 			if (color) {
 				changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
+				setInfoStudentBGColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
 			}
 		}
 	}, [color]);
@@ -236,7 +241,7 @@ const IndividualProgress = (props) => {
 					let justInTime = 0;
 
 					// To set if the activity was delivered in time or with delay
-					if (tempStudentActivity.complete) {
+					if (tempStudentActivity.complete && task.is_due_date) {
 						const due_date = new Date(dateFormat(task.due_date, 'GMT:yyyy-mm-dd'));
 						const realizationDate = new Date(dateFormat(tempStudentActivity.date, 'GMT:yyyy-mm-dd'));
 
@@ -248,7 +253,7 @@ const IndividualProgress = (props) => {
 					}
 
 					// This is to add a custom date format
-					dateFormat.masks.hammerTime = 'GMT:yyyy-mm-dd "a las" HH:MM:ss';
+					dateFormat.masks.customDateFormat = 'GMT:"El" yyyy-mm-dd "a las" HH:MM:ss';
 
 					items.push(
 						<tr>
@@ -264,16 +269,19 @@ const IndividualProgress = (props) => {
 							</td>
 							<td className="grade-field-td">{tempStudentActivity.grade}</td>
 							<td className="completed-field-td">
-								{justInTime === 1 ?
-									'SI'
-									:
-									justInTime === -1 ?
-										'NO'
+								{task.is_due_date ?
+									justInTime === 1 ?
+										'SI'
 										:
-										'Sin fecha de entrega'
+										justInTime === -1 ?
+											'NO'
+											:
+											'Sin fecha de entrega'
+									:
+									'Sin fecha de entrega'
 								}
 							</td>
-							<td className="activity-name-field-td">{dateFormat(tempStudentActivity.date, "hammerTime")}</td>
+							<td className="activity-name-field-td">{dateFormat(tempStudentActivity.date, "customDateFormat")}</td>
 						</tr>
 					)
 				} else {
@@ -316,7 +324,7 @@ const IndividualProgress = (props) => {
 					""
 			}
 			{individualProgressInfo && individualProgressInfo.student ?
-				<div className='student-info'>
+				<div className='student-info' style={{ backgroundColor: infoStudentBGColor }}>
 					<div className='student-info-card'>
 						<Avatar className="student-avatar mr-4" src="https://picsum.photos/200/300" />
 						<div>
@@ -389,6 +397,13 @@ const IndividualProgress = (props) => {
 														<AccordionDetails>
 															<Typography component="div" style={{ width: '100%' }}>
 																<div>
+																	<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Description: </span>{task.description}</p>
+																	{task.is_due_date ?
+																		<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Fecha de entrega: </span>{task.due_date.substring(0, 10)}</p>
+																		:
+																		<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Fecha de entrega: </span>Sin fecha de entrega</p>
+																	}
+																	<hr />
 																	<table className="student-progress-table-by-tasks">
 																		<thead>
 																			<tr>

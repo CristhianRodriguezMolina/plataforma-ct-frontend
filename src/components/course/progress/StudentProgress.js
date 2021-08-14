@@ -29,6 +29,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
+        marginTop: '0.5em',
+        marginBottom: '0.5em',
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
