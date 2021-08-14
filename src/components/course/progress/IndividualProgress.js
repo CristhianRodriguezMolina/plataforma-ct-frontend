@@ -226,6 +226,7 @@ const IndividualProgress = (props) => {
 					items.push(
 						<tr>
 							<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
+							<td className="activity-name-field-td">{tempTaskActivities[i].activity.description}</td>
 							<td className="completed-field-td">
 								{
 									tempStudentActivity.complete ?
@@ -235,16 +236,19 @@ const IndividualProgress = (props) => {
 								}
 							</td>
 							<td className="grade-field-td">{tempStudentActivity.grade}</td>
+							<td className="activity-name-field-td">{tempStudentActivity.date}</td>
 						</tr>
 					)
 				} else {
 					items.push(
 						<tr>
 							<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
+							<td className="activity-name-field-td">{tempTaskActivities[i].activity.description}</td>
 							<td className="completed-field-td">
 								<Cancel className='incompleted-task-icon' />
 							</td>
 							<td className="grade-field-td">Aún sin resolver</td>
+							<td className="activity-name-field-td">Aún sin resolver</td>
 						</tr>
 					)
 				}
@@ -350,8 +354,10 @@ const IndividualProgress = (props) => {
 																	<thead>
 																		<tr>
 																			<th className="activity-field-th">Actividad</th>
+																			<th className="activity-field-th">Descripción</th>
 																			<th className="completed-field-th">Completada</th>
 																			<th className="grade-field-th">Nota</th>
+																			<th className="activity-field-th">Fecha</th>
 																		</tr>
 																	</thead>
 																	<tbody>
