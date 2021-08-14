@@ -30,20 +30,21 @@ export default function SearchUser(props) {
 		setFilterGenre('NA')
 	}, [location]);
 
-	// UseEffect to set the filter text to empty if the input is changed to empty
+	// UseEffect to set the filter text to empty if the input is changed to empty or the genre is changed to N/A
 	useEffect(() => {
-		if (searchInput === '') {
+		if (searchInput === '' && filterGenre === 'NA') {
 			setFilteredUsers(users);
 			if (setPage) {
 				setPage(1); // This line is for, when you clean the search input then put the page in 1
 			}
 		}
-	}, [searchInput])
+	}, [searchInput, filterGenre])
 
 	// When the students list change only if the students list is different to the filtered list then change the filtered list to the filtered
 	useEffect(() => {
 		if (users !== filteredUsers) {
-			setFilteredUsers(users);
+			console.log('Is entering here')
+			filterUsers();
 		}
 	}, [users])
 
@@ -51,33 +52,53 @@ export default function SearchUser(props) {
 	const changeFilterText = (e) => {
 		e.preventDefault();
 
+		filterUsers();
+	}
+
+	const filterUsers = () => {
+		let auxUsers = users;
+		console.log(auxUsers)
+		auxUsers = filterByText(auxUsers);
+		// console.log(auxUsers)
+		auxUsers = filterByGenre(auxUsers);
+		// console.log(auxUsers)
+
+		setFilteredUsers(auxUsers);
+	}
+
+	const filterByText = (users) => {
+		if (setPage) {
+			setPage(1); // This line is for, when you clean the search input then put the page in 1
+		}
 		if (searchInput.trim() !== '') {
-			setFilteredUsers(users.filter(({ first_name, last_name, phone, id, email, genre }) => (
+			console.log(searchInput, users)
+			const auxUsers = users.filter(({ first_name, last_name, phone, id, email }) => (
 				first_name.toLowerCase().includes(searchInput.trim().toLowerCase()) ||
 				last_name.toLowerCase().includes(searchInput.trim().toLowerCase()) ||
 				phone.includes(searchInput.trim()) ||
 				id.includes(searchInput.trim()) ||
-				email.includes(searchInput.trim()) ||
-				genre.includes(filterGenre)
-			)));
+				email.includes(searchInput.trim())
+			));
+			console.log(auxUsers)
+			return auxUsers;
 		} else {
-			setFilteredUsers(users);
-			if (setPage) {
-				setPage(1); // This line is for, when you clean the search input then put the page in 1
-			}
+			return users;
 		}
 	}
 
-	const filterByGenre = (value) => {
-		if (value !== 'NA') {
-			setFilteredUsers(users.filter(({ genre }) => (
-				genre.includes(value)
-			)));
+	const filterByGenre = (users) => {
+		if (setPage) {
+			setPage(1); // This line is for, when you clean the search input then put the page in 1
+		}
+		if (filterGenre !== 'NA') {
+			console.log(filterGenre, users)
+			const auxUsers = users.filter(({ genre }) => (
+				genre === filterGenre
+			));
+			console.log(auxUsers)
+			return auxUsers;
 		} else {
-			setFilteredUsers(users);
-			if (setPage) {
-				setPage(1); // This line is for, when you clean the search input then put the page in 1
-			}
+			return users;
 		}
 	}
 
@@ -114,16 +135,20 @@ export default function SearchUser(props) {
 			<div className="d-flex">
 				<div className="d-flex justify-content-center align-items-center">
 					<label className="mr-2">Genero</label>
-					<select className="form-control" onChange={evt => { setFilterGenre(evt.target.value); filterByGenre(evt.target.value) }} value={filterGenre} aria-label="Default select example" required>
+					<select className="form-control" onChange={evt => { setFilterGenre(evt.target.value); }} value={filterGenre} aria-label="Default select example" required>
 						<option value="NA" selected>N/A</option>
 						<option value="F">Femenino</option>
 						<option value="M">Masculino</option>
 						<option value="NB">No binario</option>
 					</select>
 				</div>
-				<IconButton onClick={handleClearFilters} className='clear-button' size="small">
-					<Clear />
-				</IconButton>
+				{
+					filterGenre !== 'NA' ?
+						<IconButton onClick={handleClearFilters} className='clear-button' size="small">
+							<Clear />
+						</IconButton>
+						: ''
+				}
 			</div>
 		</div>
 	)

@@ -25,8 +25,6 @@ export default function ProtectedRoute({ component, type, ...options }) {
         }
     }
 
-
-
     // En caso de que no se de el parametro de type, significa que cualquiera de los roles puede entrar a esta ruta
     // Por tanto se setea el type en los tres roles
     if (!type) {

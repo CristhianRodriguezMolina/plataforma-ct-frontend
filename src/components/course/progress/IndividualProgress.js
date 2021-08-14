@@ -14,6 +14,7 @@ import dateFormat from 'dateformat';
 // CONTEXT
 import UserContext from '../../../context/user/UserContext';
 
+// Color js
 import { prominent, average } from 'color.js'
 
 //image-exists
@@ -21,6 +22,9 @@ import imageExists from 'image-exists';
 
 // Props types
 import PropTypes from 'prop-types';
+
+// Util
+import * as util from '../../../util/util';
 
 //COMPONENTS
 
@@ -40,10 +44,13 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Alert } from '@material-ui/lab'
 
 // Components for the tab bar
-import { AppBar, Box, Button, Tab, Tabs, Typography } from '@material-ui/core'
+import { AppBar, Avatar, Box, Button, Tab, Tabs, Typography } from '@material-ui/core'
 
 // Tarjeta de titulo
 import TitleCard from '../../common/TitleCard';
+
+// Icons
+import { Cancel, CheckCircle } from '@material-ui/icons'
 
 /* STUDENTS */
 function TabPanel(props) {
@@ -102,21 +109,21 @@ const useStyles = makeStyles((theme) => ({
 	notSelected: {
 		fontWeight: 'bold'
 	},
-    accordionRoot: {
-        width: '100%',
-    },
-    accordionHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightRegular,
-    },
+	accordionRoot: {
+		width: '100%',
+	},
+	accordionHeading: {
+		fontSize: theme.typography.pxToRem(15),
+		fontWeight: theme.typography.fontWeightRegular,
+	},
 }));
 
 const IndividualProgress = (props) => {
 
 	const classes = useStyles();
 
-    // Datos del contexto de usuario
-    const { isAdmin, isTeacher, changeColor, changeFontColor } = useContext(UserContext);
+	// Datos del contexto de usuario
+	const { isAdmin, isTeacher, changeColor, changeFontColor } = useContext(UserContext);
 
 	// Variables que llegan en la url de la pagina
 	const { studentId, courseId } = useParams();
@@ -126,8 +133,8 @@ const IndividualProgress = (props) => {
 
 	const [individualProgressInfo, setIndividualProgressInfo] = useState(null);
 
-    // Colors for the navbar in base of the image of the course
-    const [color, setColor] = useState(null);
+	// Colors for the navbar in base of the image of the course
+	const [color, setColor] = useState(null);
 
 	const [loading, setLoading] = useState(true);
 
@@ -137,16 +144,16 @@ const IndividualProgress = (props) => {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
-	useEffect(async() => {
-		if(!individualProgressInfo) {
+	useEffect(async () => {
+		if (!individualProgressInfo) {
 			try {
 				const res = await api.get(`/api/course/students/individual-progress/${studentId}/${courseId}`, {
 					headers: {
 						'x-access-token': localStorage.getItem('token')
 					}
 				});
-				
-				if(res) {
+
+				if (res) {
 					setIndividualProgressInfo({
 						studentActivities: res.data.studentActivities,
 						course: res.data.course,
@@ -199,100 +206,128 @@ const IndividualProgress = (props) => {
 		setValue(newValue);
 	};
 
-    // UseEffect para cambiar el color de la barra de navegación
-    useEffect(() => {
-        if (individualProgressInfo && individualProgressInfo.course) {
-            if (color) {
-
-                changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
-            }
-        }
-    }, [color]);
-
-	const renderActivities = (activities, task) => {
-
-		var activitiesComponents = [];
-		var tempTaskActivities = individualProgressInfo.taskActivities.filter(taskActivity => taskActivity.task === task._id);
-		var tempActivities = []
-		for(let i = 0; i < activities.length; i++) {
-			for (let j = 0; j < tempTaskActivities.length; j++) {
-				if(activities[i]._id === tempTaskActivities[j].activity) {
-					tempActivities.push(activities[i]);
-				}
+	// UseEffect para cambiar el color de la barra de navegación
+	useEffect(() => {
+		if (individualProgressInfo && individualProgressInfo.course) {
+			if (color) {
+				changeColor(`rgba(${color[0] + 100}, ${color[1] + 100}, ${color[2] + 100})`);
 			}
-		} 
-		
-		var completed = false;
-		tempActivities.map((activity, index) => {
-			var tempStudentActivity = individualProgressInfo.studentActivities.find(studentActivity => studentActivity.task === task._id && studentActivity.activity === activity._id);
+		}
+	}, [color]);
 
-			var justInTime = 0;
+	const renderStudentProgress = (task) => {
 
-			if(tempStudentActivity) {
-				completed = tempStudentActivity.complete;
-			 
-				const due_date = new Date(dateFormat(task.due_date, 'GMT:yyyy-mm-dd'));
-				const realizationDate = new Date(dateFormat(tempStudentActivity.date, 'GMT:yyyy-mm-dd'));
+		let items = [];
 
-				if(due_date.getTime() >= realizationDate.getTime()) {
-					justInTime = 1;
-				}
-				else {
-					justInTime = -1;
-				}
-			}
-
-			activitiesComponents.push(<div>
-					<p><span style={{'color': '#ccc'}}>Nombre de la Actividad: </span>{activity.name}</p>
-					<p><span style={{'color': '#ccc'}}>Descripción de la Actividad: </span>{activity.description}</p>
-					<p><span style={{'color': '#ccc'}}>Completada: </span>{`${completed}`}</p>
-					
-					{tempStudentActivity ?
-						<>
-							<p><span style={{'color': '#ccc'}}>Fecha: </span>{`${tempStudentActivity.date}`}</p>
-							<p><span style={{'color': '#ccc'}}>Calificación: </span>{`${tempStudentActivity.grade}`}</p>
-							{justInTime === 1?
-								<p><span style={{'color': '#ccc'}}>Entregado a tiempo: </span>Entregado a tiempo</p>
-								:
-								justInTime === -1 ?
-									<p><span style={{'color': '#ccc'}}>Entregado a tiempo: </span>Entregado con retraso</p>
-									:
-									<p><span style={{'color': '#ccc'}}>Entregado a tiempo: </span>Sin fecha de entrega</p>
-							}
-						</>
-					:
-						<>
-							<p><span style={{'color': '#ccc'}}>Fecha: </span>Sin fecha</p>
-							<p><span style={{'color': '#ccc'}}>Calificación: </span>Sin calificación</p>
-							<p><span style={{'color': '#ccc'}}>Entregado a tiempo: </span>Sin fecha de entrega</p>
-						</>
-					}
-				</div>);
+		// TaskActivities of the task that comes in the parameters
+		let tempTaskActivities = individualProgressInfo.taskActivities.filter(taskActivity => taskActivity.task === task._id);
+		tempTaskActivities.sort((a, b) => {
+			return a.position - b.position;
 		});
 
-		return activitiesComponents;
-	};
+		// StudentActivities realted to the task that comes in the parameters
+		let tempStudentActivities = individualProgressInfo.studentActivities.filter(studentActivity => studentActivity.task === task._id);
+
+		if (tempTaskActivities.length > 0) {
+			for (let i = 0; i < tempTaskActivities.length; i++) {
+				let tempStudentActivity = tempStudentActivities.find(studentActivity => studentActivity.activity === tempTaskActivities[i].activity._id)
+
+				if (tempStudentActivity) {
+					let justInTime = 0;
+
+					// To set if the activity was delivered in time or with delay
+					if (tempStudentActivity.complete) {
+						const due_date = new Date(dateFormat(task.due_date, 'GMT:yyyy-mm-dd'));
+						const realizationDate = new Date(dateFormat(tempStudentActivity.date, 'GMT:yyyy-mm-dd'));
+
+						if (due_date.getTime() >= realizationDate.getTime()) {
+							justInTime = 1;
+						} else {
+							justInTime = -1;
+						}
+					}
+
+					// This is to add a custom date format
+					dateFormat.masks.hammerTime = 'GMT:yyyy-mm-dd "a las" HH:MM:ss';
+
+					items.push(
+						<tr>
+							<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
+							<td className="activity-name-field-td">{tempTaskActivities[i].activity.description}</td>
+							<td className="completed-field-td">
+								{
+									tempStudentActivity.complete ?
+										<CheckCircle className='completed-task-icon' />
+										:
+										<Cancel className='incompleted-task-icon' />
+								}
+							</td>
+							<td className="grade-field-td">{tempStudentActivity.grade}</td>
+							<td className="completed-field-td">
+								{justInTime === 1 ?
+									'SI'
+									:
+									justInTime === -1 ?
+										'NO'
+										:
+										'Sin fecha de entrega'
+								}
+							</td>
+							<td className="activity-name-field-td">{dateFormat(tempStudentActivity.date, "hammerTime")}</td>
+						</tr>
+					)
+				} else {
+					items.push(
+						<tr>
+							<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
+							<td className="activity-name-field-td">{tempTaskActivities[i].activity.description}</td>
+							<td className="completed-field-td">
+								<Cancel className='incompleted-task-icon' />
+							</td>
+							<td className="grade-field-td">Aún sin resolver</td>
+							<td className="completed-field-td">Sin fecha de entrega</td>
+							<td className="activity-name-field-td">Sin fecha de entrega</td>
+						</tr>
+					)
+				}
+			}
+		} else {
+			items.push(
+				<tr>
+					<td className="no-activities-task">No hay actividades para mostrar</td>
+				</tr>
+			)
+		}
+
+		return items;
+	}
 
 	return (
 		<div>
-            {
-                individualProgressInfo && individualProgressInfo.course ?
-                    <TitleCard
-                        title={individualProgressInfo.course.name}
-                        color="#B6E768"
-                        colorFont='#fff'
-                        image={`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`}
-                    />
-                    :
-                    ""
-            }
-			{individualProgressInfo && individualProgressInfo.student?
-				<div>
-					<h2><span style={{'color': '#ccc'}}>Estudiante: </span>{ individualProgressInfo.student.first_name } { individualProgressInfo.student.last_name }</h2>
-					<h2><span style={{'color': '#ccc'}}>Identificación: </span>{ individualProgressInfo.student.id }</h2>
-					<h2><span style={{'color': '#ccc'}}>Género: </span>{ individualProgressInfo.student.genre }</h2>
+			{
+				individualProgressInfo && individualProgressInfo.course ?
+					<TitleCard
+						title={individualProgressInfo.course.name}
+						color="#B6E768"
+						colorFont='#fff'
+						image={`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`}
+					/>
+					:
+					""
+			}
+			{individualProgressInfo && individualProgressInfo.student ?
+				<div className='student-info'>
+					<div className='student-info-card'>
+						<Avatar className="student-avatar mr-4" src="https://picsum.photos/200/300" />
+						<div>
+							<h2><span style={{ 'color': 'rgb(161, 161, 161)' }}>Estudiante: </span>{individualProgressInfo.student.first_name} {individualProgressInfo.student.last_name}</h2>
+							<h2><span style={{ 'color': 'rgb(161, 161, 161)' }}>Identificación: </span>{individualProgressInfo.student.id}</h2>
+							<h2><span style={{ 'color': 'rgb(161, 161, 161)' }}>Edad: </span>{util.getAge(individualProgressInfo.student.birth_date)} años</h2>
+							<h2><span style={{ 'color': 'rgb(161, 161, 161)' }}>Género: </span>{util.getGenre(individualProgressInfo.student.genre)}</h2>
+						</div>
+					</div>
 				</div>
-			:""}
+				: ""}
 			<div className={classes.root}>
 				<AppBar className={classes.bar} position="static">
 					<Typography component="div">
@@ -311,11 +346,11 @@ const IndividualProgress = (props) => {
 								className="units-bar"
 							>
 								{/* TABS FOR EACH UNIT IN THE COURSE */}
-								{ individualProgressInfo ?
+								{individualProgressInfo ?
 									individualProgressInfo.course.units.map((unit, index) => (
 										<Tab className={value === index ? classes.selected : classes.notSelected} key={index} label={`Unidad ${index + 1}`} {...a11yProps(index)} />
 									))
-									:""
+									: ""
 								}
 
 								{individualProgressInfo && individualProgressInfo.course.units[0] ? <div className="divider bg-white"></div> : ""}
@@ -337,51 +372,56 @@ const IndividualProgress = (props) => {
 					!loading ?
 						individualProgressInfo && individualProgressInfo.course ?
 							individualProgressInfo.course.units.length > 0 ?
-							individualProgressInfo.course.units.map((unit, index) => {
-								return <TabPanel value={value} key={index} index={index}>
-									{unit.tasks.length > 0?
-										unit.tasks.map((task) => {
-											return <div className={classes.accordionRoot}>
-												<Accordion>
-													<AccordionSummary
-														expandIcon={<ExpandMoreIcon />}
-														aria-controls="panel1a-content"
-														id="panel1a-header"
-													>
+								individualProgressInfo.course.units.map((unit, index) => {
+									return <TabPanel value={value} key={index} index={index}>
+										{unit.tasks.length > 0 ?
+											unit.tasks.map((task) => {
+												return <div className={classes.accordionRoot}>
+													<Accordion>
+														<AccordionSummary
+															expandIcon={<ExpandMoreIcon />}
+															aria-controls="panel1a-content"
+															id="panel1a-header"
+														>
 
-														<Typography className={classes.accordionHeading}>{task.name}</Typography>
-													</AccordionSummary>
-													<AccordionDetails>
-														<Typography component="div" style={{width: '100%'}}>
-															<div>
-																<p><span style={{ color: '#ccc' }} >Name: </span>{task.name}</p>
-																<p><span style={{ color: '#ccc' }} >Description: </span>{task.description}</p>
-																{task.is_due_date?
-																	<p><span style={{ color: '#ccc' }} >Fecha de entrega: </span>{task.due_date.substring(0, 10)}</p>
-																	:
-																	<p><span style={{ color: '#ccc' }} >Fecha de entrega: </span>Sin fecha de entrega</p>
-																}
-																<hr/>
-																<h2>Actividades</h2>
-																{renderActivities(individualProgressInfo.activities, task)}
-															</div>
-														</Typography>
-													</AccordionDetails>
-												</Accordion>
-											</div>
-									}):
-									<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
-								</TabPanel>
-							}) : 
-							<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
-						: 
-						<Redirect to='/unauthorized'/>
-					: 
-					<div className="spinner-loading">
-					  <div className="spinner-border" role="status">
-						<span className="sr-only">Loading...</span>
-					  </div>
-					</div>
+															<Typography className={classes.accordionHeading}>{task.name}</Typography>
+														</AccordionSummary>
+														<AccordionDetails>
+															<Typography component="div" style={{ width: '100%' }}>
+																<div>
+																	<table className="student-progress-table-by-tasks">
+																		<thead>
+																			<tr>
+																				<th className="activity-field-th">Actividad</th>
+																				<th className="activity-field-th">Descripción</th>
+																				<th className="completed-field-th">Completada</th>
+																				<th className="grade-field-th">Nota</th>
+																				<th className="activity-field-th">Entregado a tiempo</th>
+																				<th className="activity-field-th">Fecha</th>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			{renderStudentProgress(task)}
+																		</tbody>
+																	</table>
+																</div>
+															</Typography>
+														</AccordionDetails>
+													</Accordion>
+												</div>
+											}) :
+											<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
+									</TabPanel>
+								}) :
+								<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
+							:
+							<Redirect to='/unauthorized' />
+						:
+						<div className="spinner-loading">
+							<div className="spinner-border" role="status">
+								<span className="sr-only">Loading...</span>
+							</div>
+						</div>
 				}
 			</div>
 		</div>

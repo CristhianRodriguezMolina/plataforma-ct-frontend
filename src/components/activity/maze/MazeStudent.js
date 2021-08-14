@@ -12,9 +12,6 @@ import './maze.scss';
 
 // Images
 import robot from '../../../assets/robot.svg'
-import maze_block from '../../../assets/maze-block.jpg'
-import maze_start from '../../../assets/maze-start.jpg'
-import maze_end from '../../../assets/maze-end.jpg'
 
 // COMPONENTS
 
@@ -25,13 +22,10 @@ import Intructions from './Intructions';
 import Cell from './Cell';
 
 // Material UI core
-import { Container, ButtonBase, FormControlLabel, Switch } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 
 // Icons
 import { ZoomIn, ZoomOut } from '@material-ui/icons';
-
-// DynamicInput
-import DynamicInput from '../../common/DynamicInput';
 
 // Styled-components
 import styled, { css, keyframes } from 'styled-components'
@@ -39,7 +33,7 @@ import styled, { css, keyframes } from 'styled-components'
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
-export default function MazeStudent() {
+export default function MazeStudent(props) {
 
 	// Variables del contexto
 	const { changeColor } = useContext(UserContext);
@@ -170,9 +164,14 @@ export default function MazeStudent() {
 
 	// Use effects ----------------------------------------------------------------------------------------------------------------------------------
 
+	// UseEffect to init the maze activity data or to change the rows and cols
 	useEffect(() => {
 		if (!maze) {
-			fetchMaze();
+			console.log(props)
+			setMaze(props.inheritedActivity);
+			setActivityName(props.activity.name); // Activity_id is the activity schema of the maze
+			setActivityDescription(props.activity.description);
+			setLoading(false); // This it to wait to the component to render completely
 		} else {
 			setRows(maze.rows);
 			setCols(maze.cols);
@@ -286,24 +285,31 @@ export default function MazeStudent() {
 
 	// Update the data of the maze in the DB
 	const handleCompleteActivity = async (grade) => {
-		try {
-			setProcess(true);
-			setProcessMessage('Guardando cambios...');
+		setProcess(true);
+		setProcessMessage('Guardando cambios...');
 
-			// HERE GOES THE API REQUEST
-
-			if (true) { // HERE GOES THE REQUEST 
-
-				showSuccess(`Actividad realizada, su calificación es: ${grade}`);
-			}
-		} catch (error) {
-			if (error.response) {
-				console.log(error.response.data.message);
-				showError(error.response.data.message);
-			} else {
-				console.log(`Un error ha ocurrido resolviendo el laberinto: ${error}`);
-				showError(`Un error ha ocurrido resolviendo el laberinto: ${error}`);
-			}
+		if (props.studentActivity) {
+			api.put(`/api/student-activity/${props.studentActivity._id}`, {
+				complete: true,
+				grade: grade
+			}, {
+				headers: {
+					'x-access-token': localStorage.getItem('token')
+				}
+			})
+				.then((res) => {
+					showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+				})
+				.catch((err) => {
+					if (err.response) {
+						console.log(err.response.data.message);
+						showError(err.response.data.message);
+					}
+					else {
+						console.log(`Un error ha ocurrido resolviendo el laberinto: ${error}`);
+						showError(`Un error ha ocurrido resolviendo el laberinto: ${error}`);
+					}
+				});
 		}
 		setProcess(false);
 		setProcessMessage('');
@@ -883,12 +889,7 @@ export default function MazeStudent() {
 						</div>
 					</div>
 				</>
-				:
-				<div className="spinner-loading">
-				  <div className="spinner-border" role="status">
-					<span className="sr-only">Loading...</span>
-				  </div>
-				</div>
+				: ''
 			}
 		</div >
 	)

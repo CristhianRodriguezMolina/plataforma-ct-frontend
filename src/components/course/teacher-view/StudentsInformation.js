@@ -19,6 +19,8 @@ import { Element, animateScroll as scroll, Link } from 'react-scroll'
 
 // Materia-ui lab
 import { Pagination } from '@material-ui/lab';
+
+// Search user component
 import SearchUser from '../../common/SearchUser';
 
 /* TECAHER */

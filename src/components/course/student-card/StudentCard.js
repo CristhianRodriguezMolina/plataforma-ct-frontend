@@ -83,6 +83,7 @@ export default function StudentCard(props) {
 
 			const response = await api.delete(`/api/course/students/${course._id}/${student._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
+			setIsAddingStudents(true); // This is for indicate the studentspopup that it have to fetch students again
 			const { message } = response.data;
 
 			showSuccess(message);
@@ -108,6 +109,7 @@ export default function StudentCard(props) {
 		setVisible(false);
 		setProcess(false);
 		setProcessMessage('');
+		setIsAddingStudents(false); // This is for indicate the studentspopup that it have to fetch students again
 	}
 
 	return (
@@ -151,7 +153,7 @@ export default function StudentCard(props) {
 								<Typography variant="subtitle1">
 									<div className="btn-group-sm btn-group-vertical">
 										<Tooltip title="Borrar del curso" aria-label="delete">
-											<Link onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></Link>
+											<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></button>
 										</Tooltip>
 										<Tooltip title="Editar" aria-label="edit">
 											<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-primary btn-user-card"><Edit /></Link>

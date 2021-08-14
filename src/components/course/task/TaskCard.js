@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+// API
+import api from '../../../services/api';
+
+// SCSS
 import './TaskCard.scss';
 
 // WithRouter
@@ -70,12 +74,28 @@ const TaskCard = props => {
 
 	const items = [];
 
-	const handleRedirectToActivity = (taskActivity) => {
+	const handleRedirectToActivity = async (taskActivity) => {
 		if (props.forStudent) {
-			
+
 			props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
 		} else {
-			props.history.push(`/activity/teacher/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
+			//Get logic sequence activity
+			const activityRes = await api.get(`/api/activity/${taskActivity.activity}`, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			});
+
+			if (!activityRes) {
+				console.log('activity not found');
+				return;
+			}
+
+			if (activityRes.data.activity.type === 'logic_sequence') {
+				props.history.push(`/activity/logic-sequence/${taskActivity.activity}`);
+			} else if (activityRes.data.activity.type === 'maze') {
+				props.history.push(`/activity/maze/${taskActivity.activity}`);
+			} else if (activityRes.data.activity.type === 'questionnaire') {
+				// QUESTIONNAIRE ROUTE
+			}
 		}
 	};
 
@@ -150,7 +170,7 @@ const TaskCard = props => {
 							<h3><b>Hasta:</b> Sin fecha limite</h3>}
 					</div>}
 			</div>
-			{	
+			{
 				!props.forStudent ?
 					<>
 						<Link to={`/course/edit/${props.courseId}/units-info/${props.unitId}/${props.task._id}`} className="custom-btn custom-btn-primary edit-button"><Edit /></Link>

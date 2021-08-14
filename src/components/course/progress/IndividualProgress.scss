@@ -1,0 +1,94 @@
+.student-info {
+	display: flex;
+	align-items: center;
+	padding: 1.5em 2em 1.5em 4em;
+	background-color: rgb(161, 161, 161);
+
+	.student-info-card {
+		background-color: whitesmoke;
+		display: flex;
+		align-items: center;
+		padding: 1em;
+		border-radius: 10px;
+		filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
+		.student-avatar {
+			height: 5em;
+			width: 5em;
+		}
+	}
+}
+
+.student-progress-table-by-tasks {
+	display: flex;
+	flex-direction: column;
+
+	tr {
+		display: flex;
+	}
+
+	th,
+	td {
+		border-bottom: 1px solid #ddd;
+	}
+
+	.student-tasks-view-td,
+	.completed-field-th {
+		flex: 0.3;
+	}
+
+	.grade-field-th {
+		flex: 0.3;
+	}
+
+	.grade-field-td {
+		flex: 0.3;
+	}
+
+	.completed-field-th {
+		overflow-x: hidden;
+	}
+
+	.student-tasks-view-td {
+		display: flex;
+		align-items: center;
+		overflow-x: auto;
+	}
+
+	.activity-field-th {
+		width: 100px;
+		flex: 0.3;
+	}
+
+	.activity-name-field-td {
+		width: 100px;
+		flex: 0.3;
+	}
+
+	.activity-name-field-td {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+	}
+
+	.completed-field-td {
+		display: flex;
+		align-items: center;
+		overflow-x: auto;
+		flex: 0.3;
+		.incompleted-task-icon {
+			color: red;
+		}
+
+		.completed-task-icon {
+			color: #3ec763;
+		}
+	}
+
+	.no-activities-task {
+		text-align: center;
+		flex: 1;
+		padding: 0.5em 0;
+	}
+}

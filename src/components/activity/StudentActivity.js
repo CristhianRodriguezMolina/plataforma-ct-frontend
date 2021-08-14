@@ -17,9 +17,9 @@ const StudentActivity = (props) => {
 
 	const [loading, setLoading] = useState(true);
 
-	const { view, courseId, unitId, taskId, activityId } = useParams(); 
+	const { view, courseId, unitId, taskId, activityId } = useParams();
 
-    useEffect(() => {
+	useEffect(() => {
 
 		const createStudentActivity = async () => {
 			try {
@@ -41,82 +41,82 @@ const StudentActivity = (props) => {
 				setStudentActivity(createStudentActivityRes.data.savedStudentActivity);
 
 			}
-            catch (err) {
-                if (err.response) {
-                    console.log(err.response.data.message);
-                }
-                else {
+			catch (err) {
+				if (err.response) {
+					console.log(err.response.data.message);
+				}
+				else {
 					console.log('No encontrado')
-                }
-            }
+				}
+			}
 		};
 
-        const fetch = async () => {
+		const fetch = async () => {
 
-				//Get logic sequence activity
-                const activityRes = await api.get(`/api/activity/${activityId}`, {
-                    headers: { 'x-access-token': localStorage.getItem('token') }
-                });
+			//Get logic sequence activity
+			const activityRes = await api.get(`/api/activity/${activityId}`, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			});
 
-                if (!activityRes) {
-                    console.log('activity not found');
-                    return;
-                }
-                setActivity(activityRes.data.activity);
-				setInheritedActivity(activityRes.data.inheritedActivity);
+			if (!activityRes) {
+				console.log('activity not found');
+				return;
+			}
+			setActivity(activityRes.data.activity);
+			setInheritedActivity(activityRes.data.inheritedActivity);
 
 
-                //GET student activity
-                const studentActivityRes = await api.post("/api/student-activity/foreign", {
-                    student: localStorage.getItem("user_id"),
-                    course: courseId,
-                    unit: unitId,
-                    task: taskId,
-                    activity: activityId
-                }, {
-                    method: 'GET',
-                    headers: {
-                        'x-access-token': localStorage.getItem('token')
-                    }
-                });
+			//GET student activity
+			const studentActivityRes = await api.post("/api/student-activity/foreign", {
+				student: localStorage.getItem("user_id"),
+				course: courseId,
+				unit: unitId,
+				task: taskId,
+				activity: activityId
+			}, {
+				method: 'GET',
+				headers: {
+					'x-access-token': localStorage.getItem('token')
+				}
+			});
 
-				if (studentActivityRes) {
-					if(studentActivityRes.data.found) {
+			if (studentActivityRes) {
+				if (studentActivityRes.data.found) {
 
-						if (studentActivityRes.data.studentActivity.length > 0) {
-							setStudentActivity(studentActivityRes.data.studentActivity[0]);
-						} else {
-							createStudentActivity();
-						}
-					}
-					else {
+					if (studentActivityRes.data.studentActivity.length > 0) {
+						setStudentActivity(studentActivityRes.data.studentActivity[0]);
+					} else {
 						createStudentActivity();
 					}
 				}
-				setLoading(false);
-        };
+				else {
+					createStudentActivity();
+				}
+			}
+			setLoading(false);
+		};
 
 		if (!activity) {
 			fetch();
 		}
 		else {
 
-			if(view === 'teacher') {
-				if(activity.type === 'logic_sequence') {
+			if (view === 'teacher') {
+				if (activity.type === 'logic_sequence') {
 					//Redirect to maze view for teachers or admins
 					props.history.push(`/activity/logic-sequence/${activityId}`);
 				}
-				else if(activity.type === 'maze') {
+				else if (activity.type === 'maze') {
 					//Redirect to maze view for teachers or admins
 					props.history.push(`/activity/maze/${activityId}`);
 				}
-				else if(activity.type === 'questionnaire') {
+				else if (activity.type === 'questionnaire') {
 					//Redirect to questionnaire view for teacher or admins
 				}
 			}
 		}
 
-    }, [activity]);
+	}, [activity]);
 
 	return (
 		<div>
@@ -126,33 +126,32 @@ const StudentActivity = (props) => {
 
 					view === 'student' ?
 
-						activity && inheritedActivity && studentActivity?
+						activity && inheritedActivity && studentActivity ?
 
 							activity.type === 'logic_sequence' ?
 
-								<LogicSequenceStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity}/>
+								<LogicSequenceStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 								:
 								activity.type === 'maze' ?
 
-									<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity}/>
+									<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 									:
-									<Redirect to='/unauthorized'/>
+									<Redirect to='/unauthorized' />
+
+							:
+							<Redirect to='/unauthorized' />
 
 						:
-						<Redirect to='/unauthorized'/>
+						""
 
 					:
-					""
-
+					<Redirect to="/unauthorized" />
 				:
-				<Redirect to="/unauthorized" />
-			 :
-			
-            <div className="spinner-loading">
-              <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-            </div>
+				<div className="spinner-loading">
+					<div className="spinner-border" role="status">
+						<span className="sr-only">Loading...</span>
+					</div>
+				</div>
 			}
 		</div>
 	)
