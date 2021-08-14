@@ -23,6 +23,9 @@ import PropTypes from 'prop-types';
 // Util
 import * as util from '../../../util/util';
 
+// Dateformat
+import dateFormat from 'dateformat';
+
 //COMPONENTS
 
 //NoTasksMessage
@@ -46,6 +49,7 @@ import { AppBar, Avatar, Box, Button, Tab, Tabs, Typography } from '@material-ui
 // Tarjeta de titulo
 import TitleCard from '../../common/TitleCard';
 
+// Icons
 import { Cancel, CheckCircle } from '@material-ui/icons'
 
 /* STUDENTS */
@@ -208,21 +212,41 @@ const IndividualProgress = (props) => {
 		}
 	}, [color]);
 
-	const renderStudentProgress = (taskId) => {
+	const renderStudentProgress = (task) => {
 
 		let items = [];
 
-		let tempTaskActivities = individualProgressInfo.taskActivities.filter(taskActivity => taskActivity.task === taskId);
+		// TaskActivities of the task that comes in the parameters
+		let tempTaskActivities = individualProgressInfo.taskActivities.filter(taskActivity => taskActivity.task === task._id);
 		tempTaskActivities.sort((a, b) => {
 			return a.position - b.position;
 		});
-		let tempStudentActivities = individualProgressInfo.studentActivities.filter(studentActivity => studentActivity.task === taskId);
+
+		// StudentActivities realted to the task that comes in the parameters
+		let tempStudentActivities = individualProgressInfo.studentActivities.filter(studentActivity => studentActivity.task === task._id);
 
 		if (tempTaskActivities.length > 0) {
 			for (let i = 0; i < tempTaskActivities.length; i++) {
 				let tempStudentActivity = tempStudentActivities.find(studentActivity => studentActivity.activity === tempTaskActivities[i].activity._id)
 
 				if (tempStudentActivity) {
+					let justInTime = 0;
+
+					// To set if the activity was delivered in time or with delay
+					if (tempStudentActivity.complete) {
+						const due_date = new Date(dateFormat(task.due_date, 'GMT:yyyy-mm-dd'));
+						const realizationDate = new Date(dateFormat(tempStudentActivity.date, 'GMT:yyyy-mm-dd'));
+
+						if (due_date.getTime() >= realizationDate.getTime()) {
+							justInTime = 1;
+						} else {
+							justInTime = -1;
+						}
+					}
+
+					// This is to add a custom date format
+					dateFormat.masks.hammerTime = 'GMT:yyyy-mm-dd "a las" HH:MM:ss';
+
 					items.push(
 						<tr>
 							<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
@@ -236,7 +260,17 @@ const IndividualProgress = (props) => {
 								}
 							</td>
 							<td className="grade-field-td">{tempStudentActivity.grade}</td>
-							<td className="activity-name-field-td">{tempStudentActivity.date}</td>
+							<td className="completed-field-td">
+								{justInTime === 1 ?
+									'SI'
+									:
+									justInTime === -1 ?
+										'NO'
+										:
+										'Sin fecha de entrega'
+								}
+							</td>
+							<td className="activity-name-field-td">{dateFormat(tempStudentActivity.date, "hammerTime")}</td>
 						</tr>
 					)
 				} else {
@@ -248,7 +282,8 @@ const IndividualProgress = (props) => {
 								<Cancel className='incompleted-task-icon' />
 							</td>
 							<td className="grade-field-td">Aún sin resolver</td>
-							<td className="activity-name-field-td">Aún sin resolver</td>
+							<td className="completed-field-td">Sin fecha de entrega</td>
+							<td className="activity-name-field-td">Sin fecha de entrega</td>
 						</tr>
 					)
 				}
@@ -357,11 +392,12 @@ const IndividualProgress = (props) => {
 																			<th className="activity-field-th">Descripción</th>
 																			<th className="completed-field-th">Completada</th>
 																			<th className="grade-field-th">Nota</th>
+																			<th className="activity-field-th">Entregado a tiempo</th>
 																			<th className="activity-field-th">Fecha</th>
 																		</tr>
 																	</thead>
 																	<tbody>
-																		{renderStudentProgress(task._id)}
+																		{renderStudentProgress(task)}
 																	</tbody>
 																</table>
 															</div>
