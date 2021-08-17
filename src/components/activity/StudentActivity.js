@@ -60,6 +60,7 @@ const StudentActivity = (props) => {
 
 			if (!activityRes) {
 				console.log('activity not found');
+				setLoading(false);
 				return;
 			}
 			setActivity(activityRes.data.activity);
@@ -126,7 +127,7 @@ const StudentActivity = (props) => {
 
 					view === 'student' ?
 
-						activity && inheritedActivity && studentActivity ?
+						activity && inheritedActivity?
 
 							activity.type === 'logic_sequence' ?
 

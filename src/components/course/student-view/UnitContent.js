@@ -39,6 +39,9 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 //NoTasksMessage
 import NoTasksMessage from '../task/NoTasksMessage';
 
+//Progress Bar
+import ProgressBar from '../../common/ProgressBar';
+
 const UnitContent = props => {
 
 	const [isCompletedUnit, setCompletedUnit] = useState(false);
@@ -48,6 +51,8 @@ const UnitContent = props => {
 
 	//show a message if the current unit has no task to show
 	const [foundTasks, setFoundTasks] = useState(true);
+
+	const [completedPercentage, setCompletedPercentage] = useState(null);
 
 	const nameInputStyle = {
 		width: "100%",
@@ -70,9 +75,16 @@ const UnitContent = props => {
 	};
 
 	useEffect(() => {
+
 		if (props.taskActivities && props.studentActivities && props.unitValue) {
+
+
 			if(props.unitValue.tasks.length > 0) {
 				let taskActivities = props.taskActivities.filter(taskActivity => taskActivity.unit === props.unitValue._id);
+			
+				let completedActivities = props.studentActivities.filter(studentActivity => studentActivity.unit === props.unitValue._id && studentActivity.complete == true);
+				setCompletedPercentage(Math.round((completedActivities.length/taskActivities.length) * 100));
+
 				let disableBtn = true;
 				for (let i = 0; i < taskActivities.length && disableBtn; i++) {
 					//find if the student is linked to the especific activity
@@ -123,7 +135,7 @@ const UnitContent = props => {
 
 	const redirectToActivity = () => {
 		if(lastActivityInfo) {
-			props.history.push(`/activity/logic-sequence/student/${props.course._id}/${props.unitValue._id}/${lastActivityInfo.taskId}/${lastActivityInfo.activityId}`);
+			props.history.push(`/activity/student/${props.course._id}/${props.unitValue._id}/${lastActivityInfo.taskId}/${lastActivityInfo.activityId}`);
 		}
 	}
 
@@ -137,6 +149,9 @@ const UnitContent = props => {
 				<h3 className="h6 mx-3"><b>Hasta:</b> {props.unitValue.due_date.substring(0, 10)}</h3> :
 				<h3 className="h6 mx-3">Fecha limite de la unidad: Sin fecha limite</h3>}
 			<hr className="mx-3" />
+			{!isCompletedUnit && completedPercentage && completedPercentage > 0?
+				<ProgressBar hasTitle={true} title={'Progreso:'} bgColor={'#ffb16e'} percentage={completedPercentage}/>
+			:''}
 			{isCompletedUnit ?
 				<div className="completed-unit-message">
 					<div className="success-icon-container">
