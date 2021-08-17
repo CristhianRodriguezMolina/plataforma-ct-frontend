@@ -982,12 +982,12 @@ export default function Maze() {
 									<form onSubmit={setNewSize} className="form-size d-flex justify-content-between align-items-center">
 										<div>
 											<label className='m-0'>Filas</label>
-											<input type="number" value={rows} onChange={(evt) => setRows(evt.target.value)} className='form-control' label='Columnas Del Maze' name='cols' />
+											<input type="number" min={4} max={8} value={rows} onChange={(evt) => setRows(evt.target.value)} className='form-control' label='Columnas Del Maze' name='cols' />
 										</div>
 										<label className='mx-3 mb-2 align-self-end'>X</label>
 										<div className='mr-3'>
 											<label className='m-0'>Cols</label>
-											<input type="number" value={cols} onChange={(evt) => setCols(evt.target.value)} className='form-control' label='Filas Del Maze' name='rows' />
+											<input type="number" min={4} max={8} value={cols} onChange={(evt) => setCols(evt.target.value)} className='form-control' label='Filas Del Maze' name='rows' />
 										</div>
 										<button type="submit" className="custom-btn custom-btn-primary p-2">Establecer tamaño</button>
 									</form>
@@ -1137,11 +1137,11 @@ export default function Maze() {
 					{/* BUTTON TO UPDATE THE MAZE DIRECTLY */}
 					<button onClick={handleUpdateMaze} className='btn-save-maze custom-btn custom-btn-primary'>Guardar</button>
 				</>
-				: 
+				:
 				<div className="spinner-loading">
-				  <div className="spinner-border" role="status">
-					<span className="sr-only">Loading...</span>
-				  </div>
+					<div className="spinner-border" role="status">
+						<span className="sr-only">Loading...</span>
+					</div>
 				</div>
 			}
 		</div >
