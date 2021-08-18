@@ -39,12 +39,6 @@ import NavBar from './components/navigation/NavBar';
 
 import ExpiredSessionConfirmation from './components/expired-session/ExpiredSessionConfirmation';
 
-// Maze
-const Maze = React.lazy(() => import('./components/activity/maze/Maze'));
-
-// Maze student view
-const MazeStudent = React.lazy(() => import('./components/activity/maze/MazeStudent'));
-
 // My courses
 const MyCourses = React.lazy(() => import('./components/course/MyCourses'));
 
@@ -57,17 +51,8 @@ const IndividualProgress = React.lazy(() => import('./components/course/progress
 // Manage Task
 const ManageTask = React.lazy(() => import('./components/course/teacher-view/ManageTask'));
 
-// My activities
-const MyActivities = React.lazy(() => import('./components/activity/MyActivities'));
-
 // Create activity
 const CreateActivity = React.lazy(() => import('./components/activity/CreateActivity'));
-
-// Logic sequence
-const LogicSequence = React.lazy(() => import('./components/activity/logic-sequence/LogicSequence'));
-
-//Logic sequence (student view)
-const StudentActivity = React.lazy(() => import('./components/activity/StudentActivity'));
 
 // Users manage
 const UserManage = React.lazy(() => import('./components/users/UserManage'));
@@ -83,6 +68,29 @@ const Profile = React.lazy(() => import('./components/profile/Profile'));
 
 // Error 404
 const Error404 = React.lazy(() => import('./components/error/Error404'));
+
+//ACTIVITY COMPONENTS
+ 
+// My activities
+const MyActivities = React.lazy(() => import('./components/activity/MyActivities'));
+
+// Maze (create maze view)
+const Maze = React.lazy(() => import('./components/activity/maze/Maze'));
+
+// Maze student view
+const MazeStudent = React.lazy(() => import('./components/activity/maze/MazeStudent'));
+
+// Logic sequence (create logic sequence view)
+const LogicSequence = React.lazy(() => import('./components/activity/logic-sequence/LogicSequence'));
+
+//Questionnaire (create questionnaire view)
+const Questionnaire = React.lazy(() => import('./components/activity/questionnaire/Questionnaire'));
+
+//Questionnaire (student view)
+//const QuestionnaireStudent = React.lazy(() => import('./components/activity/questionnaire/QuestionnaireStudent'));
+
+//Logic sequence (student view)
+const StudentActivity = React.lazy(() => import('./components/activity/StudentActivity'));
 
 function App() {
 
@@ -119,6 +127,7 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
                 <ProtectedRoute type="admin, teacher" path='/activity/maze/:activityId' exact component={Maze} />
+                <ProtectedRoute type="admin, teacher" path='/activity/questionnaire/:activityId' exact component={Questionnaire} />
                 <ProtectedRoute type="admin, teacher" path='/activity/maze/student/:activityId' exact component={MazeStudent} />
 
                 {/* PROFILE */}
