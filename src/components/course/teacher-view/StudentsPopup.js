@@ -38,6 +38,9 @@ export default function StudentsPopup(props) {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(""); //Mensaje de proceso satisfactorio
 
+	// Variable to see if the info data is loading
+	const [isLoading, setIsLoading] = useState(true);
+
 	// List of students that can be added to the course
 	const [students, setStudents] = useState(null);
 
@@ -131,8 +134,6 @@ export default function StudentsPopup(props) {
 
 			const { students, message } = response.data;
 
-			setProcess(false);
-			setProcessMessage("");
 			if (students) {
 				// Asignacion de los cursos de la base de datos
 				setStudents(students);
@@ -145,8 +146,6 @@ export default function StudentsPopup(props) {
 				showSuccess('No hay alumnos para agregar');
 			}
 		} catch (error) {
-			setProcess(false);
-			setProcessMessage("");
 			if (error.response) {
 				console.log(`Un error ha ocurrido obteniendo los estudiantes ${error}`);
 				showError(error.response.data.message);
@@ -155,6 +154,9 @@ export default function StudentsPopup(props) {
 				showError(`Un error ha ocurrido obteniendo los estudiantes ${error}`);
 			}
 		}
+		setProcess(false);
+		setProcessMessage("");
+		setIsLoading(false);
 	};
 
 	// Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
@@ -220,35 +222,47 @@ export default function StudentsPopup(props) {
 				<ModalHeader toggle={toggle}>Agregue alumnos a su curso</ModalHeader>
 				<ModalBody className="students-modal">
 					<SearchUser users={students} filteredUsers={filteredStudents} setFilteredUsers={setFilteredStudents} setPage={setPage} />
-					{filteredStudents && filteredStudents.length > 0
-						?
-						<>
-							{
-								filteredStudents.slice((page - 1) * maxStudents, ((page - 1) * maxStudents) + maxStudents).map((student) => (
-									<div key={student._id} className="d-flex justify-content-start align-items-center">
-										<h5 className="mr-3">{students.indexOf(student) + 1}</h5>
-										<StudentModalCard
-											student={student}
-											setStudentsToAdd={setStudentsToAdd}
-										/>
-									</div>
-								))
-							}
-							{
-								filteredStudents.length > maxStudents ?
-									<div className='d-flex justify-content-center mt-4'>
-										<Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
-									</div>
+					{
+						!isLoading ?
+							<>
+								{filteredStudents && filteredStudents.length > 0
+									?
+									<>
+										{
+											filteredStudents.slice((page - 1) * maxStudents, ((page - 1) * maxStudents) + maxStudents).map((student) => (
+												<div key={student._id} className="d-flex justify-content-start align-items-center">
+													<h5 className="mr-3">{students.indexOf(student) + 1}</h5>
+													<StudentModalCard
+														student={student}
+														setStudentsToAdd={setStudentsToAdd}
+													/>
+												</div>
+											))
+										}
+										{
+											filteredStudents.length > maxStudents ?
+												<div className='d-flex justify-content-center mt-4'>
+													<Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
+												</div>
+												:
+												''
+										}
+									</>
 									:
-									''
-							}
-						</>
-						:
-						<>
-							<div className="there-is-no-students-container">
-								<h3 className="there-is-no-students">No hay alumnos para mostrar</h3>
+									<>
+										<div className="there-is-no-students-container">
+											<h3 className="there-is-no-students">No hay alumnos para mostrar</h3>
+										</div>
+									</>
+
+								}
+							</>
+							:
+							<div className="spinner-loading" style={{ marginTop: '8em' }}>
+								<div className="spinner-border" role="status">
+									<span className="sr-only">Loading...</span>
+								</div>
 							</div>
-						</>
 					}
 				</ModalBody>
 				<ModalFooter>

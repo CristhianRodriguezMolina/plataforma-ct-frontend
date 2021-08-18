@@ -32,6 +32,9 @@ export default function ActivitiesPopup(props) {
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(""); //Mensaje de proceso satisfactorio
 
+    // Variable to see if the info data is loading
+    const [isLoading, setIsLoading] = useState(true);
+
     // List of activities that can be added to the task
     const [activities, setActivities] = useState(null);
 
@@ -106,6 +109,7 @@ export default function ActivitiesPopup(props) {
                 showError(`Un error ha ocurrido obteniendo los estudiantes`);
             }
         }
+        setIsLoading(false);
     };
 
     // Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
@@ -176,22 +180,33 @@ export default function ActivitiesPopup(props) {
                             </button>
                         </div>
                     </form>
-                    {activities
-                        ? activities.map((activity, index) => (
-                            <div key={activity._id} className="d-flex justify-content-start align-items-center">
-                                <h5 className="mr-3">{index + 1}</h5>
-                                <ActivityModalCard
-                                    activity={activity}
-                                    setActivitiesToAdd={setActivitiesToAdd}
-                                />
+                    {
+                        !isLoading ?
+                            <>
+                                {activities
+                                    ? activities.map((activity, index) => (
+                                        <div key={activity._id} className="d-flex justify-content-start align-items-center">
+                                            <h5 className="mr-3">{index + 1}</h5>
+                                            <ActivityModalCard
+                                                activity={activity}
+                                                setActivitiesToAdd={setActivitiesToAdd}
+                                            />
+                                        </div>
+                                    ))
+                                    :
+                                    <>
+                                        <div>
+                                            <h3 className="there-is-no-students">Ya estan todos las actividades agregadas a la tarea<br />O aún no hay actividades en la plataforma</h3>
+                                        </div>
+                                    </>
+                                }
+                            </>
+                            :
+                            <div className="spinner-loading" style={{ marginTop: '8em' }}>
+                                <div className="spinner-border" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
                             </div>
-                        ))
-                        :
-                        <>
-                            <div>
-                                <h3 className="there-is-no-students">Ya estan todos las actividades agregadas a la tarea<br />O aún no hay actividades en la plataforma</h3>
-                            </div>
-                        </>
                     }
                 </ModalBody>
                 <ModalFooter>

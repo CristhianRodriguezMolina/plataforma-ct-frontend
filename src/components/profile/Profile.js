@@ -58,6 +58,9 @@ export default function Profile(props) {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+	// Variable to see if the info data is loading
+	const [isLoading, setIsLoading] = useState(true);
+
 	const [upload, setUpload] = useState(false)
 
 	// Falg of the modal to add image
@@ -138,6 +141,7 @@ export default function Profile(props) {
 				showError('Error en el servidor');
 			}
 		}
+		setIsLoading(false);
 	}
 
 	// Method to watch if something is uploading
@@ -203,56 +207,63 @@ export default function Profile(props) {
 				<div className='row h-100'>
 					<div className='pricipal-info-section col-md-4'>
 						{
-							user ?
-								<div className='avatar-container'>
-									{
-										user.image ?
-											<Avatar className='profile-avatar' src={`${process.env.REACT_APP_API_URL}/profile/${user.image}`} />
-											:
-											<Avatar className='profile-avatar' />
-									}
-									<div className='edit-image-button'>
-										<IconButton onClick={toggle} size='medium' color='primary'>
-											<Edit color='action' />
-										</IconButton>
-									</div>
-									<Modal
-										aria-labelledby="transition-modal-title"
-										aria-describedby="transition-modal-description"
-										className='d-flex justify-content-center align-items-center'
-										open={open}
-										onClose={toggle}
-										closeAfterTransition
-										BackdropComponent={Backdrop}
-										BackdropProps={{
-											timeout: 500,
-										}}
-									>
-										{/* <Fade in={open}> */}
-										<div style={{
-											backgroundColor: "#424242",
-											color: "white",
-											borderRadius: "10px",
-											padding: "2em 3em",
-											filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))"
-										}}>
-											<h1 className='h3 text-white'>Cambiar imagen</h1>
-											<DropzoneUploader
-												onFormSubmit={uploadImage}
-												upload={upload}
-												type="image/jpeg, image/png, image/gif"
-												maxFiles="1"
-											/>
-											<div className='d-flex justify-content-end'>
-												<button onClick={handleUpload} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
-												<button onClick={toggle} className='custom-btn p-2'>Cancelar</button>
-											</div>
+							!isLoading ?
+								user ?
+									<div className='avatar-container'>
+										{
+											user.image ?
+												<Avatar className='profile-avatar' src={`${process.env.REACT_APP_API_URL}/profile/${user.image}`} />
+												:
+												<Avatar className='profile-avatar' />
+										}
+										<div className='edit-image-button'>
+											<IconButton onClick={toggle} size='medium' color='primary'>
+												<Edit color='action' />
+											</IconButton>
 										</div>
-										{/* </Fade> */}
-									</Modal>
-								</div>
+										<Modal
+											aria-labelledby="transition-modal-title"
+											aria-describedby="transition-modal-description"
+											className='d-flex justify-content-center align-items-center'
+											open={open}
+											onClose={toggle}
+											closeAfterTransition
+											BackdropComponent={Backdrop}
+											BackdropProps={{
+												timeout: 500,
+											}}
+										>
+											{/* <Fade in={open}> */}
+											<div style={{
+												backgroundColor: "#424242",
+												color: "white",
+												borderRadius: "10px",
+												padding: "2em 3em",
+												filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))"
+											}}>
+												<h1 className='h3 text-white'>Cambiar imagen</h1>
+												<DropzoneUploader
+													onFormSubmit={uploadImage}
+													upload={upload}
+													type="image/jpeg, image/png, image/gif"
+													maxFiles="1"
+												/>
+												<div className='d-flex justify-content-end'>
+													<button onClick={handleUpload} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
+													<button onClick={toggle} className='custom-btn p-2'>Cancelar</button>
+												</div>
+											</div>
+											{/* </Fade> */}
+										</Modal>
+									</div>
+									:
+									""
 								:
-								""
+								<div className="spinner-loading">
+									<div className="spinner-border" role="status">
+										<span className="sr-only">Loading...</span>
+									</div>
+								</div>
 						}
 						{
 							user ?
@@ -267,16 +278,25 @@ export default function Profile(props) {
 					</div>
 					<div className='data-section col-md-8'>
 						{
-							view === 'overview' ?
-								<Overview user={user} />
-								:
-								view === 'edit-profile' ?
-									<EditProfile user={user} setIsChangingData={setIsChangingData} setUser={setUser} />
+							!isLoading ?
+								view === 'overview' ?
+									<Overview user={user} />
 									:
-									view === 'change-password' ?
-										<ChangePassword user={user} setIsChangingData={setIsChangingData} />
+									view === 'edit-profile' ?
+										<EditProfile user={user} setIsChangingData={setIsChangingData} setUser={setUser} />
 										:
-										''
+										view === 'change-password' ?
+											<ChangePassword user={user} setIsChangingData={setIsChangingData} />
+											:
+											''
+								:
+								<div className="profile-data-content-loading">
+									<div className="spinner-loading">
+										<div className="spinner-border" role="status">
+											<span className="sr-only">Loading...</span>
+										</div>
+									</div>
+								</div>
 						}
 					</div>
 				</div>

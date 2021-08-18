@@ -39,6 +39,9 @@ export default function MyCourses({ history }) {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+	// Variable to see if the info data is loading
+	const [isLoading, setIsLoading] = useState(true);
+
 	// INFO BASE DE UN CURSO
 	const [name, setName] = useState('Nuevo curso');
 	const [description, setDescription] = useState('Añade una descripción para el curso');
@@ -110,6 +113,7 @@ export default function MyCourses({ history }) {
 		}
 		setProcess(false);
 		setProcessMessage('');
+		setIsLoading(false);
 	}
 
 	// Funcion para redirigin a la pagina de edición de un curso en especifico con la history
@@ -178,34 +182,45 @@ export default function MyCourses({ history }) {
 				: ""
 			}
 			{
-				courses && courses.length > 0 ?
-					(
-						<div className="courses-container mx-lg-5">
-							{
-								courses.map(course => (
-									<CourseCard
-										key={course._id}
-										image="https://i.blogs.es/8c3c21/pcbuild2/450_1000.jpg"
-										course={course}
-										setCourses={setCourses}
-										onPress={() => redirect(course)}
-									/>
-								))
-							}
-						</div>
-					)
+				!isLoading ?
+					<>
+						{
+							courses && courses.length > 0 ?
+								(
+									<div className="courses-container mx-lg-5">
+										{
+											courses.map(course => (
+												<CourseCard
+													key={course._id}
+													image="https://i.blogs.es/8c3c21/pcbuild2/450_1000.jpg"
+													course={course}
+													setCourses={setCourses}
+													onPress={() => redirect(course)}
+												/>
+											))
+										}
+									</div>
+								)
+								:
+								(
+									<div>
+										<h3 className="there-is-no-courses text-center">Aún no hay cursos</h3>
+									</div>
+								)
+						}
+						{
+							isTeacher || isAdmin ?
+								<button className="custom-btn custom-btn-success btn-create-course" onClick={() => createCourse()}>Crear curso</button>
+								:
+								""
+						}
+					</>
 					:
-					(
-						<div>
-							<h3 className="there-is-no-courses text-center">Aún no hay cursos</h3>
+					<div className="spinner-loading" style={{ marginTop: '2em' }}>
+						<div className="spinner-border" role="status">
+							<span className="sr-only">Loading...</span>
 						</div>
-					)
-			}
-			{
-				isTeacher || isAdmin ?
-					<button className="custom-btn custom-btn-success btn-create-course" onClick={() => createCourse()}>Crear curso</button>
-					:
-					""
+					</div>
 			}
 		</div>
 	)

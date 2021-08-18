@@ -25,6 +25,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 //Tooltip
 import Tooltip from '@material-ui/core/Tooltip';
+import NoTasksMessage from '../task/NoTasksMessage';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,29 +45,37 @@ const StudentProgress = props => {
 
     const classes = useStyles();
 
-    useEffect(async () => {
-        if (!studentActivities) {
-            try {
-                // get the progress of all students
-                let response = await api.post("/api/student-activity/foreign", {
-                    course: props.course._id,
-                    unit: props.unit._id
-                }, {
-                    headers: { 'x-access-token': localStorage.getItem('token') }
-                });
-                if (response) {
-                    setStudentActivities(response.data.studentActivity);
+    // Variable to see if the info data is loading
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        console.log(props)
+        const fetchData = async () => {
+            if (!studentActivities) {
+                try {
+                    // get the progress of all students
+                    let response = await api.post("/api/student-activity/foreign", {
+                        course: props.course._id,
+                        unit: props.unit._id
+                    }, {
+                        headers: { 'x-access-token': localStorage.getItem('token') }
+                    });
+                    if (response) {
+                        setStudentActivities(response.data.studentActivity);
+                    }
                 }
-            }
-            catch (e) {
-                if (e.response) {
-                    console.log('e.response.data.message');
-                    console.log(e.response.data.message);
+                catch (e) {
+                    if (e.response) {
+                        console.log('e.response.data.message');
+                        console.log(e.response.data.message);
+                    }
+                    console.log('e');
+                    console.log(e);
                 }
-                console.log('e');
-                console.log(e);
+                setIsLoading(false);
             }
         }
+        fetchData();
     }, [studentActivities]);
 
 
@@ -148,62 +157,78 @@ const StudentProgress = props => {
 
     return (
         <div className="student-progress-container">
-            {props.taskActivities && studentActivities ?
-                props.unit.tasks.map((task) => {
-                    return <div className={classes.root}>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
+            {
+                !isLoading ?
+                    <>
+                        {props.taskActivities && studentActivities ?
+                            <>
+                                {
+                                    props.unit.tasks.map((task) => {
+                                        return <div className={classes.root}>
+                                            <Accordion>
+                                                <AccordionSummary
+                                                    expandIcon={<ExpandMoreIcon />}
+                                                    aria-controls="panel1a-content"
+                                                    id="panel1a-header"
+                                                >
 
-                                <Typography className={classes.heading}>{task.name}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography component="div" style={{ width: '100%' }}>
-                                    <div>
-                                        <table className="student-progress-by-tasks">
-                                            <thead>
-                                                <tr>
-                                                    <th className="name-field-th">Estudiante</th>
-                                                    <th className="activities-field-th">Actividades</th>
-                                                    <th className="completed-field-th">Completado</th>
-                                                </tr>
-                                            </thead>
+                                                    <Typography className={classes.heading}>{task.name}</Typography>
+                                                </AccordionSummary>
+                                                <AccordionDetails>
+                                                    <Typography component="div" style={{ width: '100%' }}>
+                                                        <div>
+                                                            <table className="student-progress-by-tasks">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th className="name-field-th">Estudiante</th>
+                                                                        <th className="activities-field-th">Actividades</th>
+                                                                        <th className="completed-field-th">Completado</th>
+                                                                    </tr>
+                                                                </thead>
 
-                                            <tbody>
+                                                                <tbody>
 
-                                                {props.students ?
-                                                    props.students.map((student) => {
-                                                        return <tr>
-                                                            <Tooltip enterDelay={200} enterNextDelay={200} title={`${student.last_name} ${student.first_name}`} aria-label={`${student.last_name} ${student.first_name}`}>
-                                                                <td className="student-name-field-td">{student.last_name} {student.first_name}</td>
-                                                            </Tooltip>
-                                                            <td className="student-tasks-view-td">
-                                                                <div className="student-progress-items-container scrollable">
-                                                                    {renderStudentProgress(student, task._id)}
-                                                                </div>
-                                                            </td>
+                                                                    {props.students ?
+                                                                        props.students.map((student) => {
+                                                                            return <tr>
+                                                                                <Tooltip enterDelay={200} enterNextDelay={200} title={`${student.last_name} ${student.first_name}`} aria-label={`${student.last_name} ${student.first_name}`}>
+                                                                                    <td className="student-name-field-td">{student.last_name} {student.first_name}</td>
+                                                                                </Tooltip>
+                                                                                <td className="student-tasks-view-td">
+                                                                                    <div className="student-progress-items-container scrollable">
+                                                                                        {renderStudentProgress(student, task._id)}
+                                                                                    </div>
+                                                                                </td>
 
-                                                            <td className="completed-field-td">{checkCompletedTask(student, task._id)}</td>
-                                                        </tr>
-                                                    })
-                                                    : ""}
-                                            </tbody>
-                                        </table>
+                                                                                <td className="completed-field-td">{checkCompletedTask(student, task._id)}</td>
+                                                                            </tr>
+                                                                        })
+                                                                        : ""}
+                                                                </tbody>
+                                                            </table>
 
 
-                                    </div>
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
+                                                        </div>
+                                                    </Typography>
+                                                </AccordionDetails>
+                                            </Accordion>
+                                        </div>
+                                    })
+                                }
+                            </>
+                            :
+                            <NoTasksMessage messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun progreso en esta unidad'} />
+                        }
+                    </>
+                    :
+                    <div className="spinner-loading mt-5">
+                        <div className="spinner-border" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
                     </div>
-
-                })
-                : ""}
-
+            }
         </div>
+
     )
 };
 export default StudentProgress;

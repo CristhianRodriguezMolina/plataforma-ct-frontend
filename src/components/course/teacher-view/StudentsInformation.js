@@ -42,6 +42,9 @@ export default function StudentsInformation(props) {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
 
+    // Variable to see if the info data is loading
+    const [isLoading, setIsLoading] = useState(true);
+
     // Students of the course
     const [students, setStudents] = useState(null);
 
@@ -160,6 +163,7 @@ export default function StudentsInformation(props) {
         }
         setProcess(false);
         setProcessMessage('');
+        setIsLoading(false);
     }
 
     // Method to handle the change of the page
@@ -168,56 +172,73 @@ export default function StudentsInformation(props) {
     }
 
     return (
-        <div className='students-information'>
-            {success ? <Alert className="alert-message mb-5" severity="success">{successMessage}</Alert> : ""}
-            {error ? <Alert className="alert-message" severity="error">{errorMessage}</Alert> : ""}
-            {process ? <Alert className="alert-message" severity="info">{processMessage}</Alert> : ""}
+        <>
 
-            <div className="students-container">
-                <SearchUser users={students} filteredUsers={filteredStudents} setFilteredUsers={setFilteredStudents} setPage={setPage} />
-                {filteredStudents && filteredStudents.length > 0 ?
-                    <>
-                        <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
 
-                        {/* USES A SLICE TO JUST RENDER THE STUDENTS IN THE CURRENT PAGE */}
-                        {
-                            filteredStudents.slice((page - 1) * maxStudents, ((page - 1) * maxStudents) + maxStudents).map((student, index) => (
-                                <StudentCard
-                                    index={index + ((page - 1) * maxStudents)}
-                                    id={student._id}
-                                    key={student._id}
-                                    student={student}
-                                    setStudents={setStudents}
-                                    setIsAddingStudents={setIsAddingStudents}
-                                    course={course} />
-                            ))
-                        }
-                        {
-                            filteredStudents.length > maxStudents ?
-                                <div className='d-flex justify-content-center mt-4'>
-                                    <Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
+            <div className='students-information'>
+                {success ? <Alert className="alert-message mb-5" severity="success">{successMessage}</Alert> : ""}
+                {error ? <Alert className="alert-message" severity="error">{errorMessage}</Alert> : ""}
+                {process ? <Alert className="alert-message" severity="info">{processMessage}</Alert> : ""}
+
+                <div className="students-container">
+                    <SearchUser users={students} filteredUsers={filteredStudents} setFilteredUsers={setFilteredStudents} setPage={setPage} />
+
+                    {
+                        !isLoading ?
+                            <>
+                                {filteredStudents && filteredStudents.length > 0 ?
+                                    <>
+                                        <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
+
+                                        {/* USES A SLICE TO JUST RENDER THE STUDENTS IN THE CURRENT PAGE */}
+                                        {
+                                            filteredStudents.slice((page - 1) * maxStudents, ((page - 1) * maxStudents) + maxStudents).map((student, index) => (
+                                                <StudentCard
+                                                    index={index + ((page - 1) * maxStudents)}
+                                                    id={student._id}
+                                                    key={student._id}
+                                                    student={student}
+                                                    setStudents={setStudents}
+                                                    setIsAddingStudents={setIsAddingStudents}
+                                                    course={course} />
+                                            ))
+                                        }
+                                        {
+                                            filteredStudents.length > maxStudents ?
+                                                <div className='d-flex justify-content-center mt-4'>
+                                                    <Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
+                                                </div>
+                                                :
+                                                ''
+                                        }
+                                    </>
+                                    :
+                                    <>
+                                        <div className="there-is-no-students-container">
+                                            <h3 className="there-is-no-students">No hay alumnos para mostrar</h3>
+                                        </div>
+                                    </>
+                                }
+                            </>
+                            :
+                            <div className="spinner-loading" style={{ marginTop: '8em' }}>
+                                <div className="spinner-border" role="status">
+                                    <span className="sr-only">Loading...</span>
                                 </div>
-                                :
-                                ''
-                        }
-                    </>
-                    :
-                    <>
-                        <div className="there-is-no-students-container">
-                            <h3 className="there-is-no-students">No hay alumnos para mostrar</h3>
-                        </div>
-                    </>
-                }
+                            </div>
+                    }
+                </div>
+
+                <button className="custom-btn custom-btn-success btn-modal-add-student" onClick={toggle}>Agregar alumnos</button>
+                <StudentsPopup
+                    course={course}
+                    isOpen={isOpen}
+                    toggle={toggle}
+                    setCourseStudents={setStudents}
+                    isAddingStudents={isAddingStudents}
+                    setIsAddingStudents={setIsAddingStudents} />
             </div>
 
-            <button className="custom-btn custom-btn-success btn-modal-add-student" onClick={toggle}>Agregar alumnos</button>
-            <StudentsPopup
-                course={course}
-                isOpen={isOpen}
-                toggle={toggle}
-                setCourseStudents={setStudents}
-                isAddingStudents={isAddingStudents}
-                setIsAddingStudents={setIsAddingStudents} />
-        </div>
+        </>
     )
 }
