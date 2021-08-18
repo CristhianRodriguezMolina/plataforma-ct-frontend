@@ -263,7 +263,7 @@ const MyActivities = props => {
 								)))
 								: null
 							:
-							<div className="spinner-loading" style={{ marginTop: '2em' }}>
+							<div className="spinner-loading" style={{ marginTop: '8em' }}>
 								<div className="spinner-border" role="status">
 									<span className="sr-only">Loading...</span>
 								</div>
