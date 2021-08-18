@@ -169,7 +169,7 @@ export default function Cell(props) {
 								height: '90%',
 								alignSelf: 'center',
 								borderRadius: '5px',
-								zIndex: 999
+								zIndex: 500
 							}}
 						>
 							{children}

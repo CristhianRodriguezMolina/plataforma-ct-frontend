@@ -490,7 +490,7 @@ export default function Maze() {
 		height: ${wY}px;
 		align-self: center;
 		transition-duration: 1s;
-		z-index: 1000;
+		z-index: 501;
 		animation: ${props =>
 			props.animate &&
 			css`
@@ -963,29 +963,31 @@ export default function Maze() {
 
 									<div className="difficulty-grid-item">
 										<label>Dificultad:</label>
-										<select className="form-control" style={{width: '10em'}} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
+										<select className="form-control" style={{ width: '10em' }} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
 											<option value="beginner" selected>Principiante</option>
 											<option value="intermediate">Intermedio</option>
 											<option value="advanced">Avanzado</option>
 										</select>
 									</div>
 
-									<FormControlLabel className="verified-grid-item switcher" label="Verificado" control={
-										<Switch
-											checked={verified}
-											onChange={() => setVerified(!verified)}
-											name="visibilty"
-											color="primary"
-										/>
-									} />
+									<div className="verified-grid-item">
+										<FormControlLabel className="switcher" label="Verificado" control={
+											<Switch
+												checked={verified}
+												onChange={() => setVerified(!verified)}
+												name="visibilty"
+												color="primary"
+											/>
+										} />
+									</div>
 								</div>
 							</div>
 
 							<hr />
 
-							<div className='d-flex justify-content-around align-items-center'>
+							<div className='d-flex flex-wrap justify-content-around align-items-center'>
 								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
-								<div className='d-flex flex-column'>
+								<div className='d-flex flex-column align-items-center zoom-panel'>
 									<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
 									<div>
 										<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
@@ -995,7 +997,7 @@ export default function Maze() {
 								</div>
 
 								{/* FORM TO CHANGE THE ROWS AND COLS */}
-								<div className="d-flex flex-column justify-content-between">
+								<div className="d-flex flex-column align-items-center justify-content-between">
 									<h1 className='h4'>Cambiar filas y cols</h1>
 									<form onSubmit={setNewSize} className="form-size d-flex justify-content-between align-items-center">
 										<div>
@@ -1007,7 +1009,7 @@ export default function Maze() {
 											<label className='m-0'>Cols</label>
 											<input type="number" min={4} max={8} value={cols} onChange={(evt) => setCols(evt.target.value)} className='form-control' label='Filas Del Maze' name='rows' />
 										</div>
-										<button type="submit" className="custom-btn custom-btn-primary p-2">Establecer tamaño</button>
+										<button type="submit" className="custom-btn custom-btn-primary p-2 align-self-end mb-1">Establecer tamaño</button>
 									</form>
 								</div>
 							</div>
@@ -1015,14 +1017,18 @@ export default function Maze() {
 						</Container>
 					</div>
 
-					<div className='mt-4 d-flex justify-content-center'>
-						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
-						<button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button>
-						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
-						<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
+					<div className='mt-2 d-flex flex-wrap justify-content-center px-2 '>
+						<div className='d-flex justify-content-center mt-2'>
+							<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
+							<button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button>
+						</div>
+						<div className='d-flex justify-content-center mt-2'>
+							<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+							<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
+						</div>
 					</div>
 
-					<div className='row p-4 w-100'>
+					<div className='row py-4 w-100 mx-auto'>
 						<div className='col-md-6'>
 							{/* MAZE */}
 							<div className='maze-container' ref={setRef}>
@@ -1161,7 +1167,7 @@ export default function Maze() {
 					</div>
 
 					{/* BUTTON TO UPDATE THE MAZE DIRECTLY */}
-					<button onClick={handleUpdateMaze} className='btn-save-maze custom-btn custom-btn-primary'>Guardar</button>
+					<button onClick={handleUpdateMaze} className='btn-save-maze custom-btn custom-btn-primary' style={{ zIndex: 1000 }}>Guardar</button>
 				</>
 				:
 				<div className="spinner-loading">
