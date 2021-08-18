@@ -25,7 +25,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 //Tooltip
 import Tooltip from '@material-ui/core/Tooltip';
-import NoTasksMessage from '../task/NoTasksMessage';
+import NoContentToShow from '../../common/NoContentToShow';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -217,7 +217,7 @@ const StudentProgress = props => {
                                 }
                             </>
                             :
-                            <NoTasksMessage messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun progreso en esta unidad'} />
+                            <NoContentToShow messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun progreso en esta unidad'} />
                         }
                     </>
                     :
