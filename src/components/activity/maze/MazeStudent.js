@@ -815,14 +815,7 @@ export default function MazeStudent(props) {
 								<p style={desInputStyle} >{activityDescription}</p>
 							</div>
 							<hr />
-							<div className='d-flex justify-content-around align-items-center'>
-								{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
-								<div className='mt-4 d-flex justify-content-center'>
-									<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
-									{/* <button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button> */}
-									<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
-									<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
-								</div>
+							<div className='d-flex flex-wrap justify-content-around align-items-center'>
 								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
 								<div className='d-flex flex-column'>
 									<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
@@ -832,11 +825,18 @@ export default function MazeStudent(props) {
 										<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
 									</div>
 								</div>
+								{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
+								<div className='mt-4 d-flex justify-content-center'>
+									<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
+									{/* <button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button> */}
+									<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+									<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
+								</div>
 							</div>
 							<hr />
 						</Container>
 					</div>
-					<div className='row p-4 w-100'>
+					<div className='row py-4 w-100 mx-auto'>
 						<div className='col-md-6'>
 							{/* MAZE */}
 							<div className='maze-container' ref={setRef}>

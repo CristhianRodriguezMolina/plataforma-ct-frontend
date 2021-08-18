@@ -155,6 +155,7 @@ export default function Login({ history }) {
                                                 color="secondary"
                                                 type={showPassword ? "text" : "password"}
                                                 minLength="4"
+                                                className="form-control"
                                                 onChange={evt => setPassword(evt.target.value)}
                                                 value={password} label="Contraseña"
                                                 name="contrasena"

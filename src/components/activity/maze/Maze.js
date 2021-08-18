@@ -450,6 +450,18 @@ export default function Maze() {
 		setProcessMessage('');
 	}
 
+	const handleSetVerified = () => {
+		if (!verified) {
+			if (isStart && isEnd) {
+				setVerified(!verified)
+			} else {
+				showError('Debe haber un inicio y un fin')
+			}
+		} else {
+			setVerified(!verified)
+		}
+	}
+
 	// ROBOT ANIMATION -------------------------------------------------------------------------------------------------------------------------
 
 	// Variables for the animation
@@ -974,7 +986,7 @@ export default function Maze() {
 										<FormControlLabel className="switcher" label="Verificado" control={
 											<Switch
 												checked={verified}
-												onChange={() => setVerified(!verified)}
+												onChange={handleSetVerified}
 												name="visibilty"
 												color="primary"
 											/>
