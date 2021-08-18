@@ -26,6 +26,9 @@ import Alert from "@material-ui/lab/Alert";
 // Search user component
 import SearchUser from '../../common/SearchUser';
 
+//No content to show
+import NoContentToShow from '../../common/NoContentToShow';
+
 export default function StudentsPopup(props) {
 	// Props for the modal
 	const { course, isOpen, toggle, isAddingStudents, setIsAddingStudents } = props;
@@ -250,9 +253,7 @@ export default function StudentsPopup(props) {
 									</>
 									:
 									<>
-										<div className="there-is-no-students-container">
-											<h3 className="there-is-no-students">No hay alumnos para mostrar</h3>
-										</div>
+										<NoContentToShow messageTitle={'Sin alumnos...'} messageDes={'No hay alumnos para mostrar'} />
 									</>
 
 								}

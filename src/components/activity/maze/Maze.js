@@ -99,6 +99,9 @@ export default function Maze() {
 	// Verified activity 
 	const [verified, setVerified] = useState(false);
 
+	// activity difficulty
+	const [difficulty, setDifficulty] = useState('beginner');
+
 	// MAZE VARIABLES
 
 	// The maze
@@ -414,7 +417,8 @@ export default function Maze() {
 				activity: {
 					name: activityName,
 					description: activityDescription,
-					verified: verified
+					verified,
+					difficulty
 				},
 				child: {
 					cells: maze.cells,
@@ -948,14 +952,25 @@ export default function Maze() {
 							<Alert className="alert-message" severity="info">{processMessage}</Alert>
 							: ""
 					}
+
 					<div className="maze-header">
 						<Container maxWidth='md'>
 							{/* GENERAL DATA OF THE MAZE */}
 							<div>
 								<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
 								<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
-								<div className='d-flex justify-content-end'>
-									<FormControlLabel className="switcher" label="Verificado" control={
+								<div className='activity-attributes'>
+
+									<div className="difficulty-grid-item">
+										<label>Dificultad:</label>
+										<select className="form-control" style={{width: '10em'}} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
+											<option value="beginner" selected>Principiante</option>
+											<option value="intermediate">Intermedio</option>
+											<option value="advanced">Avanzado</option>
+										</select>
+									</div>
+
+									<FormControlLabel className="verified-grid-item switcher" label="Verificado" control={
 										<Switch
 											checked={verified}
 											onChange={() => setVerified(!verified)}
@@ -965,7 +980,9 @@ export default function Maze() {
 									} />
 								</div>
 							</div>
+
 							<hr />
+
 							<div className='d-flex justify-content-around align-items-center'>
 								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
 								<div className='d-flex flex-column'>
@@ -976,6 +993,7 @@ export default function Maze() {
 										<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
 									</div>
 								</div>
+
 								{/* FORM TO CHANGE THE ROWS AND COLS */}
 								<div className="d-flex flex-column justify-content-between">
 									<h1 className='h4'>Cambiar filas y cols</h1>
@@ -996,12 +1014,14 @@ export default function Maze() {
 							<hr />
 						</Container>
 					</div>
+
 					<div className='mt-4 d-flex justify-content-center'>
 						<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
 						<button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button>
 						<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
 						<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 					</div>
+
 					<div className='row p-4 w-100'>
 						<div className='col-md-6'>
 							{/* MAZE */}
@@ -1039,6 +1059,7 @@ export default function Maze() {
 												}
 											</>
 									}
+
 									{/* CHARACTER */}
 									{
 										isStart && isEnd && animate &&
@@ -1061,6 +1082,7 @@ export default function Maze() {
 							}
 						</div>
 					</div>
+
 					<div className='options-palette-container'>
 						<div className='options-palette'>
 							<ButtonBase
@@ -1080,6 +1102,7 @@ export default function Maze() {
 									<h1 className='h4'>Block</h1>
 								</div>
 							</ButtonBase>
+
 							<ButtonBase
 								focusRipple
 								className='option'
@@ -1096,6 +1119,7 @@ export default function Maze() {
 									<h1 className='h4'>Empty</h1>
 								</div>
 							</ButtonBase>
+
 							<ButtonBase
 								focusRipple
 								className='option'
@@ -1113,6 +1137,7 @@ export default function Maze() {
 									<h1 className='h4'>Start</h1>
 								</div>
 							</ButtonBase>
+
 							<ButtonBase
 								focusRipple
 								className='option'
@@ -1134,6 +1159,7 @@ export default function Maze() {
 							</ButtonBase>
 						</div>
 					</div>
+
 					{/* BUTTON TO UPDATE THE MAZE DIRECTLY */}
 					<button onClick={handleUpdateMaze} className='btn-save-maze custom-btn custom-btn-primary'>Guardar</button>
 				</>

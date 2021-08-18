@@ -1,5 +1,10 @@
 .my-activities-container {
     width: 100%;
+	
+	.search-container {
+		width: auto;
+		margin: 1em;
+	}
 
     .activities-list {
         width: 100%;
@@ -83,6 +88,12 @@
 
 @media only screen and (min-width: 675px) {
     .my-activities-container {
+
+		.search-container {
+			width: 70%;
+			margin: 1em auto;
+		}
+
         .activities-list {
             td:nth-child(2) {
                 display: table-cell;
@@ -97,6 +108,12 @@
 
 @media only screen and (min-width: 1200px) {
     .my-activities-container {
+
+		.search-container {
+			width: 60%;
+			margin: 1em auto;
+		}
+
         .activities-list {
             td:nth-child(3) {
                 display: table-cell;

@@ -23,6 +23,9 @@ import { Pagination } from '@material-ui/lab';
 // Search user component
 import SearchUser from '../../common/SearchUser';
 
+// No Content to show
+import NoContentToShow from '../../common/NoContentToShow';
+
 /* TECAHER */
 export default function StudentsInformation(props) {
 
@@ -214,9 +217,7 @@ export default function StudentsInformation(props) {
                                     </>
                                     :
                                     <>
-                                        <div className="there-is-no-students-container">
-                                            <h3 className="there-is-no-students">No hay alumnos para mostrar</h3>
-                                        </div>
+                                        <NoContentToShow messageTitle={'Sin alumnos...'} messageDes={'No hay alumnos para mostrar'} />
                                     </>
                                 }
                             </>
