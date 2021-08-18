@@ -164,7 +164,8 @@ export default function SearchUser(props) {
 						<IconButton onClick={handleClearFilters} className='clear-button' size="small">
 							<Clear />
 						</IconButton>
-						: ''
+						:
+						<label className="text-start m-0 text-muted font-italic align-self-end mb-2 ml-2">Sin filtros</label>
 				}
 			</div>
 		</div>
