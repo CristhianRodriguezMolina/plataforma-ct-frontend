@@ -23,6 +23,9 @@ import Alert from '@material-ui/lab/Alert';
 // Modal de confirmación 
 import AlertModal from '../common/AlertModal';
 
+//Search Activity
+import SearchActivity from '../common/SearchActivity';
+
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -39,7 +42,7 @@ const MyActivities = props => {
 	const [init, setInit] = useState(0); 
 	const [fin, setFin] = useState(0); // The end of the acvitivities range 
 	const [count, setCount] = useState(0); //The number of documents
-	const range = Math.round((window.innerHeight - 240) / 48); //Number of activities to show depends of windows height
+	const [range, setRange] = useState(Math.round((window.innerHeight - 330) / 48)); //Number of activities to show depends of windows height
 	const [currentMenu, setCurrentMenu] = useState(false);
 
 	// Variable de estado para el modal
@@ -57,11 +60,19 @@ const MyActivities = props => {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+	//Filtered Activities
+	const [filteredActivities, setFilteredActivities] = useState(activities); 
 
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
 		changeColor('#f8bbd0');
 	});
+
+	useEffect(() => {
+		if(range <= 0) {
+			setRange(1);
+		}
+	}, [range]);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -91,6 +102,7 @@ const MyActivities = props => {
 				})
 					.then((response) => {
 						setActivities(response.data.activities);
+						setFilteredActivities(response.data.activities);
 						setCount(response.data.count);
 						if (response.data.count == 0) {
 							setLoadingCourses(false);
@@ -190,6 +202,10 @@ const MyActivities = props => {
 				color="#FA61CD"
 				colorFont="#FFF"
 			/>
+
+			<div className='search-container' >
+				<SearchActivity activities={activities} filteredActivities={filteredActivities} setFilteredActivities={setFilteredActivities}/>
+			</div>
 			<table className="activities-list">
 				<thead>
 					<tr>
@@ -199,9 +215,10 @@ const MyActivities = props => {
 						<th></th>
 					</tr>
 				</thead>
+
 				<tbody>
-					{activities ?
-						(activities.slice(0, fin).map((activity, i) => (
+					{filteredActivities && filteredActivities.length > 0 ?
+						(filteredActivities.slice(0, fin).map((activity, i) => (
 							<tr key={i}>
                         		<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
 									<td className="activity-name">
@@ -219,6 +236,7 @@ const MyActivities = props => {
 										{activity.description}
 									</td>
 								</Tooltip>
+
 								<td>{activity.updatedAt.slice(0, 10)}</td>
 								<td>
 									<div className="drop-menu">

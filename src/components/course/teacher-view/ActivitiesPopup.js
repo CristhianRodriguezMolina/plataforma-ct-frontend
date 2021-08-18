@@ -20,6 +20,12 @@ import ActivityModalCard from "./ActivityModalCard";
 // Alert
 import Alert from "@material-ui/lab/Alert";
 
+//Search Activity
+import SearchActivity from '../../common/SearchActivity';
+
+//No Content to show
+import NoContentToShow from '../../common/NoContentToShow';
+
 export default function ActivitiesPopup(props) {
     // Props for the modal
     const { task, unitId, isOpen, toggle, isAddingActivities, setIsAddingActivities } = props;
@@ -37,6 +43,9 @@ export default function ActivitiesPopup(props) {
 
     // List of activities that will be added to the task
     const [activitiesToAdd, setActivitiesToAdd] = useState([]);
+
+	//Filtered Activities
+	const [filteredActivities, setFilteredActivities] = useState(activities); 
 
     useEffect(() => {
         if (!activities || isAddingActivities) {
@@ -90,6 +99,7 @@ export default function ActivitiesPopup(props) {
             if (activities) {
                 // Asignacion de los cursos de la base de datos
                 setActivities(activities);
+				setFilteredActivities(activities);
 
                 if (activities.length > 0) {
                     showSuccess(message);
@@ -166,18 +176,9 @@ export default function ActivitiesPopup(props) {
             >
                 <ModalHeader toggle={toggle}>Agregue actividades a una tarea</ModalHeader>
                 <ModalBody className="students-modal">
-                    <form className="search-form d-flex justify-content-between mt-4 ml-4 mb-3">
-                        <div className="text-field form-group mr-3">
-                            <input className="form-control text-center" />
-                        </div>
-                        <div className="form-group">
-                            <button type="submit" className="btn-search custom-btn custom-btn-search">
-                                Buscar
-                            </button>
-                        </div>
-                    </form>
-                    {activities
-                        ? activities.map((activity, index) => (
+					<SearchActivity activities={activities} filteredActivities={filteredActivities} setFilteredActivities={setFilteredActivities}/>
+					{filteredActivities && filteredActivities.length > 0
+                        ? filteredActivities.map((activity, index) => (
                             <div key={activity._id} className="d-flex justify-content-start align-items-center">
                                 <h5 className="mr-3">{index + 1}</h5>
                                 <ActivityModalCard
@@ -188,9 +189,7 @@ export default function ActivitiesPopup(props) {
                         ))
                         :
                         <>
-                            <div>
-                                <h3 className="there-is-no-students">Ya estan todos las actividades agregadas a la tarea<br />O aún no hay actividades en la plataforma</h3>
-                            </div>
+							<NoContentToShow messageTitle={'Sin activitidades...'} messageDes={'Ya estan todos las actividades agregadas a la tarea o aún no hay actividades en la plataforma'} />
                         </>
                     }
                 </ModalBody>

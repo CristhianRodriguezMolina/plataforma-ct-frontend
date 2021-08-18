@@ -20,8 +20,8 @@ import { AppBar, Box, Button, Tab, Tabs, Typography } from '@material-ui/core';
 // Alert
 import { Alert } from '@material-ui/lab';
 
-//NoTasksMessage
-import NoTasksMessage from '../task/NoTasksMessage';
+//NoContentToShow
+import NoContentToShow from '../../common/NoContentToShow';
 
 /* STUDENTS */
 function TabPanel(props) {
@@ -140,9 +140,9 @@ export default function UnitsInformation(props) {
 				});
 		}
 
-		if(props.course.units.length <= 0) {
+		if (props.course.units.length <= 0) {
 			setFoundTasks(false);
-		}	
+		}
 
 	}, [props.course]);
 
@@ -169,7 +169,7 @@ export default function UnitsInformation(props) {
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
-	
+
 	return (
 		<div className={classes.root}>
 			<AppBar className={classes.bar} position="static">
@@ -227,8 +227,8 @@ export default function UnitsInformation(props) {
 			}
 
 			{!foundTasks ?
-				<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'Al parecer estas de suerte porque aquí no hay nada que hacer'} />
-			: ""}
+				<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'Al parecer estas de suerte porque aquí no hay nada que hacer'} />
+				: ""}
 		</div>
 	)
 }

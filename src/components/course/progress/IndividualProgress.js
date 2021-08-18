@@ -28,8 +28,8 @@ import * as util from '../../../util/util';
 
 //COMPONENTS
 
-//NoTasksMessage
-import NoTasksMessage from '../task/NoTasksMessage';
+//No Content to show
+import NoContentToShow from '../../common/NoContentToShow';
 
 // Material UI Make Styles
 import { makeStyles } from '@material-ui/core/styles';
@@ -425,10 +425,10 @@ const IndividualProgress = (props) => {
 													</Accordion>
 												</div>
 											}) :
-											<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
+											<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
 									</TabPanel>
 								}) :
-								<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
+								<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
 							:
 							<Redirect to='/unauthorized' />
 						:

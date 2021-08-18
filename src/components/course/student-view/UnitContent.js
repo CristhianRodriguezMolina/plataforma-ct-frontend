@@ -36,8 +36,8 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 //CheckCircleIcon
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-//NoTasksMessage
-import NoTasksMessage from '../task/NoTasksMessage';
+//NoContentToShow
+import NoContentToShow from '../../common/NoContentToShow';
 
 //Progress Bar
 import ProgressBar from '../../common/ProgressBar';
@@ -79,11 +79,11 @@ const UnitContent = props => {
 		if (props.taskActivities && props.studentActivities && props.unitValue) {
 
 
-			if(props.unitValue.tasks.length > 0) {
+			if (props.unitValue.tasks.length > 0) {
 				let taskActivities = props.taskActivities.filter(taskActivity => taskActivity.unit === props.unitValue._id);
-			
+
 				let completedActivities = props.studentActivities.filter(studentActivity => studentActivity.unit === props.unitValue._id && studentActivity.complete == true);
-				setCompletedPercentage(Math.round((completedActivities.length/taskActivities.length) * 100));
+				setCompletedPercentage(Math.round((completedActivities.length / taskActivities.length) * 100));
 
 				let disableBtn = true;
 				for (let i = 0; i < taskActivities.length && disableBtn; i++) {
@@ -101,7 +101,7 @@ const UnitContent = props => {
 						disableBtn = false;
 					}
 				}
-			
+
 				if (disableBtn) {
 					setCompletedUnit(disableBtn);
 				}
@@ -111,18 +111,18 @@ const UnitContent = props => {
 			}
 		}
 	});
-	
+
 	useEffect(async () => {
-		if(!isCompletedUnit) {
-			if(!lastActivityInfo) {
+		if (!isCompletedUnit) {
+			if (!lastActivityInfo) {
 				try {
 					const res = await api.get(`/api/course/students/last-activity/${localStorage.getItem('user_id')}/${props.course._id}/${props.unitValue._id}`, {
 						headers: {
 							'x-access-token': localStorage.getItem('token')
 						}
 					});
-					if(res) {
-						if(res.data.success) {
+					if (res) {
+						if (res.data.success) {
 							setLastActivityInfo(res.data.lastActivityInfo);
 						}
 					}
@@ -134,7 +134,7 @@ const UnitContent = props => {
 	}, [isCompletedUnit]);
 
 	const redirectToActivity = () => {
-		if(lastActivityInfo) {
+		if (lastActivityInfo) {
 			props.history.push(`/activity/student/${props.course._id}/${props.unitValue._id}/${lastActivityInfo.taskId}/${lastActivityInfo.activityId}`);
 		}
 	}
@@ -149,9 +149,9 @@ const UnitContent = props => {
 				<h3 className="h6 mx-3"><b>Hasta:</b> {props.unitValue.due_date.substring(0, 10)}</h3> :
 				<h3 className="h6 mx-3">Fecha limite de la unidad: Sin fecha limite</h3>}
 			<hr className="mx-3" />
-			{!isCompletedUnit && completedPercentage && completedPercentage > 0?
-				<ProgressBar hasTitle={true} title={'Progreso:'} bgColor={'#ffb16e'} percentage={completedPercentage}/>
-			:''}
+			{!isCompletedUnit && completedPercentage && completedPercentage > 0 ?
+				<ProgressBar hasTitle={true} title={'Progreso:'} bgColor={'#ffb16e'} percentage={completedPercentage} />
+				: ''}
 			{isCompletedUnit ?
 				<div className="completed-unit-message">
 					<div className="success-icon-container">
@@ -162,43 +162,43 @@ const UnitContent = props => {
 					<p>¡Felicitaciones!
 						Has completado todas las actividades de esta unidad
 					</p>
-				</div> 
+				</div>
 				:
 				lastActivityInfo ?
-				<div className="quick-access-container">
-					<h1 className="quick-access-label">Acceso rápido</h1>
-					<div className="last-activity-container">
-						<div className="task-info">
-							<h2>{ lastActivityInfo.taskName }</h2>
-							<p>{ lastActivityInfo.taskDes }</p>
-						</div>
-						<div className='last-activity-info'>
-							<div className='activity-icon'>
-								{lastActivityInfo.activityType === 'logic_sequence' ?
-									<AccountTreeIcon style={{ fontSize: 50 }}/> :
-									lastActivityInfo.activityType === 'maze' ?
-									<BorderVerticalIcon style={{ fontSize: 50 }}/> :
-									<BallotIcon style={{ fontSize: 50 }}/>
-								}
+					<div className="quick-access-container">
+						<h1 className="quick-access-label">Acceso rápido</h1>
+						<div className="last-activity-container">
+							<div className="task-info">
+								<h2>{lastActivityInfo.taskName}</h2>
+								<p>{lastActivityInfo.taskDes}</p>
 							</div>
-							<h3><span style={{color: '#aaa'}}>Nombre: </span>{ lastActivityInfo.activityName }</h3>
-							<p className='activity-des-label'><span style={{color: '#aaa'}}>Descripción: </span>{ lastActivityInfo.activityDes }</p>
-							<p className='activity-pos-label'><span style={{color: '#aaa'}}>Número: </span>{ (lastActivityInfo.activityPos + 1) }</p>
-							<div className='do-activity-button-container'>
-								<button className="custom-btn custom-btn-success px-2 py-1" onClick={() => redirectToActivity()}>Realizar actividad</button>
+							<div className='last-activity-info'>
+								<div className='activity-icon'>
+									{lastActivityInfo.activityType === 'logic_sequence' ?
+										<AccountTreeIcon style={{ fontSize: 50 }} /> :
+										lastActivityInfo.activityType === 'maze' ?
+											<BorderVerticalIcon style={{ fontSize: 50 }} /> :
+											<BallotIcon style={{ fontSize: 50 }} />
+									}
+								</div>
+								<h3><span style={{ color: '#aaa' }}>Nombre: </span>{lastActivityInfo.activityName}</h3>
+								<p className='activity-des-label'><span style={{ color: '#aaa' }}>Descripción: </span>{lastActivityInfo.activityDes}</p>
+								<p className='activity-pos-label'><span style={{ color: '#aaa' }}>Número: </span>{(lastActivityInfo.activityPos + 1)}</p>
+								<div className='do-activity-button-container'>
+									<button className="custom-btn custom-btn-success px-2 py-1" onClick={() => redirectToActivity()}>Realizar actividad</button>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				:""
+					: ""
 			}
 
 			<hr className="mx-3" />
 			<h1 className="h5 text-center mb-4">Actividades</h1>
 
 			{!foundTasks ?
-				<NoTasksMessage messageTitle={'Sin tareas...'} messageDes={'Al parecer estas de suerte porque aquí no hay nada que hacer'} />
-			: ""}
+				<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'Al parecer estas de suerte porque aquí no hay nada que hacer'} />
+				: ""}
 
 			{props.taskActivities ?
 				<div className="cards-container">

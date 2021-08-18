@@ -35,6 +35,9 @@ import { withRouter } from 'react-router-dom';
 //Student Progress
 import StudentProgress from '../progress/StudentProgress';
 
+//No content to show
+import NoContentToShow from '../../common/NoContentToShow';
+
 /* TEACHER */
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -383,28 +386,31 @@ const UnitsInformation = (props) => {
 			</AppBar>
 			{/* COMPONENTS OF EACH UNIT IN THE COURSE */}
 			{
-				props.course.units.map((unit, index) => (
-					<TabPanel value={value} key={index} index={index}>
-						{
-							!props.progress ?
-								<UnitContent
-									course={props.course}
-									taskActivities={taskActivities}
-									unitValue={unit}
-									onAddTask={handleAddTask}
-									onUpdateChanges={handleUpdateUnit}
-									onDeleteUnit={deleteUnit}
-									onDeleteTask={handleDeleteTask} />
-								:
-								students ?
-									<StudentProgress
+				props.course.units.length > 0 ?
+					props.course.units.map((unit, index) => (
+						<TabPanel value={value} key={index} index={index}>
+							{
+								!props.progress ?
+									<UnitContent
 										course={props.course}
-										students={students}
-										unit={unit}
-										taskActivities={taskActivities} /> : ""
-						}
-					</TabPanel>
-				))
+										taskActivities={taskActivities}
+										unitValue={unit}
+										onAddTask={handleAddTask}
+										onUpdateChanges={handleUpdateUnit}
+										onDeleteUnit={deleteUnit}
+										onDeleteTask={handleDeleteTask} />
+									:
+									students ?
+										<StudentProgress
+											course={props.course}
+											students={students}
+											unit={unit}
+											taskActivities={taskActivities} /> : ""
+							}
+						</TabPanel>
+					))
+				:
+					<NoContentToShow messageTitle={'Sin unidades...'} messageDes={'Agregue una nueva unidad para comenzar'} />
 			}
 		</div>
 	)
