@@ -39,11 +39,14 @@ const MyActivities = props => {
 	const [showFetchButton, setShowFetchButton] = useState(true);
 	const [loadingCourses, setLoadingCourses] = useState(true);
 
-	const [init, setInit] = useState(0); 
+	const [init, setInit] = useState(0);
 	const [fin, setFin] = useState(0); // The end of the acvitivities range 
 	const [count, setCount] = useState(0); //The number of documents
 	const [range, setRange] = useState(Math.round((window.innerHeight - 330) / 48)); //Number of activities to show depends of windows height
 	const [currentMenu, setCurrentMenu] = useState(false);
+
+	// Variable to see if the info data is loading
+	const [isLoading, setIsLoading] = useState(true);
 
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
@@ -61,7 +64,7 @@ const MyActivities = props => {
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
 	//Filtered Activities
-	const [filteredActivities, setFilteredActivities] = useState(activities); 
+	const [filteredActivities, setFilteredActivities] = useState(activities);
 
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
@@ -69,7 +72,7 @@ const MyActivities = props => {
 	});
 
 	useEffect(() => {
-		if(range <= 0) {
+		if (range <= 0) {
 			setRange(1);
 		}
 	}, [range]);
@@ -204,7 +207,7 @@ const MyActivities = props => {
 			/>
 
 			<div className='search-container' >
-				<SearchActivity activities={activities} filteredActivities={filteredActivities} setFilteredActivities={setFilteredActivities}/>
+				<SearchActivity activities={activities} filteredActivities={filteredActivities} setFilteredActivities={setFilteredActivities} />
 			</div>
 			<table className="activities-list">
 				<thead>
@@ -217,47 +220,54 @@ const MyActivities = props => {
 				</thead>
 
 				<tbody>
-					{filteredActivities && filteredActivities.length > 0 ?
-						(filteredActivities.slice(0, fin).map((activity, i) => (
-							<tr key={i}>
-                        		<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
-									<td className="activity-name">
-										{
-											activity.type.localeCompare("logic_sequence") === 0 ?
-												<AccountTreeIcon className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
-													<BorderVerticalIcon className="activity-icon" /> : <BallotIcon className="activity-icon" />
-										}
-										{activity.name}
-									</td>
-								</Tooltip>
-								
-                        		<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
-									<td className="activity-description">
-										{activity.description}
-									</td>
-								</Tooltip>
+					{
+						!loadingCourses ?
+							filteredActivities && filteredActivities.length > 0 ?
+								(filteredActivities.slice(0, fin).map((activity, i) => (
+									<tr key={i}>
+										<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
+											<td className="activity-name">
+												{
+													activity.type.localeCompare("logic_sequence") === 0 ?
+														<AccountTreeIcon className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
+															<BorderVerticalIcon className="activity-icon" /> : <BallotIcon className="activity-icon" />
+												}
+												{activity.name}
+											</td>
+										</Tooltip>
 
-								<td>{activity.updatedAt.slice(0, 10)}</td>
-								<td>
-									<div className="drop-menu">
-										<div onClick={(e) => handleClick(e, activity)} className="drop-button">...</div>
-										<Menu
-											elevation={1}
-											id="simple-menu"
-											anchorEl={anchorEl}
-											keepMounted
-											open={Boolean(anchorEl)}
-											onClose={handleClose}
-										>
-											<MenuItem onClick={() => { handleEdit(currentMenu.type) }}>Editar</MenuItem>
-											<MenuItem onClick={() => { setOpen(!open); setActivityIdToDelete(currentMenu._id); }}>Borrar</MenuItem>
-										</Menu>
-									</div >
-								</td >
-							</tr >
+										<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
+											<td className="activity-description">
+												{activity.description}
+											</td>
+										</Tooltip>
+										<td>{activity.updatedAt.slice(0, 10)}</td>
+										<td>
+											<div className="drop-menu">
+												<div onClick={(e) => handleClick(e, activity)} className="drop-button">...</div>
+												<Menu
+													elevation={1}
+													id="simple-menu"
+													anchorEl={anchorEl}
+													keepMounted
+													open={Boolean(anchorEl)}
+													onClose={handleClose}
+												>
+													<MenuItem onClick={() => { handleEdit(currentMenu.type) }}>Editar</MenuItem>
+													<MenuItem onClick={() => { setOpen(!open); setActivityIdToDelete(currentMenu._id); }}>Borrar</MenuItem>
+												</Menu>
+											</div >
+										</td >
+									</tr >
 
-						)))
-						: null
+								)))
+								: null
+							:
+							<div className="spinner-loading" style={{ marginTop: '8em' }}>
+								<div className="spinner-border" role="status">
+									<span className="sr-only">Loading...</span>
+								</div>
+							</div>
 					}
 
 				</tbody >
@@ -276,8 +286,8 @@ const MyActivities = props => {
 			}
 
 			{
-				showFetchButton
-					? <button type="button" className="btn btn-light btn-block" onClick={loadActivities}>Load more</button>
+				showFetchButton && !loadingCourses ?
+					<button type="button" className="btn btn-light btn-block" onClick={loadActivities}>Cargar más</button>
 					: ""
 			}
 		</div >

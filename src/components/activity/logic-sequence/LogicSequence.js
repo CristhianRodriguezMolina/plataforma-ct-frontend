@@ -244,6 +244,18 @@ const LogicSequence = props => {
 		}
 	};
 
+	const handleSetVerified = () => {
+		if (!verified) {
+			if (sequenceList.length >= 3) {
+				setVerified(!verified)
+			} else {
+				showError('Debe tener almenos 3 tarjetas')
+			}
+		} else {
+			setVerified(!verified)
+		}
+	}
+
 	return (
 		<LogicSequenceContext.Provider value={{ selectedCard, setSelectedCard, logicSequence, setSequenceList, sequenceList, cardDeleted, setCardDeleted }}>
 
@@ -272,7 +284,7 @@ const LogicSequence = props => {
 
 									<div className="difficulty-grid-item">
 										<label>Dificultad:</label>
-										<select className="form-control" style={{width: '10em'}} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
+										<select className="form-control" style={{ width: '10em' }} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
 											<option value="beginner" selected>Principiante</option>
 											<option value="intermediate">Intermedio</option>
 											<option value="advanced">Avanzado</option>
@@ -282,7 +294,7 @@ const LogicSequence = props => {
 									<FormControlLabel className="verified-grid-item switcher" label="Verificado" control={
 										<Switch
 											checked={verified}
-											onChange={() => setVerified(!verified)}
+											onChange={handleSetVerified}
 											name="visibilty"
 											color="primary"
 										/>

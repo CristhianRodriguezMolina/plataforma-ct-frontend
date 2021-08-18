@@ -77,8 +77,6 @@ const UnitContent = props => {
 	useEffect(() => {
 
 		if (props.taskActivities && props.studentActivities && props.unitValue) {
-
-
 			if (props.unitValue.tasks.length > 0) {
 				let taskActivities = props.taskActivities.filter(taskActivity => taskActivity.unit === props.unitValue._id);
 
@@ -112,25 +110,28 @@ const UnitContent = props => {
 		}
 	});
 
-	useEffect(async () => {
-		if (!isCompletedUnit) {
-			if (!lastActivityInfo) {
-				try {
-					const res = await api.get(`/api/course/students/last-activity/${localStorage.getItem('user_id')}/${props.course._id}/${props.unitValue._id}`, {
-						headers: {
-							'x-access-token': localStorage.getItem('token')
+	useEffect(() => {
+		const fetchLastActivityInfo = async () => {
+			if (!isCompletedUnit) {
+				if (!lastActivityInfo) {
+					try {
+						const res = await api.get(`/api/course/students/last-activity/${localStorage.getItem('user_id')}/${props.course._id}/${props.unitValue._id}`, {
+							headers: {
+								'x-access-token': localStorage.getItem('token')
+							}
+						});
+						if (res) {
+							if (res.data.success) {
+								setLastActivityInfo(res.data.lastActivityInfo);
+							}
 						}
-					});
-					if (res) {
-						if (res.data.success) {
-							setLastActivityInfo(res.data.lastActivityInfo);
-						}
+					} catch (e) {
+						console.log(e);
 					}
-				} catch (e) {
-					console.log(e);
 				}
 			}
 		}
+		fetchLastActivityInfo();
 	}, [isCompletedUnit]);
 
 	const redirectToActivity = () => {

@@ -31,6 +31,9 @@ export default function UserList({ type }) {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+	// Variable to see if the info data is loading
+	const [isLoading, setIsLoading] = useState(true);
+
 	// Users of the platform (Teacher or Students)
 	const [users, setUsers] = useState(null)
 
@@ -51,6 +54,7 @@ export default function UserList({ type }) {
 
 	useEffect(() => {
 		if (!users || actualType !== type) {
+			setIsLoading(true);
 			setSuccess(false);
 			setUsers(null);
 			setFilteredUsers(null);
@@ -136,6 +140,7 @@ export default function UserList({ type }) {
 				console.log(`Ha ocurrido un error: ${error}`);
 			}
 		}
+		setIsLoading(false);
 		setProcess(false);
 		setProcessMessage('');
 	}
@@ -162,27 +167,34 @@ export default function UserList({ type }) {
 			}
 			<div className="mt-4">
 				{
-					filteredUsers && filteredUsers.length > 0 ?
-						<>
-							{/* USES A SLICE TO JUST RENDER THE USERS IN THE CURRENT PAGE */}
-							{
-								filteredUsers.slice((page - 1) * maxUsers, ((page - 1) * maxUsers) + maxUsers).map(user => (
-									<div key={user._id}>
-										<UserCard user={user} setUsers={setUsers} type={type} />
-									</div>
-								))
-							}
-							{
-								filteredUsers.length > maxUsers ?
-									<div className='d-flex justify-content-center mt-4'>
-										<Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
-									</div>
-									:
-									''
-							}
-						</>
+					!isLoading ?
+						filteredUsers && filteredUsers.length > 0 ?
+							<>
+								{/* USES A SLICE TO JUST RENDER THE USERS IN THE CURRENT PAGE */}
+								{
+									filteredUsers.slice((page - 1) * maxUsers, ((page - 1) * maxUsers) + maxUsers).map(user => (
+										<div key={user._id}>
+											<UserCard user={user} setUsers={setUsers} type={type} />
+										</div>
+									))
+								}
+								{
+									filteredUsers.length > maxUsers ?
+										<div className='d-flex justify-content-center mt-4'>
+											<Pagination count={numPages} onChange={handleChangePage} page={page} color="primary" />
+										</div>
+										:
+										''
+								}
+							</>
+							:
+							<h3 className="there-is-no-users">No hay {type === "teachers" ? "profesores" : "alumnos"} para mostrar</h3>
 						:
-						<h3 className="there-is-no-users">No hay {type === "teachers" ? "profesores" : "alumnos"} para mostrar</h3>
+						<div className="spinner-loading" style={{ marginTop: '8em' }}>
+							<div className="spinner-border" role="status">
+								<span className="sr-only">Loading...</span>
+							</div>
+						</div>
 				}
 			</div>
 		</div>

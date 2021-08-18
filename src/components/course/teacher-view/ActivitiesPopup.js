@@ -38,14 +38,17 @@ export default function ActivitiesPopup(props) {
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(""); //Mensaje de proceso satisfactorio
 
+    // Variable to see if the info data is loading
+    const [isLoading, setIsLoading] = useState(true);
+
     // List of activities that can be added to the task
     const [activities, setActivities] = useState(null);
 
     // List of activities that will be added to the task
     const [activitiesToAdd, setActivitiesToAdd] = useState([]);
 
-	//Filtered Activities
-	const [filteredActivities, setFilteredActivities] = useState(activities); 
+    //Filtered Activities
+    const [filteredActivities, setFilteredActivities] = useState(activities);
 
     useEffect(() => {
         if (!activities || isAddingActivities) {
@@ -99,7 +102,7 @@ export default function ActivitiesPopup(props) {
             if (activities) {
                 // Asignacion de los cursos de la base de datos
                 setActivities(activities);
-				setFilteredActivities(activities);
+                setFilteredActivities(activities);
 
                 if (activities.length > 0) {
                     showSuccess(message);
@@ -116,6 +119,7 @@ export default function ActivitiesPopup(props) {
                 showError(`Un error ha ocurrido obteniendo los estudiantes`);
             }
         }
+        setIsLoading(false);
     };
 
     // Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
@@ -176,21 +180,29 @@ export default function ActivitiesPopup(props) {
             >
                 <ModalHeader toggle={toggle}>Agregue actividades a una tarea</ModalHeader>
                 <ModalBody className="students-modal">
-					<SearchActivity activities={activities} filteredActivities={filteredActivities} setFilteredActivities={setFilteredActivities}/>
-					{filteredActivities && filteredActivities.length > 0
-                        ? filteredActivities.map((activity, index) => (
-                            <div key={activity._id} className="d-flex justify-content-start align-items-center">
-                                <h5 className="mr-3">{index + 1}</h5>
-                                <ActivityModalCard
-                                    activity={activity}
-                                    setActivitiesToAdd={setActivitiesToAdd}
-                                />
+                    <SearchActivity activities={activities} filteredActivities={filteredActivities} setFilteredActivities={setFilteredActivities} />
+                    {
+                        !isLoading ?
+                            filteredActivities && filteredActivities.length > 0
+                                ? filteredActivities.map((activity, index) => (
+                                    <div key={activity._id} className="d-flex justify-content-start align-items-center">
+                                        <h5 className="mr-3">{index + 1}</h5>
+                                        <ActivityModalCard
+                                            activity={activity}
+                                            setActivitiesToAdd={setActivitiesToAdd}
+                                        />
+                                    </div>
+                                ))
+                                :
+                                <>
+                                    <NoContentToShow messageTitle={'Sin activitidades...'} messageDes={'Ya estan todos las actividades agregadas a la tarea o aún no hay actividades en la plataforma'} />
+                                </>
+                            :
+                            <div className="spinner-loading" style={{ marginTop: '8em' }}>
+                                <div className="spinner-border" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
                             </div>
-                        ))
-                        :
-                        <>
-							<NoContentToShow messageTitle={'Sin activitidades...'} messageDes={'Ya estan todos las actividades agregadas a la tarea o aún no hay actividades en la plataforma'} />
-                        </>
                     }
                 </ModalBody>
                 <ModalFooter>

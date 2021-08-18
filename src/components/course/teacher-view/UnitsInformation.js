@@ -122,6 +122,9 @@ const UnitsInformation = (props) => {
 	const [taskActivities, setTaskActivities] = useState(null);
 	const [students, setStudents] = useState(null);
 
+	// Variable to see if the info data is loading
+	const [isLoading, setIsLoading] = useState(true);
+
 	// UseEffect para cambiar la pestaña actual a la pestaña que se cree nueva
 	useEffect(() => {
 		if (props.course.units.length > 0 && addingUnit) {
@@ -137,6 +140,7 @@ const UnitsInformation = (props) => {
 			})
 				.then((res) => {
 					setTaskActivities(res.data.activities);
+					setIsLoading(false);
 				})
 				.catch(err => {
 					if (err.response) {
@@ -145,11 +149,9 @@ const UnitsInformation = (props) => {
 					else {
 						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 					}
+					setIsLoading(false);
 				});
-
-
 		}
-
 	}, [props.course])
 
 	useEffect(() => {
@@ -169,7 +171,6 @@ const UnitsInformation = (props) => {
 						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 					}
 				});
-
 		}
 	}, [students]);
 
@@ -386,31 +387,42 @@ const UnitsInformation = (props) => {
 			</AppBar>
 			{/* COMPONENTS OF EACH UNIT IN THE COURSE */}
 			{
-				props.course.units.length > 0 ?
-					props.course.units.map((unit, index) => (
-						<TabPanel value={value} key={index} index={index}>
-							{
-								!props.progress ?
-									<UnitContent
-										course={props.course}
-										taskActivities={taskActivities}
-										unitValue={unit}
-										onAddTask={handleAddTask}
-										onUpdateChanges={handleUpdateUnit}
-										onDeleteUnit={deleteUnit}
-										onDeleteTask={handleDeleteTask} />
-									:
-									students ?
-										<StudentProgress
-											course={props.course}
-											students={students}
-											unit={unit}
-											taskActivities={taskActivities} /> : ""
-							}
-						</TabPanel>
-					))
-				:
-					<NoContentToShow messageTitle={'Sin unidades...'} messageDes={'Agregue una nueva unidad para comenzar'} />
+				!isLoading ?
+					<>
+						{
+							props.course.units.length > 0 ?
+								props.course.units.map((unit, index) => (
+									<TabPanel value={value} key={index} index={index}>
+										{
+											!props.progress ?
+												<UnitContent
+													course={props.course}
+													taskActivities={taskActivities}
+													unitValue={unit}
+													onAddTask={handleAddTask}
+													onUpdateChanges={handleUpdateUnit}
+													onDeleteUnit={deleteUnit}
+													onDeleteTask={handleDeleteTask} />
+												:
+												students ?
+													<StudentProgress
+														course={props.course}
+														students={students}
+														unit={unit}
+														taskActivities={taskActivities} /> : ""
+										}
+									</TabPanel>
+								))
+								:
+								<NoContentToShow messageTitle={'Sin unidades...'} messageDes={'Agregue una nueva unidad para comenzar'} />
+						}
+					</>
+					:
+					<div className="spinner-loading mt-5">
+						<div className="spinner-border" role="status">
+							<span className="sr-only">Loading...</span>
+						</div>
+					</div>
 			}
 		</div>
 	)
