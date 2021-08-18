@@ -23,20 +23,25 @@ export default function SearchUser(props) {
 	// Text of the filed that is used to filter the students list
 	const [searchInput, setSearchInput] = useState('');
 
+	//To filter by activity type
 	const [filterType, setFilterType] = useState('NA');
+
+	//To filter by activity difficulty
+	const [filterDifficulty, setFilterDifficulty] = useState('NA');
 
 	// If the location change then the search input is cleaned
 	useEffect(() => {
 		setSearchInput('');
-		setFilterType('NA')
+		setFilterType('NA');
+		setFilterDifficulty('NA');
 	}, [location]);
 
 	// UseEffect to set the filter text to empty if the input is changed to empty or the genre is changed to N/A
 	useEffect(() => {
-		if (searchInput === '' && filterType === 'NA') {
+		if (searchInput === '' && filterType === 'NA' && filterDifficulty === 'NA') {
 			setFilteredActivities(activities);
 		}
-	}, [searchInput, filterType])
+	}, [searchInput, filterType, filterDifficulty])
 
 	// When the students list change only if the students list is different to the filtered list then change the filtered list to the filtered
 	useEffect(() => {
@@ -60,6 +65,7 @@ export default function SearchUser(props) {
 		// console.log(auxUsers)
 		auxActivities = filterByType(auxActivities);
 		// console.log(auxUsers)
+		auxActivities = filterByDifficulty(auxActivities);
 
 		setFilteredActivities(auxActivities);
 	}
@@ -91,6 +97,19 @@ export default function SearchUser(props) {
 		}
 	}
 
+	const filterByDifficulty = (activities) => {
+		if (filterDifficulty !== 'NA') {
+			console.log(filterDifficulty, activities)
+			const auxActivities = activities.filter(({ difficulty }) => (
+				difficulty === filterDifficulty
+			));
+			console.log(auxActivities)
+			return auxActivities;
+		} else {
+			return activities;
+		}
+	}
+
 	// Method to empty to the search field
 	const handleClearSearchInput = () => {
 		setSearchInput(''); // Set the input to empty
@@ -98,6 +117,7 @@ export default function SearchUser(props) {
 
 	const handleClearFilters = () => {
 		setFilterType('NA');
+		setFilterDifficulty('NA')
 		setFilteredActivities(activities);
 	}
 
@@ -123,16 +143,24 @@ export default function SearchUser(props) {
 			</form>
 			<div className="d-flex">
 				<div className="d-flex justify-content-center align-items-center">
-					<label className="mr-2">Tipo:</label>
-					<select className="form-control" onChange={evt => { setFilterType(evt.target.value); }} value={filterType} aria-label="Default select example" required>
+					<label className="my-auto mr-2">Tipo:</label>
+					<select className="form-control mr-2" onChange={evt => { setFilterType(evt.target.value); }} value={filterType} aria-label="ComboBox to Filter by type" required>
 						<option value="NA" selected>Todas</option>
 						<option value="logic_sequence">Secuencia lógica</option>
 						<option value="maze">Laberinto</option>
 						<option value="questionnaire">Selección multiple</option>
 					</select>
+
+					<label className="my-auto mr-2">Dificultad:</label>
+					<select className="form-control" onChange={evt => { setFilterDifficulty(evt.target.value); }} value={filterDifficulty} aria-label="ComboBox to Filter by difficulty" required>
+						<option value="NA" selected>Todas</option>
+						<option value="beginner">Principiante</option>
+						<option value="intermediate">Intermedio</option>
+						<option value="advance">Avanzado</option>
+					</select>
 				</div>
 				{
-					filterType !== 'NA' ?
+					filterType !== 'NA' || filterDifficulty !== 'NA' ?
 						<IconButton onClick={handleClearFilters} className='clear-button' size="small">
 							<Clear />
 						</IconButton>

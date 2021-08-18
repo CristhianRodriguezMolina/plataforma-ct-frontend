@@ -7,6 +7,27 @@
 			width: 4em;
 		}
 	}
+
+	.activity-attributes {
+		display: grid;
+		grid-template-columns: auto auto;
+		grid-gap: auto;
+
+		.difficulty-grid-item {
+			display: flex;
+			align-items: center;
+
+			label {
+				margin: auto 0.5em;
+			}
+		}
+
+		.verified-grid-item {
+			display: flex;
+			justify-content: end;
+			margin: auto 0.5em;
+		}
+	}
 }
 
 .maze-container {

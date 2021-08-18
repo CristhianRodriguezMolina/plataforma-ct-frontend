@@ -64,6 +64,9 @@ const LogicSequence = props => {
 
 	const newCardInput = useRef(null);
 
+	//Actvity Difficulty
+	const [difficulty, setDifficulty] = useState('beginner');
+
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
@@ -162,12 +165,14 @@ const LogicSequence = props => {
 	};
 
 	const saveLogicSequence = () => {
+		console.log(difficulty)
 		if (activityName && activityName.trim().localeCompare("") !== 0) {
 			api.put(`/api/activity/${activityId}`, {
 				activity: {
 					name: activityName,
 					description: activityDescription,
-					verified: verified
+					verified,
+					difficulty
 				},
 				child: {
 					sequence_cards: sequenceList
@@ -263,8 +268,18 @@ const LogicSequence = props => {
 							<div className="logic-sequence-info">
 								<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
 								<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
-								<div className='d-flex justify-content-end'>
-									<FormControlLabel className="switcher" label="Verificado" control={
+								<div className='activity-attributes'>
+
+									<div className="difficulty-grid-item">
+										<label>Dificultad:</label>
+										<select className="form-control" style={{width: '10em'}} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
+											<option value="beginner" selected>Principiante</option>
+											<option value="intermediate">Intermedio</option>
+											<option value="advanced">Avanzado</option>
+										</select>
+									</div>
+
+									<FormControlLabel className="verified-grid-item switcher" label="Verificado" control={
 										<Switch
 											checked={verified}
 											onChange={() => setVerified(!verified)}
