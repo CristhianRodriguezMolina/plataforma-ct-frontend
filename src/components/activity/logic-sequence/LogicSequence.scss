@@ -2,15 +2,15 @@
     width: auto;
     margin: 1em auto auto auto;
 
-	.activity-attributes {
-		margin: 0.5em;
+    .activity-attributes {
+        margin: 0.5em;
 
-		.verified-grid-item {
-			display: flex;
-			justify-content: end;
-			margin: auto 0.5em;
-		}
-	}
+        .verified-grid-item {
+            display: flex;
+            justify-content: end;
+            margin: auto 0.5em;
+        }
+    }
 
     .sequence-cards-container {
         width: auto;
@@ -33,28 +33,27 @@
 }
 
 @media only screen and (min-width: 550px) {
-	.logic-sequence-container {
+    .logic-sequence-container {
+        .activity-attributes {
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-gap: auto;
 
-		.activity-attributes {
-			display: grid;
-			grid-template-columns: auto auto;
-			grid-gap: auto;
+            .difficulty-grid-item {
+                display: flex;
+                align-items: center;
 
-			.difficulty-grid-item {
-				display: flex;
-				align-items: center;
-
-				label {
-					margin: auto 0.5em;
-				}
-			}
-		}
-	}
+                label {
+                    margin: auto 0.5em;
+                }
+            }
+        }
+    }
 }
 
 @media only screen and (min-width: 850px) {
     .logic-sequence-container {
-        margin-top: 8em;
+        margin-top: 2em;
         width: 50em;
 
         .logic-sequence-alert {

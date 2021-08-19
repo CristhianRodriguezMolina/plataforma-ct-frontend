@@ -245,15 +245,7 @@ const LogicSequence = props => {
 	};
 
 	const handleSetVerified = () => {
-		if (!verified) {
-			if (sequenceList.length >= 3) {
-				setVerified(!verified)
-			} else {
-				showError('Debe tener almenos 3 tarjetas')
-			}
-		} else {
-			setVerified(!verified)
-		}
+		setVerified(!verified)
 	}
 
 	return (

@@ -451,15 +451,7 @@ export default function Maze() {
 	}
 
 	const handleSetVerified = () => {
-		if (!verified) {
-			if (isStart && isEnd) {
-				setVerified(!verified)
-			} else {
-				showError('Debe haber un inicio y un fin')
-			}
-		} else {
-			setVerified(!verified)
-		}
+		setVerified(!verified)
 	}
 
 	// ROBOT ANIMATION -------------------------------------------------------------------------------------------------------------------------

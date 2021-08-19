@@ -81,7 +81,6 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
                 setSelectedCard(null);
                 setSequenceList(res.data.updatedLogicSequence.sequence_cards);
                 setCardDeleted(true);
-
             })
             .catch(err => {
                 if (err.response) {
@@ -97,6 +96,7 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
     const renderMainContent = () => {
         return
     }
+
     return (
         <Tooltip enterDelay={500} enterNextDelay={200} title={value.name} aria-label="delete">
             <div
