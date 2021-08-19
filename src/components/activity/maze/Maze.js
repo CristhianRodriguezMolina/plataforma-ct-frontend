@@ -254,6 +254,7 @@ export default function Maze() {
 				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
 				setActivityDescription(res.data.activity_id.description);
 				setVerified(res.data.activity_id.verified);
+				setDifficulty(res.data.activity_id.difficulty);
 				setLoading(false);
 			})
 			.catch(err => {

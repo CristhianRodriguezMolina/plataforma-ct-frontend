@@ -61,7 +61,10 @@ const DynamicInput = props => {
 					className="form-control dynamic-input" value={value} onBlur={handleOnblur}
 					onChange={onChangeHandler}>
 				</textarea>
-				: <h1 style={props.dynamicInputStyle} ref={h1} onClick={handleInputClick} className="dynamic-label">{value}</h1>}
+				: value && value.trim() !== ''?
+					<h1 style={props.dynamicInputStyle} ref={h1} onClick={handleInputClick} className="dynamic-label">{value}</h1>
+					: <h1 style={{...props.dynamicInputStyle, color: '#ccc'}} ref={h1} onClick={handleInputClick} className="dynamic-label">Clic aqui para escribir</h1>
+			}
 		</div>
 	)
 };

@@ -29,6 +29,7 @@ import SearchActivity from '../common/SearchActivity';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Tooltip from '@material-ui/core/Tooltip';
+import NoContentToShow from '../common/NoContentToShow';
 
 const MyActivities = props => {
 
@@ -134,7 +135,7 @@ const MyActivities = props => {
 				setShowFetchButton(false);
 			}
 		}
-	}, [fin]);
+	}, [fin]);	
 
 	const loadActivities = () => {
 		if (fin < count) {
@@ -155,8 +156,11 @@ const MyActivities = props => {
 		else if (type.localeCompare("maze") === 0) {
 			props.history.push(`/activity/maze/${currentMenu._id}`);
 		}
+		else if (type.localeCompare('questionnaire') === 0) {
+			props.history.push(`/activity/questionnaire/${currentMenu._id}`);
+		}
 		else {
-			console.log('type not valid');
+			showError('Type not valid');
 		}
 	};
 
@@ -209,69 +213,84 @@ const MyActivities = props => {
 			<div className='search-container' >
 				<SearchActivity activities={activities} filteredActivities={filteredActivities} setFilteredActivities={setFilteredActivities} />
 			</div>
-			<table className="activities-list">
-				<thead>
-					<tr>
-						<th className="name-tag">Nombre</th>
-						<th>Descripción</th>
-						<th>Última modificación</th>
-						<th></th>
-					</tr>
-				</thead>
+			{
+				!loadingCourses ?
+					filteredActivities && filteredActivities.length > 0 ?
+						<table className="activities-list">
+							<thead>
+								<tr>
+									<th className="name-tag">Nombre</th>
+									<th>Descripción</th>
+									<th>Última modificación</th>
+									<th></th>
+								</tr>
+							</thead>
 
-				<tbody>
-					{
-						!loadingCourses ?
-							filteredActivities && filteredActivities.length > 0 ?
-								(filteredActivities.slice(0, fin).map((activity, i) => (
-									<tr key={i}>
-										<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
-											<td className="activity-name">
-												{
-													activity.type.localeCompare("logic_sequence") === 0 ?
-														<AccountTreeIcon className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
-															<BorderVerticalIcon className="activity-icon" /> : <BallotIcon className="activity-icon" />
-												}
-												{activity.name}
-											</td>
-										</Tooltip>
+							<tbody>
+								{	
+									filteredActivities.slice(0, fin).map((activity, i) => (
+										<tr key={i}>
+											<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
+												<td className="activity-name">
+													{
+														activity.type.localeCompare("logic_sequence") === 0 ?
+															<AccountTreeIcon className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
+																<BorderVerticalIcon className="activity-icon" /> : <BallotIcon className="activity-icon" />
+													}
+													{activity.name}
+												</td>
+											</Tooltip>
 
-										<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
-											<td className="activity-description">
-												{activity.description}
-											</td>
-										</Tooltip>
-										<td>{activity.updatedAt.slice(0, 10)}</td>
-										<td>
-											<div className="drop-menu">
-												<div onClick={(e) => handleClick(e, activity)} className="drop-button">...</div>
-												<Menu
-													elevation={1}
-													id="simple-menu"
-													anchorEl={anchorEl}
-													keepMounted
-													open={Boolean(anchorEl)}
-													onClose={handleClose}
-												>
-													<MenuItem onClick={() => { handleEdit(currentMenu.type) }}>Editar</MenuItem>
-													<MenuItem onClick={() => { setOpen(!open); setActivityIdToDelete(currentMenu._id); }}>Borrar</MenuItem>
-												</Menu>
-											</div >
-										</td >
-									</tr >
+											<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
+												<td className="activity-description">
+													{activity.description}
+												</td>
+											</Tooltip>
+											<td>{activity.updatedAt.slice(0, 10)}</td>
+											<td>
+												<div className="drop-menu">
+													<div onClick={(e) => handleClick(e, activity)} className="drop-button">...</div>
+													<Menu
+														elevation={1}
+														id="simple-menu"
+														anchorEl={anchorEl}
+														keepMounted
+														open={Boolean(anchorEl)}
+														onClose={handleClose}
+													>
+														<MenuItem onClick={() => { handleEdit(currentMenu.type) }}>Editar</MenuItem>
+														<MenuItem onClick={() => { setOpen(!open); setActivityIdToDelete(currentMenu._id); }}>Borrar</MenuItem>
+													</Menu>
+												</div >
+											</td >
+										</tr >
 
-								)))
-								: null
-							:
-							<div className="spinner-loading" style={{ marginTop: '8em' }}>
-								<div className="spinner-border" role="status">
-									<span className="sr-only">Loading...</span>
-								</div>
-							</div>
-					}
+									))
+								}
 
-				</tbody >
-			</table >
+							</tbody >
+						</table >
+					:
+						<>
+							<table className="activities-list">
+								<thead>
+									<tr>
+										<th className="name-tag">Nombre</th>
+										<th>Descripción</th>
+										<th>Última modificación</th>
+										<th></th>
+									</tr>
+								</thead>
+							</table>
+							<NoContentToShow messageTitle="Sin actividades..." messageDes="Las actividades que agregues apareceran aqui"/>
+						</>
+				:
+				<div className="spinner-loading" style={{ marginTop: '8em' }}>
+					<div className="spinner-border" role="status">
+						<span className="sr-only">Loading...</span>
+					</div>
+				</div>
+			}
 			<AlertModal
 				type="delete"
 				open={open}

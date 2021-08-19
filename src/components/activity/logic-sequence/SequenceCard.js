@@ -94,9 +94,6 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
             })
     }
 
-    const renderMainContent = () => {
-        return
-    }
     return (
         <Tooltip enterDelay={500} enterNextDelay={200} title={value.name} aria-label="delete">
             <div
@@ -106,6 +103,7 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
                         'selected-card' : '')
                     : "sequence-card-student"
                     } `} >
+
                 {value.image ?
                     <img className="sequence-card-img" src={`${process.env.REACT_APP_API_URL}/i/${value.image}`} alt="default" /> :
                     <img className="sequence-card-img" src={'/default.png'} alt="default" />
@@ -115,6 +113,7 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
                     <Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
                     : ""
                 }
+
                 {error ?
                     <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
                     : ""
@@ -122,6 +121,7 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
                 <div className="text-container">
                     <h1 className={`${forStudents ? "text-student" : ""}`} > {value.name}</h1>
                 </div>
+
                 {!forStudents ?
                     <>
                         <div className="manage-buttons-container">
@@ -129,6 +129,7 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
                                 <DeleteIcon />
                             </IconButton>
                         </div>
+
                         <AlertModal
                             type="delete"
                             open={open}
