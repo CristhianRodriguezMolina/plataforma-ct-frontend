@@ -9,6 +9,8 @@ import api from '../../../services/api';
 
 import { QuestionnaireContext } from './Questionnaire';
 
+import { Modal, Backdrop } from '@material-ui/core';
+
 //COMPONENTS
 
 //DynamicInput
@@ -22,6 +24,9 @@ import AlertModal from '../../common/AlertModal';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
+
+// DropzoneUploader
+import DropzoneUploader from '../../common/DropzoneUploader';
 
 //ICONS
 
@@ -37,44 +42,91 @@ import CropOriginalIcon from '@material-ui/icons/CropOriginal';
 // Add new option icon
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
+// Delete option icon
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+
 const QuestionCard = SortableElement(({ value, forStudents }) => {
-	
-    // MENSAJES DEL FORMULARIO
-    const [error, setError] = useState(false); //Variable flag de existencia de error
-    const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-    const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
-    const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+	// MENSAJES DEL FORMULARIO
+	const [error, setError] = useState(false); //Variable flag de existencia de error
+	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
 	const { questionnaire, setQuestionsList } = useContext(QuestionnaireContext);
 
-    // Variable de estado para el modal
-    const [open, setOpen] = useState(false);
+	// it opens the modal to delete a question
+	const [openDeleteQuestion, setOpenDeleteQuestion] = useState(false);
+
+	// it opens the modal to delete an option
+	const [openDeleteOption, setOpenDeleteOption] = useState(false);
+
+	// it opens the modal to upload an image
+	const [openUploadImage, setOpenUploadImage] = useState(false);
+
+	// To upload images
+	const [upload, setUpload] = useState(false);
 
 	const [question, setQuestion] = useState(value.question);
 
 	const [optionsList, setOptionsList] = useState(value.options);
 
-    // Funcion para mostrar una alerta de error dado un mensaje
-    const showError = (message) => {
-        setError(true);   //Se cambia el estado de mensaje de error a verdadero
-        setErrorMessage(message); //Se setea el mensaje de error
-        setTimeout(() => { //Dura 2sg en pantalla el mensaje
-            setError(false);
-            setErrorMessage("");
-        }, 2000)
-    }
+	const [selectedOption, setSelectedOption] = useState(null);
 
-    // Funcion para mostrar una alerta satisfactoria dado un mensaje
-    const showSuccess = (message) => {
-        setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
-        setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
-        setTimeout(() => { //Dura 2sg en pantalla el mensaje
-            setSuccess(false);
-            setSuccessMessage("");
-        }, 2000)
-    }
+	useEffect(() => {
+		console.log('hi')
+		if (upload) {
+			setUpload(false);
+		}
+	}, [upload]);
 
-    const deleteCard = () => {
+	// Toggle of the modal to upload an image
+	const toggle = () => setOpenUploadImage(!openUploadImage);
+
+	// Funcion para mostrar una alerta de error dado un mensaje
+	const showError = (message) => {
+		setError(true);   //Se cambia el estado de mensaje de error a verdadero
+		setErrorMessage(message); //Se setea el mensaje de error
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setError(false);
+			setErrorMessage("");
+		}, 2000)
+	}
+
+	// Funcion para mostrar una alerta satisfactoria dado un mensaje
+	const showSuccess = (message) => {
+		setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setSuccess(false);
+			setSuccessMessage("");
+		}, 2000)
+	}
+
+	const deleteOption = () => {
+		if(selectedOption) {
+			api.delete(`/api/questionnaire/option/${questionnaire._id}/${value._id}/${selectedOption}`, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			})
+				.then((res) => {
+					showSuccess(res.data.message);
+					setOptionsList(res.data.updatedQuestion.options);
+					setSelectedOption(null);
+				})
+				.catch(err => {
+					if (err.response) {
+						showError(err.response.message);
+					}
+					else {
+						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+
+					}
+					setSelectedOption(null);
+				});
+		}
+	}
+
+	const deleteCard = () => {
 		api.delete(`/api/questionnaire/question/${questionnaire._id}/${value._id}`, {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
@@ -91,11 +143,11 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 				}
 			});
-    }
+	}
 
 	const createOption = () => {
 		if (questionnaire) {
-			api.post(`/api/questionnaire/option/${questionnaire._id}/${value._id}`, { }, {
+			api.post(`/api/questionnaire/option/${questionnaire._id}/${value._id}`, {}, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
@@ -119,12 +171,30 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	const questionInputStyle = {
 		width: "100%",
 		fontSize: "0.8em",
-		margin: "0.5em auto 0 auto",
 		padding: "0.7em",
 		overflow: "hidden",
 		lineHeight: "1.2em",
 		fontWeight: "500",
-		minHeight: "2.5em"
+		minHeight: "2.5em",
+		borderBottom: "solid",
+		borderColor: "#ccc",
+		borderWidth: '1px',
+		margin: "0",
+		fontWeight: "bold"
+	};
+
+	const optionInputStyle = {
+		width: "100%",
+		fontSize: "0.8em",
+		padding: "0.7em",
+		overflow: "hidden",
+		lineHeight: "1.2em",
+		fontWeight: "500",
+		minHeight: "2.5em",
+	};
+
+	const handleUpload = () => {
+		setUpload(true);
 	};
 
 	return (
@@ -137,59 +207,122 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
 				: ""
 			}
-			
 
-			<DynamicInput dynamicInputValue={question} dynamicInputStyle={questionInputStyle} sendValue={updateQuestion}></DynamicInput>
+			<div className="question-info">
+				<DynamicInput dynamicInputValue={question} dynamicInputStyle={questionInputStyle} sendValue={updateQuestion}></DynamicInput>
 
+				<IconButton className="question-button-uploader" color="primary" aria-label="Delete" onClick={() => setOpenUploadImage(!openUploadImage)}>
+					<CropOriginalIcon />
+				</IconButton>
+			</div>
 
-			<img src="https://picsum.photos/100/100" alt="image"/>
-
-			<IconButton className="manage-buttons-container-1 m-0 p-0" color="primary" aria-label="Delete" onClick={() => setOpen(!open)}>
-				<CropOriginalIcon />
-			</IconButton>
+			<img className='question-image' src="https://picsum.photos/1000/1000" alt="image" />
 
 			{optionsList && optionsList.length > 0 ?
 				optionsList.map((option) => {
 
 					return (
-						<div>
-							<div className="radio-group d-flex justify-conetent-start align-items-center">
-								<input className="radio-button" type="radio" id="questionnaire" name="activity" value="questionnaire" />
-								<label className="title-label" for="questionnaire">{option.option}</label>
+						<div className="option-container">
+						<div className="option-info">
+							<div className={`check-option ${option.isCorrect ? 'active': ''}`} />
+								<DynamicInput dynamicInputValue={option.option} dynamicInputStyle={optionInputStyle} sendValue={updateQuestion}></DynamicInput>
+								<IconButton
+									className="option-info-icon"
+									color="primary"
+									aria-label="Delete"
+									onClick={() => {
+										setSelectedOption(option._id);
+										setOpenUploadImage(!openUploadImage);
+									}}>
+									<CropOriginalIcon />
+								</IconButton>
+
+								<IconButton 
+									className="option-info-icon" 
+									color="secondary" 
+									aria-label="Delete" 
+									onClick={() => {
+										setSelectedOption(option._id);
+										setOpenDeleteOption(!openDeleteOption);
+									}}>
+									<HighlightOffIcon />
+								</IconButton>
 							</div>
+							<img className="option-image" src="https://picsum.photos/100/100" alt="image" />
 
-							<img src="https://picsum.photos/100/100" alt="image"/>
-							<IconButton className="manage-buttons-container-1 m-0 p-0" color="primary" aria-label="Delete" onClick={() => setOpen(!open)}>
-								<CropOriginalIcon />
-							</IconButton>
 						</div>
-				)})
-				
-			: '' }
+					)
+				})
 
-			<div className="create-card-button">
-				<IconButton color="primary" aria-label="Create" onClick={createOption}>
-					<AddCircleIcon style={{ fontSize: 25 }} />
-				</IconButton>
-			</div>
+				: ''}
+			
+			<button className="btn btn-light add-option-btn" onClick={createOption}>
+				<AddCircleIcon className="add-icon"/> Añadir opción
+			</button>
 
 			{!forStudents ?
 				<>
-					<div className="manage-buttons-container">
-						<IconButton className="manage-buttons-container-1 m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
-							<DeleteIcon />
+					<div className="delete-question-icon-container">
+						<IconButton color="secondary" aria-label="Delete" onClick={() => setOpenDeleteQuestion(!openDeleteQuestion)}>
+							<DeleteIcon style={{ fontSize: 30 }}/>
 						</IconButton>
-
 					</div>
+
 					<AlertModal
 						type="delete"
-						open={open}
-						handleClose={() => setOpen(!open)}
-						message='¿Esta seguro que quiere eliminar esta tarjeta?'
+						open={openDeleteQuestion}
+						handleClose={() => setOpenDeleteQuestion(!openDeleteQuestion)}
+						message='¿Esta seguro que quiere eliminar esta pregunta?'
 						action={deleteCard}
 					/>
 				</>
 				: ""}
+
+			<Modal
+				aria-labelledby="transition-modal-title"
+				aria-describedby="transition-modal-description"
+				className='d-flex justify-content-center align-items-center'
+				open={openUploadImage}
+				onClose={toggle}
+				closeAfterTransition
+				BackdropComponent={Backdrop}
+				BackdropProps={{
+					timeout: 500,
+				}}
+			>
+
+				{/* <Fade in={open}> */}
+				<div style={{
+					backgroundColor: "#424242",
+					color: "white",
+					borderRadius: "10px",
+					padding: "2em 3em",
+					filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))"
+				}}>
+
+					<h1 className='h3 text-white'>Cambiar imagen</h1>
+					<DropzoneUploader
+						onFormSubmit={() => console.log('hi')}
+						upload={upload}
+						type="image/jpeg, image/png, image/gif"
+						maxFiles="1"
+					/>
+
+					<div className='d-flex justify-content-end'>
+						<button onClick={handleUpload} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
+						<button onClick={toggle} className='custom-btn p-2'>Cancelar</button>
+					</div>
+				</div>
+				{/* </Fade> */}
+			</Modal>
+
+			<AlertModal
+				type="delete"
+				open={openDeleteOption}
+				handleClose={() => setOpenDeleteOption(!openDeleteOption)}
+				message='¿Esta seguro que quiere eliminar esta tarjeta?'
+				action={deleteOption}
+			/>
 		</div>
 	)
 });

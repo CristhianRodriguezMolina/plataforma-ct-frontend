@@ -1,0 +1,127 @@
+.question-card-container {
+	background-color: white;
+	margin: 0.1em 0.18em;
+	padding: 0.5em;
+	border-radius: 5px;
+
+	.question-info {
+		display: grid;
+		grid-template-columns: 90% 10%;
+		align-items: center;
+		justify-content: center;
+
+		.question-button-uploader {
+			margin: auto;
+		}
+	}
+
+	.question-image {
+		width: 80%;
+		display: block;
+		margin: 0.5em auto;
+	}
+
+	.option-container {
+		margin: 1em auto;
+
+		.option-info {
+			display: grid;
+			grid-template-columns: 6% 74% 10% 10%;
+			
+			.option-info-icon {
+				margin: auto;
+			}
+
+			.option-info-name {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.check-option {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: auto auto auto 0;
+				background-color: white;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				border-width: 2px;
+				border-style: solid;
+				border-color: #525eff;
+				position: relative;
+				transition-duration: 0.2s;
+				cursor: pointer;
+
+				&.active::before {
+					content: "";
+					transition-duration: 0.2s;
+					background-color: #3330ff;
+					position: absolute;
+					width: 12px;
+					height: 12px;
+					top: 2px;
+					left: 2px;
+					border-radius: 50%;
+					
+				}
+
+
+				&:hover {
+					box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+					transition-duration: 0.2s;
+					background-color: #f1f1f1;
+					border-color: #3429cf;
+
+					&.active::before {
+						background-color: #3429cf;
+					}
+				}
+			}
+		}
+
+		.option-image {
+			width: 20%;
+			display: block;
+			margin: 0.5em auto;
+		}
+	}
+
+	.add-option-btn {
+		background-color: white;
+		border: none;
+		display: flex;
+		align-items: center;
+
+		.add-icon {
+			margin-right: 0.2em;
+		}
+
+		&:hover {
+			background-color: #f5f5f5;
+			border: none;
+		}
+	}
+
+	.delete-question-icon-container {
+
+		display: flex;
+		justify-content: right;
+		align-items: center;
+	}
+}
+
+@media only screen and (min-width: 800px) {
+	.question-card-container {
+		padding: 2em;
+
+		.option-container {
+
+			.option-info {
+				display: grid;
+				grid-template-columns: 3% 87% 5% 5%;
+			}
+		}
+	}
+}

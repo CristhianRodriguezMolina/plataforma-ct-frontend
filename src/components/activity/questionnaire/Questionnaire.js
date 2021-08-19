@@ -117,12 +117,19 @@ const Questionnaire = () => {
 		}, 2000)
 	};
 
+
+	useEffect(() => {
+
+		console.log(questionsList)
+	}, [questionsList])
+
 	useEffect(() => {
 		const fetch = () => {
 			api.get(`/api/questionnaire/${activityId}`, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
+					console.log(res.data)
 					setQuestionnaire(res.data);
 					setQuestionsList(res.data.questions);
 					setActivityName(res.data.activity_id.name);
@@ -143,6 +150,7 @@ const Questionnaire = () => {
 		}
 
 		if (!questionnaire) {
+			console.log('1')
 			fetch();
 		}
 
@@ -281,6 +289,7 @@ const Questionnaire = () => {
 						</div>
 
 						<div className="questionnaire-body">
+							<hr style={{visibility: 'hidden'}}/>
 							{questionsList?
 								<SortableList distance={1} items={questionsList} onSortEnd={onSortEnd} />
 							:""}
