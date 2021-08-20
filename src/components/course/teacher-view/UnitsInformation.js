@@ -395,7 +395,6 @@ const UnitsInformation = (props) => {
 								props.course.units.map((unit, index) => (
 									<TabPanel value={value} key={index} index={index}>
 										{
-
 											!props.progress ?
 												<UnitContent
 													course={props.course}

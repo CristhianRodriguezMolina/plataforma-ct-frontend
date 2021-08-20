@@ -59,6 +59,7 @@ const StudentProgress = props => {
                     }, {
                         headers: { 'x-access-token': localStorage.getItem('token') }
                     });
+                    console.log(response)
                     if (response) {
                         setStudentActivities(response.data.studentActivity);
                     }
@@ -73,6 +74,7 @@ const StudentProgress = props => {
             }
         }
         fetchData();
+        console.log('EFFECT')
     }, [studentActivities]);
 
 
@@ -189,10 +191,10 @@ const StudentProgress = props => {
                                                                         props.students.map((student) => {
                                                                             return <tr>
                                                                                 <Tooltip
-																					enterDelay={200}
-																					enterNextDelay={200}
-																					title={`${student.last_name} ${student.first_name}`}
-																					aria-label={`${student.last_name} ${student.first_name}`}>
+                                                                                    enterDelay={200}
+                                                                                    enterNextDelay={200}
+                                                                                    title={`${student.last_name} ${student.first_name}`}
+                                                                                    aria-label={`${student.last_name} ${student.first_name}`}>
                                                                                     <td className="student-name-field-td">{student.last_name} {student.first_name}</td>
                                                                                 </Tooltip>
                                                                                 <td className="student-tasks-view-td">
@@ -202,6 +204,8 @@ const StudentProgress = props => {
                                                                                 </td>
 
                                                                                 <td className="completed-field-td">{checkCompletedTask(student, task._id)}</td>
+
+
                                                                             </tr>
                                                                         })
                                                                         : ""}
@@ -215,6 +219,7 @@ const StudentProgress = props => {
                                             </Accordion>
                                         </div>
                                     })
+
                                 }
                             </>
                             :

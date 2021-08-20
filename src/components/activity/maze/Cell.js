@@ -71,6 +71,11 @@ export default function Cell(props) {
 	}
 
 	const handleClick = () => {
+		// Enter in this if when its student view
+		if (!(maze !== null && maze !== undefined)) {
+			return;
+		}
+
 		// Get the index of the cell
 		var index = maze.cells.indexOf(cell);
 
@@ -146,7 +151,7 @@ export default function Cell(props) {
 				: ""
 			}
 			<div
-				onClick={maze !== null && maze !== undefined ? handleClick : console.log('Clickeando-ando')}
+				onClick={handleClick}
 				style={{
 					border: '1px solid white',
 					position: 'absolute',

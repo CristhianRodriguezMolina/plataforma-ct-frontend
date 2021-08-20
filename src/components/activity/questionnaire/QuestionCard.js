@@ -109,7 +109,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	}
 
 	const deleteOption = () => {
-		if(questionnaire && selectedOption !== "") {
+		if (questionnaire && selectedOption !== "") {
 			api.delete(`/api/questionnaire/option/${questionnaire._id}/${value._id}/${selectedOption}`, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
@@ -135,7 +135,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	}
 
 	const deleteCard = () => {
-		if(questionnaire) {
+		if (questionnaire) {
 			api.delete(`/api/questionnaire/question/${questionnaire._id}/${value._id}`, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
@@ -181,9 +181,10 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	};
 
 	const saveQuestion = () => {
-		if(questionnaire) {
+		if (questionnaire) {
 			api.put(`/api/questionnaire/question/${questionnaire._id}/${value._id}`, {
-				question	
+				question,
+				options: optionsList
 			}, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
@@ -295,9 +296,9 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	const updateOption = (value, optionId) => {
 		let found = false;
 
-		let auxOptionsList = [...optionsList]; 
-		for(let i = 0; i < auxOptionsList.length && !found; i++) {
-			if(auxOptionsList[i]._id === optionId) {
+		let auxOptionsList = [...optionsList];
+		for (let i = 0; i < auxOptionsList.length && !found; i++) {
+			if (auxOptionsList[i]._id === optionId) {
 				found = true;
 				auxOptionsList[i].option = value;
 			}
@@ -308,12 +309,12 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	};
 
 	const handleSwitchIsCorrect = (optionId) => {
-		
+
 		let found = false;
 
-		let auxOptionsList = [...optionsList]; 
-		for(let i = 0; i < auxOptionsList.length && !found; i++) {
-			if(auxOptionsList[i]._id === optionId) {
+		let auxOptionsList = [...optionsList];
+		for (let i = 0; i < auxOptionsList.length && !found; i++) {
+			if (auxOptionsList[i]._id === optionId) {
 				found = true;
 				auxOptionsList[i].isCorrect = !auxOptionsList[i].isCorrect;
 			}
@@ -323,12 +324,12 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	};
 
 	const handleUploadImg = (files) => {
-		if(uploadImgFrom === 'question') {
+		if (uploadImgFrom === 'question') {
 			uploadQuestonImg(files);
 			setUploadImgFrom("");
 			setOpenUploadImage(false);
 		}
-		else if(uploadImgFrom === 'option') {
+		else if (uploadImgFrom === 'option') {
 			uploadOptionImg(files);
 			setUploadImgFrom("");
 			setOpenUploadImage(false);
@@ -350,7 +351,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				<DynamicInput dynamicInputValue={question} dynamicInputStyle={questionInputStyle} sendValue={updateQuestion}></DynamicInput>
 
 				<IconButton
-					className="question-button-uploader" 
+					className="question-button-uploader"
 					color="primary"
 					aria-label="Delete"
 					onClick={() => {
@@ -360,9 +361,9 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 					<CropOriginalIcon />
 				</IconButton>
 			</div>
-			{value.image !== ""?
+			{value.image !== "" ?
 				<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${value.image}`} alt="image" />
-				:""}
+				: ""}
 
 			{optionsList && optionsList.length > 0 ?
 				optionsList.map((option) => {
@@ -370,7 +371,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 					return (
 						<div className="option-container">
 							<div className="option-info">
-								<div className={`check-option ${option.isCorrect ? 'active': ''}`} onClick={() => handleSwitchIsCorrect(option._id)} />
+								<div className={`check-option ${option.isCorrect ? 'active' : ''}`} onClick={() => handleSwitchIsCorrect(option._id)} />
 								<DynamicInput dynamicInputValue={option.option} dynamicInputStyle={optionInputStyle} sendValue={(value) => updateOption(value, option._id)} />
 								<IconButton
 									className="option-info-icon"
@@ -384,10 +385,10 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 									<CropOriginalIcon />
 								</IconButton>
 
-								<IconButton 
-									className="option-info-icon" 
-									color="secondary" 
-									aria-label="Delete" 
+								<IconButton
+									className="option-info-icon"
+									color="secondary"
+									aria-label="Delete"
 									onClick={() => {
 										setSelectedOption(option._id);
 										setOpenDeleteOption(!openDeleteOption);
@@ -395,28 +396,28 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 									<HighlightOffIcon />
 								</IconButton>
 							</div>
-							{option.image !== ""?
+							{option.image !== "" ?
 								<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="image" />
-								:""}
+								: ""}
 
 						</div>
 					)
 				})
 
 				: ''}
-			
+
 			<button className="btn btn-light add-option-btn" onClick={createOption}>
-				<AddCircleIcon className="add-icon"/> Añadir opción
+				<AddCircleIcon className="add-icon" /> Añadir opción
 			</button>
 
 			{!forStudents ?
 				<>
 					<div className="delete-question-icon-container">
-						<IconButton color="primary" aria-label="Delete" onClick={saveQuestion}>
-							<SaveIcon style={{ fontSize: 30 }}/>
+						<IconButton color="primary" aria-label="Save" onClick={saveQuestion}>
+							<SaveIcon style={{ fontSize: 30 }} />
 						</IconButton>
 						<IconButton color="secondary" aria-label="Delete" onClick={() => setOpenDeleteQuestion(!openDeleteQuestion)}>
-							<DeleteIcon style={{ fontSize: 30 }}/>
+							<DeleteIcon style={{ fontSize: 30 }} />
 						</IconButton>
 					</div>
 

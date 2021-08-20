@@ -19,6 +19,9 @@ import api from '../../../services/api';
 
 // COMPONENTS
 
+//No content to show
+import NoContentToShow from '../../common/NoContentToShow';
+
 // Link
 import { Link } from 'react-router-dom';
 
@@ -354,7 +357,7 @@ export default function ManageTask() {
 										// />
 										:
 										<div>
-											<h3 className="there-is-no-activities">Aún no hay tareas en la actividad</h3>
+											<NoContentToShow messageTitle={'Sin activiades...'} messageDes={'Las actividades agregadas se mostraran aqui'} />
 										</div>
 									}
 								</div>
@@ -373,11 +376,11 @@ export default function ManageTask() {
 					</div>
 					:
 					<Redirect to="/unauthorized" />
-				: 
+				:
 				<div className="spinner-loading">
-				  	<div className="spinner-border" role="status">
+					<div className="spinner-border" role="status">
 						<span className="sr-only">Loading...</span>
-				  	</div>
+					</div>
 				</div>
 			}
 		</div>

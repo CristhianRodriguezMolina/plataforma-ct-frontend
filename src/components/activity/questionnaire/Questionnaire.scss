@@ -1,22 +1,39 @@
-
 .questionnaire-container {
     width: auto;
     margin: 1em auto auto auto;
 
-	.activity-attributes {
-		margin: 0.5em;
+    .activity-attributes {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-gap: 1em;
+        margin-top: 1em;
+        justify-content: center;
 
-		.verified-grid-item {
-			display: flex;
-			justify-content: end;
-			margin: auto 0.5em;
-		}
-	}
+        .difficulty-grid-item {
+            display: flex;
+            align-items: center;
+            grid-column: 1;
+            grid-row: 1;
+
+            label {
+                margin: auto 0.5em;
+            }
+        }
+
+        .verified-grid-item {
+            display: flex;
+            justify-content: center;
+            margin: auto 0.5em;
+            grid-column: 1;
+            grid-row: 2;
+        }
+    }
 
     .questionnaire-body {
         width: auto;
         background-color: rgb(233, 233, 233);
         border-radius: 5px;
+        margin-top: 1.5em;
 
         .create-card-button {
             width: 100%;
@@ -32,24 +49,23 @@
     }
 }
 
-@media only screen and (min-width: 550px) {
-	.questionnaire-container {
+@media only screen and (min-width: 460px) {
+    .questionnaire-container {
+        .activity-attributes {
+            justify-content: space-around;
 
-		.activity-attributes {
-			display: grid;
-			grid-template-columns: auto auto;
-			grid-gap: auto;
+            .difficulty-grid-item {
+                grid-column: 1;
+                grid-row: 1;
+            }
 
-			.difficulty-grid-item {
-				display: flex;
-				align-items: center;
-
-				label {
-					margin: auto 0.5em;
-				}
-			}
-		}
-	}
+            .verified-grid-item {
+                justify-content: end;
+                grid-column: 2;
+                grid-row: 1;
+            }
+        }
+    }
 }
 
 @media only screen and (min-width: 850px) {
@@ -68,7 +84,8 @@
 
         .questionnaire-body {
             margin: 0;
-            padding: 0;
+            margin-top: 1.5em;
+            padding: 3px;
             width: auto;
         }
 

@@ -47,18 +47,18 @@ export const QuestionnaireContext = createContext({
 
 const SortableList = SortableContainer(({ items }) => {
 
-    return (
-        <div>
-            {items.map((value, index) => (
-                <QuestionCard key={`item-${index}`} forStudents={false} index={index} value={value} />
-            ))}
-        </div>
-    );
+	return (
+		<div>
+			{items.map((value, index) => (
+				<QuestionCard key={`item-${index}`} forStudents={false} index={index} value={value} />
+			))}
+		</div>
+	);
 });
 
 const Questionnaire = () => {
 
-    const { activityId } = useParams();
+	const { activityId } = useParams();
 
 	//Store questionnaire data
 	const [questionnaire, setQuestionnaire] = useState(null);
@@ -74,39 +74,39 @@ const Questionnaire = () => {
 
 	const [loading, setLoading] = useState(true);
 
-    const { changeColor } = useContext(UserContext);
+	const { changeColor } = useContext(UserContext);
 
-    // MENSAJES DEL FORMULARIO
-    const [error, setError] = useState(false); //Variable flag de existencia de error
-    const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+	// MENSAJES DEL FORMULARIO
+	const [error, setError] = useState(false); //Variable flag de existencia de error
+	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
 	const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
 	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
-    const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
-    const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
-    useEffect(() => {
-        changeColor('#f8bbd0');
-    });
+	useEffect(() => {
+		changeColor('#f8bbd0');
+	});
 
-    // Funcion para mostrar una alerta de error dado un mensaje
-    const showError = (message) => {
-        setError(true);   //Se cambia el estado de mensaje de error a verdadero
-        setErrorMessage(message); //Se setea el mensaje de error
-        setTimeout(() => { //Dura 2sg en pantalla el mensaje
-            setError(false);
-            setErrorMessage("");
-        }, 2000)
-    };
+	// Funcion para mostrar una alerta de error dado un mensaje
+	const showError = (message) => {
+		setError(true);   //Se cambia el estado de mensaje de error a verdadero
+		setErrorMessage(message); //Se setea el mensaje de error
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setError(false);
+			setErrorMessage("");
+		}, 2000)
+	};
 
-    // Funcion para mostrar una alerta satisfactoria dado un mensaje
-    const showSuccess = (message) => {
-        setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
-        setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
-        setTimeout(() => { //Dura 2sg en pantalla el mensaje
-            setSuccess(false);
-            setSuccessMessage("");
-        }, 2000)
-    }
+	// Funcion para mostrar una alerta satisfactoria dado un mensaje
+	const showSuccess = (message) => {
+		setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setSuccess(false);
+			setSuccessMessage("");
+		}, 2000)
+	}
 
 	const showInfo = (message) => {
 		setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
@@ -183,7 +183,7 @@ const Questionnaire = () => {
 
 	const createCard = () => {
 		if (questionnaire) {
-			api.post(`/api/questionnaire/question/${questionnaire._id}`, { },{
+			api.post(`/api/questionnaire/question/${questionnaire._id}`, {}, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
@@ -237,24 +237,24 @@ const Questionnaire = () => {
 	};
 
 	return (
-		<QuestionnaireContext.Provider value={{questionnaire, setQuestionsList}}>
-            <TitleCard
-                title="Cuestionario"
-                color="#FA61CD"
-                colorFont="#FFF"
-            />
-			
-            {error ?
-                <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
-                : ""
-            }
-            {success ?
-                <Alert className="alert-message" severity="success">{successMessage}</Alert>
-                : ""
-            }
+		<QuestionnaireContext.Provider value={{ questionnaire, setQuestionsList }}>
+			<TitleCard
+				title="Cuestionario"
+				color="#FA61CD"
+				colorFont="#FFF"
+			/>
 
-			{!loading?
-				questionnaire?
+			{error ?
+				<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
+				: ""
+			}
+			{success ?
+				<Alert className="alert-message" severity="success">{successMessage}</Alert>
+				: ""
+			}
+
+			{!loading ?
+				questionnaire ?
 					<div className="questionnaire-container">
 						<div className='questionnaire-info'>
 							<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
@@ -263,7 +263,7 @@ const Questionnaire = () => {
 
 								<div className="difficulty-grid-item">
 									<label>Dificultad:</label>
-									<select className="form-control" style={{width: '10em'}} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
+									<select className="form-control" style={{ width: '10em' }} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
 										<option value="beginner" selected>Principiante</option>
 										<option value="intermediate">Intermedio</option>
 										<option value="advanced">Avanzado</option>
@@ -282,10 +282,10 @@ const Questionnaire = () => {
 						</div>
 
 						<div className="questionnaire-body">
-							<hr style={{visibility: 'hidden'}}/>
-							{questionsList?
+							{/* <hr style={{visibility: 'hidden'}}/> */}
+							{questionsList ?
 								<SortableList distance={1} items={questionsList} onSortEnd={onSortEnd} />
-							:""}
+								: ""}
 							<div className="create-card-button">
 								<IconButton color="primary" aria-label="Create" onClick={createCard}>
 									<AddCircleIcon style={{ fontSize: 40 }} />
@@ -297,12 +297,12 @@ const Questionnaire = () => {
 					</div>
 					:
 					<Redirect to="/unauthorized" />
-			:
+				:
 
 				<div className="spinner-loading">
-				  	<div className="spinner-border" role="status">
+					<div className="spinner-border" role="status">
 						<span className="sr-only">Loading...</span>
-				  	</div>
+					</div>
 				</div>
 			}
 		</QuestionnaireContext.Provider>

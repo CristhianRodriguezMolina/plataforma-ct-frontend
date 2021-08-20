@@ -138,7 +138,7 @@ const CreateActivity = (props) => {
 						</div>
 					</div>
 					<hr />
-					<button className="btn btn-success" type="submit">Crear Actividad</button>
+					<button className="custom-btn custom-btn-success p-2" type="submit">Crear Actividad</button>
 				</form>
 			</div>
 			{
