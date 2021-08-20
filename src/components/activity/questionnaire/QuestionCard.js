@@ -45,6 +45,9 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 // Delete option icon
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
+//Save icon
+import SaveIcon from '@material-ui/icons/Save';
+
 const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 	// MENSAJES DEL FORMULARIO
@@ -67,6 +70,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	// To upload images
 	const [upload, setUpload] = useState(false);
 
+	//Question name
 	const [question, setQuestion] = useState(value.question);
 
 	const [optionsList, setOptionsList] = useState(value.options);
@@ -74,7 +78,6 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	const [selectedOption, setSelectedOption] = useState(null);
 
 	useEffect(() => {
-		console.log('hi')
 		if (upload) {
 			setUpload(false);
 		}
@@ -127,22 +130,24 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	}
 
 	const deleteCard = () => {
-		api.delete(`/api/questionnaire/question/${questionnaire._id}/${value._id}`, {
-			headers: { 'x-access-token': localStorage.getItem('token') }
-		})
-			.then((res) => {
-				showSuccess(res.data.message);
-				setQuestionsList(res.data.updatedQuestionnaire.questions);
+		if(questionnaire) {
+			api.delete(`/api/questionnaire/question/${questionnaire._id}/${value._id}`, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
-			.catch(err => {
-				if (err.response) {
-					showError(err.response.message);
-				}
-				else {
-					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+				.then((res) => {
+					showSuccess(res.data.message);
+					setQuestionsList(res.data.updatedQuestionnaire.questions);
+				})
+				.catch(err => {
+					if (err.response) {
+						showError(err.response.message);
+					}
+					else {
+						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
 
-				}
-			});
+					}
+				});
+		}
 	}
 
 	const createOption = () => {
@@ -152,6 +157,28 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 			})
 				.then((res) => {
 					setOptionsList(res.data.updatedQuestion.options);
+				})
+				.catch(err => {
+					if (err.response) {
+						showError(err.response.data.message);
+					}
+					else {
+						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+					}
+				})
+		}
+	};
+
+	const saveQuestion = () => {
+		if(questionnaire) {
+			api.put(`/api/questionnaire/question/${questionnaire._id}/${value._id}`, {
+				question	
+			}, {
+				headers: { 'x-access-token': localStorage.getItem('token') }
+			})
+				.then((res) => {
+					setQuestionsList(res.data.updatedQuestionnaire.questions);
+					showSuccess(res.data.message);
 				})
 				.catch(err => {
 					if (err.response) {
@@ -197,6 +224,21 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 		setUpload(true);
 	};
 
+	const updateOption = (value, optionId) => {
+		let found = false;
+
+		let auxOptionsList = [...optionsList]; 
+		for(let i = 0; i < auxOptionsList.length && !found; i++) {
+			if(auxOptionsList[i]._id === optionId) {
+				found = true;
+				auxOptionsList[i].option = value;
+			}
+		}
+
+		setOptionsList(auxOptionsList);
+
+	};
+
 	return (
 		<div className='question-card-container'>
 			{success ?
@@ -216,7 +258,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				</IconButton>
 			</div>
 
-			<img className='question-image' src="https://picsum.photos/1000/1000" alt="image" />
+			<img className='question-image' src="https://picsum.photos/100/100" alt="image" />
 
 			{optionsList && optionsList.length > 0 ?
 				optionsList.map((option) => {
@@ -225,7 +267,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						<div className="option-container">
 						<div className="option-info">
 							<div className={`check-option ${option.isCorrect ? 'active': ''}`} />
-								<DynamicInput dynamicInputValue={option.option} dynamicInputStyle={optionInputStyle} sendValue={updateQuestion}></DynamicInput>
+							<DynamicInput dynamicInputValue={option.option} dynamicInputStyle={optionInputStyle} sendValue={(value) => updateOption(value, option._id)}></DynamicInput>
 								<IconButton
 									className="option-info-icon"
 									color="primary"
@@ -263,6 +305,9 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 			{!forStudents ?
 				<>
 					<div className="delete-question-icon-container">
+						<IconButton color="primary" aria-label="Delete" onClick={saveQuestion}>
+							<SaveIcon style={{ fontSize: 30 }}/>
+						</IconButton>
 						<IconButton color="secondary" aria-label="Delete" onClick={() => setOpenDeleteQuestion(!openDeleteQuestion)}>
 							<DeleteIcon style={{ fontSize: 30 }}/>
 						</IconButton>

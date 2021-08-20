@@ -119,17 +119,11 @@ const Questionnaire = () => {
 
 
 	useEffect(() => {
-
-		console.log(questionsList)
-	}, [questionsList])
-
-	useEffect(() => {
 		const fetch = () => {
 			api.get(`/api/questionnaire/${activityId}`, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
-					console.log(res.data)
 					setQuestionnaire(res.data);
 					setQuestionsList(res.data.questions);
 					setActivityName(res.data.activity_id.name);
@@ -150,7 +144,6 @@ const Questionnaire = () => {
 		}
 
 		if (!questionnaire) {
-			console.log('1')
 			fetch();
 		}
 

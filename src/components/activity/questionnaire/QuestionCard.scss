@@ -16,9 +16,11 @@
 	}
 
 	.question-image {
-		width: 80%;
+		min-width: 500px;
+		max-width: 100%;
 		display: block;
 		margin: 0.5em auto;
+		min-height: 300px;
 	}
 
 	.option-container {
