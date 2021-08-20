@@ -107,10 +107,8 @@ export default function CreateUser({ history }) {
 		} catch (error) {
 			if (error.response) {
 				showError(error.response.data.message);
-				console.log(error.response.data.message);
 			} else {
 				showError('Error inesperado en el servidor');
-				console.log(`Ha ocurrido un error: ${error}`);
 			}
 			history.push('/unauthorized');
 		}
@@ -188,10 +186,8 @@ export default function CreateUser({ history }) {
 		} catch (error) {
 			if (error.response) {
 				showError(error.response.data.message);
-				console.log(error.response.data.message);
 			} else {
 				showError('Error inesperado en el servidor');
-				console.log(`Ha ocurrido un error: ${error}`);
 			}
 		}
 		setProcess(false);
@@ -244,7 +240,6 @@ export default function CreateUser({ history }) {
 			}
 		} catch (error) {
 			showError('Error inesperado en el servidor');
-			console.log(`Ha ocurrido un error: ${error}`);
 		}
 		setProcess(false);
 		setProcessMessage('');

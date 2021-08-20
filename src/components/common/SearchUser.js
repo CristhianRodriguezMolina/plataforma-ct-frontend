@@ -51,7 +51,6 @@ export default function SearchUser(props) {
 	// When the students list change only if the students list is different to the filtered list then change the filtered list to the filtered
 	useEffect(() => {
 		if (users !== filteredUsers) {
-			console.log('Is entering here')
 			filterUsers();
 		}
 	}, [users])
@@ -72,11 +71,8 @@ export default function SearchUser(props) {
 
 	const filterUsers = () => {
 		let auxUsers = users;
-		console.log(auxUsers)
 		auxUsers = filterByText(auxUsers);
-		// console.log(auxUsers)
 		auxUsers = filterByGenre(auxUsers);
-		// console.log(auxUsers)
 		auxUsers = filterByAge(auxUsers);
 
 		setFilteredUsers(auxUsers);
@@ -119,7 +115,6 @@ export default function SearchUser(props) {
 			setPage(1); // This line is for, when you clean the search input then put the page in 1
 		}
 		if (ageOne > 0 || ageTwo > 0) {
-			console.log(util.getAge(users[0].birth_date))
 			const auxUsers = users.filter(({ birth_date }) => (
 				util.getAge(birth_date) >= ageOne &&
 				util.getAge(birth_date) <= ageTwo

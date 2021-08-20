@@ -140,7 +140,6 @@ export default function StudentsInformation(props) {
                     // To get the page of the first added student
                     const firstAddedStudentPage = Math.ceil(firstAddedStudentPosition / maxStudents);
 
-                    console.log('queputas hace aqui papi')
                     setPage(firstAddedStudentPage);
 
                     firstAddedStudentPosition = firstAddedStudentPosition - ((firstAddedStudentPage - 1) * maxStudents);
@@ -157,10 +156,8 @@ export default function StudentsInformation(props) {
             }
         } catch (error) {
             if (error.response) {
-                console.log(`Error obteniendo los estudiantes del curso: ${error}`);
                 showError(error.response.data.message);
             } else {
-                console.log(`Error obteniendo los estudiantes del curso: ${error}`);
                 showError(`Error obteniendo los estudiantes del curso`);
             }
         }

@@ -104,10 +104,8 @@ export default function MyCourses({ history }) {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(error.response.data.message);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido obteniendo los cursos ${error}`);
 				showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
 			}
 		}
@@ -152,11 +150,9 @@ export default function MyCourses({ history }) {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(error.response.data.message);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido creando un curso: ${error}`);
-				showError(`Un error ha ocurrido creando un curso: ${error}`);
+				showError("Un error ha ocurrido creando un curso");
 			}
 		}
 		setProcess(false);

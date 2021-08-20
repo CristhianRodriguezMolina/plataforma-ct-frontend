@@ -74,10 +74,8 @@ export default function ClassmatesInformation(props) {
             }
         } catch (error) {
             if (error.response) {
-                console.log(`Error obteniendo los estudiantes del curso: ${error}`);
                 showError(error.response.data.message);
             } else {
-                console.log(`Error obteniendo los estudiantes del curso: ${error}`);
                 showError(`Error obteniendo los estudiantes del curso`);
             }
         }

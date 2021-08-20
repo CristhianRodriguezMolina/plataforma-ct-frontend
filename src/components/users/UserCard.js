@@ -98,10 +98,8 @@ export default function UserCard({ user, setUsers, history, type }) {
 		} catch (error) {
 			if (error.response) {
 				showError(error.response.data.message);
-				console.log(error.response.data.message);
 			} else {
 				showError('Error inesperado en el servidor');
-				console.log(`Ha ocurrido un error en el servidor`);
 			}
 		}
 		// Toggle for the animation of the component

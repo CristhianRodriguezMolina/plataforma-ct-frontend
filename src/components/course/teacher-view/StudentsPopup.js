@@ -150,10 +150,8 @@ export default function StudentsPopup(props) {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(`Un error ha ocurrido obteniendo los estudiantes ${error}`);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido obteniendo los estudiantes ${error}`);
 				showError(`Un error ha ocurrido obteniendo los estudiantes ${error}`);
 			}
 		}
@@ -191,11 +189,9 @@ export default function StudentsPopup(props) {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(`Un error ha ocurrido en el servidor: ${error}`);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido en el servidor: ${error}`);
-				showError(`Un error ha ocurrido en el servidor: ${error}`);
+				showError("Un error ha ocurrido en el servidor");
 			}
 		}
 		setIsAddingStudents(false);

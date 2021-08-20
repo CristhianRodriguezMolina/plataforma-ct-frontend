@@ -248,7 +248,6 @@ export default function Maze() {
 			headers: { 'x-access-token': localStorage.getItem('token') }
 		})
 			.then((res) => {
-				console.log(res.data)
 				setMaze(res.data);
 				verifyStartEnd(res.data); // It verifies if the comming maze have start and/or end
 				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
@@ -393,16 +392,12 @@ export default function Maze() {
 				setCols(e.target[1].value);
 
 				setReformingMaze(true); // Turn the reforming flag to true
-
-				console.log(res.data.maze);
 			}
 		} catch (e) {
 			if (e.response.data) {
 				showError(e.response.data.message);
-				console.log(e.response.data.message);
 			} else {
 				showError('Error inesperado en el servidor');
-				console.log(`Ha ocurrido un error en el servidor`);
 			}
 		}
 
@@ -440,11 +435,9 @@ export default function Maze() {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(error.response.data.message);
 				showError(error.response.data.message);
 			} else {
-				console.log('Un error ha ocurrido actualizando el laberinto');
-				showError(`Un error ha ocurrido actualizando el laberinto: ${error}`);
+				showError("Un error ha ocurrido actualizando el laberinto");
 			}
 		}
 		setProcess(false);
@@ -798,7 +791,6 @@ export default function Maze() {
 			setMaze(prevMaze => {
 				return { ...prevMaze, verified: false }
 			})
-			console.log('Hubo un error en el camino del maze')
 			showError(errorMazeMessage);
 		}
 
@@ -806,7 +798,6 @@ export default function Maze() {
 			setMaze(prevMaze => {
 				return { ...prevMaze, verified: true }
 			})
-			console.log('Felicidades completaste el laberinto')
 			showSuccess('Felicidades completaste el laberinto')
 		}
 
@@ -1065,9 +1056,6 @@ export default function Maze() {
 											</>
 											:
 											<>
-												{
-													console.log('No grid')
-												}
 											</>
 									}
 

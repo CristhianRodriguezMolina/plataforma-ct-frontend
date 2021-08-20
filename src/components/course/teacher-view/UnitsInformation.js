@@ -227,10 +227,8 @@ const UnitsInformation = (props) => {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(`Un error ha ocurrido creando una unidad`);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido creando una unidad`);
 				showError(`Un error ha ocurrido creando una unidad`);
 			}
 		} finally {
@@ -260,10 +258,8 @@ const UnitsInformation = (props) => {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(`Un error ha ocurrido borrando una unidad`);
 				showError(error.response.data.message);
 			} else {
-				console.log(`Un error ha ocurrido borrando una unidad`);
 				showError(`Un error ha ocurrido borrando una unidad`);
 			}
 		} finally {
@@ -313,8 +309,6 @@ const UnitsInformation = (props) => {
 					showError(err.response.data.message);
 				}
 				else {
-					console.log('err');
-					console.log(err);
 					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
 				}
 			});
@@ -412,13 +406,13 @@ const UnitsInformation = (props) => {
 													onDeleteUnit={deleteUnit}
 													onDeleteTask={handleDeleteTask} />
 												:
-
 												students ?
 													<StudentProgress
 														course={props.course}
 														students={students}
 														unit={unit}
-														taskActivities={taskActivities} /> : ""
+														taskActivities={taskActivities} /> :
+														<NoContentToShow messageTitle={'Sin estudiantes...'} messageDes={'El progreso de los estudiantes se mostrara aqui'} />
 										}
 									</TabPanel>
 								))

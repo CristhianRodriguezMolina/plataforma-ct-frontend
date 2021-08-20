@@ -38,7 +38,7 @@ export default function CourseInformation(props) {
             if (error.response) {
                 console.log(error.response.data.message);
             } else {
-                console.log(`Ha ocurrido un error: ${error}`);
+                console.log(`Ha ocurrido un error`);
             }
         }
     }

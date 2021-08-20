@@ -59,8 +59,6 @@ const CreateActivity = (props) => {
 	const handleSubmit = (e) => {
 		e.preventDefault(); //Prevent form reload the webside
 
-		console.log(type)
-
 		//Verifying fields
 		if (name.trim().localeCompare("") !== 0) {
 			//Making API calls

@@ -67,11 +67,8 @@ const Intructions = props => {
     }
 
     useEffect(() => {
-        console.log(instructionsList.length > 0)
         if (instructionsList.length === 0) {
-            console.log(props.maze)
             if (props.maze !== null && props.maze !== undefined) {
-                console.log(props.maze)
                 setInstructionsList(props.maze.instructions);
             } else {
                 setInstructionsList(props.instructions);

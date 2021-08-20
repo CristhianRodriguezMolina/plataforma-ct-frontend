@@ -91,10 +91,8 @@ export default function CourseInformation({ course, setCourse }) {
         } catch (error) {
             if (error.response) {
                 showError(error.response.data.message);
-                console.log(error.response.data.message);
             } else {
                 showError('Error inesperado en el servidor');
-                console.log(`Ha ocurrido un error: ${error}`);
             }
         }
         setInfo(false);
@@ -133,15 +131,12 @@ export default function CourseInformation({ course, setCourse }) {
                     showSuccess(message);
                 }
             } else {
-                console.log(files);
                 showInfo('Selecciona alguna imagen para agregar al curso')
             }
         } catch (error) {
             if (error.response) {
-                console.log(error.response.data.message);
                 showError(error.response.data.message);
             } else {
-                console.log('Error en el servidor');
                 showError('Error en el servidor');
             }
         }

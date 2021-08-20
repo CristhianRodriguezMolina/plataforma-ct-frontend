@@ -167,7 +167,6 @@ export default function MazeStudent(props) {
 	// UseEffect to init the maze activity data or to change the rows and cols
 	useEffect(() => {
 		if (!maze) {
-			console.log(props)
 			setMaze(props.inheritedActivity);
 			setActivityName(props.activity.name); // Activity_id is the activity schema of the maze
 			setActivityDescription(props.activity.description);
@@ -302,12 +301,10 @@ export default function MazeStudent(props) {
 				})
 				.catch((err) => {
 					if (err.response) {
-						console.log(err.response.data.message);
 						showError(err.response.data.message);
 					}
 					else {
-						console.log(`Un error ha ocurrido resolviendo el laberinto: ${error}`);
-						showError(`Un error ha ocurrido resolviendo el laberinto: ${error}`);
+						showError("Un error ha ocurrido resolviendo el laberinto");
 					}
 				});
 		}
@@ -653,7 +650,6 @@ export default function MazeStudent(props) {
 			setMaze(prevMaze => {
 				return { ...prevMaze, verified: false }
 			})
-			console.log('Hubo un error en el camino del maze')
 			showError(errorMazeMessage);
 		}
 
@@ -661,7 +657,6 @@ export default function MazeStudent(props) {
 			setMaze(prevMaze => {
 				return { ...prevMaze, verified: true }
 			})
-			console.log('Felicidades completaste el laberinto')
 			showSuccess('Felicidades completaste el laberinto')
 		}
 
@@ -861,9 +856,6 @@ export default function MazeStudent(props) {
 											</>
 											:
 											<>
-												{
-													console.log('No grid')
-												}
 											</>
 									}
 									{/* CHARACTER */}

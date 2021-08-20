@@ -49,7 +49,6 @@ const StudentProgress = props => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        console.log(props)
         const fetchData = async () => {
             if (!studentActivities) {
                 try {
@@ -66,10 +65,8 @@ const StudentProgress = props => {
                 }
                 catch (e) {
                     if (e.response) {
-                        console.log('e.response.data.message');
                         console.log(e.response.data.message);
                     }
-                    console.log('e');
                     console.log(e);
                 }
                 setIsLoading(false);
@@ -191,7 +188,11 @@ const StudentProgress = props => {
                                                                     {props.students ?
                                                                         props.students.map((student) => {
                                                                             return <tr>
-                                                                                <Tooltip enterDelay={200} enterNextDelay={200} title={`${student.last_name} ${student.first_name}`} aria-label={`${student.last_name} ${student.first_name}`}>
+                                                                                <Tooltip
+																					enterDelay={200}
+																					enterNextDelay={200}
+																					title={`${student.last_name} ${student.first_name}`}
+																					aria-label={`${student.last_name} ${student.first_name}`}>
                                                                                     <td className="student-name-field-td">{student.last_name} {student.first_name}</td>
                                                                                 </Tooltip>
                                                                                 <td className="student-tasks-view-td">

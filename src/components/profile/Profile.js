@@ -134,10 +134,8 @@ export default function Profile(props) {
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(error.response.data.message)
 				showError(error.response.data.message);
 			} else {
-				console.log(error)
 				showError('Error en el servidor');
 			}
 		}
@@ -184,15 +182,12 @@ export default function Profile(props) {
 					history.push(`/profile/${user._id}/${view}`); // Se redirige a la misma pagina en la que se encuentra el usuario para que se actualice la imagen de la navegacion
 				}
 			} else {
-				console.log(files);
 				showInfo('Selecciona alguna imagen')
 			}
 		} catch (error) {
 			if (error.response) {
-				console.log(error.response.data.message);
 				showError(error.response.data.message);
 			} else {
-				console.log('Error en el servidor');
 				showError('Error en el servidor');
 			}
 		}

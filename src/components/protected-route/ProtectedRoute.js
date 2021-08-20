@@ -19,7 +19,6 @@ export default function ProtectedRoute({ component, type, ...options }) {
     if (expire_at) {
         const now = Date.now().valueOf() / 1000;
         if (now > parseInt(expire_at)) {
-            console.log('Expirado protectedRoute')
             sessionExpiredHandler();
             expired = true;
         }

@@ -89,7 +89,6 @@ export default function CourseView({ history }) {
             imageExists(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, (exists) => {
                 if (exists) {
                     average(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, { sample: 10 }).then(color => {
-                        console.log(color); // [241, 221, 63]
                         setColor(color);
                     })
                 }
@@ -114,7 +113,7 @@ export default function CourseView({ history }) {
 
             setCourse(course);
         } catch (error) {
-            console.log(`Ha ocurrido un error: ${error}`)
+            console.log("Ha ocurrido un error")
 
             //En caso de que no se encuentre un curso se redirige a /unauthorized
             if (!course) {

@@ -88,10 +88,8 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
         } catch (error) {
             if (error.response) {
                 showError('Error inesperado en el servidor');
-                console.log(error.response.data.message);
             } else {
                 showError('Error inesperado en el servidor');
-                console.log(`Error inesperado en el servidor`);
             }
         }
         // Toggle for the animation

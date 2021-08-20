@@ -23,7 +23,6 @@ const StudentActivity = (props) => {
 
 		const createStudentActivity = async () => {
 			try {
-				console.log("hi")
 				//Create the student activity
 				const createStudentActivityRes = await api.post("/api/student-activity", {
 					studentId: localStorage.getItem("user_id"),
@@ -59,7 +58,6 @@ const StudentActivity = (props) => {
 			});
 
 			if (!activityRes) {
-				console.log('activity not found');
 				setLoading(false);
 				return;
 			}

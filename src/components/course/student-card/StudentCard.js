@@ -90,7 +90,6 @@ export default function StudentCard(props) {
 
 			// Eliminacion del estudiante de la lista de estudiantes del curso
 			setStudents(prevValues => {
-				console.log(prevValues);
 				// if (prevValues.length === 1) {
 				// 	return null;
 				// }
@@ -99,10 +98,8 @@ export default function StudentCard(props) {
 		} catch (error) {
 			if (error.response) {
 				showError('Error inesperado en el servidor');
-				console.log(error.response.data.message);
 			} else {
 				showError('Error inesperado en el servidor');
-				console.log(`Ha ocurrido un error: ${error}`);
 			}
 		}
 		// Toggle for the animation of the component
