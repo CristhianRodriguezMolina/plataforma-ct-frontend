@@ -46,9 +46,6 @@ const MyActivities = props => {
 	const [range, setRange] = useState(Math.round((window.innerHeight - 330) / 48)); //Number of activities to show depends of windows height
 	const [currentMenu, setCurrentMenu] = useState(false);
 
-	// Variable to see if the info data is loading
-	const [isLoading, setIsLoading] = useState(true);
-
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
 
@@ -72,6 +69,7 @@ const MyActivities = props => {
 		changeColor('#f8bbd0');
 	});
 
+	//Set the range to 1 when it is lower than 0
 	useEffect(() => {
 		if (range <= 0) {
 			setRange(1);
@@ -98,6 +96,7 @@ const MyActivities = props => {
 		}, 2000)
 	}
 
+	//Fetch the activities
 	useEffect(() => {
 		if (!activities) {
 			const fetch = () => {
@@ -122,6 +121,7 @@ const MyActivities = props => {
 		}
 	}, [activities]);
 
+
 	useEffect(() => {
 		if (count !== 0) {
 			setFin(range);
@@ -131,14 +131,29 @@ const MyActivities = props => {
 	useEffect(() => {
 		if (init < fin) {
 			setLoadingCourses(false);
-			if (fin >= count) {
+			if (fin >= filteredActivities.length) {
 				setShowFetchButton(false);
 			}
 		}
 	}, [fin]);	
 
+	//when you filter the activities, it resets the init and fin vars
+	useEffect(() => {
+		if(filteredActivities && count !== 0) {
+			setInit(0);
+			setFin(range);
+			if(filteredActivities.length > range) {
+				setShowFetchButton(true);
+			}
+			else {
+				console.log("nope")
+				setShowFetchButton(false);
+			}
+		}
+	}, [filteredActivities]);
+
 	const loadActivities = () => {
-		if (fin < count) {
+		if (fin < filteredActivities.length) {
 			setInit(init + range);
 			setFin(fin + range);
 			setLoadingCourses(true);
@@ -305,7 +320,7 @@ const MyActivities = props => {
 			}
 
 			{
-				showFetchButton && !loadingCourses ?
+				showFetchButton && !loadingCourses && filteredActivities.length > 0?
 					<button type="button" className="btn btn-light btn-block" onClick={loadActivities}>Cargar más</button>
 					: ""
 			}
