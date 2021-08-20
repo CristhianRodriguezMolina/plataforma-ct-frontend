@@ -76,9 +76,9 @@ const CreateActivity = (props) => {
 					if (type === 'logic_sequence') {
 						props.history.push(`/activity/logic-sequence/${res.data.activity_id}`);
 					} else if (type === 'maze') {
-						props.history.push(`/activity/maze/${res.data.activity_id}`)
+						props.history.push(`/activity/maze/${res.data.activity_id}`);
 					} else if (type === 'questionnaire') {
-
+						props.history.push(`/activity/questionnaire/${res.data.activity_id}`);
 					}
 				})
 				.catch(err => {
@@ -104,8 +104,8 @@ const CreateActivity = (props) => {
 			/>
 
 			<div className="create-activity-container">
-				<h1 className="title">Create new activity</h1>
-				<p>A repository contains all project files, including the revision history. Already have a project repository elsewhere?</p>
+				<h1 className="title">Crear nueva actividad</h1>
+				<p>La actividades dinámicas permiten que los estudiantes aprendan y se diviertan al mismo tiempo.</p>
 				<hr />
 				<form onSubmit={handleSubmit}>
 					<div className="form-group">
@@ -117,7 +117,7 @@ const CreateActivity = (props) => {
 						<textarea className="form-control" type="text" id="description" name="description" onChange={evt => setDescription(evt.target.value)}></textarea>
 					</div>
 					<hr />
-					<h2>Tipo de actividad *</h2>
+					<h2>Tipo de actividad <span style={{ color: "red" }}>*</span></h2>
 					<div className="radio-group d-flex justify-conetent-start align-items-center">
 						<input className="radio-button" type="radio" id="logic_sequence" name="activity" value="logic_sequence" onChange={evt => setType(evt.target.value)} />
 						<div>

@@ -13,12 +13,17 @@ import CardDataPanel from './CardDataPanel';
 import arrayMove from 'array-move';
 
 import { SortableContainer } from 'react-sortable-hoc';
+
+//DynamicInput
 import DynamicInput from '../../common/DynamicInput';
+
+//ICONS
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+
 // Boton de icono
 import IconButton from '@material-ui/core/IconButton';
 
-
+//Material ui 
 // Alert
 import Alert from '@material-ui/lab/Alert';
 import { FormControlLabel, Switch } from '@material-ui/core';
@@ -56,6 +61,7 @@ const LogicSequence = props => {
 
 	const [cardName, setCardName] = useState("");
 
+	//To show a input to insert the name of a new item in the list
 	const [showInpNewCard, setShowInpNewCard] = useState(false);
 
 	const [verified, setVerified] = useState(false);
@@ -118,6 +124,7 @@ const LogicSequence = props => {
 					setActivityName(res.data.activity_id.name);
 					setActivityDescription(res.data.activity_id.description);
 					setVerified(res.data.activity_id.verified);
+					setDifficulty(res.data.activity_id.difficulty);
 					setLoading(false);
 				})
 				.catch(err => {
@@ -165,7 +172,6 @@ const LogicSequence = props => {
 	};
 
 	const saveLogicSequence = () => {
-		console.log(difficulty)
 		if (activityName && activityName.trim().localeCompare("") !== 0) {
 			api.put(`/api/activity/${activityId}`, {
 				activity: {
@@ -240,7 +246,7 @@ const LogicSequence = props => {
 
 	const handleKeyDownInput = (event) => {
 		if (event.key === 'Enter') {
-			createCard()
+			createCard();
 		}
 	};
 
@@ -276,7 +282,7 @@ const LogicSequence = props => {
 
 									<div className="difficulty-grid-item">
 										<label>Dificultad:</label>
-										<select className="form-control" style={{ width: '10em' }} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
+										<select className="form-control" style={{width: '10em'}} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
 											<option value="beginner" selected>Principiante</option>
 											<option value="intermediate">Intermedio</option>
 											<option value="advanced">Avanzado</option>
@@ -294,6 +300,7 @@ const LogicSequence = props => {
 								</div>
 							</div>
 							:
+
 							<div>
 								<h1 style={nameInputStyle} >Description of the logic sequence activity</h1>
 								<p style={desInputStyle} >Name of the logic sequence</p>
@@ -303,14 +310,17 @@ const LogicSequence = props => {
 							<Alert severity="info">{"Cargando tarjetas, por favor espere"}</Alert>
 							: ""
 						}
+
 						<div className="panels">
 							<div className="sequence-cards-container">
 								{sequenceList ?
 									<SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} /> : ""}
+
 								{showInpNewCard ?
 									<input ref={newCardInput} value={cardName} onChange={(e) => setCardName(e.target.value)} className="form-control"
 										placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}>
 									</input> :
+
 									<div className="create-card-button">
 										<IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
 											<AddCircleIcon style={{ fontSize: 40 }} />
@@ -327,7 +337,13 @@ const LogicSequence = props => {
 					</div>
 					:
 					<Redirect to="/unauthorized" />
-				: ""}
+				: 
+				<div className="spinner-loading">
+				  	<div className="spinner-border" role="status">
+						<span className="sr-only">Loading...</span>
+				  	</div>
+				</div>
+			}
 		</LogicSequenceContext.Provider>
 	)
 }

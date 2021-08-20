@@ -46,7 +46,6 @@ export default function SearchUser(props) {
 	// When the students list change only if the students list is different to the filtered list then change the filtered list to the filtered
 	useEffect(() => {
 		if (activities !== filteredActivities) {
-			console.log('Is entering here')
 			filterActivities();
 		}
 	}, [activities])
@@ -60,11 +59,8 @@ export default function SearchUser(props) {
 
 	const filterActivities = () => {
 		let auxActivities = activities;
-		console.log(auxActivities);
 		auxActivities = filterByText(auxActivities);
-		// console.log(auxUsers)
 		auxActivities = filterByType(auxActivities);
-		// console.log(auxUsers)
 		auxActivities = filterByDifficulty(auxActivities);
 
 		setFilteredActivities(auxActivities);
@@ -72,12 +68,10 @@ export default function SearchUser(props) {
 
 	const filterByText = (activities) => {
 		if (searchInput.trim() !== '') {
-			console.log(searchInput, activities);
 			const auxActivities = activities.filter(({ name, description }) => (
 				name.toLowerCase().includes(searchInput.trim().toLowerCase()) ||
 				description.toLowerCase().includes(searchInput.trim().toLowerCase())
 			));
-			console.log(auxActivities)
 			return auxActivities;
 		} else {
 			return activities;
@@ -86,11 +80,9 @@ export default function SearchUser(props) {
 
 	const filterByType = (activities) => {
 		if (filterType !== 'NA') {
-			console.log(filterType, activities)
 			const auxActivities = activities.filter(({ type }) => (
 				type === filterType
 			));
-			console.log(auxActivities)
 			return auxActivities;
 		} else {
 			return activities;
@@ -99,11 +91,9 @@ export default function SearchUser(props) {
 
 	const filterByDifficulty = (activities) => {
 		if (filterDifficulty !== 'NA') {
-			console.log(filterDifficulty, activities)
 			const auxActivities = activities.filter(({ difficulty }) => (
 				difficulty === filterDifficulty
 			));
-			console.log(auxActivities)
 			return auxActivities;
 		} else {
 			return activities;

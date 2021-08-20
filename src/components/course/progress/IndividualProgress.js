@@ -323,6 +323,7 @@ const IndividualProgress = (props) => {
 					:
 					""
 			}
+
 			{individualProgressInfo && individualProgressInfo.student ?
 				<div className='student-info' style={{ backgroundColor: infoStudentBGColor }}>
 					<div className='student-info-card'>
@@ -336,10 +337,12 @@ const IndividualProgress = (props) => {
 					</div>
 				</div>
 				: ""}
+
 			<div className={classes.root}>
 				<AppBar className={classes.bar} position="static">
 					<Typography component="div">
 						<div className="d-flex">
+
 							<Tabs
 								value={value}
 								onChange={handleChange}
@@ -353,6 +356,7 @@ const IndividualProgress = (props) => {
 								aria-label="scrollable force tabs example"
 								className="units-bar"
 							>
+
 								{/* TABS FOR EACH UNIT IN THE COURSE */}
 								{individualProgressInfo ?
 									individualProgressInfo.course.units.map((unit, index) => (
@@ -366,10 +370,12 @@ const IndividualProgress = (props) => {
 							{individualProgressInfo && individualProgressInfo.course.units[0] ? <div className="divider"></div> : ""}
 						</div>
 					</Typography>
+
 					{success ?
 						<Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
 						: ""
 					}
+
 					{error ?
 						<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
 						: ""
@@ -379,11 +385,14 @@ const IndividualProgress = (props) => {
 				{
 					!loading ?
 						individualProgressInfo && individualProgressInfo.course ?
+
 							individualProgressInfo.course.units.length > 0 ?
 								individualProgressInfo.course.units.map((unit, index) => {
+
 									return <TabPanel value={value} key={index} index={index}>
 										{unit.tasks.length > 0 ?
 											unit.tasks.map((task) => {
+
 												return <div className={classes.accordionRoot}>
 													<Accordion>
 														<AccordionSummary
@@ -394,6 +403,7 @@ const IndividualProgress = (props) => {
 
 															<Typography className={classes.accordionHeading}>{task.name}</Typography>
 														</AccordionSummary>
+
 														<AccordionDetails>
 															<Typography component="div" style={{ width: '100%' }}>
 																<div>
@@ -404,6 +414,7 @@ const IndividualProgress = (props) => {
 																		<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Fecha de entrega: </span>Sin fecha de entrega</p>
 																	}
 																	<hr />
+
 																	<table className="student-progress-table-by-tasks">
 																		<thead>
 																			<tr>
@@ -415,11 +426,13 @@ const IndividualProgress = (props) => {
 																				<th className="activity-field-th">Fecha</th>
 																			</tr>
 																		</thead>
+
 																		<tbody>
 																			{renderStudentProgress(task)}
 																		</tbody>
 																	</table>
 																</div>
+
 															</Typography>
 														</AccordionDetails>
 													</Accordion>
@@ -427,6 +440,7 @@ const IndividualProgress = (props) => {
 											}) :
 											<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
 									</TabPanel>
+
 								}) :
 								<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
 							:

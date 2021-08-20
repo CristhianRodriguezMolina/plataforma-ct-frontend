@@ -167,7 +167,7 @@ const LogicSequenceStudent = props => {
     return (
         <>
             <TitleCard
-                title="Actividad 1"
+                title="Actividad de secuencia lógica"
                 color="#FA61CD"
                 colorFont="#FFF"
             />

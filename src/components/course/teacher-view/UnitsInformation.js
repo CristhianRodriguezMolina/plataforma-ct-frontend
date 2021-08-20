@@ -342,6 +342,7 @@ const UnitsInformation = (props) => {
 		<div className={classes.root}>
 			<AppBar className={classes.bar} position="static">
 				<Typography component="div">
+
 					<div className="d-flex">
 						<Tabs
 							value={value}
@@ -365,6 +366,7 @@ const UnitsInformation = (props) => {
 							{props.course.units[0] ? <div className="divider bg-white"></div> : ""}
 						</Tabs>
 						{props.course.units[0] ? <div className="divider"></div> : ""}
+
 						{/* BUTTON TO ADD NEW UNITS */}
 						{!props.progress ?
 							<Button onClick={() => addUnit()} className={classes.selected}><ControlPoint /> Añadir unidad</Button>
@@ -372,28 +374,34 @@ const UnitsInformation = (props) => {
 						}
 					</div>
 				</Typography>
+
 				{success ?
 					<Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
 					: ""
 				}
+
 				{error ?
 					<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
 					: ""
 				}
+
 				{process ?
 					<Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
 					: ""
 				}
 			</AppBar>
+
 			{/* COMPONENTS OF EACH UNIT IN THE COURSE */}
 			{
 				!isLoading ?
 					<>
 						{
+
 							props.course.units.length > 0 ?
 								props.course.units.map((unit, index) => (
 									<TabPanel value={value} key={index} index={index}>
 										{
+
 											!props.progress ?
 												<UnitContent
 													course={props.course}
@@ -404,6 +412,7 @@ const UnitsInformation = (props) => {
 													onDeleteUnit={deleteUnit}
 													onDeleteTask={handleDeleteTask} />
 												:
+
 												students ?
 													<StudentProgress
 														course={props.course}
@@ -417,6 +426,7 @@ const UnitsInformation = (props) => {
 								<NoContentToShow messageTitle={'Sin unidades...'} messageDes={'Agregue una nueva unidad para comenzar'} />
 						}
 					</>
+
 					:
 					<div className="spinner-loading mt-5">
 						<div className="spinner-border" role="status">

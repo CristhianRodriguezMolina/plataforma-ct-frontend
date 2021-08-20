@@ -375,9 +375,9 @@ export default function ManageTask() {
 					<Redirect to="/unauthorized" />
 				: 
 				<div className="spinner-loading">
-				  <div className="spinner-border" role="status">
-					<span className="sr-only">Loading...</span>
-				  </div>
+				  	<div className="spinner-border" role="status">
+						<span className="sr-only">Loading...</span>
+				  	</div>
 				</div>
 			}
 		</div>
