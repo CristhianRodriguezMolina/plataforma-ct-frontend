@@ -75,7 +75,9 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 	const [optionsList, setOptionsList] = useState(value.options);
 
-	const [selectedOption, setSelectedOption] = useState(null);
+	const [selectedOption, setSelectedOption] = useState("");
+
+	const [uploadImgFrom, setUploadImgFrom] = useState("");
 
 	useEffect(() => {
 		if (upload) {
@@ -107,14 +109,14 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	}
 
 	const deleteOption = () => {
-		if(selectedOption) {
+		if(questionnaire && selectedOption !== "") {
 			api.delete(`/api/questionnaire/option/${questionnaire._id}/${value._id}/${selectedOption}`, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
 					showSuccess(res.data.message);
 					setOptionsList(res.data.updatedQuestion.options);
-					setSelectedOption(null);
+					setSelectedOption("");
 				})
 				.catch(err => {
 					if (err.response) {
@@ -124,8 +126,11 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
 
 					}
-					setSelectedOption(null);
+					setSelectedOption("");
 				});
+		}
+		else {
+			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
 		}
 	}
 
@@ -148,6 +153,9 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 					}
 				});
 		}
+		else {
+			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+		}
 	}
 
 	const createOption = () => {
@@ -166,6 +174,9 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
 					}
 				})
+		}
+		else {
+			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
 		}
 	};
 
@@ -189,7 +200,64 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 					}
 				})
 		}
+		else {
+			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+		}
 	};
+
+	const uploadOptionImg = (files) => {
+		if (files.length > 0 && questionnaire && selectedOption !== "") {
+			const formData = new FormData(); //Crea un formulario
+			formData.append('folder', 'questionnaire'); // Folder name to store the images
+			formData.append('image', files[0]); //Añade un nombre al formulario
+			const config = {
+				headers: {
+					'content-type': 'multipart/form-data', //Para aceptar archivos binarios
+					'x-access-token': localStorage.getItem('token')
+				}
+			};
+			//Make api call to upload image
+			api.post(`/api/data/upload-questionnaire-img/option/${questionnaire._id}/${value._id}/${selectedOption}`, formData, config)
+				.then((response) => {
+					setOptionsList(response.data.updatedQuestion.options);
+					setSelectedOption("");
+
+				}).catch((error) => {
+					setSelectedOption("");
+					//Muestra errores durante el proceso
+					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+				});
+		}
+		else {
+			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+		}
+	}
+
+	const uploadQuestonImg = (files) => {
+		if (files.length > 0 && questionnaire) {
+			const formData = new FormData(); //Crea un formulario
+			formData.append('folder', 'questionnaire'); // Folder name to store the images
+			formData.append('image', files[0]); //Añade un nombre al formulario
+			const config = {
+				headers: {
+					'content-type': 'multipart/form-data', //Para aceptar archivos binarios
+					'x-access-token': localStorage.getItem('token')
+				}
+			};
+			//Make api call to upload image
+			api.post(`/api/data/upload-questionnaire-img/question/${questionnaire._id}/${value._id}`, formData, config)
+				.then((response) => {
+					setQuestionsList(response.data.updatedQuestionnaire.questions);
+
+				}).catch((error) => {
+					//Muestra errores durante el proceso
+					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+				});
+		}
+		else {
+			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+		}
+	}
 
 	const updateQuestion = (value) => {
 		setQuestion(value);
@@ -239,6 +307,34 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 	};
 
+	const handleSwitchIsCorrect = (optionId) => {
+		
+		let found = false;
+
+		let auxOptionsList = [...optionsList]; 
+		for(let i = 0; i < auxOptionsList.length && !found; i++) {
+			if(auxOptionsList[i]._id === optionId) {
+				found = true;
+				auxOptionsList[i].isCorrect = !auxOptionsList[i].isCorrect;
+			}
+		}
+
+		setOptionsList(auxOptionsList);
+	};
+
+	const handleUploadImg = (files) => {
+		if(uploadImgFrom === 'question') {
+			uploadQuestonImg(files);
+			setUploadImgFrom("");
+			setOpenUploadImage(false);
+		}
+		else if(uploadImgFrom === 'option') {
+			uploadOptionImg(files);
+			setUploadImgFrom("");
+			setOpenUploadImage(false);
+		}
+	};
+
 	return (
 		<div className='question-card-container'>
 			{success ?
@@ -253,26 +349,35 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 			<div className="question-info">
 				<DynamicInput dynamicInputValue={question} dynamicInputStyle={questionInputStyle} sendValue={updateQuestion}></DynamicInput>
 
-				<IconButton className="question-button-uploader" color="primary" aria-label="Delete" onClick={() => setOpenUploadImage(!openUploadImage)}>
+				<IconButton
+					className="question-button-uploader" 
+					color="primary"
+					aria-label="Delete"
+					onClick={() => {
+						setUploadImgFrom("question");
+						setOpenUploadImage(!openUploadImage);
+					}}>
 					<CropOriginalIcon />
 				</IconButton>
 			</div>
-
-			<img className='question-image' src="https://picsum.photos/100/100" alt="image" />
+			{value.image !== ""?
+				<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${value.image}`} alt="image" />
+				:""}
 
 			{optionsList && optionsList.length > 0 ?
 				optionsList.map((option) => {
 
 					return (
 						<div className="option-container">
-						<div className="option-info">
-							<div className={`check-option ${option.isCorrect ? 'active': ''}`} />
-							<DynamicInput dynamicInputValue={option.option} dynamicInputStyle={optionInputStyle} sendValue={(value) => updateOption(value, option._id)}></DynamicInput>
+							<div className="option-info">
+								<div className={`check-option ${option.isCorrect ? 'active': ''}`} onClick={() => handleSwitchIsCorrect(option._id)} />
+								<DynamicInput dynamicInputValue={option.option} dynamicInputStyle={optionInputStyle} sendValue={(value) => updateOption(value, option._id)} />
 								<IconButton
 									className="option-info-icon"
 									color="primary"
 									aria-label="Delete"
 									onClick={() => {
+										setUploadImgFrom("option");
 										setSelectedOption(option._id);
 										setOpenUploadImage(!openUploadImage);
 									}}>
@@ -290,7 +395,9 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 									<HighlightOffIcon />
 								</IconButton>
 							</div>
-							<img className="option-image" src="https://picsum.photos/100/100" alt="image" />
+							{option.image !== ""?
+								<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="image" />
+								:""}
 
 						</div>
 					)
@@ -347,7 +454,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 					<h1 className='h3 text-white'>Cambiar imagen</h1>
 					<DropzoneUploader
-						onFormSubmit={() => console.log('hi')}
+						onFormSubmit={handleUploadImg}
 						upload={upload}
 						type="image/jpeg, image/png, image/gif"
 						maxFiles="1"

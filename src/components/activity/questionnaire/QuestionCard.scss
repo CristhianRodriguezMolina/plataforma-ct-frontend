@@ -16,8 +16,8 @@
 	}
 
 	.question-image {
-		min-width: 500px;
-		max-width: 100%;
+		min-width: 50%;
+		max-width: 80%;
 		display: block;
 		margin: 0.5em auto;
 		min-height: 300px;
@@ -28,7 +28,8 @@
 
 		.option-info {
 			display: grid;
-			grid-template-columns: 6% 74% 10% 10%;
+			grid-template-columns: 7% 69% 12% 12%;
+			grid-column-gap: 0.2em;
 			
 			.option-info-icon {
 				margin: auto;
@@ -69,7 +70,6 @@
 					
 				}
 
-
 				&:hover {
 					box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 					transition-duration: 0.2s;
@@ -77,6 +77,7 @@
 					border-color: #3429cf;
 
 					&.active::before {
+						transition-duration: 0.2s;
 						background-color: #3429cf;
 					}
 				}
@@ -95,9 +96,12 @@
 		border: none;
 		display: flex;
 		align-items: center;
+		font-size: 0.8em;
+		padding: 0.3em;
 
 		.add-icon {
 			margin-right: 0.2em;
+			font-size: 1.5em;
 		}
 
 		&:hover {
@@ -122,7 +126,12 @@
 
 			.option-info {
 				display: grid;
-				grid-template-columns: 3% 87% 5% 5%;
+				grid-template-columns: 4% 85% 5% 5%;
+
+				.check-option {
+					
+					margin: auto;
+				}
 			}
 		}
 	}
