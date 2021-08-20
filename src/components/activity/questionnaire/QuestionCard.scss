@@ -1,6 +1,6 @@
 .question-card-container {
 	background-color: white;
-	margin: 0.1em 0.18em;
+	margin-bottom: 0.3em;
 	padding: 0.5em;
 	border-radius: 5px;
 
@@ -30,7 +30,7 @@
 			display: grid;
 			grid-template-columns: 7% 69% 12% 12%;
 			grid-column-gap: 0.2em;
-			
+
 			.option-info-icon {
 				margin: auto;
 			}
@@ -67,7 +67,6 @@
 					top: 2px;
 					left: 2px;
 					border-radius: 50%;
-					
 				}
 
 				&:hover {
@@ -111,9 +110,8 @@
 	}
 
 	.delete-question-icon-container {
-
 		display: flex;
-		justify-content: right;
+		justify-content: flex-end;
 		align-items: center;
 	}
 }
@@ -123,13 +121,11 @@
 		padding: 2em;
 
 		.option-container {
-
 			.option-info {
 				display: grid;
 				grid-template-columns: 4% 85% 5% 5%;
 
 				.check-option {
-					
 					margin: auto;
 				}
 			}

@@ -60,6 +60,7 @@ const StudentProgress = props => {
                     }, {
                         headers: { 'x-access-token': localStorage.getItem('token') }
                     });
+                    console.log(response)
                     if (response) {
                         setStudentActivities(response.data.studentActivity);
                     }
@@ -76,6 +77,7 @@ const StudentProgress = props => {
             }
         }
         fetchData();
+        console.log('EFFECT')
     }, [studentActivities]);
 
 
@@ -160,64 +162,68 @@ const StudentProgress = props => {
             {
                 !isLoading ?
                     <>
-                        {props.taskActivities && studentActivities ?
-                            <>
-                                {
-                                    props.unit.tasks.map((task) => {
-                                        return <div className={classes.root}>
-                                            <Accordion>
-                                                <AccordionSummary
-                                                    expandIcon={<ExpandMoreIcon />}
-                                                    aria-controls="panel1a-content"
-                                                    id="panel1a-header"
-                                                >
+                        {
+                            props.taskActivities && studentActivities ?
+                                <>
+                                    {
+                                        props.unit.tasks.length > 0 ?
+                                            props.unit.tasks.map((task) => {
+                                                return <div className={classes.root}>
+                                                    <Accordion>
+                                                        <AccordionSummary
+                                                            expandIcon={<ExpandMoreIcon />}
+                                                            aria-controls="panel1a-content"
+                                                            id="panel1a-header"
+                                                        >
 
-                                                    <Typography className={classes.heading}>{task.name}</Typography>
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                    <Typography component="div" style={{ width: '100%' }}>
-                                                        <div>
-                                                            <table className="student-progress-by-tasks">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th className="name-field-th">Estudiante</th>
-                                                                        <th className="activities-field-th">Actividades</th>
-                                                                        <th className="completed-field-th">Completado</th>
-                                                                    </tr>
-                                                                </thead>
-
-                                                                <tbody>
-
-                                                                    {props.students ?
-                                                                        props.students.map((student) => {
-                                                                            return <tr>
-                                                                                <Tooltip enterDelay={200} enterNextDelay={200} title={`${student.last_name} ${student.first_name}`} aria-label={`${student.last_name} ${student.first_name}`}>
-                                                                                    <td className="student-name-field-td">{student.last_name} {student.first_name}</td>
-                                                                                </Tooltip>
-                                                                                <td className="student-tasks-view-td">
-                                                                                    <div className="student-progress-items-container scrollable">
-                                                                                        {renderStudentProgress(student, task._id)}
-                                                                                    </div>
-                                                                                </td>
-
-                                                                                <td className="completed-field-td">{checkCompletedTask(student, task._id)}</td>
+                                                            <Typography className={classes.heading}>{task.name}</Typography>
+                                                        </AccordionSummary>
+                                                        <AccordionDetails>
+                                                            <Typography component="div" style={{ width: '100%' }}>
+                                                                <div>
+                                                                    <table className="student-progress-by-tasks">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th className="name-field-th">Estudiante</th>
+                                                                                <th className="activities-field-th">Actividades</th>
+                                                                                <th className="completed-field-th">Completado</th>
                                                                             </tr>
-                                                                        })
-                                                                        : ""}
-                                                                </tbody>
-                                                            </table>
+                                                                        </thead>
+
+                                                                        <tbody>
+
+                                                                            {props.students ?
+                                                                                props.students.map((student) => {
+                                                                                    return <tr>
+                                                                                        <Tooltip enterDelay={200} enterNextDelay={200} title={`${student.last_name} ${student.first_name}`} aria-label={`${student.last_name} ${student.first_name}`}>
+                                                                                            <td className="student-name-field-td">{student.last_name} {student.first_name}</td>
+                                                                                        </Tooltip>
+                                                                                        <td className="student-tasks-view-td">
+                                                                                            <div className="student-progress-items-container scrollable">
+                                                                                                {renderStudentProgress(student, task._id)}
+                                                                                            </div>
+                                                                                        </td>
+
+                                                                                        <td className="completed-field-td">{checkCompletedTask(student, task._id)}</td>
+                                                                                    </tr>
+                                                                                })
+                                                                                : ""}
+                                                                        </tbody>
+                                                                    </table>
 
 
-                                                        </div>
-                                                    </Typography>
-                                                </AccordionDetails>
-                                            </Accordion>
-                                        </div>
-                                    })
-                                }
-                            </>
-                            :
-                            <NoContentToShow messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun progreso en esta unidad'} />
+                                                                </div>
+                                                            </Typography>
+                                                        </AccordionDetails>
+                                                    </Accordion>
+                                                </div>
+                                            })
+                                            :
+                                            <NoContentToShow messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun progreso en esta unidad'} />
+                                    }
+                                </>
+                                :
+                                <NoContentToShow messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun progreso en esta unidad'} />
                         }
                     </>
                     :

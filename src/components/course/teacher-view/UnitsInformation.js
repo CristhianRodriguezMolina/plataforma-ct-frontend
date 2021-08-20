@@ -401,7 +401,6 @@ const UnitsInformation = (props) => {
 								props.course.units.map((unit, index) => (
 									<TabPanel value={value} key={index} index={index}>
 										{
-
 											!props.progress ?
 												<UnitContent
 													course={props.course}
@@ -418,7 +417,9 @@ const UnitsInformation = (props) => {
 														course={props.course}
 														students={students}
 														unit={unit}
-														taskActivities={taskActivities} /> : ""
+														taskActivities={taskActivities} />
+													:
+													<NoContentToShow messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun estudiante en el curso para tener progresos'} />
 										}
 									</TabPanel>
 								))

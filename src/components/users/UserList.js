@@ -19,6 +19,8 @@ import { useLocation } from 'react-router-dom';
 import { Pagination } from '@material-ui/lab';
 import SearchUser from '../common/SearchUser';
 
+import NoContentToShow from '../common/NoContentToShow';
+
 export default function UserList({ type }) {
 
 	let location = useLocation();
@@ -188,7 +190,7 @@ export default function UserList({ type }) {
 								}
 							</>
 							:
-							<h3 className="there-is-no-users">No hay {type === "teachers" ? "profesores" : "alumnos"} para mostrar</h3>
+							<NoContentToShow messageTitle={`Sin ${type === "teachers" ? "profesores" : "alumnos"}...`} messageDes={`No hay ${type === "teachers" ? "profesores" : "alumnos"} para mostrar`} />
 						:
 						<div className="spinner-loading" style={{ marginTop: '8em' }}>
 							<div className="spinner-border" role="status">

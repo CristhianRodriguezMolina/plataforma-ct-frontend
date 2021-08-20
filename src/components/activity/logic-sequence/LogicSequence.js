@@ -282,7 +282,7 @@ const LogicSequence = props => {
 
 									<div className="difficulty-grid-item">
 										<label>Dificultad:</label>
-										<select className="form-control" style={{width: '10em'}} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
+										<select className="form-control" style={{ width: '10em' }} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
 											<option value="beginner" selected>Principiante</option>
 											<option value="intermediate">Intermedio</option>
 											<option value="advanced">Avanzado</option>
@@ -312,6 +312,7 @@ const LogicSequence = props => {
 						}
 
 						<div className="panels">
+							{/* CARDS LIST */}
 							<div className="sequence-cards-container">
 								{sequenceList ?
 									<SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} /> : ""}
@@ -328,20 +329,20 @@ const LogicSequence = props => {
 									</div>
 								}
 							</div>
-							<CardDataPanel>
-							</CardDataPanel>
 
+							{/* INFO OF THE SELECTED CARD */}
+							<CardDataPanel />
 						</div>
 						<hr className="hr-bar"></hr>
 						<button className="save-button custom-btn custom-btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
 					</div>
 					:
 					<Redirect to="/unauthorized" />
-				: 
+				:
 				<div className="spinner-loading">
-				  	<div className="spinner-border" role="status">
+					<div className="spinner-border" role="status">
 						<span className="sr-only">Loading...</span>
-				  	</div>
+					</div>
 				</div>
 			}
 		</LogicSequenceContext.Provider>
