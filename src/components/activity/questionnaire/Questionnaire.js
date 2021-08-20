@@ -34,6 +34,9 @@ import DynamicInput from '../../common/DynamicInput';
 
 import { FormControlLabel, Switch } from '@material-ui/core';
 
+// Tip de uso
+import Tooltip from '@material-ui/core/Tooltip';
+
 //ICONS
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
@@ -287,9 +290,11 @@ const Questionnaire = () => {
 								<SortableList distance={1} items={questionsList} onSortEnd={onSortEnd} />
 								: ""}
 							<div className="create-card-button">
-								<IconButton color="primary" aria-label="Create" onClick={createCard}>
-									<AddCircleIcon style={{ fontSize: 40 }} />
-								</IconButton>
+								<Tooltip enterDelay={200} enterNextDelay={200} title="Añadir nueva pregunta" aria-label="add-question">
+									<IconButton color="primary" aria-label="Create" onClick={createCard}>
+										<AddCircleIcon style={{ fontSize: 40 }} />
+									</IconButton>
+								</Tooltip>
 							</div>
 						</div>
 						<hr className="hr-bar"></hr>

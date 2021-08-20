@@ -146,7 +146,6 @@ const MyActivities = props => {
 				setShowFetchButton(true);
 			}
 			else {
-				console.log("nope")
 				setShowFetchButton(false);
 			}
 		}
