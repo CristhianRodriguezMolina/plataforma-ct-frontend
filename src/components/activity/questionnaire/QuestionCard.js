@@ -9,7 +9,7 @@ import api from '../../../services/api';
 
 import { QuestionnaireContext } from './Questionnaire';
 
-import { Modal, Backdrop } from '@material-ui/core';
+import { Modal, Backdrop, Tooltip } from '@material-ui/core';
 
 //COMPONENTS
 
@@ -47,6 +47,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 //Save icon
 import SaveIcon from '@material-ui/icons/Save';
+import { Clear } from '@material-ui/icons';
 
 const QuestionCard = SortableElement(({ value, forStudents }) => {
 
@@ -234,7 +235,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 		}
 	}
 
-	const uploadQuestonImg = (files) => {
+	const uploadQuestionImg = (files) => {
 		if (files.length > 0 && questionnaire) {
 			const formData = new FormData(); //Crea un formulario
 			formData.append('folder', 'questionnaire'); // Folder name to store the images
@@ -257,6 +258,45 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 		}
 		else {
 			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+		}
+	}
+
+	const deleteQuestionImg = async () => {
+		try {
+			const response = await api.delete(`/api/data/delete-questionnaire-img/question/${questionnaire._id}/${value._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
+
+			const questions = response.data.updatedQuestionnaire.questions;
+
+			if (questions) {
+				setQuestionsList(questions);
+				showSuccess('Imagen borrada');
+			}
+		} catch (error) {
+			if (error.response) {
+				showError(error.response.message);
+			} else {
+				showError("Un error ha ocurrido borrando la imagen");
+			}
+		}
+	}
+
+	const deleteOptionImg = async (optionId) => {
+		try {
+			const response = await api.delete(`/api/data/delete-questionnaire-img/option/${questionnaire._id}/${value._id}/${optionId}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
+
+			const options = response.data.updatedQuestion.options;
+
+			if (options) {
+				setOptionsList(options);
+				showSuccess('Imagen borrada');
+			}
+		} catch (error) {
+			console.log(error)
+			if (error.response) {
+				showError(error.response.message);
+			} else {
+				showError("Un error ha ocurrido borrando la imagen");
+			}
 		}
 	}
 
@@ -325,7 +365,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 	const handleUploadImg = (files) => {
 		if (uploadImgFrom === 'question') {
-			uploadQuestonImg(files);
+			uploadQuestionImg(files);
 			setUploadImgFrom("");
 			setOpenUploadImage(false);
 		}
@@ -362,7 +402,18 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				</IconButton>
 			</div>
 			{value.image !== "" ?
-				<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${value.image}`} alt="image" />
+				<div className='d-flex justify-content-center'>
+					<div
+						className='image-container'
+					>
+						<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${value.image}`} alt="Question" />
+						<Tooltip className='delete-img-button' title="Borrar imagen" aria-label="clean_filters">
+							<IconButton onClick={deleteQuestionImg} size="small">
+								<Clear />
+							</IconButton>
+						</Tooltip>
+					</div>
+				</div>
 				: ""}
 
 			{optionsList && optionsList.length > 0 ?
@@ -397,7 +448,18 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 								</IconButton>
 							</div>
 							{option.image !== "" ?
-								<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="image" />
+								<div className='d-flex justify-content-center'>
+									<div
+										className='image-container'
+									>
+										<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="Option" />
+										<Tooltip title="Borrar imagen" aria-label="clean_filters">
+											<IconButton onClick={() => deleteOptionImg(option._id)} className='delete-img-button' size="small">
+												<Clear />
+											</IconButton>
+										</Tooltip>
+									</div>
+								</div>
 								: ""}
 
 						</div>

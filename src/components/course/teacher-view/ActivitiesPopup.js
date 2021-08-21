@@ -97,8 +97,7 @@ export default function ActivitiesPopup(props) {
 
             const { activities, message } = response.data;
 
-            setProcess(false);
-            setProcessMessage("");
+            console.log(activities)
             if (activities) {
                 // Asignacion de los cursos de la base de datos
                 setActivities(activities);
@@ -111,14 +110,14 @@ export default function ActivitiesPopup(props) {
                 showSuccess('No hay actividades para agregar');
             }
         } catch (error) {
-            setProcess(false);
-            setProcessMessage("");
             if (error.response) {
                 showError(error.response.data.message);
             } else {
                 showError(`Un error ha ocurrido obteniendo los estudiantes`);
             }
         }
+        setProcess(false);
+        setProcessMessage("");
         setIsLoading(false);
     };
 
@@ -143,11 +142,11 @@ export default function ActivitiesPopup(props) {
             if (acceptedActivities) {
                 fetchActivities();
 
-                showSuccess(`${acceptedActivities.length} estudiantes agregados al curso`);
-                showError(`${deniedActivities.length} estudiantes denegados al curso`);
+                showSuccess(`${acceptedActivities.length} actividades agregadas a la tarea`);
+                showError(`${deniedActivities.length} actividades denegadas a la tarea`);
             } else {
                 if (deniedActivities) {
-                    showError(`${deniedActivities.length} estudiantes denegados al curso`);
+                    showError(`${deniedActivities.length} actividades denegadas a la tarea`);
                 } else {
                     showError(message);
                 }

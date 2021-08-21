@@ -15,12 +15,33 @@
 		}
 	}
 
-	.question-image {
-		min-width: 50%;
-		max-width: 80%;
-		display: block;
-		margin: 0.5em auto;
-		min-height: 300px;
+	.image-container {
+		position: relative;
+		max-width: 50%;
+		max-height: 200px;
+		width: fit-content;
+		height: fit-content;
+
+		.question-image {
+			max-width: 100%;
+			max-height: 150px;
+			display: block;
+		}
+
+		.delete-img-button {
+			background-color: rgb(228, 228, 228);
+			position: absolute;
+			top: -5px;
+			right: -5px;
+			opacity: 0;
+			transition: all 0.1s ease-in-out;
+		}
+
+		&:hover {
+			.delete-img-button {
+				opacity: 1;
+			}
+		}
 	}
 
 	.option-container {
@@ -83,10 +104,18 @@
 			}
 		}
 
-		.option-image {
-			width: 20%;
-			display: block;
-			margin: 0.5em auto;
+		.image-container {
+			max-width: 50%;
+			max-height: 200px;
+			width: fit-content;
+			height: fit-content;
+
+			.option-image {
+				max-width: 100%;
+				max-height: 200px;
+				display: block;
+				margin: 0.5em auto;
+			}
 		}
 	}
 

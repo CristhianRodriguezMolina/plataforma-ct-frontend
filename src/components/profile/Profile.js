@@ -216,40 +216,6 @@ export default function Profile(props) {
 												<Edit color='action' />
 											</IconButton>
 										</div>
-										<Modal
-											aria-labelledby="transition-modal-title"
-											aria-describedby="transition-modal-description"
-											className='d-flex justify-content-center align-items-center'
-											open={open}
-											onClose={toggle}
-											closeAfterTransition
-											BackdropComponent={Backdrop}
-											BackdropProps={{
-												timeout: 500,
-											}}
-										>
-											{/* <Fade in={open}> */}
-											<div style={{
-												backgroundColor: "#424242",
-												color: "white",
-												borderRadius: "10px",
-												padding: "2em 3em",
-												filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))"
-											}}>
-												<h1 className='h3 text-white'>Cambiar imagen</h1>
-												<DropzoneUploader
-													onFormSubmit={uploadImage}
-													upload={upload}
-													type="image/jpeg, image/png, image/gif"
-													maxFiles="1"
-												/>
-												<div className='d-flex justify-content-end'>
-													<button onClick={handleUpload} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
-													<button onClick={toggle} className='custom-btn p-2'>Cancelar</button>
-												</div>
-											</div>
-											{/* </Fade> */}
-										</Modal>
 									</div>
 									:
 									""
@@ -260,6 +226,40 @@ export default function Profile(props) {
 									</div>
 								</div>
 						}
+						<Modal
+							aria-labelledby="transition-modal-title"
+							aria-describedby="transition-modal-description"
+							className='d-flex justify-content-center align-items-center'
+							open={open}
+							onClose={toggle}
+							closeAfterTransition
+							BackdropComponent={Backdrop}
+							BackdropProps={{
+								timeout: 300,
+							}}
+						>
+							{/* <Fade in={open}> */}
+							<div style={{
+								backgroundColor: "#424242",
+								color: "white",
+								borderRadius: "10px",
+								padding: "2em 3em",
+								filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))"
+							}}>
+								<h1 className='h3 text-white'>Cambiar imagen</h1>
+								<DropzoneUploader
+									onFormSubmit={uploadImage}
+									upload={upload}
+									type="image/jpeg, image/png, image/gif"
+									maxFiles="1"
+								/>
+								<div className='d-flex justify-content-end'>
+									<button onClick={handleUpload} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
+									<button onClick={toggle} className='custom-btn p-2'>Cancelar</button>
+								</div>
+							</div>
+							{/* </Fade> */}
+						</Modal>
 						{
 							user ?
 								<div className='text-center mt-3'>
