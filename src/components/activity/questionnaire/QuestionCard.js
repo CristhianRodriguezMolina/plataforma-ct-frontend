@@ -390,16 +390,18 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 			<div className="question-info">
 				<DynamicInput dynamicInputValue={question} dynamicInputStyle={questionInputStyle} sendValue={updateQuestion}></DynamicInput>
 
-				<IconButton
-					className="question-button-uploader"
-					color="primary"
-					aria-label="Delete"
-					onClick={() => {
-						setUploadImgFrom("question");
-						setOpenUploadImage(!openUploadImage);
-					}}>
-					<CropOriginalIcon />
-				</IconButton>
+				<Tooltip enterDelay={200} enterNextDelay={200} title="Agregar imagen para la pregunta" aria-label="add-question-img">
+					<IconButton
+						className="question-button-uploader"
+						color="primary"
+						aria-label="Delete"
+						onClick={() => {
+							setUploadImgFrom("question");
+							setOpenUploadImage(!openUploadImage);
+						}}>
+						<CropOriginalIcon />
+					</IconButton>
+				</Tooltip>
 			</div>
 			{value.image !== "" ?
 				<div className='d-flex justify-content-center'>
@@ -422,30 +424,36 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 					return (
 						<div className="option-container">
 							<div className="option-info">
-								<div className={`check-option ${option.isCorrect ? 'active' : ''}`} onClick={() => handleSwitchIsCorrect(option._id)} />
+								<Tooltip enterDelay={200} enterNextDelay={200} title="Marcar opción como correcta" aria-label="check-option">
+									<div className={`check-option ${option.isCorrect ? 'active' : ''}`} onClick={() => handleSwitchIsCorrect(option._id)} />
+								</Tooltip>
 								<DynamicInput dynamicInputValue={option.option} dynamicInputStyle={optionInputStyle} sendValue={(value) => updateOption(value, option._id)} />
-								<IconButton
-									className="option-info-icon"
-									color="primary"
-									aria-label="Delete"
-									onClick={() => {
-										setUploadImgFrom("option");
-										setSelectedOption(option._id);
-										setOpenUploadImage(!openUploadImage);
-									}}>
-									<CropOriginalIcon />
-								</IconButton>
+								<Tooltip enterDelay={200} enterNextDelay={200} title="Agregar imagen para la opción" aria-label="add-option-img">
+									<IconButton
+										className="option-info-icon"
+										color="primary"
+										aria-label="Delete"
+										onClick={() => {
+											setUploadImgFrom("option");
+											setSelectedOption(option._id);
+											setOpenUploadImage(!openUploadImage);
+										}}>
+										<CropOriginalIcon />
+									</IconButton>
+								</Tooltip>
 
-								<IconButton
-									className="option-info-icon"
-									color="secondary"
-									aria-label="Delete"
-									onClick={() => {
-										setSelectedOption(option._id);
-										setOpenDeleteOption(!openDeleteOption);
-									}}>
-									<HighlightOffIcon />
-								</IconButton>
+								<Tooltip enterDelay={200} enterNextDelay={200} title="Eliminar opción" aria-label="delete-option">
+									<IconButton
+										className="option-info-icon"
+										color="secondary"
+										aria-label="Delete"
+										onClick={() => {
+											setSelectedOption(option._id);
+											setOpenDeleteOption(!openDeleteOption);
+										}}>
+										<HighlightOffIcon />
+									</IconButton>
+								</Tooltip>
 							</div>
 							{option.image !== "" ?
 								<div className='d-flex justify-content-center'>
@@ -475,12 +483,16 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 			{!forStudents ?
 				<>
 					<div className="delete-question-icon-container">
-						<IconButton color="primary" aria-label="Save" onClick={saveQuestion}>
-							<SaveIcon style={{ fontSize: 30 }} />
-						</IconButton>
-						<IconButton color="secondary" aria-label="Delete" onClick={() => setOpenDeleteQuestion(!openDeleteQuestion)}>
-							<DeleteIcon style={{ fontSize: 30 }} />
-						</IconButton>
+						<Tooltip enterDelay={200} enterNextDelay={200} title="Guardar datos de la pregunta" aria-label="add-question">
+							<IconButton color="primary" aria-label="Save" onClick={saveQuestion}>
+								<SaveIcon style={{ fontSize: 30 }} />
+							</IconButton>
+						</Tooltip>
+						<Tooltip enterDelay={200} enterNextDelay={200} title="Eliminar pregunta" aria-label="delete-question">
+							<IconButton color="secondary" aria-label="Delete" onClick={() => setOpenDeleteQuestion(!openDeleteQuestion)}>
+								<DeleteIcon style={{ fontSize: 30 }} />
+							</IconButton>
+						</Tooltip>
 					</div>
 
 					<AlertModal
