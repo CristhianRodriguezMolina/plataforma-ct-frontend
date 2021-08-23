@@ -42,8 +42,6 @@ export default function MazeStudent(props) {
 
 	//Timer vars
 	const [isActive, setIsActive] = useState(false);
-	const [seconds, setSeconds] = useState('00');
-	const [minutes, setMinutes] = useState('00');
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -291,7 +289,7 @@ export default function MazeStudent(props) {
 	}
 
 	// Update the data of the maze in the DB
-	const handleCompleteActivity = async (grade) => {
+	const handleCompleteActivity = async (grade, minutes, seconds) => {
 		setProcess(true);
 		setProcessMessage('Guardando cambios...');
 
@@ -755,7 +753,6 @@ export default function MazeStudent(props) {
 
 		setTimeout(() => {
 			// Update the maze when executes any instructions
-			//handleCompleteActivity(animationType === 'WIN' ? 5 : 0);
 			setIsActive(false);
 
 			setRobotX(startX);
@@ -765,27 +762,14 @@ export default function MazeStudent(props) {
 			setAnimation(``);
 			setAnimate(false);
 
+			setAnimationType('NO_ANIMATION');
+
 			// When the animation ends then the button to prove the maze and the button to show the robot are activated
 			btnProveMaze.current.disabled = false;
 			btnShowRobot.current.disabled = false;
 		}, 5000)
 
-		setAnimationType('NO_ANIMATION');
 	}
-
-	//Execute the complete actvity when the timer is updated
-	useEffect(() => {
-		if(minutes !== '00' || seconds !== '00') {
-			handleCompleteActivity(animationType === 'WIN' ? 5 : 0);
-		}
-	}, [seconds, minutes]);
-
-
-	//Receive timer date (minutes and seconds)
-	const handleTime = (minutes, seconds) => {
-		setMinutes(minutes);
-		setSeconds(seconds);
-	};
 
 	const cancelAnimation = () => {
 
@@ -831,7 +815,7 @@ export default function MazeStudent(props) {
 							: ""
 					}
 
-					<Timer isActive={isActive} sendTime={handleTime}/>
+					<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(animationType === 'WIN' ? 5 : 0, minutes, seconds)}/>
 
 					<div className="maze-header">
 						<Container maxWidth='md'>

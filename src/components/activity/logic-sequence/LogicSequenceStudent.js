@@ -67,8 +67,6 @@ const LogicSequenceStudent = props => {
 
 	//Timer vars
 	const [isActive, setIsActive] = useState(false);
-	const [seconds, setSeconds] = useState('00');
-	const [minutes, setMinutes] = useState('00');
 
     useEffect(() => {
         changeColor('#f8bbd0');
@@ -112,7 +110,7 @@ const LogicSequenceStudent = props => {
 		}
 	}, [props.activity, props.inheritedActivity, props.studentActivity]);
 
-    const handleCompleteActivity = () => {
+    const handleCompleteActivity = (minutes, seconds) => {
 
         let grade = 0;
         let equals = true;
@@ -172,17 +170,6 @@ const LogicSequenceStudent = props => {
         minHeight: "2.5em"
     };
 
-	useEffect(() => {
-		if(minutes !== '00' || seconds !== '00') {
-			handleCompleteActivity();
-		}
-	}, [seconds, minutes]);
-
-	const handleTime = (minutes, seconds) => {
-		setMinutes(minutes);
-		setSeconds(seconds);
-	};
-
     return (
         <>
             <TitleCard
@@ -200,7 +187,7 @@ const LogicSequenceStudent = props => {
                 : ""
             }
 
-			<Timer isActive={isActive} sendTime={handleTime}/>
+			<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)}/>
 
 			{ logicSequence && studentActivity ?
 
