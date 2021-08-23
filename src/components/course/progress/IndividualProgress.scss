@@ -22,9 +22,21 @@
 .student-progress-table-by-tasks {
 	display: flex;
 	flex-direction: column;
+	overflow-x: scroll;
+
+	th, td, tr {
+		min-width: 5em;
+	}
+
 
 	tr {
 		display: flex;
+	}
+
+	th {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
 	}
 
 	th,

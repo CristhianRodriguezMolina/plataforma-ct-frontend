@@ -28,6 +28,9 @@ import * as util from '../../../util/util';
 
 //COMPONENTS
 
+// Tip de uso
+import Tooltip from '@material-ui/core/Tooltip';
+
 //No Content to show
 import NoContentToShow from '../../common/NoContentToShow';
 
@@ -257,8 +260,14 @@ const IndividualProgress = (props) => {
 
 					items.push(
 						<tr>
-							<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
-							<td className="activity-name-field-td">{tempTaskActivities[i].activity.description}</td>
+							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.name} aria-label="activity-name">
+								<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
+							</Tooltip>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.description} aria-label="activity-description">
+								<td className="activity-name-field-td">{tempTaskActivities[i].activity.description}</td>
+							</Tooltip>
+
 							<td className="completed-field-td">
 								{
 									tempStudentActivity.complete ?
@@ -267,34 +276,79 @@ const IndividualProgress = (props) => {
 										<Cancel className='incompleted-task-icon' />
 								}
 							</td>
-							<td className="grade-field-td">{tempStudentActivity.grade}</td>
-							<td className="completed-field-td">
-								{task.is_due_date ?
-									justInTime === 1 ?
-										'SI'
-										:
-										justInTime === -1 ?
-											'NO'
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title={tempStudentActivity.grade} aria-label="grade">
+								<td className="grade-field-td">{tempStudentActivity.grade}</td>
+							</Tooltip>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} 
+								title={
+									task.is_due_date ?
+										justInTime === 1 ?
+											'SI'
 											:
-											'Sin fecha de entrega'
-									:
-									'Sin fecha de entrega'
-								}
-							</td>
-							<td className="activity-name-field-td">{dateFormat(tempStudentActivity.date, "customDateFormat")}</td>
+											justInTime === -1 ?
+												'NO'
+												:
+												'Sin fecha de entrega'
+										:
+										'Sin fecha de entrega'
+									}
+								aria-label="just-in-time">
+								<td className="completed-field-td">
+									{task.is_due_date ?
+										justInTime === 1 ?
+											'SI'
+											:
+											justInTime === -1 ?
+												'NO'
+												:
+												'Sin fecha de entrega'
+										:
+										'Sin fecha de entrega'
+									}
+								</td>
+							</Tooltip>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title={dateFormat(tempStudentActivity.date, "customDateFormat")} aria-labe="realization-date">
+								<td className="activity-name-field-td">{dateFormat(tempStudentActivity.date, "customDateFormat")}</td>
+							</Tooltip>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title={`${tempStudentActivity.minutes}:${tempStudentActivity.seconds}`} aria-label="realization-time">
+								<td className="activity-name-field-td">{tempStudentActivity.minutes}:{tempStudentActivity.seconds}</td>
+							</Tooltip>
 						</tr>
 					)
 				} else {
 					items.push(
 						<tr>
-							<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
-							<td className="activity-name-field-td">{tempTaskActivities[i].activity.description}</td>
+							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.name} aria-label="activity-name">
+								<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
+							</Tooltip>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.description} aria-label="activity-description">
+								<td className="activity-name-field-td">{tempTaskActivities[i].activity.description}</td>
+							</Tooltip>
+
 							<td className="completed-field-td">
 								<Cancel className='incompleted-task-icon' />
 							</td>
-							<td className="grade-field-td">Aún sin resolver</td>
-							<td className="completed-field-td">Sin fecha de entrega</td>
-							<td className="activity-name-field-td">Sin fecha de entrega</td>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title="Aún sin resolver" aria-label="grade">
+								<td className="grade-field-td">Aún sin resolver</td>
+							</Tooltip>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title="Sin fecha de entrega" aria-label="just-in-time">
+								<td className="completed-field-td">Sin fecha de entrega</td>
+							</Tooltip>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title="Sin fecha de entrega" aria-label="realization-date">
+								<td className="activity-name-field-td">Sin fecha de entrega</td>
+							</Tooltip>
+
+							<Tooltip enterDelay={200} enterNextDelay={200} title="Sin tiempo de realización" aria-label="realization-time">
+								<td className="activity-name-field-td">Sin tiempo de realización</td>
+							</Tooltip>
 						</tr>
 					)
 				}
@@ -329,10 +383,10 @@ const IndividualProgress = (props) => {
 					<div className='student-info-card'>
 						<Avatar className="student-avatar mr-4" src="https://picsum.photos/200/300" />
 						<div>
-							<h2><span style={{ 'color': 'rgb(161, 161, 161)' }}>Estudiante: </span>{individualProgressInfo.student.first_name} {individualProgressInfo.student.last_name}</h2>
-							<h2><span style={{ 'color': 'rgb(161, 161, 161)' }}>Identificación: </span>{individualProgressInfo.student.id}</h2>
-							<h2><span style={{ 'color': 'rgb(161, 161, 161)' }}>Edad: </span>{util.getAge(individualProgressInfo.student.birth_date)} años</h2>
-							<h2><span style={{ 'color': 'rgb(161, 161, 161)' }}>Género: </span>{util.getGenre(individualProgressInfo.student.genre)}</h2>
+							<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Estudiante: </span>{individualProgressInfo.student.first_name} {individualProgressInfo.student.last_name}</h2>
+							<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Identificación: </span>{individualProgressInfo.student.id}</h2>
+							<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Edad: </span>{util.getAge(individualProgressInfo.student.birth_date)} años</h2>
+							<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Género: </span>{util.getGenre(individualProgressInfo.student.genre)}</h2>
 						</div>
 					</div>
 				</div>
@@ -424,6 +478,7 @@ const IndividualProgress = (props) => {
 																				<th className="grade-field-th">Nota</th>
 																				<th className="activity-field-th">Entregado a tiempo</th>
 																				<th className="activity-field-th">Fecha</th>
+																				<th className="activity-field-th">Tiempo</th>
 																			</tr>
 																		</thead>
 

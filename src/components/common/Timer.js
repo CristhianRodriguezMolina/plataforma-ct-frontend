@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 
 const Timer = (props) => {
 	//Timer vars
-	const [second, setSecond] = useState('00');
-	const [minute, setMinute] = useState('00');
+	const [seconds, setSeconds] = useState('00');
+	const [minutes, setMinutes] = useState('00');
 	const [isActive, setIsActive] = useState(false);
 	const [counter, setCounter] = useState(0);
 
 	useEffect(() => {
 
-		if(!props.isActive && (second !== '00' || minute !== '00')) {
-			props.sendTime(minute, second);
-		}
+			if(!props.isActive && (seconds !== '00' || minutes !== '00')) {
+				props.sendTime(minutes, seconds);
+			}
 
 		setIsActive(props.isActive);
 	}, [props.isActive]);
@@ -22,14 +22,14 @@ const Timer = (props) => {
 
 		if (isActive) {
 			intervalId = setInterval(() => {
-				const secondCounter = counter % 60;
-				const minuteCounter = Math.floor(counter / 60);
+				const secondsCounter = counter % 60;
+				const minutesCounter = Math.floor(counter / 60);
 
-				const computedSecond = String(secondCounter).length === 1 ? `0${secondCounter}`: secondCounter;
-				const computedMinute = String(minuteCounter).length === 1 ? `0${minuteCounter}`: minuteCounter;
+				const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}`: secondsCounter;
+				const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}`: minutesCounter;
 
-				setSecond(computedSecond);
-				setMinute(computedMinute);
+				setSeconds(computedSeconds);
+				setMinutes(computedMinutes);
 
 				setCounter(counter => counter + 1);
 			}, 1000);

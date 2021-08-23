@@ -33,10 +33,17 @@ import styled, { css, keyframes } from 'styled-components'
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+import Timer from '../../common/Timer';
+
 export default function MazeStudent(props) {
 
 	// Variables del contexto
 	const { changeColor } = useContext(UserContext);
+
+	//Timer vars
+	const [isActive, setIsActive] = useState(false);
+	const [seconds, setSeconds] = useState('00');
+	const [minutes, setMinutes] = useState('00');
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -171,6 +178,7 @@ export default function MazeStudent(props) {
 			setActivityName(props.activity.name); // Activity_id is the activity schema of the maze
 			setActivityDescription(props.activity.description);
 			setLoading(false); // This it to wait to the component to render completely
+			setIsActive(true);
 		} else {
 			setRows(maze.rows);
 			setCols(maze.cols);
@@ -287,10 +295,13 @@ export default function MazeStudent(props) {
 		setProcess(true);
 		setProcessMessage('Guardando cambios...');
 
+
 		if (props.studentActivity) {
 			api.put(`/api/student-activity/${props.studentActivity._id}`, {
 				complete: true,
-				grade: grade
+				grade: grade,
+				minutes,
+				seconds
 			}, {
 				headers: {
 					'x-access-token': localStorage.getItem('token')
@@ -744,7 +755,8 @@ export default function MazeStudent(props) {
 
 		setTimeout(() => {
 			// Update the maze when executes any instructions
-			handleCompleteActivity(animationType === 'WIN' ? 5 : 0);
+			//handleCompleteActivity(animationType === 'WIN' ? 5 : 0);
+			setIsActive(false);
 
 			setRobotX(startX);
 			setRobotY(startY);
@@ -760,6 +772,20 @@ export default function MazeStudent(props) {
 
 		setAnimationType('NO_ANIMATION');
 	}
+
+	//Execute the complete actvity when the timer is updated
+	useEffect(() => {
+		if(minutes !== '00' || seconds !== '00') {
+			handleCompleteActivity(animationType === 'WIN' ? 5 : 0);
+		}
+	}, [seconds, minutes]);
+
+
+	//Receive timer date (minutes and seconds)
+	const handleTime = (minutes, seconds) => {
+		setMinutes(minutes);
+		setSeconds(seconds);
+	};
 
 	const cancelAnimation = () => {
 
@@ -792,16 +818,21 @@ export default function MazeStudent(props) {
 							<Alert className="alert-message" severity="success">{successMessage}</Alert>
 							: ""
 					}
+
 					{
 						error ?
 							<Alert className="alert-message" severity="error">{errorMessage}</Alert>
 							: ""
 					}
+
 					{
 						process ?
 							<Alert className="alert-message" severity="info">{processMessage}</Alert>
 							: ""
 					}
+
+					<Timer isActive={isActive} sendTime={handleTime}/>
+
 					<div className="maze-header">
 						<Container maxWidth='md'>
 							{/* GENERAL DATA OF THE MAZE */}
@@ -810,6 +841,7 @@ export default function MazeStudent(props) {
 								<p style={desInputStyle} >{activityDescription}</p>
 							</div>
 							<hr />
+
 							<div className='d-flex flex-wrap justify-content-around align-items-center'>
 								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
 								<div className='d-flex flex-column'>
@@ -820,6 +852,7 @@ export default function MazeStudent(props) {
 										<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
 									</div>
 								</div>
+
 								{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
 								<div className='mt-4 d-flex justify-content-center'>
 									<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
@@ -828,9 +861,11 @@ export default function MazeStudent(props) {
 									<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 								</div>
 							</div>
+
 							<hr />
 						</Container>
 					</div>
+
 					<div className='row py-4 w-100 mx-auto'>
 						<div className='col-md-6'>
 							{/* MAZE */}
@@ -839,6 +874,7 @@ export default function MazeStudent(props) {
 									{
 										maze ?
 											<>
+
 												{
 													maze.cells.map(cell => (
 														<Cell
@@ -853,12 +889,14 @@ export default function MazeStudent(props) {
 														</Cell>
 													))
 												}
+
 											</>
 											:
 											<>
 											</>
 									}
 									{/* CHARACTER */}
+
 									{
 										animate &&
 										<Robot
@@ -872,6 +910,7 @@ export default function MazeStudent(props) {
 								</div>
 							</div>
 						</div>
+
 						<div className='col-md-6 mt-md-0 mt-4'>
 							{
 								maze ?
@@ -879,6 +918,7 @@ export default function MazeStudent(props) {
 									: ''
 							}
 						</div>
+
 					</div>
 				</>
 				: ''

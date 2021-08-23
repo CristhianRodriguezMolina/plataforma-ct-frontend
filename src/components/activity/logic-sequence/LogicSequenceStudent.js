@@ -67,8 +67,8 @@ const LogicSequenceStudent = props => {
 
 	//Timer vars
 	const [isActive, setIsActive] = useState(false);
-	const [second, setSecond] = useState('00');
-	const [minute, setMinute] = useState('00');
+	const [seconds, setSeconds] = useState('00');
+	const [minutes, setMinutes] = useState('00');
 
     useEffect(() => {
         changeColor('#f8bbd0');
@@ -114,7 +114,6 @@ const LogicSequenceStudent = props => {
 
     const handleCompleteActivity = () => {
 
-		setIsActive(false);
         let grade = 0;
         let equals = true;
         for (let i = 0; i < orderedSequenceList.length && equals; i++) {
@@ -130,7 +129,9 @@ const LogicSequenceStudent = props => {
         if (studentActivity) {
             api.put(`/api/student-activity/${studentActivity._id}`, {
                 complete: true,
-                grade: grade
+                grade,
+				minutes,
+				seconds
             }, {
                 headers: {
                     'x-access-token': localStorage.getItem('token')
@@ -172,14 +173,14 @@ const LogicSequenceStudent = props => {
     };
 
 	useEffect(() => {
-		if(minute !== '00' || second !== '00') {
+		if(minutes !== '00' || seconds !== '00') {
 			handleCompleteActivity();
 		}
-	}, [second, minute]);
+	}, [seconds, minutes]);
 
-	const handleTime = (minute, second) => {
-		setMinute(minute);
-		setSecond(second);
+	const handleTime = (minutes, seconds) => {
+		setMinutes(minutes);
+		setSeconds(seconds);
 	};
 
     return (
