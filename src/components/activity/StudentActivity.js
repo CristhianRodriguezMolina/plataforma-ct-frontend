@@ -7,6 +7,7 @@ import api from '../../services/api';
 //Components
 import LogicSequenceStudent from './logic-sequence/LogicSequenceStudent';
 import MazeStudent from './maze/MazeStudent';
+import QuestionnaireStudent from './questionnaire/QuestionnaireStudent';
 
 
 const StudentActivity = (props) => {
@@ -101,16 +102,19 @@ const StudentActivity = (props) => {
 		else {
 
 			if (view === 'teacher') {
+				console.log(props.history)
+
 				if (activity.type === 'logic_sequence') {
 					//Redirect to maze view for teachers or admins
-					props.history.push(`/activity/logic-sequence/${activityId}`);
+					props.history.replace(`/activity/logic-sequence/${activityId}`);
 				}
 				else if (activity.type === 'maze') {
 					//Redirect to maze view for teachers or admins
-					props.history.push(`/activity/maze/${activityId}`);
+					props.history.replace(`/activity/maze/${activityId}`);
 				}
 				else if (activity.type === 'questionnaire') {
 					//Redirect to questionnaire view for teacher or admins
+					props.history.replace(`/activity/questionnaire/${activityId}`);
 				}
 			}
 		}
@@ -125,7 +129,7 @@ const StudentActivity = (props) => {
 
 					view === 'student' ?
 
-						activity && inheritedActivity?
+						activity && inheritedActivity ?
 
 							activity.type === 'logic_sequence' ?
 
@@ -135,7 +139,10 @@ const StudentActivity = (props) => {
 
 									<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 									:
-									<Redirect to='/unauthorized' />
+									activity.type === 'questionnaire' ?
+										<QuestionnaireStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+										:
+										<Redirect to='/unauthorized' />
 
 							:
 							<Redirect to='/unauthorized' />

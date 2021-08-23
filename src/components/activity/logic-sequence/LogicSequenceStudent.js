@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import arrayMove from 'array-move';
 import api from '../../../services/api';
-import { useParams, Redirect } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import shuffleArray from 'shuffle-array';
 
 // CONTEXT
@@ -10,6 +10,8 @@ import UserContext from '../../../context/user/UserContext';
 //SCSS
 import './LogicSequenceStudent.scss';
 
+// Util methods
+import * as util from '../../../util/util';
 
 //COMPONENTS
 
@@ -24,9 +26,6 @@ import TitleCard from '../../common/TitleCard';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
-
-
-
 
 const SortableList = SortableContainer(({ items }) => {
 
@@ -96,15 +95,15 @@ const LogicSequenceStudent = props => {
         setSequenceList(arrayCopy);
     };
 
-	useEffect(() => {
-		if(props.activity && props.inheritedActivity && props.studentActivity) {
-			setLogicSequence(props.inheritedActivity);
-			setOrderedSequenceList(props.inheritedActivity.sequence_cards);
-			setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
-			setActivity(props.activity);
-			setStudentActivity(props.studentActivity);
-		}
-	}, [props.activity, props.inheritedActivity, props.studentActivity]);
+    useEffect(() => {
+        if (props.activity && props.inheritedActivity && props.studentActivity) {
+            setLogicSequence(props.inheritedActivity);
+            setOrderedSequenceList(props.inheritedActivity.sequence_cards);
+            setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
+            setActivity(props.activity);
+            setStudentActivity(props.studentActivity);
+        }
+    }, [props.activity, props.inheritedActivity, props.studentActivity]);
 
     const handleCompleteActivity = () => {
 
@@ -179,24 +178,29 @@ const LogicSequenceStudent = props => {
                 <Alert className="alert-message" severity="success">{successMessage}</Alert>
                 : ""
             }
-			{ logicSequence && studentActivity ?
-				<div className="logic-sequence-student-container">
-					<div>
-						<h1 style={nameInputStyle} >{activity.name}</h1>
-						<p style={desInputStyle} >{activity.description}</p>
-					</div>
-					<hr className="hr-bar"></hr>
-					<div className="panels">
-						<div className="sequence-cards-container">
-							{sequenceList ?
-								<SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
-						</div>
-					</div>
-					<hr className="hr-bar"></hr>
-					<button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
+            {logicSequence && studentActivity ?
+                <div className="logic-sequence-student-container">
+                    <div>
+                        <h1 style={nameInputStyle} >{activity.name}</h1>
+                        <p style={desInputStyle} >{activity.description}</p>
+                        <div className='activity-attributes'>
+                            <div className="difficulty-grid-item">
+                                <p><b>Dificultad:</b> {util.getDifficulty(activity.difficulty)}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr className="hr-bar"></hr>
+                    <div className="panels">
+                        <div className="sequence-cards-container">
+                            {sequenceList ?
+                                <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
+                        </div>
+                    </div>
+                    <hr className="hr-bar"></hr>
+                    <button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
 
-				</div>
-			: ''}
+                </div>
+                : ''}
         </>
     )
 };

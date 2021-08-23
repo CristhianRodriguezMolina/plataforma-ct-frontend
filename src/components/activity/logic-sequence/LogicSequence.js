@@ -1,6 +1,8 @@
-import React, { createContext, useEffect, useState, useRef } from 'react';
+import React, { createContext, useEffect, useState, useRef, useContext } from 'react';
 import { useParams, Redirect } from "react-router-dom";
 
+// CONTEXT
+import UserContext from '../../../context/user/UserContext';
 
 import './LogicSequence.scss';
 import '../../common/alert-message.scss';
@@ -51,6 +53,9 @@ const SortableList = SortableContainer(({ items }) => {
 
 const LogicSequence = props => {
 
+	// Variables del contexto
+	const { changeColor } = useContext(UserContext);
+
 	const [sequenceList, setSequenceList] = useState(null);
 	const [logicSequence, setLogicSequence] = useState(null);
 	const [selectedCard, setSelectedCard] = useState(null);
@@ -83,6 +88,10 @@ const LogicSequence = props => {
 
 	const [loading, setLoading] = useState(true);
 
+	// UseEffect para cambiar el color de la barra de navegación
+	useEffect(() => {
+		changeColor('#f8bbd0');
+	});
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {

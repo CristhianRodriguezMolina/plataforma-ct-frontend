@@ -1,4 +1,4 @@
-import React, { useContext, Suspense } from 'react';
+import React, { Suspense } from 'react';
 
 // SCSS
 import './App.scss';
@@ -19,9 +19,6 @@ import 'popper.js/dist/popper';
 import UserState from './context/user/UserState';
 
 // ARCHIVES -----------------------------------------------------------
-
-// Theme config
-import theme from './themeConfig';
 
 // Ruta protegida
 import ProtectedRoute from './components/protected-route/ProtectedRoute';
@@ -70,24 +67,18 @@ const Profile = React.lazy(() => import('./components/profile/Profile'));
 const Error404 = React.lazy(() => import('./components/error/Error404'));
 
 //ACTIVITY COMPONENTS
- 
+
 // My activities
 const MyActivities = React.lazy(() => import('./components/activity/MyActivities'));
 
 // Maze (create maze view)
 const Maze = React.lazy(() => import('./components/activity/maze/Maze'));
 
-// Maze student view
-const MazeStudent = React.lazy(() => import('./components/activity/maze/MazeStudent'));
-
 // Logic sequence (create logic sequence view)
 const LogicSequence = React.lazy(() => import('./components/activity/logic-sequence/LogicSequence'));
 
 //Questionnaire (create questionnaire view)
 const Questionnaire = React.lazy(() => import('./components/activity/questionnaire/Questionnaire'));
-
-//Questionnaire (student view)
-//const QuestionnaireStudent = React.lazy(() => import('./components/activity/questionnaire/QuestionnaireStudent'));
 
 //Logic sequence (student view)
 const StudentActivity = React.lazy(() => import('./components/activity/StudentActivity'));
@@ -128,7 +119,7 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
                 <ProtectedRoute type="admin, teacher" path='/activity/maze/:activityId' exact component={Maze} />
                 <ProtectedRoute type="admin, teacher" path='/activity/questionnaire/:activityId' exact component={Questionnaire} />
-                <ProtectedRoute type="admin, teacher" path='/activity/maze/student/:activityId' exact component={MazeStudent} />
+                {/* <ProtectedRoute type="admin, teacher" path='/activity/questionnaire/student/:activityId' exact component={MazeStudent} /> */}
 
                 {/* PROFILE */}
                 <ProtectedRoute path='/profile/:userId/:view' exact component={Profile} />

@@ -1,6 +1,8 @@
 .question-card-container {
 	background-color: white;
 	margin-bottom: 0.3em;
+	margin-left: 0.8em;
+	margin-right: 0.8em;
 	padding: 0.5em;
 	border-radius: 5px;
 
@@ -17,7 +19,8 @@
 
 	.image-container {
 		position: relative;
-		max-width: 50%;
+		max-width: 100%;
+		min-width: fit-content;
 		max-height: 200px;
 		width: fit-content;
 		height: fit-content;
@@ -25,7 +28,10 @@
 		.question-image {
 			max-width: 100%;
 			max-height: 150px;
+			min-height: 150px;
 			display: block;
+			margin-left: auto;
+			margin-right: auto;
 		}
 
 		.delete-img-button-mobile {
@@ -126,6 +132,23 @@
 		}
 	}
 
+	.option-container-student {
+		-webkit-box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2);
+		box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2);
+		cursor: pointer;
+		margin: 0.5em auto 0.5em auto;
+		padding-bottom: 0.2em;
+		border-radius: 10px;
+		box-sizing: border-box;
+		transition-duration: 0.2s;
+
+		&:hover {
+			transform: scale(1.05);
+			-webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+			box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+		}
+	}
+
 	.add-option-btn {
 		background-color: white;
 		border: none;
@@ -154,6 +177,8 @@
 
 @media only screen and (min-width: 800px) {
 	.question-card-container {
+		margin-left: 0;
+		margin-right: 0;
 		padding: 2em;
 
 		.option-container {
