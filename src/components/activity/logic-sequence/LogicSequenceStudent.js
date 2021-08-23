@@ -27,13 +27,10 @@ import TitleCard from '../../common/TitleCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
-<<<<<<< HEAD
 //Timer
 import Timer from '../../common/Timer';
 
 
-=======
->>>>>>> 71fe4e63792ca22ebd46457161e4d8fbae5fb820
 const SortableList = SortableContainer(({ items }) => {
 
     return (
@@ -191,58 +188,32 @@ const LogicSequenceStudent = props => {
                 <Alert className="alert-message" severity="success">{successMessage}</Alert>
                 : ""
             }
-<<<<<<< HEAD
 
-<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
+            <Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
 
-{
-    logicSequence && studentActivity ?
+            {
+                logicSequence && studentActivity ?
 
-    <div className="logic-sequence-student-container">
-        <div>
-            <h1 style={nameInputStyle} >{activity.name}</h1>
-            <p style={desInputStyle} >{activity.description}</p>
-        </div>
-        <hr className="hr-bar"></hr>
+                    <div className="logic-sequence-student-container">
+                        <div>
+                            <h1 style={nameInputStyle} >{activity.name}</h1>
+                            <p style={desInputStyle} >{activity.description}</p>
+                        </div>
+                        <hr className="hr-bar"></hr>
 
-        <div className="panels">
-            <div className="sequence-cards-container">
-                {sequenceList ?
-                    <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
-            </div>
-        </div>
-
-        <hr className="hr-bar"></hr>
-        <button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
-
-    </div>
-    : ''
-}
-=======
-            {logicSequence && studentActivity ?
-                <div className="logic-sequence-student-container">
-                    <div>
-                        <h1 style={nameInputStyle} >{activity.name}</h1>
-                        <p style={desInputStyle} >{activity.description}</p>
-                        <div className='activity-attributes'>
-                            <div className="difficulty-grid-item">
-                                <p><b>Dificultad:</b> {util.getDifficulty(activity.difficulty)}</p>
+                        <div className="panels">
+                            <div className="sequence-cards-container">
+                                {sequenceList ?
+                                    <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
                             </div>
                         </div>
-                    </div>
-                    <hr className="hr-bar"></hr>
-                    <div className="panels">
-                        <div className="sequence-cards-container">
-                            {sequenceList ?
-                                <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
-                        </div>
-                    </div>
-                    <hr className="hr-bar"></hr>
-                    <button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
 
-                </div>
-                : ''}
->>>>>>> 71fe4e63792ca22ebd46457161e4d8fbae5fb820
+                        <hr className="hr-bar"></hr>
+                        <button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
+
+                    </div>
+                    : ''
+            }
         </>
     )
 };
