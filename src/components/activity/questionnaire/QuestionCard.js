@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 
 //SCSS
 import './QuestionCard.scss';
@@ -79,6 +79,9 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	const [selectedOption, setSelectedOption] = useState("");
 
 	const [uploadImgFrom, setUploadImgFrom] = useState("");
+
+	const deleteOptionImgButtonRef = useRef(null);
+	const deleteQuestionImgButtonRef = useRef(null);
 
 	useEffect(() => {
 		if (upload) {
@@ -409,7 +412,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						className='image-container'
 					>
 						<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${value.image}`} alt="Question" />
-						<Tooltip className='delete-img-button' title="Borrar imagen" aria-label="clean_filters">
+						<Tooltip className={'ontouchstart' in window || navigator.msMaxTouchPoints ? 'delete-img-button-mobile' : 'delete-img-button'} title="Borrar imagen" aria-label="clean_filters">
 							<IconButton onClick={deleteQuestionImg} size="small">
 								<Clear />
 							</IconButton>
@@ -461,8 +464,8 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 										className='image-container'
 									>
 										<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="Option" />
-										<Tooltip title="Borrar imagen" aria-label="clean_filters">
-											<IconButton onClick={() => deleteOptionImg(option._id)} className='delete-img-button' size="small">
+										<Tooltip title="Borrar imagen" className={'ontouchstart' in window || navigator.msMaxTouchPoints ? 'delete-img-button-mobile' : 'delete-img-button'} aria-label="clean_filters">
+											<IconButton onClick={() => deleteOptionImg(option._id)} size="small">
 												<Clear />
 											</IconButton>
 										</Tooltip>

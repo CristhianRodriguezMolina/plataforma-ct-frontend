@@ -136,6 +136,7 @@ export default function ActivitiesPopup(props) {
             setIsAddingActivities(true); // This flag activate the fetch users in the StudentsInformation view
             const { acceptedActivities, deniedActivities, message } = response.data;
 
+            console.log(acceptedActivities)
 
             setProcess(false);
             setProcessMessage("");
