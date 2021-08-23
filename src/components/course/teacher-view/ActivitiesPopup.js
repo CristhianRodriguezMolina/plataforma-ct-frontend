@@ -97,7 +97,7 @@ export default function ActivitiesPopup(props) {
 
             const { activities, message } = response.data;
 
-            console.log(activities)
+
             if (activities) {
                 // Asignacion de los cursos de la base de datos
                 setActivities(activities);

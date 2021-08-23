@@ -25,7 +25,8 @@ import TitleCard from '../../common/TitleCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
-
+//Timer
+import Timer from '../../common/Timer';
 
 
 const SortableList = SortableContainer(({ items }) => {
@@ -64,6 +65,10 @@ const LogicSequenceStudent = props => {
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+	//Timer vars
+	const [isActive, setIsActive] = useState(false);
+	const [second, setSecond] = useState('00');
+	const [minute, setMinute] = useState('00');
 
     useEffect(() => {
         changeColor('#f8bbd0');
@@ -103,11 +108,13 @@ const LogicSequenceStudent = props => {
 			setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
 			setActivity(props.activity);
 			setStudentActivity(props.studentActivity);
+			setIsActive(true);
 		}
 	}, [props.activity, props.inheritedActivity, props.studentActivity]);
 
     const handleCompleteActivity = () => {
 
+		setIsActive(false);
         let grade = 0;
         let equals = true;
         for (let i = 0; i < orderedSequenceList.length && equals; i++) {
@@ -164,6 +171,17 @@ const LogicSequenceStudent = props => {
         minHeight: "2.5em"
     };
 
+	useEffect(() => {
+		if(minute !== '00' || second !== '00') {
+			handleCompleteActivity();
+		}
+	}, [second, minute]);
+
+	const handleTime = (minute, second) => {
+		setMinute(minute);
+		setSecond(second);
+	};
+
     return (
         <>
             <TitleCard
@@ -175,25 +193,32 @@ const LogicSequenceStudent = props => {
                 <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
                 : ""
             }
+
             {success ?
                 <Alert className="alert-message" severity="success">{successMessage}</Alert>
                 : ""
             }
+
+			<Timer isActive={isActive} sendTime={handleTime}/>
+
 			{ logicSequence && studentActivity ?
+
 				<div className="logic-sequence-student-container">
 					<div>
 						<h1 style={nameInputStyle} >{activity.name}</h1>
 						<p style={desInputStyle} >{activity.description}</p>
 					</div>
 					<hr className="hr-bar"></hr>
+
 					<div className="panels">
 						<div className="sequence-cards-container">
 							{sequenceList ?
 								<SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
 						</div>
 					</div>
+
 					<hr className="hr-bar"></hr>
-					<button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
+					<button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
 
 				</div>
 			: ''}

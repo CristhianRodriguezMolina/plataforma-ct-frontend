@@ -83,7 +83,6 @@ const LogicSequence = props => {
 
 	const [loading, setLoading] = useState(true);
 
-
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
 		setError(true);   //Se cambia el estado de mensaje de error a verdadero
