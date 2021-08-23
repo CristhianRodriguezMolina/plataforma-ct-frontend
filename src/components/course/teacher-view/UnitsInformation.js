@@ -347,7 +347,7 @@ const UnitsInformation = (props) => {
 								indicator: classes.indicator,
 								textColor: classes.textColor
 							}}
-							textColor="inherit"
+							// textColor="inherit"
 							aria-label="scrollable force tabs example"
 							className="units-bar"
 						>
@@ -411,7 +411,7 @@ const UnitsInformation = (props) => {
 														students={students}
 														unit={unit}
 														taskActivities={taskActivities} /> :
-														<NoContentToShow messageTitle={'Sin estudiantes...'} messageDes={'El progreso de los estudiantes se mostrara aqui'} />
+													<NoContentToShow messageTitle={'Sin estudiantes...'} messageDes={'El progreso de los estudiantes se mostrara aqui'} />
 										}
 									</TabPanel>
 								))

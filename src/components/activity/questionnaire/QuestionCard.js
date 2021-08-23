@@ -80,9 +80,6 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 	const [uploadImgFrom, setUploadImgFrom] = useState("");
 
-	const deleteOptionImgButtonRef = useRef(null);
-	const deleteQuestionImgButtonRef = useRef(null);
-
 	useEffect(() => {
 		if (upload) {
 			setUpload(false);
@@ -348,7 +345,6 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 		}
 
 		setOptionsList(auxOptionsList);
-
 	};
 
 	const handleSwitchIsCorrect = (optionId) => {

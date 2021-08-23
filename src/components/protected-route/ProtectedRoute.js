@@ -12,7 +12,7 @@ import { Route, Redirect } from 'react-router';
 
 export default function ProtectedRoute({ component, type, ...options }) {
 
-    const { isLoggedIn, isAdmin, isTeacher, isStudent, isSessionExpired, sessionExpiredHandler } = useContext(UserContext);
+    const { isLoggedIn, isAdmin, isTeacher, isStudent, sessionExpiredHandler } = useContext(UserContext);
 
     const expire_at = localStorage.getItem('expire_at');
     var expired = false;
@@ -41,6 +41,7 @@ export default function ProtectedRoute({ component, type, ...options }) {
             <Route {...options} component={component} />
         )
     } else {
+        console.log(isLoggedIn)
         if (expired) {
             return (
                 <Redirect to="/session-expired" />
@@ -51,7 +52,7 @@ export default function ProtectedRoute({ component, type, ...options }) {
             )
         } else {
             return (
-                <Redirect to='/' />
+                <Redirect to='/unauthorized' />
             )
         }
     }

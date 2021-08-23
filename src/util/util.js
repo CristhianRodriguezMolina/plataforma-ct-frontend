@@ -60,6 +60,17 @@ export const getGenre = (genre) => {
     return 'Error obteniendo el genero'
 }
 
+export const getDifficulty = (difficulty) => {
+    if (difficulty === 'beginner') {
+        return 'Principiante'
+    } else if (difficulty === 'intermediate') {
+        return 'Intermedio'
+    } else if (difficulty === 'advanced') {
+        return 'Avanzado'
+    }
+    return 'Error obteniendo la dificultad'
+}
+
 export const getSpanishDate = (date) => {
     const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
     const auxDate = new Date(dateFormat(new Date(date), "GMT:yyyy/mm/dd")) // Se ponen slashes para que javascript lo detecte como una fecha con zona horaria local
