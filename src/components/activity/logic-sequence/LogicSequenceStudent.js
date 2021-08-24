@@ -191,13 +191,16 @@ const LogicSequenceStudent = props => {
 
             <Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
 
-            {
-                logicSequence && studentActivity ?
+            {logicSequence && studentActivity ?
 
-                    <div className="logic-sequence-student-container">
-                        <div>
-                            <h1 style={nameInputStyle} >{activity.name}</h1>
-                            <p style={desInputStyle} >{activity.description}</p>
+                <div className="logic-sequence-student-container">
+                    <div>
+                        <h1 style={nameInputStyle} >{activity.name}</h1>
+                        <p style={desInputStyle} >{activity.description}</p>
+                        <div className='activity-attributes'>
+                            <div className="difficulty-grid-item">
+                                <p><b>Dificultad:</b> {util.getDifficulty(activity.difficulty)}</p>
+                            </div>
                         </div>
                         <hr className="hr-bar"></hr>
 
@@ -207,13 +210,13 @@ const LogicSequenceStudent = props => {
                                     <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
                             </div>
                         </div>
-
-                        <hr className="hr-bar"></hr>
-                        <button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
-
                     </div>
-                    : ''
-            }
+
+                    <hr className="hr-bar"></hr>
+                    <button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
+
+                </div>
+                : ''}
         </>
     )
 };

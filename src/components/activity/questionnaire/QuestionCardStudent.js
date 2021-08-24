@@ -29,11 +29,11 @@ const QuestionCardStudent = (props) => {
 	const [optionsList, setOptionsList] = useState(null);
 
 	useEffect(() => {
-		if (!question) {
+		if (!optionsList) {
 			setQuestion(props.value.question);
 			setOptionsList(props.value.options);
 		}
-	}, [question]);
+	}, [optionsList]);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -83,7 +83,7 @@ const QuestionCardStudent = (props) => {
 	const updateQuestions = (options) => {
 		let found = false;
 
-		let auxQuestionsList = [...props.answerQuestionsList];
+		let auxQuestionsList = props.answerQuestionsList.slice();
 		for (let i = 0; i < auxQuestionsList.length && !found; i++) {
 			if (auxQuestionsList[i]._id === props.value._id) {
 				found = true;
@@ -98,11 +98,11 @@ const QuestionCardStudent = (props) => {
 
 		let found = false;
 
-		let auxOptionsList = [...optionsList];
+		let auxOptionsList = optionsList.slice();
 		for (let i = 0; i < auxOptionsList.length && !found; i++) {
 			if (auxOptionsList[i]._id === optionId) {
 				found = true;
-				auxOptionsList[i].isCorrect = !auxOptionsList[i].isCorrect;
+				auxOptionsList[i].answer = !auxOptionsList[i].answer;
 			}
 		}
 
@@ -143,7 +143,7 @@ const QuestionCardStudent = (props) => {
 								<div key={`item-${index}`} className="option-container option-container-student col-md-5" onClick={() => handleSwitchIsCorrect(option._id)}>
 									<div className="option-info">
 										<Tooltip enterDelay={200} enterNextDelay={200} title="Marcar opción como correcta" aria-label="check-option">
-											<div className={`check-option ${option.isCorrect ? 'active' : ''}`} onClick={() => handleSwitchIsCorrect(option._id)} />
+											<div className={`check-option ${option.answer ? 'active' : ''}`} />
 										</Tooltip>
 										<p style={optionInputStyle} >{option.option}</p>
 									</div>
