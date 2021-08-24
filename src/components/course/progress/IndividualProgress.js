@@ -52,8 +52,8 @@ import { AppBar, Avatar, Box, Button, Tab, Tabs, Typography } from '@material-ui
 // Tarjeta de titulo
 import TitleCard from '../../common/TitleCard';
 
-// Icons
-import { Cancel, CheckCircle } from '@material-ui/icons'
+// Iconos
+import { AccountCircle, AccountTree, BorderVertical, Ballot, Cancel, CheckCircle } from '@material-ui/icons';
 
 /* STUDENTS */
 function TabPanel(props) {
@@ -261,7 +261,14 @@ const IndividualProgress = (props) => {
 					items.push(
 						<tr>
 							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.name} aria-label="activity-name">
-								<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
+								<td className="activity-name-field-td">
+									{tempTaskActivities[i].activity.type === "logic_sequence" ? 
+										<AccountTree/> :
+											tempTaskActivities[i].activity.type === "maze" ?
+											<BorderVertical/>:<Ballot/>	
+										}
+									{`  ${tempTaskActivities[i].activity.name}`}
+								</td>
 							</Tooltip>
 
 							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.description} aria-label="activity-description">
@@ -323,7 +330,14 @@ const IndividualProgress = (props) => {
 					items.push(
 						<tr>
 							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.name} aria-label="activity-name">
-								<td className="activity-name-field-td">{tempTaskActivities[i].activity.name}</td>
+								<td className="activity-name-field-td">
+									{tempTaskActivities[i].activity.type === "logic_sequence" ? 
+										<AccountTree/> :
+											tempTaskActivities[i].activity.type === "maze" ?
+											<BorderVertical/>:<Ballot/>	
+										}
+									{`  ${tempTaskActivities[i].activity.name}`}
+								</td>
 							</Tooltip>
 
 							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.description} aria-label="activity-description">
@@ -381,7 +395,12 @@ const IndividualProgress = (props) => {
 			{individualProgressInfo && individualProgressInfo.student ?
 				<div className='student-info' style={{ backgroundColor: infoStudentBGColor }}>
 					<div className='student-info-card'>
-						<Avatar className="student-avatar mr-4" src="https://picsum.photos/200/300" />
+						{individualProgressInfo.student.image !== "" ?
+							<Avatar className="student-avatar mr-4" src={`${process.env.REACT_APP_API_URL}/profile/${individualProgressInfo.student.image}`} />:
+							<Avatar className="student-avatar mr-4">
+								<AccountCircle style={{ fontSize: 110 }}/>
+							</Avatar>
+						}
 						<div>
 							<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Estudiante: </span>{individualProgressInfo.student.first_name} {individualProgressInfo.student.last_name}</h2>
 							<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Identificación: </span>{individualProgressInfo.student.id}</h2>
