@@ -102,7 +102,6 @@ const StudentActivity = (props) => {
 		else {
 
 			if (view === 'teacher') {
-				console.log(props.history)
 
 				if (activity.type === 'logic_sequence') {
 					//Redirect to maze view for teachers or admins

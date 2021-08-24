@@ -80,24 +80,6 @@ const TaskCard = props => {
 			props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
 		} else {
 			props.history.push(`/activity/teacher/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
-
-			//Get logic sequence activity
-			// const activityRes = await api.get(`/api/activity/${taskActivity.activity}`, {
-			// 	headers: { 'x-access-token': localStorage.getItem('token') }
-			// });
-
-			// if (!activityRes) {
-			// 	console.log('activity not found');
-			// 	return;
-			// }
-
-			// if (activityRes.data.activity.type === 'logic_sequence') {
-			// 	props.history.push(`/activity/logic-sequence/${taskActivity.activity}`);
-			// } else if (activityRes.data.activity.type === 'maze') {
-			// 	props.history.push(`/activity/maze/${taskActivity.activity}`);
-			// } else if (activityRes.data.activity.type === 'questionnaire') {
-			// 	props.history.push(`/activity/questionnaire/${taskActivity.activity}`);
-			// }
 		}
 	};
 

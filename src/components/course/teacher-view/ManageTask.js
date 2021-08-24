@@ -348,16 +348,9 @@ export default function ManageTask() {
 											setIsAddingActivities={setIsAddingActivities}
 											setActivities={setActivities}
 											task={task} />
-
-										// <ActivityCard
-										// 	setIsAddingActivities={setIsAddingActivities}
-										// 	setActivities={setActivities}
-										// 	task={task}
-										// 	activity={activity}
-										// />
 										:
 										<div>
-											<NoContentToShow messageTitle={'Sin activiades...'} messageDes={'Las actividades agregadas se mostraran aqui'} />
+											<NoContentToShow messageTitle={'Sin actividades...'} messageDes={'Las actividades agregadas se mostraran aqui'} />
 										</div>
 									}
 								</div>

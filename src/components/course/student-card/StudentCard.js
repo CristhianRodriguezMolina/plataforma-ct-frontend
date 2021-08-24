@@ -27,10 +27,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { Link } from 'react-router-dom'
 
 // Icons
-import { Delete, Edit, Cached, Info } from '@material-ui/icons'
+import { AccountCircle, Delete, Edit, Cached, Info } from '@material-ui/icons'
 
 // Alert
 import { Alert } from '@material-ui/lab';
+
 
 export default function StudentCard(props) {
 
@@ -40,8 +41,8 @@ export default function StudentCard(props) {
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-	const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
-	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+	const [info, setInfo] = useState(false); //Variable flag de existencia de un proceso
+	const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
@@ -78,8 +79,8 @@ export default function StudentCard(props) {
 		// Toggle for the animation of the component
 		setVisible(false);
 		try {
-			setProcess(true);
-			setProcessMessage('Borrando usuario...');
+			setInfo(true);
+			setInfoMessage('Borrando usuario...');
 
 			const response = await api.delete(`/api/course/students/${course._id}/${student._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
@@ -104,8 +105,8 @@ export default function StudentCard(props) {
 		}
 		// Toggle for the animation of the component
 		setVisible(false);
-		setProcess(false);
-		setProcessMessage('');
+		setInfo(false);
+		setInfoMessage('');
 		setIsAddingStudents(false); // This is for indicate the studentspopup that it have to fetch students again
 	}
 
@@ -114,7 +115,14 @@ export default function StudentCard(props) {
 			<div id={student._id} className="course-user">
 				<div className="student-course-card">
 					<b>{index + 1}</b>
-					<Avatar className="student-avatar mr-2" src="https://picsum.photos/200/300" />
+
+					{student && student.image !== "" ?
+						<Avatar className="student-avatar mr-2" src={`${process.env.REACT_APP_API_URL}/profile/${student.image}`} />:
+						<Avatar className="student-avatar mr-2">
+							<AccountCircle style={{ fontSize: 60 }}/>
+						</Avatar>
+					}
+
 					<div className="mr-auto">
 						<Typography component="h1">
 							{student.first_name} {student.last_name}
@@ -122,18 +130,22 @@ export default function StudentCard(props) {
 							<p className="text-muted d-inline">Género: {student.genre}</p>
 						</Typography>
 					</div>
+
 					{success ?
 						<Alert severity="success">{successMessage}</Alert>
 						: ""
 					}
+
 					{error ?
 						<Alert severity="error">{errorMessage}</Alert>
 						: ""
 					}
-					{process ?
-						<Alert severity="info">{processMessage}</Alert>
+
+					{info ?
+						<Alert severity="info">{infoMessage}</Alert>
 						: ""
 					}
+
 					{
 						forStudent ?
 							<>
@@ -146,8 +158,9 @@ export default function StudentCard(props) {
 								</Typography>
 							</>
 							:
+
 							<>
-								<Typography variant="subtitle1">
+								<Typography variant="subtitle1" style={{minWidth: "72px"}}>
 									<div className="btn-group-sm btn-group-vertical">
 										<Tooltip title="Borrar del curso" aria-label="delete">
 											<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></button>
@@ -156,6 +169,7 @@ export default function StudentCard(props) {
 											<Link to={`/user/students/edit/${student._id}`} className="custom-btn custom-btn-primary btn-user-card"><Edit /></Link>
 										</Tooltip>
 									</div>
+
 									<div className="btn-group-sm btn-group-vertical ml-2">
 										<Tooltip title={<p className='text-center m-0 p-0'>Información< br />del< br />estudiante</p>} aria-label="info">
 											<button onClick={() => setOpenInfo(!openInfo)} className="custom-btn custom-btn-info btn-user-card mb-2"><Info /></button>
@@ -165,6 +179,7 @@ export default function StudentCard(props) {
 										</Tooltip>
 									</div>
 								</Typography>
+
 								<AlertModal
 									type="delete"
 									open={open}
@@ -174,6 +189,7 @@ export default function StudentCard(props) {
 								/>
 							</>
 					}
+
 					<Modal
 						aria-labelledby="transition-modal-title"
 						aria-describedby="transition-modal-description"
@@ -186,11 +202,19 @@ export default function StudentCard(props) {
 							timeout: 500,
 						}}
 					>
+
 						<Fade in={openInfo}>
 							<div className='modal-student-info'>
-								<Typography variant='h4' className='mb-4'>{student.genre !== 'M' ? 'Información del compañero' : 'Información de la compañera'}</Typography>
+								<Typography variant='h4' className='mb-4'>{student.genre === 'F' ? 'Información de la compañera' : 'Información del compañero'}</Typography>
 								<div className="d-flex justify-content-center align-items-center">
-									<Avatar className="modal-student-avatar mr-2" src="https://picsum.photos/200/300" />
+
+									{student && student.image !== "" ?
+										<Avatar className="student-avatar mr-2" src={`${process.env.REACT_APP_API_URL}/profile/${student.image}`} />:
+										<Avatar className="student-avatar mr-2">
+											<AccountCircle style={{ fontSize: 60 }}/>
+										</Avatar>
+									}
+
 									<div>
 										<p className='m-0 ml-4 mb-2 p-0 text-white'><b>{student.first_name} {student.last_name}</b></p>
 										{
@@ -199,13 +223,16 @@ export default function StudentCard(props) {
 												:
 												<p className='m-0 ml-4 mb-2 p-0'>Identificación: {student.id !== '' ? <b>{student.id}</b> : <b>No tiene Identificación :(</b>}</p>
 										}
+
 										<p className='m-0 ml-4 mb-2 p-0'>{forStudent ? "Cumpleaños" : "Fecha de nacimiento"}: <b>{util.getSpanishDate(student.birth_date)}</b></p>
 										<p className='m-0 ml-4 mb-2 p-0'>Edad: <b>{util.getAge(student.birth_date)}</b></p>
 										<p className='m-0 ml-4 mb-2 p-0'>Genero: <b>{util.getGenre(student.genre)}</b></p>
+
 									</div>
 								</div>
 							</div>
 						</Fade>
+
 					</Modal>
 				</div>
 			</div>

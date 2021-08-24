@@ -5,6 +5,9 @@ import React, { useEffect, useState } from 'react'
 // Avatar, Typografia, checkbox
 import { Avatar, Typography, Checkbox } from '@material-ui/core';
 
+//Icons
+import AccountCircle from '@material-ui/icons/AccountCircle';
+
 export default function StudentModalCard(props) {
 
     const { student, setStudentsToAdd } = props;
@@ -32,7 +35,14 @@ export default function StudentModalCard(props) {
     return (
         <div className="user-modal-card">
             <div className="modal-card">
-                <Avatar className="mr-2" src="https://picsum.photos/200/300" />
+
+				{student && student.image !== "" ?
+					<Avatar className="student-avatar mr-2" src={`${process.env.REACT_APP_API_URL}/profile/${student.image}`} />:
+					<Avatar className="student-avatar mr-2">
+						<AccountCircle style={{ fontSize: 60 }}/>
+					</Avatar>
+				}
+
                 <div className="mr-auto">
                     <Typography component="h1">
                         {student.first_name} {student.last_name}
