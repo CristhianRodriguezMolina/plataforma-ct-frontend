@@ -6,7 +6,7 @@ import './ActivityCard.scss';
 // COMPONENTS
 
 // Link 
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 // Material UI Core
 import { Tooltip } from '@material-ui/core';
@@ -41,9 +41,6 @@ const ActivityCard = SortableElement((props) => {
 
 	// Variable de estado para el modal
 	const [open, setOpen] = useState(false);
-
-	// Visibility for the components animation
-	const [visible, setVisible] = useState(true);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -88,8 +85,18 @@ const ActivityCard = SortableElement((props) => {
 					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 				}
 			})
+	}
 
-
+	const redirectToEdit = () => {
+		if (activity.type === 'logic_sequence') {
+			props.history.push(`/activity/logic-sequence/${activity._id}`)
+		} else if (activity.type === 'maze') {
+			props.history.push(`/activity/maze/${activity._id}`)
+		} else if (activity.type === 'questionnaire') {
+			props.history.push(`/activity/questionnaire/${activity._id}`)
+		} else {
+			showError('Error desconocido con la actividad')
+		}
 	}
 
 	return (
@@ -121,14 +128,14 @@ const ActivityCard = SortableElement((props) => {
 			<div className="buttons-container">
 				<div className="icon-buttons btn-group-vertical">
 					<Tooltip title="Editar" aria-label="edit">
-						<Link to='' className="custom-btn custom-btn-primary mb-2 p-2 d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></Link>
+						<button onClick={() => redirectToEdit()} className="custom-btn custom-btn-primary mb-2 p-2 d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail"><Edit /></button>
 					</Tooltip>
 					<Tooltip title="Borrar" aria-label="delete">
 						<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete p-2" data-toggle="modal" data-target="#deleteUser"><Delete /></button>
 					</Tooltip>
 				</div>
 				<div className="group-buttons btn-group-vertical">
-					<Link to='' className="custom-btn custom-btn-primary mb-2 p-2 d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#userDetail">Editar</Link>
+					<button onClick={() => redirectToEdit()} className="custom-btn custom-btn-primary mb-2 p-2 d-flex justify-content-center align-items-center w-100" data-toggle="modal" data-target="#userDetail">Editar</button>
 					<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete p-2" data-toggle="modal" data-target="#deleteUser">Borrar</button>
 				</div>
 			</div>
@@ -139,9 +146,9 @@ const ActivityCard = SortableElement((props) => {
 				message='¿Esta seguro que quiere borrar esta actividad de la tarea?'
 				action={deleteActivity}
 			/>
-		</div>
+		</div >
 	)
 });
 
 
-export default ActivityCard;
+export default withRouter(ActivityCard);

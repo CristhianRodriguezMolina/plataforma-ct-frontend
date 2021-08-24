@@ -13,6 +13,9 @@ import './maze.scss';
 // Images
 import robot from '../../../assets/robot.svg'
 
+// Util methods
+import * as util from '../../../util/util';
+
 // COMPONENTS
 
 // Instructions
@@ -33,7 +36,11 @@ import styled, { css, keyframes } from 'styled-components'
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+// Timer
 import Timer from '../../common/Timer';
+
+// Titulo
+import TitleCard from '../../common/TitleCard';
 
 export default function MazeStudent(props) {
 
@@ -814,15 +821,25 @@ export default function MazeStudent(props) {
 							<Alert className="alert-message" severity="info">{processMessage}</Alert>
 							: ""
 					}
+					<TitleCard
+						title="Laberinto"
+						color="#FA61CD"
+						colorFont="#FFF"
+					/>
 
-					<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(animationType === 'WIN' ? 5 : 0, minutes, seconds)}/>
+					<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(animationType === 'WIN' ? 5 : 0, minutes, seconds)} />
 
 					<div className="maze-header">
 						<Container maxWidth='md'>
 							{/* GENERAL DATA OF THE MAZE */}
 							<div>
 								<h1 style={nameInputStyle} >{activityName}</h1>
-								<p style={desInputStyle} >{activityDescription}</p>
+								<p style={desInputStyle} >{activityDescription.trim() === '' ? 'Aqui iría la descripción... si tan solo tuviera una' : activityDescription}</p>
+								<div className='activity-attributes'>
+									<div className="difficulty-grid-item">
+										<p><b>Dificultad:</b> {util.getDifficulty(props.activity.difficulty)}</p>
+									</div>
+								</div>
 							</div>
 							<hr />
 

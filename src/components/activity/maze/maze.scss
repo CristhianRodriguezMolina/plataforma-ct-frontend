@@ -54,6 +54,7 @@
 		position: relative;
 		background-color: #6cbae3;
 		border-radius: 10px;
+		overflow: hidden;
 	}
 }
 
@@ -135,7 +136,7 @@
 @media only screen and (min-width: 460px) {
 	.maze-header {
 		.activity-attributes {
-			justify-content: space-around;
+			justify-content: space-between;
 
 			.difficulty-grid-item {
 				grid-column: 1;

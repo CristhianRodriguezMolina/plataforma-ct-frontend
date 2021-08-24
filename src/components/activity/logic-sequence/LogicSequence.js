@@ -25,6 +25,9 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 // Boton de icono
 import IconButton from '@material-ui/core/IconButton';
 
+// Titulo
+import TitleCard from '../../common/TitleCard';
+
 //Material ui 
 // Alert
 import Alert from '@material-ui/lab/Alert';
@@ -268,83 +271,90 @@ const LogicSequence = props => {
 
 			{!loading ?
 				logicSequence ?
-					<div className="logic-sequence-container">
+					<>
+						<TitleCard
+							title="Secuencia lógica"
+							color="#FA61CD"
+							colorFont="#FFF"
+						/>
+						<div className="logic-sequence-container">
 
-						{success ?
-							<Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
-							: ""
-						}
-						{error ?
-							<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
-							: ""
-						}
-						{process ?
-							<Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
-							: ""
-						}
+							{success ?
+								<Alert className="alert-message logic-sequence-alert" severity="success">{successMessage}</Alert>
+								: ""
+							}
+							{error ?
+								<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
+								: ""
+							}
+							{process ?
+								<Alert className="alert-message logic-sequence-alert" severity="info">{processMessage}</Alert>
+								: ""
+							}
 
-						{logicSequence ?
-							<div className="logic-sequence-info">
-								<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
-								<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
-								<div className='activity-attributes'>
+							{logicSequence ?
+								<div className="logic-sequence-info">
+									<DynamicInput dynamicInputValue={activityName} dynamicInputStyle={nameInputStyle} sendValue={updateName}></DynamicInput>
+									<DynamicInput dynamicInputValue={activityDescription} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
+									<div className='activity-attributes'>
 
-									<div className="difficulty-grid-item">
-										<label>Dificultad:</label>
-										<select className="form-control" style={{ width: '10em' }} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
-											<option value="beginner" selected>Principiante</option>
-											<option value="intermediate">Intermedio</option>
-											<option value="advanced">Avanzado</option>
-										</select>
+										<div className="difficulty-grid-item">
+											<label>Dificultad:</label>
+											<select className="form-control" style={{ width: '10em' }} onChange={evt => { setDifficulty(evt.target.value); }} value={difficulty} aria-label="Activity difficulty" required>
+												<option value="beginner" selected>Principiante</option>
+												<option value="intermediate">Intermedio</option>
+												<option value="advanced">Avanzado</option>
+											</select>
+										</div>
+
+										<FormControlLabel className="verified-grid-item switcher" label="Verificado" control={
+											<Switch
+												checked={verified}
+												onChange={handleSetVerified}
+												name="visibilty"
+												color="primary"
+											/>
+										} />
 									</div>
-
-									<FormControlLabel className="verified-grid-item switcher" label="Verificado" control={
-										<Switch
-											checked={verified}
-											onChange={handleSetVerified}
-											name="visibilty"
-											color="primary"
-										/>
-									} />
 								</div>
+								:
+
+								<div>
+									<h1 style={nameInputStyle} >Description of the logic sequence activity</h1>
+									<p style={desInputStyle} >Name of the logic sequence</p>
+								</div>}
+							<hr className="hr-bar"></hr>
+							{loading ?
+								<Alert severity="info">{"Cargando tarjetas, por favor espere"}</Alert>
+								: ""
+							}
+
+							<div className="panels">
+								{/* CARDS LIST */}
+								<div className="sequence-cards-container">
+									{sequenceList ?
+										<SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} /> : ""}
+
+									{showInpNewCard ?
+										<input ref={newCardInput} value={cardName} onChange={(e) => setCardName(e.target.value)} className="form-control"
+											placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}>
+										</input> :
+
+										<div className="create-card-button">
+											<IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
+												<AddCircleIcon style={{ fontSize: 40 }} />
+											</IconButton>
+										</div>
+									}
+								</div>
+
+								{/* INFO OF THE SELECTED CARD */}
+								<CardDataPanel />
 							</div>
-							:
-
-							<div>
-								<h1 style={nameInputStyle} >Description of the logic sequence activity</h1>
-								<p style={desInputStyle} >Name of the logic sequence</p>
-							</div>}
-						<hr className="hr-bar"></hr>
-						{loading ?
-							<Alert severity="info">{"Cargando tarjetas, por favor espere"}</Alert>
-							: ""
-						}
-
-						<div className="panels">
-							{/* CARDS LIST */}
-							<div className="sequence-cards-container">
-								{sequenceList ?
-									<SortableList distance={1} items={sequenceList} onSortEnd={onSortEnd} /> : ""}
-
-								{showInpNewCard ?
-									<input ref={newCardInput} value={cardName} onChange={(e) => setCardName(e.target.value)} className="form-control"
-										placeholder={"Nombre de la tarjeta"} onKeyDown={handleKeyDownInput} autoFocus={true} onBlur={() => setShowInpNewCard(false)}>
-									</input> :
-
-									<div className="create-card-button">
-										<IconButton color="primary" aria-label="Create" onClick={createCardHandler}>
-											<AddCircleIcon style={{ fontSize: 40 }} />
-										</IconButton>
-									</div>
-								}
-							</div>
-
-							{/* INFO OF THE SELECTED CARD */}
-							<CardDataPanel />
+							<hr className="hr-bar"></hr>
+							<button className="save-button custom-btn custom-btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
 						</div>
-						<hr className="hr-bar"></hr>
-						<button className="save-button custom-btn custom-btn-primary" onClick={() => saveLogicSequence()}>Guardar cambios generales</button>
-					</div>
+					</>
 					:
 					<Redirect to="/unauthorized" />
 				:

@@ -39,6 +39,9 @@ import styled, { css, keyframes } from 'styled-components'
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+// Titulo
+import TitleCard from '../../common/TitleCard';
+
 export default function Maze() {
 
 	// Variables del contexto
@@ -950,6 +953,7 @@ export default function Maze() {
 		<div className=''>
 			{!loading ?
 				<>
+
 					{
 						success ?
 							<Alert className="alert-message" severity="success">{successMessage}</Alert>
@@ -965,6 +969,11 @@ export default function Maze() {
 							<Alert className="alert-message" severity="info">{processMessage}</Alert>
 							: ""
 					}
+					<TitleCard
+						title="Laberinto"
+						color="#FA61CD"
+						colorFont="#FFF"
+					/>
 
 					<div className="maze-header">
 						<Container maxWidth='md'>

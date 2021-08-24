@@ -12,9 +12,6 @@ import UserContext from '../../../context/user/UserContext';
 import './Questionnaire.scss';
 import '../../common/alert-message.scss';
 
-//ArrayMove
-import arrayMove from 'array-move';
-
 // Shiffle array
 import shuffleArray from 'shuffle-array';
 
@@ -172,7 +169,7 @@ const QuestionnaireStudent = (props) => {
 
 	const desInputStyle = {
 		width: "100%",
-		fontSize: "0.8em",
+		fontSize: "1em",
 		margin: "0.5em auto 0 auto",
 		padding: "0.7em",
 		overflow: "hidden",
@@ -183,11 +180,7 @@ const QuestionnaireStudent = (props) => {
 
 	return (
 		<>
-			<TitleCard
-				title="Cuestionario"
-				color="#FA61CD"
-				colorFont="#FFF"
-			/>
+
 
 			{error ?
 				<Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
@@ -200,29 +193,36 @@ const QuestionnaireStudent = (props) => {
 
 			{!loading ?
 				questionnaire && studentActivity ?
-					<div className="questionnaire-container">
-						<div className='questionnaire-info'>
-							<h1 style={nameInputStyle} >{activity.name}</h1>
-							<p style={desInputStyle} >{activity.description}</p>
-							<div className='activity-attributes'>
-								<div className="difficulty-grid-item">
-									<p><b>Dificultad:</b> {util.getDifficulty(activity.difficulty)}</p>
+					<>
+						<TitleCard
+							title="Cuestionario"
+							color="#FA61CD"
+							colorFont="#FFF"
+						/>
+						<div className="questionnaire-container">
+							<div className='questionnaire-info'>
+								<h1 style={nameInputStyle} >{activity.name}</h1>
+								<p style={desInputStyle} >{activity.description.trim() === '' ? 'Aqui iría la descripción... si tan solo tuviera una' : activity.description}</p>
+								<div className='activity-attributes'>
+									<div className="difficulty-grid-item">
+										<p><b>Dificultad:</b> {util.getDifficulty(activity.difficulty)}</p>
+									</div>
 								</div>
 							</div>
-						</div>
 
-						<div className="questionnaire-body">
-							{answerQuestionsList ?
-								answerQuestionsList.map((value, index) => (
-									<QuestionCardStudent key={`item-${index}`} questionnaire={questionnaire} answerQuestionsList={answerQuestionsList} setAnswerQuestionsList={setAnswerQuestionsList} index={index} value={value} />
-								))
-								: ""}
+							<div className="questionnaire-body">
+								{answerQuestionsList ?
+									answerQuestionsList.map((value, index) => (
+										<QuestionCardStudent key={`item-${index}`} questionnaire={questionnaire} answerQuestionsList={answerQuestionsList} setAnswerQuestionsList={setAnswerQuestionsList} index={index} value={value} />
+									))
+									: ""}
+							</div>
+							<hr className="hr-bar"></hr>
+							<div className='d-flex justify-content-center'>
+								<button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button>
+							</div>
 						</div>
-						<hr className="hr-bar"></hr>
-						<div className='d-flex justify-content-center'>
-							<button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button>
-						</div>
-					</div>
+					</>
 					:
 					<Redirect to="/unauthorized" />
 				:

@@ -163,7 +163,7 @@ const LogicSequenceStudent = props => {
 
     const desInputStyle = {
         width: "100%",
-        fontSize: "0.8em",
+        fontSize: "1em",
         margin: "0.5em auto 0 auto",
         padding: "0.7em",
         overflow: "hidden",
@@ -196,7 +196,7 @@ const LogicSequenceStudent = props => {
                 <div className="logic-sequence-student-container">
                     <div>
                         <h1 style={nameInputStyle} >{activity.name}</h1>
-                        <p style={desInputStyle} >{activity.description}</p>
+                        <p style={desInputStyle} >{activity.description.trim() === '' ? 'Aqui iría la descripción... si tan solo tuviera una' : activity.description}</p>
                         <div className='activity-attributes'>
                             <div className="difficulty-grid-item">
                                 <p><b>Dificultad:</b> {util.getDifficulty(activity.difficulty)}</p>

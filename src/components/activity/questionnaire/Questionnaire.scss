@@ -52,7 +52,7 @@
 @media only screen and (min-width: 460px) {
     .questionnaire-container {
         .activity-attributes {
-            justify-content: space-around;
+            justify-content: space-between;
 
             .difficulty-grid-item {
                 grid-column: 1;
@@ -70,7 +70,7 @@
 
 @media only screen and (min-width: 850px) {
     .questionnaire-container {
-        margin-top: 2em;
+        margin-top: 1em;
         width: 50em;
 
         .logic-sequence-alert {
