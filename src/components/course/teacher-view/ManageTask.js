@@ -339,7 +339,7 @@ export default function ManageTask() {
 							<hr />
 							<div>
 								<Typography variant="subtitle1" className="text-center">Actividades</Typography>
-								<div className="activities-container">
+								<div className="manage-task-activitities-container">
 									{activities && activities.length > 0 ?
 										<SortableList
 											distance={1}

@@ -11,6 +11,9 @@ import Alert from '@material-ui/lab/Alert';
 // Student card
 import StudentCard from '../student-card/StudentCard';
 
+//No content to show
+import NoContentToShow from '../../common/NoContentToShow';
+
 /* STUDENTS */
 export default function ClassmatesInformation(props) {
 
@@ -117,9 +120,7 @@ export default function ClassmatesInformation(props) {
                     </>
                     :
                     <>
-                        <div className="there-is-no-students-container">
-                            <h3 className="there-is-no-students">Aún no hay alumnos en el curso</h3>
-                        </div>
+						<NoContentToShow messageTitle="Sin alumnos..." messageDes="Aún no hay alumnos en el curso"/>
                     </>
                 }
             </div>
