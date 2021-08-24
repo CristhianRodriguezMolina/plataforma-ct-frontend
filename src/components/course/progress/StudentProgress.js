@@ -59,7 +59,6 @@ const StudentProgress = props => {
                     }, {
                         headers: { 'x-access-token': localStorage.getItem('token') }
                     });
-                    console.log(response)
                     if (response) {
                         setStudentActivities(response.data.studentActivity);
                     }
@@ -74,7 +73,6 @@ const StudentProgress = props => {
             }
         }
         fetchData();
-        console.log('EFFECT')
     }, [studentActivities]);
 
 

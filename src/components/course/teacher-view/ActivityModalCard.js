@@ -38,8 +38,8 @@ export default function ActivityModalCard(props) {
     return (
         <div className="user-modal-card">
             <div className="modal-card activity-modal-card-container">
-                {
-                    activity.type.localeCompare("logic_sequence") === 0 ?
+                { 	
+                    activity && activity.type.localeCompare("logic_sequence") === 0 ?
                         <AccountTree fontSize="large" className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
                             <BorderVertical fontSize="large" className="activity-icon" /> : <Ballot fontSize="large" className="activity-icon" />
                 }

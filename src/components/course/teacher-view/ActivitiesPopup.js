@@ -97,7 +97,7 @@ export default function ActivitiesPopup(props) {
 
             const { activities, message } = response.data;
 
-            console.log(activities)
+
             if (activities) {
                 // Asignacion de los cursos de la base de datos
                 setActivities(activities);
@@ -136,8 +136,6 @@ export default function ActivitiesPopup(props) {
             setIsAddingActivities(true); // This flag activate the fetch users in the StudentsInformation view
             const { acceptedActivities, deniedActivities, message } = response.data;
 
-            console.log(acceptedActivities)
-
             setProcess(false);
             setProcessMessage("");
             if (acceptedActivities) {
@@ -170,6 +168,7 @@ export default function ActivitiesPopup(props) {
             {success ? <Alert className="alert-message mb-5" severity="success">{successMessage}</Alert> : ""}
             {error ? <Alert className="alert-message" severity="error">{errorMessage}</Alert> : ""}
             {process ? <Alert className="alert-message" severity="info">{processMessage}</Alert> : ""}
+
             <Modal
                 isOpen={isOpen}
                 toggle={toggle}
@@ -180,6 +179,7 @@ export default function ActivitiesPopup(props) {
             >
                 <ModalHeader toggle={toggle}>Agregue actividades a una tarea</ModalHeader>
                 <ModalBody className="students-modal">
+
                     <SearchActivity activities={activities} filteredActivities={filteredActivities} setFilteredActivities={setFilteredActivities} />
                     {
                         !isLoading ?
@@ -195,7 +195,7 @@ export default function ActivitiesPopup(props) {
                                 ))
                                 :
                                 <>
-                                    <NoContentToShow messageTitle={'Sin activitidades...'} messageDes={'Ya estan todos las actividades agregadas a la tarea o aún no hay actividades en la plataforma'} />
+                                    <NoContentToShow messageTitle={'Sin activitidades...'} messageDes={'Ya estan todos las actividades agregadas a la tarea o aún no hay actividades verficadas en la plataforma'} />
                                 </>
                             :
                             <div className="spinner-loading" style={{ marginTop: '8em' }}>
@@ -205,6 +205,7 @@ export default function ActivitiesPopup(props) {
                             </div>
                     }
                 </ModalBody>
+
                 <ModalFooter>
                     <button
                         className='custom-btn custom-btn-success p-2'

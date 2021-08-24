@@ -27,6 +27,10 @@ import TitleCard from '../../common/TitleCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+//Timer
+import Timer from '../../common/Timer';
+
+
 const SortableList = SortableContainer(({ items }) => {
 
     return (
@@ -63,6 +67,8 @@ const LogicSequenceStudent = props => {
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+    //Timer vars
+    const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
         changeColor('#f8bbd0');
@@ -102,10 +108,11 @@ const LogicSequenceStudent = props => {
             setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
             setActivity(props.activity);
             setStudentActivity(props.studentActivity);
+            setIsActive(true);
         }
     }, [props.activity, props.inheritedActivity, props.studentActivity]);
 
-    const handleCompleteActivity = () => {
+    const handleCompleteActivity = (minutes, seconds) => {
 
         let grade = 0;
         let equals = true;
@@ -122,7 +129,9 @@ const LogicSequenceStudent = props => {
         if (studentActivity) {
             api.put(`/api/student-activity/${studentActivity._id}`, {
                 complete: true,
-                grade: grade
+                grade,
+                minutes,
+                seconds
             }, {
                 headers: {
                     'x-access-token': localStorage.getItem('token')
@@ -174,11 +183,16 @@ const LogicSequenceStudent = props => {
                 <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
                 : ""
             }
+
             {success ?
                 <Alert className="alert-message" severity="success">{successMessage}</Alert>
                 : ""
             }
+
+            <Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
+
             {logicSequence && studentActivity ?
+
                 <div className="logic-sequence-student-container">
                     <div>
                         <h1 style={nameInputStyle} >{activity.name}</h1>
@@ -196,8 +210,9 @@ const LogicSequenceStudent = props => {
                                 <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
                         </div>
                     </div>
+
                     <hr className="hr-bar"></hr>
-                    <button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
+                    <button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
 
                 </div>
                 : ''}
