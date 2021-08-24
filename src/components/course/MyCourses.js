@@ -23,6 +23,9 @@ import CourseCard from './CourseCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+//No content to show
+import NoContentToShow from '../common/NoContentToShow';
+
 export default function MyCourses({ history }) {
 
 	// Datos del contexto de usuario
@@ -199,9 +202,9 @@ export default function MyCourses({ history }) {
 								)
 								:
 								(
-									<div>
-										<h3 className="there-is-no-courses text-center">Aún no hay cursos</h3>
-									</div>
+									
+									<NoContentToShow messageTitle="Sin cursos..." messageDes="No hay cursos para mostrar"/>
+									
 								)
 						}
 						{

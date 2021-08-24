@@ -11,9 +11,6 @@ import Alert from '@material-ui/lab/Alert';
 // Student card
 import StudentCard from '../student-card/StudentCard';
 
-// Material-UI core
-import { Typography } from '@material-ui/core';
-
 // No Content to show
 import NoContentToShow from '../../common/NoContentToShow';
 
