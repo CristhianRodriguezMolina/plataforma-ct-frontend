@@ -22,7 +22,7 @@ export default function CourseInformation({ course, setCourse }) {
     const [description, setDescription] = useState(course.description);
     const [topic, setTopic] = useState(course.topic);
 
-    // MENSAJES DEL FORMULARIO
+    // MENSAJES DE LA VISTA
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
     const [info, setInfo] = useState(false); //Variable flag de existencia de un proceso

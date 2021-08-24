@@ -281,7 +281,7 @@ const IndividualProgress = (props) => {
 								<td className="grade-field-td">{tempStudentActivity.grade}</td>
 							</Tooltip>
 
-							<Tooltip enterDelay={200} enterNextDelay={200} 
+							<Tooltip enterDelay={200} enterNextDelay={200}
 								title={
 									task.is_due_date ?
 										justInTime === 1 ?
@@ -293,7 +293,7 @@ const IndividualProgress = (props) => {
 												'Sin fecha de entrega'
 										:
 										'Sin fecha de entrega'
-									}
+								}
 								aria-label="just-in-time">
 								<td className="completed-field-td">
 									{task.is_due_date ?
@@ -493,11 +493,11 @@ const IndividualProgress = (props) => {
 													</Accordion>
 												</div>
 											}) :
-											<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
+											<NoContentToShow icon='mood' messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />}
 									</TabPanel>
 
 								}) :
-								<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
+								<NoContentToShow icon='mood' messageTitle={'Sin tareas...'} messageDes={'No hay actividades que mostrar, asegurate de añadir alguna primero.'} />
 							:
 							<Redirect to='/unauthorized' />
 						:

@@ -350,7 +350,7 @@ export default function ManageTask() {
 											task={task} />
 										:
 										<div>
-											<NoContentToShow messageTitle={'Sin actividades...'} messageDes={'Las actividades agregadas se mostraran aqui'} />
+											<NoContentToShow icon='mood' messageTitle={'Sin actividades...'} messageDes={'Las actividades agregadas se mostraran aqui'} />
 										</div>
 									}
 								</div>

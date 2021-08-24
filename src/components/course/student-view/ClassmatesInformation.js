@@ -11,6 +11,12 @@ import Alert from '@material-ui/lab/Alert';
 // Student card
 import StudentCard from '../student-card/StudentCard';
 
+// Material-UI core
+import { Typography } from '@material-ui/core';
+
+// No Content to show
+import NoContentToShow from '../../common/NoContentToShow';
+
 /* STUDENTS */
 export default function ClassmatesInformation(props) {
 
@@ -27,6 +33,9 @@ export default function ClassmatesInformation(props) {
 
     // Students of the course
     const [students, setStudents] = useState(null);
+
+    // Variable to see if the info data is loading
+    const [isLoading, setIsLoading] = useState(true);
 
     // UseEffect para obtener los alumnos del curso o en dado caso que se agreguen nuevos alumnos al curso se vuelvan a obtener
     useEffect(() => {
@@ -81,6 +90,7 @@ export default function ClassmatesInformation(props) {
         }
         setProcess(false);
         setProcessMessage('');
+        setIsLoading(false);
     }
 
     return (
@@ -90,7 +100,7 @@ export default function ClassmatesInformation(props) {
             {process ? <Alert className="alert-message" severity="info">{processMessage}</Alert> : ""}
 
             <div className="students-container">
-                <form className="search-form d-flex justify-content-between mb-3">
+                {/* <form className="search-form d-flex justify-content-between mb-3">
                     <div className="text-field form-group mr-3">
                         <input className="form-control text-center" />
                     </div>
@@ -99,28 +109,35 @@ export default function ClassmatesInformation(props) {
                             Buscar
                         </button>
                     </div>
-                </form>
-                {students && students.length > 0 ?
-                    <>
-                        <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
-                        {
-                            students.map((student, index) => (
-                                <StudentCard
-                                    forStudent={true}
-                                    index={index}
-                                    id={student._id}
-                                    key={student._id}
-                                    student={student}
-                                    course={course} />
-                            ))
-                        }
-                    </>
-                    :
-                    <>
-                        <div className="there-is-no-students-container">
-                            <h3 className="there-is-no-students">Aún no hay alumnos en el curso</h3>
+                </form> */}
+                <h1 className="h4 mb-4">Compañeros del Curso</h1>
+                {
+                    !isLoading ?
+                        students && students.length > 0 ?
+                            <>
+                                <p className="students-counter"><b>{students.length}</b> estudiantes en el curso</p>
+                                {
+                                    students.map((student, index) => (
+                                        <StudentCard
+                                            forStudent={true}
+                                            index={index}
+                                            id={student._id}
+                                            key={student._id}
+                                            student={student}
+                                            course={course} />
+                                    ))
+                                }
+                            </>
+                            :
+                            <>
+                                <NoContentToShow icon='mood_bad' messageTitle={'Sin alumnos...'} messageDes={'No hay compañeros para mostrar'} />
+                            </>
+                        :
+                        <div className="spinner-loading" style={{ marginTop: '8em' }}>
+                            <div className="spinner-border" role="status">
+                                <span className="sr-only">Loading...</span>
+                            </div>
                         </div>
-                    </>
                 }
             </div>
         </div>

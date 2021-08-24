@@ -15,7 +15,7 @@ import UnitContent from './UnitContent';
 import { makeStyles } from '@material-ui/core/styles';
 
 // Components for the tab bar
-import { AppBar, Box, Button, Tab, Tabs, Typography } from '@material-ui/core';
+import { AppBar, Box, Tab, Tabs, Typography } from '@material-ui/core';
 
 // Alert
 import { Alert } from '@material-ui/lab';
@@ -104,6 +104,9 @@ export default function UnitsInformation(props) {
 	const [taskActivities, setTaskActivities] = useState(null);
 	const [studentActivities, setStudentActivities] = useState(null);
 
+	// Variable to see if the info data is loading
+	const [isLoading, setIsLoading] = useState(true);
+
 	useEffect(() => {
 		if (props.course) {
 			//Get activities all in the course
@@ -121,6 +124,7 @@ export default function UnitsInformation(props) {
 						headers: { 'x-access-token': localStorage.getItem('token') }
 					}).then((res) => {
 						setStudentActivities(res.data.studentActivity);
+						setIsLoading(false);
 					}).catch(err => {
 						if (err.response) {
 							showError(err.response.data.message);
@@ -128,6 +132,7 @@ export default function UnitsInformation(props) {
 						else {
 							showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
 						}
+						setIsLoading(false);
 					});
 				})
 				.catch(err => {
@@ -216,14 +221,21 @@ export default function UnitsInformation(props) {
 			</AppBar>
 			{/* COMPONENTS OF EACH UNIT IN THE COURSE */}
 			{
-				props.course.units.map((unit, index) => (
-					unit.visible ?
-						<TabPanel value={value} key={index} index={index}>
-							<UnitContent course={props.course} taskActivities={taskActivities} studentActivities={studentActivities} unitValue={unit} />
-						</TabPanel>
-						:
-						''
-				))
+				!isLoading ?
+					props.course.units.map((unit, index) => (
+						unit.visible ?
+							<TabPanel value={value} key={index} index={index}>
+								<UnitContent course={props.course} taskActivities={taskActivities} studentActivities={studentActivities} unitValue={unit} />
+							</TabPanel>
+							:
+							''
+					))
+					:
+					<div className="spinner-loading" style={{ marginTop: '8em' }}>
+						<div className="spinner-border" role="status">
+							<span className="sr-only">Loading...</span>
+						</div>
+					</div>
 			}
 
 			{!foundTasks ?

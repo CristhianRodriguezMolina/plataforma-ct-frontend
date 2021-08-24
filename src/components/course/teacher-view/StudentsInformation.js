@@ -214,7 +214,7 @@ export default function StudentsInformation(props) {
                                     </>
                                     :
                                     <>
-                                        <NoContentToShow messageTitle={'Sin alumnos...'} messageDes={'No hay alumnos para mostrar'} />
+                                        <NoContentToShow icon='mood_bad' messageTitle={'Sin alumnos...'} messageDes={'No hay alumnos para mostrar'} />
                                     </>
                                 }
                             </>

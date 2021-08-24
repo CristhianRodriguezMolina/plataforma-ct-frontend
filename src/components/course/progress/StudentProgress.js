@@ -221,7 +221,7 @@ const StudentProgress = props => {
                                 }
                             </>
                             :
-                            <NoContentToShow messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun progreso en esta unidad'} />
+                            <NoContentToShow icon='mood' messageTitle={'Sin progresos...'} messageDes={'Al parecer no hay ningun progreso en esta unidad'} />
                         }
                     </>
                     :
