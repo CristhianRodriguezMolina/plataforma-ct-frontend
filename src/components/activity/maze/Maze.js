@@ -190,6 +190,15 @@ export default function Maze() {
 		}
 	}, [maze])
 
+	// useEffect(() => {
+	// 	// If the size is greater than 8 either in cols or rows it just dont make the change
+	// 	if (rows > 8 || cols > 8 || rows < 4 || cols < 4 || !Number.isInteger(rows) || !Number.isInteger(cols)) {
+	// 		setRows(maze.rows);
+	// 		setCols(maze.cols);
+	// 		showError('Introduzca un numero valido');
+	// 	}
+	// }, [cols, rows])
+
 	// Si cambia la posicion del inicio se cambia la del robot y se reicinia la variable flag que muestra el robot
 	useEffect(() => {
 		setAnimate(false);
@@ -269,6 +278,14 @@ export default function Maze() {
 
 	// Metodo para inicializar o actualizar los valores de tamaño del maze 
 	const setUp = () => {
+		console.log(rows > 8 || cols > 8, rows < 4 || cols < 4, !Number.isInteger(parseFloat(rows)), !Number.isInteger(parseFloat(cols)))
+		if (rows > 8 || cols > 8 || rows < 4 || cols < 4 || !Number.isInteger(parseFloat(rows)) || !Number.isInteger(parseFloat(cols))) {
+			console.log('Entro', rows, cols)
+			setRows(maze.rows);
+			setCols(maze.cols);
+			return;
+		}
+
 		setWX((mazeSize + mazeSizeOffset) / cols); // Width of each cell
 		setWY((mazeSize + mazeSizeOffset) / rows); // Height of each cell
 
