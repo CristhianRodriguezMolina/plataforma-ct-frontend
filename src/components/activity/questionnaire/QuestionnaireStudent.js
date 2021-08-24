@@ -36,7 +36,6 @@ const QuestionnaireStudent = (props) => {
 
 	//Store questionnaire data
 	const [questionnaire, setQuestionnaire] = useState(null);
-	const [questionsList, setQuestionsList] = useState(null);
 	const [answerQuestionsList, setAnswerQuestionsList] = useState(null);
 	const [activity, setActivity] = useState(null);
 
@@ -61,16 +60,26 @@ const QuestionnaireStudent = (props) => {
 
 	useEffect(() => {
 		if (props.activity && props.inheritedActivity && props.studentActivity) {
-			const questionsListTemp = shuffleArray(props.inheritedActivity.questions, { 'copy': true });
-
-			setQuestionsList(questionsListTemp.slice());
-			setAnswerQuestionsList(questionsListTemp.slice());
+			setAnswerQuestionsList(shuffleArray(getQuestionsWithAnswer(props.inheritedActivity.questions), { 'copy': true }));
 			setQuestionnaire(props.inheritedActivity);
 			setActivity(props.activity);
 			setStudentActivity(props.studentActivity);
 			setLoading(false);
 		}
 	}, [props.activity, props.inheritedActivity, props.studentActivity]);
+
+	// Method to add the answer field to the options
+	const getQuestionsWithAnswer = (questions) => {
+		let questionsTemp = questions.slice()
+		for (let i = 0; i < questionsTemp.length; i++) {
+			let options = questionsTemp[i].options;
+
+			for (let j = 0; j < options.length; j++) {
+				options[j] = { ...options[j], answer: false }
+			}
+		}
+		return questionsTemp;
+	}
 
 	// Funcion para mostrar una alerta de error dado un mensaje
 	const showError = (message) => {
@@ -101,32 +110,47 @@ const QuestionnaireStudent = (props) => {
 		}, 2000)
 	};
 
-	useEffect(() => {
-		console.log(answerQuestionsList)
-		console.log(questionsList)
-	}, [answerQuestionsList])
-
 	const handleCompleteActivity = () => {
 		try {
 			let goodQuestions = 0;
-			for (let i = 0; i < questionsList.length; i++) {
-				const optionsList = questionsList[i].options;
-				const answerOptionsList = answerQuestionsList[i].options;
+			for (let i = 0; i < answerQuestionsList.length; i++) {
+				const answerOptionsList = answerQuestionsList[i].options.slice();
 
-				for (let j = 0; j < optionsList.length; j++) {
-					console.log(optionsList[j], answerOptionsList[j])
-					if (!(optionsList[j]._id === answerOptionsList[j]._id && optionsList[j].isCorrect === answerOptionsList[j].isCorrect)) {
+				for (let j = 0; j < answerOptionsList.length; j++) {
+					if (!(answerOptionsList[j].isCorrect === answerOptionsList[j].answer)) {
 						break;
 					}
-					if (j === optionsList.length - 1) {
+					if (j === answerOptionsList.length - 1) {
 						goodQuestions += 1;
 					}
 				}
 			}
 
-			const grade = goodQuestions / questionsList.length * 5;
+			// The grade it gets calculated on the number of good questions
+			const grade = goodQuestions / answerQuestionsList.length * 5;
+			console.log(grade)
 
-			console.log(grade);
+			if (studentActivity) {
+				api.put(`/api/student-activity/${studentActivity._id}`, {
+					complete: true,
+					grade: grade
+				}, {
+					headers: {
+						'x-access-token': localStorage.getItem('token')
+					}
+				})
+					.then((res) => {
+						showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+					})
+					.catch((err) => {
+						if (err.response) {
+							showError(err.response.data.message);
+						}
+						else {
+							showError("¡Ha ocurrido un error guardando su nota!");
+						}
+					});
+			}
 		} catch (error) {
 			if (error.response) {
 				showError(error.response.message);
@@ -190,7 +214,7 @@ const QuestionnaireStudent = (props) => {
 						<div className="questionnaire-body">
 							{answerQuestionsList ?
 								answerQuestionsList.map((value, index) => (
-									<QuestionCardStudent key={`item-${index}`} questionnaire={questionnaire} answerQuestionsList={answerQuestionsList} setAnswerQuestionsList={setAnswerQuestionsList} forStudents={false} index={index} value={value} />
+									<QuestionCardStudent key={`item-${index}`} questionnaire={questionnaire} answerQuestionsList={answerQuestionsList} setAnswerQuestionsList={setAnswerQuestionsList} index={index} value={value} />
 								))
 								: ""}
 						</div>
