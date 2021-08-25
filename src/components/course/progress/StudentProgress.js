@@ -86,7 +86,7 @@ const StudentProgress = props => {
 
         if (tempStudentActivities.length > 0) {
             for (let i = 0; i < tempActivities.length; i++) {
-                let studentActivity = tempStudentActivities.find(studentActivity => studentActivity.activity === tempActivities[i].activity);
+                let studentActivity = tempStudentActivities.find(studentActivity => studentActivity.activity === tempActivities[i].activity && studentActivity.task === tempActivities[i].task);
 
                 if (studentActivity) {
                     if (studentActivity.complete) {

@@ -29,6 +29,9 @@ import TitleCard from '../../common/TitleCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
+//Timer
+import Timer from '../../common/Timer';
+
 const QuestionnaireStudent = (props) => {
 
 	//Store questionnaire data
@@ -51,6 +54,9 @@ const QuestionnaireStudent = (props) => {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
+    //Timer vars
+    const [isActive, setIsActive] = useState(false);
+
 	useEffect(() => {
 		changeColor('#f8bbd0');
 	});
@@ -62,6 +68,7 @@ const QuestionnaireStudent = (props) => {
 			setActivity(props.activity);
 			setStudentActivity(props.studentActivity);
 			setLoading(false);
+			setIsActive(true);
 		}
 	}, [props.activity, props.inheritedActivity, props.studentActivity]);
 
@@ -107,7 +114,7 @@ const QuestionnaireStudent = (props) => {
 		}, 2000)
 	};
 
-	const handleCompleteActivity = () => {
+	const handleCompleteActivity = (minutes, seconds) => {
 		try {
 			let goodQuestions = 0;
 			for (let i = 0; i < answerQuestionsList.length; i++) {
@@ -130,7 +137,9 @@ const QuestionnaireStudent = (props) => {
 			if (studentActivity) {
 				api.put(`/api/student-activity/${studentActivity._id}`, {
 					complete: true,
-					grade: grade
+					grade,
+					minutes,
+					seconds
 				}, {
 					headers: {
 						'x-access-token': localStorage.getItem('token')
@@ -191,6 +200,8 @@ const QuestionnaireStudent = (props) => {
 				: ""
 			}
 
+            <Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
+
 			{!loading ?
 				questionnaire && studentActivity ?
 					<>
@@ -219,7 +230,7 @@ const QuestionnaireStudent = (props) => {
 							</div>
 							<hr className="hr-bar"></hr>
 							<div className='d-flex justify-content-center'>
-								<button onClick={handleCompleteActivity} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button>
+								<button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button>
 							</div>
 						</div>
 					</>
