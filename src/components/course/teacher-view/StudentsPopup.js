@@ -163,6 +163,8 @@ export default function StudentsPopup(props) {
 	// Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
 	const addStudents = async () => {
 		try {
+			btnAddStudents.current.disabled = true; // This is to avoid add multiple times the same students
+
 			setProcess(true);
 			setProcessMessage("Añadiendo estudiantes...");
 
@@ -187,12 +189,14 @@ export default function StudentsPopup(props) {
 					showError(message);
 				}
 			}
+			btnAddStudents.current.disabled = false;
 		} catch (error) {
 			if (error.response) {
 				showError(error.response.data.message);
 			} else {
 				showError("Un error ha ocurrido en el servidor");
 			}
+			btnAddStudents.current.disabled = false;
 		}
 		setIsAddingStudents(false);
 		toggle();
@@ -249,7 +253,7 @@ export default function StudentsPopup(props) {
 									</>
 									:
 									<>
-										<NoContentToShow messageTitle={'Sin alumnos...'} messageDes={'No hay alumnos para mostrar'} />
+										<NoContentToShow icon='mood' messageTitle={'Sin alumnos...'} messageDes={'No hay alumnos para mostrar'} />
 									</>
 
 								}

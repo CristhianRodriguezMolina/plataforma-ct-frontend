@@ -50,7 +50,7 @@ export default function MazeStudent(props) {
 	//Timer vars
 	const [isActive, setIsActive] = useState(false);
 
-	// MENSAJES DEL FORMULARIO
+	// MENSAJES DE LA VISTA
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
 	const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
@@ -915,7 +915,7 @@ export default function MazeStudent(props) {
 						<div className='col-md-6 mt-md-0 mt-4'>
 							{
 								maze ?
-									<Intructions instructions={instructions} setInstructions={setInstructions} />
+									<Intructions instructions={instructions} setInstructions={setInstructions} cols={cols} rows={rows} />
 									: ''
 							}
 						</div>

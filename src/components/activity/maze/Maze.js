@@ -1102,7 +1102,7 @@ export default function Maze() {
 						<div className='col-md-6 mt-md-0 mt-4'>
 							{
 								maze ?
-									<Intructions maze={maze} setMaze={setMaze} />
+									<Intructions maze={maze} setMaze={setMaze} cols={cols} rows={rows} />
 									: ''
 							}
 						</div>

@@ -26,8 +26,8 @@ const CardDataPanel = props => {
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-	const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
-	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+	const [info, setInfo] = useState(false); //Variable flag de existencia de un proceso
+	const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
@@ -53,11 +53,11 @@ const CardDataPanel = props => {
 	}
 
 	const showInfo = (message) => {
-		setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
-		setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setInfo(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setInfoMessage(message); //Se setea el mensaje de proceso satisfactorio
 		setTimeout(() => { //Dura 2sg en pantalla el mensaje
-			setProcess(false);
-			setProcessMessage("");
+			setInfo(false);
+			setInfoMessage("");
 		}, 2000)
 	}
 
@@ -106,13 +106,17 @@ const CardDataPanel = props => {
 		}
 	}, [upload]);
 
-	const buttonHandler = () => {
+	const uploadImageHandler = () => {
 		setUpload(true);
 	};
 
 	const saveCardInfo = (files) => {
 		if (cardName && cardName.trim().localeCompare("") !== 0) {
+			saveButton.current.disabled = true;	// This is for avoid problems if the user press the button multiple times
 			if (files.length > 0) {
+
+				setInfo(true);
+				setInfoMessage('Subiendo imagen de perfil al servidor...');
 				const formData = new FormData(); //Crea un formulario
 				formData.append('folder', 'i');
 				formData.append('image', files[0]); //Añade un nombre al formulario
@@ -128,10 +132,15 @@ const CardDataPanel = props => {
 				api.post(`/api/data/upload-img/${logicSequence._id}/${selectedCard}`, formData, config)
 					.then((response) => {
 						setSequenceList(response.data.updatedLogicSequence.sequence_cards);
-
+						saveButton.current.disabled = false;
+						setInfo(false);
+						setInfoMessage('');
 					}).catch((error) => {
 						//Muestra errores durante el proceso
 						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+						saveButton.current.disabled = false;
+						setInfo(false);
+						setInfoMessage('');
 					});
 			}
 			else {
@@ -143,6 +152,7 @@ const CardDataPanel = props => {
 					.then((res) => {
 						showSuccess(res.data.message)
 						setSequenceList(res.data.updatedLogicSequence.sequence_cards);
+						saveButton.current.disabled = false;
 					})
 					.catch(err => {
 						if (err.response) {
@@ -151,6 +161,7 @@ const CardDataPanel = props => {
 						else {
 							showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
 						}
+						saveButton.current.disabled = false;
 					})
 			}
 		}
@@ -181,8 +192,8 @@ const CardDataPanel = props => {
 					<Alert className="alert-message" severity="error">{errorMessage}</Alert>
 					: ""
 				}
-				{process ?
-					<Alert className="alert-message" severity="info">{processMessage}</Alert>
+				{info ?
+					<Alert className="alert-message" severity="info">{infoMessage}</Alert>
 					: ""
 				}
 
@@ -197,7 +208,7 @@ const CardDataPanel = props => {
 					upload={upload}
 					type="image/jpeg, image/png, image/gif"
 					maxFiles="1" />
-				<button ref={saveButton} className="custom-btn custom-btn-primary p-2 px-3" onClick={buttonHandler}>Guardar datos de la tarjeta</button>
+				<button ref={saveButton} className="custom-btn custom-btn-primary p-2 px-3" onClick={uploadImageHandler}>Guardar datos de la tarjeta</button>
 			</div>
 		</div>
 	)

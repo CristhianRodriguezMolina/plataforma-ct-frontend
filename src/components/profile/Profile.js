@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 // CONTEXT
@@ -25,13 +25,16 @@ import EditProfile from './EditProfile';
 import ChangePassword from './ChangePassword';
 
 // Material UI core
-import { Avatar, IconButton, Fade, Modal, Backdrop } from '@material-ui/core';
+import { Avatar, IconButton, Modal, Backdrop } from '@material-ui/core';
 
 // Iconos
 import { Edit } from '@material-ui/icons'
 
 // Dropzone
 import DropzoneUploader from '../common/DropzoneUploader';
+
+// Material-UI lab
+import { Alert } from '@material-ui/lab';
 
 export default function Profile(props) {
 
@@ -65,6 +68,8 @@ export default function Profile(props) {
 
 	// Falg of the modal to add image
 	const [open, setOpen] = useState(false);
+
+	const btnSaveImage = useRef(null);
 
 	// Toggle of the modal to upload an image
 	const toggle = () => setOpen(!open);
@@ -151,6 +156,8 @@ export default function Profile(props) {
 	const uploadImage = async (files) => {
 		try {
 			if (files.length > 0) {
+				btnSaveImage.current.disabled = true; // This is for avoid problems if the user press the button multiple times
+
 				setInfo(true);
 				setInfoMessage('Subiendo imagen de perfil al servidor...');
 
@@ -181,6 +188,8 @@ export default function Profile(props) {
 
 					history.push(`/profile/${user._id}/${view}`); // Se redirige a la misma pagina en la que se encuentra el usuario para que se actualice la imagen de la navegacion
 				}
+
+				btnSaveImage.current.disabled = false;
 			} else {
 				showInfo('Selecciona alguna imagen')
 			}
@@ -190,6 +199,7 @@ export default function Profile(props) {
 			} else {
 				showError('Error en el servidor');
 			}
+			btnSaveImage.current.disabled = false;
 		}
 		setUpload(!upload);
 		setInfo(false);
@@ -201,6 +211,10 @@ export default function Profile(props) {
 			<div className='profile'>
 				<div className='row h-100'>
 					<div className='pricipal-info-section col-md-4'>
+						{info ?
+							<Alert className='alert-message' severity="info">{infoMessage}</Alert>
+							: ""
+						}
 						{
 							!isLoading ?
 								user ?
@@ -254,7 +268,7 @@ export default function Profile(props) {
 									maxFiles="1"
 								/>
 								<div className='d-flex justify-content-end'>
-									<button onClick={handleUpload} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
+									<button onClick={handleUpload} ref={btnSaveImage} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
 									<button onClick={toggle} className='custom-btn p-2'>Cancelar</button>
 								</div>
 							</div>

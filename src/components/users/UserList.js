@@ -191,9 +191,11 @@ export default function UserList({ type }) {
 							:
 							<NoContentToShow messageTitle={`Sin ${type === "teachers" ? "profesores" : "alumnos"}...`} messageDes={`No hay ${type === "teachers" ? "profesores" : "alumnos"} para mostrar`} />
 						:
-						<div className="spinner-loading" style={{ marginTop: '8em' }}>
-							<div className="spinner-border" role="status">
-								<span className="sr-only">Loading...</span>
+						<div style={{ height: '10em', width: '100%', position: 'relative' }}>
+							<div className="spinner-loading" >
+								<div className="spinner-border" role="status">
+									<span className="sr-only">Loading...</span>
+								</div>
 							</div>
 						</div>
 				}

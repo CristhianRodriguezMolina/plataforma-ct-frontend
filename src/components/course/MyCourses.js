@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams } from 'react-router';
 
 // CONTEXT
@@ -51,6 +51,8 @@ export default function MyCourses({ history }) {
 	const [topic, setTopic] = useState('Añade un tema para el curso');
 
 	const [courses, setCourses] = useState(null)
+
+	const btnCreateCourse = useRef(null);
 
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
@@ -129,6 +131,8 @@ export default function MyCourses({ history }) {
 	// Funcion para crear un curso dados unos datos basicos
 	const createCourse = async () => {
 		try {
+			btnCreateCourse.current.disabled = true; // This is to avoid add multiple times a course
+
 			setProcess(true);
 			setProcessMessage('The course is creating...');
 
@@ -160,6 +164,7 @@ export default function MyCourses({ history }) {
 		}
 		setProcess(false);
 		setProcessMessage('');
+		btnCreateCourse.current.disabled = false;
 	}
 
 	return (
@@ -202,14 +207,14 @@ export default function MyCourses({ history }) {
 								)
 								:
 								(
-									
-									<NoContentToShow messageTitle="Sin cursos..." messageDes="No hay cursos para mostrar"/>
-									
+
+									<NoContentToShow messageTitle="Sin cursos..." messageDes="No hay cursos para mostrar" />
+
 								)
 						}
 						{
 							isTeacher || isAdmin ?
-								<button className="custom-btn custom-btn-success btn-create-course" onClick={() => createCourse()}>Crear curso</button>
+								<button className="custom-btn custom-btn-success btn-create-course" ref={btnCreateCourse} onClick={() => createCourse()}>Crear curso</button>
 								:
 								""
 						}

@@ -205,8 +205,7 @@ const UnitContent = props => {
 						</div>
 						: ""
 					:
-
-					<div style={{ height: '10em', width: '100%' }}>
+					<div style={{ height: '10em', width: '100%', position: 'relative' }}>
 						<div className="spinner-loading">
 							<div className="spinner-border" role="status">
 								<span className="sr-only">Loading...</span>

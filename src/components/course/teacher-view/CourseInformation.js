@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 // API
 import api from '../../../services/api';
@@ -32,6 +32,8 @@ export default function CourseInformation({ course, setCourse }) {
 
     // Bool to active the upload image method
     const [upload, setUpload] = useState(false);
+
+    const saveCourseImage = useRef(null);
 
     // Funcion para mostrar una alerta de error dado un mensaje
     const showError = (message) => {
@@ -106,6 +108,8 @@ export default function CourseInformation({ course, setCourse }) {
     const uploadImage = async (files) => {
         try {
             if (files.length > 0) {
+                saveCourseImage.current.disabled = true; // This is for avoid problems if the user press the button multiple times
+
                 setInfo(true);
                 setInfoMessage('Subiendo imagen del curso al servidor...');
 
@@ -130,6 +134,8 @@ export default function CourseInformation({ course, setCourse }) {
 
                     showSuccess(message);
                 }
+
+                saveCourseImage.current.disabled = false;
             } else {
                 showInfo('Selecciona alguna imagen para agregar al curso')
             }
@@ -139,6 +145,7 @@ export default function CourseInformation({ course, setCourse }) {
             } else {
                 showError('Error en el servidor');
             }
+            saveCourseImage.current.disabled = false;
         }
         setUpload(!upload);
         setInfo(false);
@@ -203,7 +210,7 @@ export default function CourseInformation({ course, setCourse }) {
                             : ""
                     }
                 </div>
-                <button onClick={handleUpload} className="custom-btn custom-btn-info px-2 py-2 mt-3">Subir imagen</button>
+                <button onClick={handleUpload} ref={saveCourseImage} className="custom-btn custom-btn-info px-2 py-2 mt-3">Subir imagen</button>
             </div>
         </div>
     )

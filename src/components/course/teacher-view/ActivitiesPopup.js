@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // API
 import api from "../../../services/api";
@@ -44,6 +44,9 @@ export default function ActivitiesPopup(props) {
     // List of activities that can be added to the task
     const [activities, setActivities] = useState(null);
 
+    // Refs of the button that add activities
+    const btnAddActivities = useRef(null);
+
     // List of activities that will be added to the task
     const [activitiesToAdd, setActivitiesToAdd] = useState([]);
 
@@ -55,6 +58,17 @@ export default function ActivitiesPopup(props) {
             fetchActivities();
         }
     }, [activities, isAddingActivities]);
+
+    // UseEffect to disable or activate the button to add activities depending if there is activities to add or not 
+    useEffect(() => {
+        if (btnAddActivities.current) {
+            if (activitiesToAdd.length > 0) {
+                btnAddActivities.current.disabled = false;
+            } else {
+                btnAddActivities.current.disabled = true;
+            }
+        }
+    }, [activitiesToAdd])
 
     useEffect(() => {
         if (isOpen) {
@@ -124,6 +138,8 @@ export default function ActivitiesPopup(props) {
     // Metodo para añadir los estudiantes seleccionados por el usuario al curso actual
     const addActivities = async () => {
         try {
+            btnAddActivities.current.disabled = true; // This is to avoid add multiple times the same activities
+
             setProcess(true);
             setProcessMessage("Añadiendo actividades...");
 
@@ -161,6 +177,7 @@ export default function ActivitiesPopup(props) {
         }
         setIsAddingActivities(false);
         toggle();
+        btnAddActivities.current.disabled = false;
     };
 
     return (
@@ -210,6 +227,7 @@ export default function ActivitiesPopup(props) {
                     <button
                         className='custom-btn custom-btn-success p-2'
                         onClick={() => addActivities()}
+                        ref={btnAddActivities}
                     >
                         Agregar
                     </button>

@@ -15,6 +15,9 @@ import { Typography, Avatar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import NoContentToShow from '../../common/NoContentToShow';
 
+// Icons
+import { AccountCircle } from '@material-ui/icons';
+
 /* STUDENT */
 export default function CourseInformation(props) {
 
@@ -86,7 +89,12 @@ export default function CourseInformation(props) {
                         teacher ?
                             <>
                                 <div className="d-flex">
-                                    <Avatar className="course-info-avatar" src="https://picsum.photos/200/300" />
+                                    {teacher.image !== "" ?
+                                        <Avatar className="course-info-avatar" src={`${process.env.REACT_APP_API_URL}/profile/${teacher.image}`} /> :
+                                        <Avatar className="course-info-avatar">
+                                            <AccountCircle style={{ fontSize: 60 }} />
+                                        </Avatar>
+                                    }
                                     <div>
                                         <p className='m-0 ml-4 mb-2 p-0'><b>{teacher.first_name} {teacher.last_name}</b></p>
                                         <p className='m-0 ml-4 mb-2 p-0 text-muted'>Genero: {teacher.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>

@@ -54,6 +54,8 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+	const [info, setInfo] = useState(false); //Variable flag de existencia de un proceso
+	const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
@@ -79,6 +81,8 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 	const [selectedOption, setSelectedOption] = useState("");
 
 	const [uploadImgFrom, setUploadImgFrom] = useState("");
+
+	const btnSaveImage = useRef(null);
 
 	useEffect(() => {
 		if (upload) {
@@ -209,6 +213,12 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 	const uploadOptionImg = (files) => {
 		if (files.length > 0 && questionnaire && selectedOption !== "") {
+			console.log(btnSaveImage.current)
+			btnSaveImage.current.disabled = true; // This is for avoid problems if the user press the button multiple times
+
+			setInfo(true);
+			setInfoMessage('Subiendo imagen de perfil al servidor...');
+
 			const formData = new FormData(); //Crea un formulario
 			formData.append('folder', 'questionnaire'); // Folder name to store the images
 			formData.append('image', files[0]); //Añade un nombre al formulario
@@ -223,11 +233,18 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				.then((response) => {
 					setOptionsList(response.data.updatedQuestion.options);
 					setSelectedOption("");
-
+					setInfo(false);
+					setInfoMessage('');
+					btnSaveImage.current.disabled = false;
+					setOpenUploadImage(false);
 				}).catch((error) => {
 					setSelectedOption("");
 					//Muestra errores durante el proceso
 					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+					setInfo(false);
+					setInfoMessage('');
+					btnSaveImage.current.disabled = false;
+					setOpenUploadImage(false);
 				});
 		}
 		else {
@@ -237,6 +254,11 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 	const uploadQuestionImg = (files) => {
 		if (files.length > 0 && questionnaire) {
+			btnSaveImage.current.disabled = true; // This is for avoid problems if the user press the button multiple times
+
+			setInfo(true);
+			setInfoMessage('Subiendo imagen de perfil al servidor...');
+
 			const formData = new FormData(); //Crea un formulario
 			formData.append('folder', 'questionnaire'); // Folder name to store the images
 			formData.append('image', files[0]); //Añade un nombre al formulario
@@ -250,10 +272,17 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 			api.post(`/api/data/upload-questionnaire-img/question/${questionnaire._id}/${value._id}`, formData, config)
 				.then((response) => {
 					setQuestionsList(response.data.updatedQuestionnaire.questions);
-
+					setInfo(false);
+					setInfoMessage('');
+					btnSaveImage.current.disabled = false;
+					setOpenUploadImage(false);
 				}).catch((error) => {
 					//Muestra errores durante el proceso
 					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+					setInfo(false);
+					setInfoMessage('');
+					btnSaveImage.current.disabled = false;
+					setOpenUploadImage(false);
 				});
 		}
 		else {
@@ -366,12 +395,10 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 		if (uploadImgFrom === 'question') {
 			uploadQuestionImg(files);
 			setUploadImgFrom("");
-			setOpenUploadImage(false);
 		}
 		else if (uploadImgFrom === 'option') {
 			uploadOptionImg(files);
 			setUploadImgFrom("");
-			setOpenUploadImage(false);
 		}
 	};
 
@@ -535,7 +562,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 					/>
 
 					<div className='d-flex justify-content-end'>
-						<button onClick={handleUpload} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
+						<button onClick={handleUpload} ref={btnSaveImage} className='custom-btn custom-btn-primary p-2 mr-2'>Guardar imagen</button>
 						<button onClick={toggle} className='custom-btn p-2'>Cancelar</button>
 					</div>
 				</div>

@@ -5,19 +5,22 @@ import React, { useState, useEffect } from 'react';
 import './NoContentToShow.scss';
 
 //Icons
-import { Mood, MoodBad } from '@material-ui/icons';
+import { Mood, MoodBad, Face } from '@material-ui/icons';
 
 const NoContentToShow = (props) => {
 	return (
 		<div className='no-tasks-message-container'>
 			{
 				props.icon === 'mood' ?
-					<Mood style={{ fontSize: 80, color: '#96BAFF' }} />
+					<Mood style={props.color ? { fontSize: 80, color: props.color } : { fontSize: 80, color: '#96BAFF' }} />
 					:
 					props.icon === 'mood_bad' ?
-						<MoodBad style={{ fontSize: 80, color: '#ef9a9a' }} />
+						<MoodBad style={props.color ? { fontSize: 80, color: props.color } : { fontSize: 80, color: '#ef9a9a' }} />
 						:
-						''
+						props.icon === 'face' ?
+							<Face style={props.color ? { fontSize: 80, color: props.color } : { fontSize: 80, color: '#b39ddb' }} />
+							:
+							''
 			}
 			<h1>{props.messageTitle}</h1>
 			<p>{props.messageDes}</p>

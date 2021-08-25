@@ -1,7 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-
-// CONTEXT
-import UserContext from '../../../context/user/UserContext';
+import React, { useContext, useState } from 'react';
 
 //SCSS
 import './SequenceCard.scss';
@@ -11,12 +8,9 @@ import '../../common/alert-message.scss';
 import api from '../../../services/api';
 
 // COMPONENTS
-import { Itemtypes } from '../../../util/item';
 import { LogicSequenceContext } from './LogicSequence';
 import { SortableElement } from 'react-sortable-hoc';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import zIndex from '@material-ui/core/styles/zIndex';
 
 // Tip de uso
 import Tooltip from '@material-ui/core/Tooltip';
@@ -32,7 +26,6 @@ import Alert from '@material-ui/lab/Alert';
 
 const SequenceCard = SortableElement(({ value, forStudents }) => {
 
-    const { env } = useContext(UserContext);
     const { setSequenceList, logicSequence, setSelectedCard, setCardDeleted, selectedCard } = useContext(LogicSequenceContext);
 
     // MENSAJES DEL FORMULARIO

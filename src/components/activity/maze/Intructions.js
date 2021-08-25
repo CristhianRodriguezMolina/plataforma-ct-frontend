@@ -34,6 +34,7 @@ import InstructionCard from './InstructionCard';
 
 // Scrollbars
 import { Scrollbars } from 'react-custom-scrollbars';
+import { Alert } from '@material-ui/lab';
 
 export const CreateMazeContext = createContext({
     instructionsToDelete: [],
@@ -52,6 +53,10 @@ const SortableList = SortableContainer(({ items, showCheck }) => {
 });
 
 const Intructions = props => {
+
+    // MENSAJES DE LA VISTA
+    const [error, setError] = useState(false); //Variable flag de existencia de error
+    const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
 
     const [instructionsList, setInstructionsList] = useState([]);
 
@@ -76,6 +81,16 @@ const Intructions = props => {
         }
     }, [instructionsList])
 
+    // Funcion para mostrar una alerta de error dado un mensaje
+    const showError = (message) => {
+        setError(true);   //Se cambia el estado de mensaje de error a verdadero
+        setErrorMessage(message); //Se setea el mensaje de error
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setError(false);
+            setErrorMessage("");
+        }, 2000)
+    }
+
     const updateMazeInstructions = (newInstructions) => {
         if (props.maze !== null && props.maze !== undefined) {
             props.setMaze(prevMaze => {
@@ -94,6 +109,11 @@ const Intructions = props => {
     };
 
     const handleClick = (value) => {
+        if (instructionsList.length >= props.cols * props.rows) {
+            showError('LLegó al numero de instrucciones')
+            return;
+        }
+
         let tempList = [...instructionsList];
 
         tempList.push({
@@ -134,6 +154,11 @@ const Intructions = props => {
     return (
         <CreateMazeContext.Provider value={{ instructionsToDelete, setInstructionsToDelete }}>
             <div className="instructions-maze-container">
+                {
+                    error ?
+                        <Alert className="alert-message" severity="error">{errorMessage}</Alert>
+                        : ""
+                }
                 {instructionsList ?
                     <div className="instructions-list-container">
                         <Scrollbars style={{ width: '100%', height: '100%' }}>
