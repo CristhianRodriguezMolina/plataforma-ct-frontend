@@ -225,7 +225,7 @@ export default function UnitsInformation(props) {
 					props.course.units.map((unit, index) => (
 						unit.visible ?
 							<TabPanel value={value} key={index} index={index}>
-								<UnitContent course={props.course} taskActivities={taskActivities.filter(taskActivity => taskActivity.unit === unit._id)} studentActivities={studentActivities.filter(studentActivity => studentActivity.unit === unit._id)} unitValue={unit} />
+								<UnitContent course={props.course} taskActivities={taskActivities ? taskActivities.filter(taskActivity => taskActivity.unit === unit._id) : null} studentActivities={studentActivities ? studentActivities.filter(studentActivity => studentActivity.unit === unit._id) : null} unitValue={unit} />
 							</TabPanel>
 							:
 							''

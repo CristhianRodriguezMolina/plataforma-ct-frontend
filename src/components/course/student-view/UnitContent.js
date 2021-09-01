@@ -228,8 +228,8 @@ const UnitContent = props => {
 							<TaskCard
 								key={i}
 								forStudent={true}
-								studentActivities={props.studentActivities.filter(studentActivity => studentActivity.task === task._id)}
-								taskActivities={props.taskActivities.filter(taskActivity => taskActivity.task === task._id)}
+								studentActivities={props.studentActivities ? props.studentActivities.filter(studentActivity => studentActivity.task === task._id) : null}
+								taskActivities={props.taskActivities ? props.taskActivities.filter(taskActivity => taskActivity.task === task._id) : null}
 								courseId={props.course._id}
 								unitId={props.unitValue._id}
 								task={task} />
