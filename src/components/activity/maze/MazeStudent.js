@@ -306,7 +306,9 @@ export default function MazeStudent(props) {
 				complete: true,
 				grade: grade,
 				minutes,
-				seconds
+				seconds,
+				asnwer: instructions,
+				type: props.activity.type,
 			}, {
 				headers: {
 					'x-access-token': localStorage.getItem('token')

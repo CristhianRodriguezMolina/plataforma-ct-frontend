@@ -131,7 +131,9 @@ const LogicSequenceStudent = props => {
                 complete: true,
                 grade,
                 minutes,
-                seconds
+                seconds,
+                asnwer: sequenceList,
+                type: activity.type,
             }, {
                 headers: {
                     'x-access-token': localStorage.getItem('token')

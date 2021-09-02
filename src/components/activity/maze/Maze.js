@@ -1102,7 +1102,10 @@ export default function Maze() {
 						<div className='col-md-6 mt-md-0 mt-4'>
 							{
 								maze ?
-									<Intructions maze={maze} setMaze={setMaze} cols={cols} rows={rows} />
+									<>
+										<h5 className='text-muted font-italic'>Aqui pon las intrucciones de la solución mas optima para este laberinto cuando lo hayas terminado</h5>
+										<Intructions maze={maze} setMaze={setMaze} cols={cols} rows={rows} />
+									</>
 									: ''
 							}
 						</div>

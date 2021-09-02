@@ -246,7 +246,7 @@ const IndividualProgress = (props) => {
 					// To set if the activity was delivered in time or with delay
 					if (tempStudentActivity.complete && task.is_due_date) {
 						const due_date = new Date(dateFormat(task.due_date, 'GMT:yyyy-mm-dd'));
-						const realizationDate = new Date(dateFormat(tempStudentActivity.date, 'GMT:yyyy-mm-dd'));
+						const realizationDate = new Date(dateFormat(tempStudentActivity.updatedAt, 'GMT:yyyy-mm-dd'));
 
 						if (due_date.getTime() >= realizationDate.getTime()) {
 							justInTime = 1;
@@ -262,11 +262,11 @@ const IndividualProgress = (props) => {
 						<tr>
 							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.name} aria-label="activity-name">
 								<td className="activity-name-field-td">
-									{tempTaskActivities[i].activity.type === "logic_sequence" ? 
-										<AccountTree/> :
-											tempTaskActivities[i].activity.type === "maze" ?
-											<BorderVertical/>:<Ballot/>	
-										}
+									{tempTaskActivities[i].activity.type === "logic_sequence" ?
+										<AccountTree /> :
+										tempTaskActivities[i].activity.type === "maze" ?
+											<BorderVertical /> : <Ballot />
+									}
 									{`  ${tempTaskActivities[i].activity.name}`}
 								</td>
 							</Tooltip>
@@ -317,8 +317,8 @@ const IndividualProgress = (props) => {
 								</td>
 							</Tooltip>
 
-							<Tooltip enterDelay={200} enterNextDelay={200} title={dateFormat(tempStudentActivity.date, "customDateFormat")} aria-labe="realization-date">
-								<td className="activity-name-field-td">{dateFormat(tempStudentActivity.date, "customDateFormat")}</td>
+							<Tooltip enterDelay={200} enterNextDelay={200} title={dateFormat(tempStudentActivity.updatedAt, "customDateFormat")} aria-labe="realization-date">
+								<td className="activity-name-field-td">{dateFormat(tempStudentActivity.updatedAt, "customDateFormat")}</td>
 							</Tooltip>
 
 							<Tooltip enterDelay={200} enterNextDelay={200} title={`${tempStudentActivity.minutes}:${tempStudentActivity.seconds}`} aria-label="realization-time">
@@ -331,11 +331,11 @@ const IndividualProgress = (props) => {
 						<tr>
 							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.name} aria-label="activity-name">
 								<td className="activity-name-field-td">
-									{tempTaskActivities[i].activity.type === "logic_sequence" ? 
-										<AccountTree/> :
-											tempTaskActivities[i].activity.type === "maze" ?
-											<BorderVertical/>:<Ballot/>	
-										}
+									{tempTaskActivities[i].activity.type === "logic_sequence" ?
+										<AccountTree /> :
+										tempTaskActivities[i].activity.type === "maze" ?
+											<BorderVertical /> : <Ballot />
+									}
 									{`  ${tempTaskActivities[i].activity.name}`}
 								</td>
 							</Tooltip>
@@ -396,9 +396,9 @@ const IndividualProgress = (props) => {
 				<div className='student-info' style={{ backgroundColor: infoStudentBGColor }}>
 					<div className='student-info-card'>
 						{individualProgressInfo.student.image !== "" ?
-							<Avatar className="student-avatar mr-4" src={`${process.env.REACT_APP_API_URL}/profile/${individualProgressInfo.student.image}`} />:
+							<Avatar className="student-avatar mr-4" src={`${process.env.REACT_APP_API_URL}/profile/${individualProgressInfo.student.image}`} /> :
 							<Avatar className="student-avatar mr-4">
-								<AccountCircle style={{ fontSize: 110 }}/>
+								<AccountCircle style={{ fontSize: 110 }} />
 							</Avatar>
 						}
 						<div>

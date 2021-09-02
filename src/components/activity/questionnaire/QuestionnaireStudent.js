@@ -54,8 +54,8 @@ const QuestionnaireStudent = (props) => {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
-    //Timer vars
-    const [isActive, setIsActive] = useState(false);
+	//Timer vars
+	const [isActive, setIsActive] = useState(false);
 
 	useEffect(() => {
 		changeColor('#f8bbd0');
@@ -79,7 +79,7 @@ const QuestionnaireStudent = (props) => {
 			let options = questionsTemp[i].options;
 
 			for (let j = 0; j < options.length; j++) {
-				options[j] = { ...options[j], answer: false }
+				options[j] = { ...options[j], answer: false } // Adding a new field "answer" for the student to solve the questionnaire and later compare to the isCorrect field given by the activity
 			}
 		}
 		return questionsTemp;
@@ -121,7 +121,7 @@ const QuestionnaireStudent = (props) => {
 				const answerOptionsList = answerQuestionsList[i].options.slice();
 
 				for (let j = 0; j < answerOptionsList.length; j++) {
-					if (!(answerOptionsList[j].isCorrect === answerOptionsList[j].answer)) {
+					if (!(answerOptionsList[j].isCorrect === answerOptionsList[j].answer)) { // It compares the answer given by the student and the aswer given by the activity
 						break;
 					}
 					if (j === answerOptionsList.length - 1) {
@@ -139,7 +139,9 @@ const QuestionnaireStudent = (props) => {
 					complete: true,
 					grade,
 					minutes,
-					seconds
+					seconds,
+					asnwer: answerQuestionsList,
+					type: activity.type,
 				}, {
 					headers: {
 						'x-access-token': localStorage.getItem('token')
@@ -200,7 +202,7 @@ const QuestionnaireStudent = (props) => {
 				: ""
 			}
 
-            <Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
+			<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
 
 			{!loading ?
 				questionnaire && studentActivity ?

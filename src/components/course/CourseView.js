@@ -15,6 +15,9 @@ import './course.scss';
 
 import { prominent, average } from 'color.js'
 
+// Default course image
+import defaultImage from '../../assets/default-course-image.jpg';
+
 // COMPONENTES
 
 // Tarjeta de titulo
@@ -87,8 +90,13 @@ export default function CourseView({ history }) {
 
         if (course) {
             imageExists(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, (exists) => {
+                console.log(exists)
                 if (exists) {
                     average(`${process.env.REACT_APP_API_URL}/course-images/${course.image}`, { sample: 10 }).then(color => {
+                        setColor(color);
+                    })
+                } else {
+                    average(defaultImage, { sample: 10 }).then(color => {
                         setColor(color);
                     })
                 }
@@ -156,7 +164,7 @@ export default function CourseView({ history }) {
                                     }
                                     color="#B6E768"
                                     colorFont='#fff'
-                                    image={`${process.env.REACT_APP_API_URL}/course-images/${course.image}`}
+                                    image={course.image === 'default-course-image.jpg' ? defaultImage : `${process.env.REACT_APP_API_URL}/course-images/${course.image}`}
                                 />
                                 :
                                 ""
