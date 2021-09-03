@@ -9,9 +9,6 @@ import './course.scss';
 // animate.css package
 import 'animate.css/animate.min.css';
 
-// Default course image
-import defaultImage from '../../assets/default-course-image.jpg';
-
 // COMPONENTS
 
 // Animation
@@ -110,7 +107,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                     </div>
                     <hr className="mx-2 my-1" />
                     <div className='img-wrapper'>
-                        <img src={course.image === 'default-course-image.jpg' ? defaultImage : `${process.env.REACT_APP_API_URL}/course-images/${course.image}`} alt="CourseImage" loading="lazy" />
+                        <img src={course.image === '' ? '/default-course-image.jpg' : `${process.env.REACT_APP_API_URL}/course-images/${course.image}`} alt="CourseImage" loading="lazy" />
                     </div>
                     <div className="info mt-3">
                         {

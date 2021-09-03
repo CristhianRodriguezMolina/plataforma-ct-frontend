@@ -15,9 +15,6 @@ import './course.scss';
 
 import { prominent, average } from 'color.js'
 
-// Default course image
-import defaultImage from '../../assets/default-course-image.jpg';
-
 // COMPONENTES
 
 // Tarjeta de titulo
@@ -96,7 +93,7 @@ export default function CourseView({ history }) {
                         setColor(color);
                     })
                 } else {
-                    average(defaultImage, { sample: 10 }).then(color => {
+                    average('/default-course-image.jpg', { sample: 10 }).then(color => {
                         setColor(color);
                     })
                 }
@@ -164,7 +161,7 @@ export default function CourseView({ history }) {
                                     }
                                     color="#B6E768"
                                     colorFont='#fff'
-                                    image={course.image === 'default-course-image.jpg' ? defaultImage : `${process.env.REACT_APP_API_URL}/course-images/${course.image}`}
+                                    image={course.image === '' ? '/default-course-image.jpg' : `${process.env.REACT_APP_API_URL}/course-images/${course.image}`}
                                 />
                                 :
                                 ""
@@ -182,7 +179,6 @@ export default function CourseView({ history }) {
                                                     <Tooltip enterDelay={500} enterNextDelay={200} title={course.name} aria-label={`${course.name}`}>
                                                         <Typography><b className="text-overflow-2">{course.name}</b></Typography>
                                                     </Tooltip>
-
                                                 </Breadcrumbs>
                                                 :
                                                 ""

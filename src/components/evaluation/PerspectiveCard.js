@@ -20,9 +20,51 @@ const PerspectiveCard = (props) => {
 	// Datos del contexto de usuario
 	const { isAdmin, isTeacher } = useContext(UserContext);
 
+	// The variables in the props
 	const { perspective } = props;
 
+	// Toggle of the modal to delete the perspective card
 	const [open, setOpen] = useState(false);
+
+	// MENSAJES DEL FORMULARIO
+	const [error, setError] = useState(false); //Variable flag de existencia de error
+	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+	const [info, setInfo] = useState(false); //Variable flag de existencia de un proceso
+	const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
+	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
+	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+
+	// Funcion para mostrar una alerta de error dado un mensaje
+	const showError = (message) => {
+		setError(true);   //Se cambia el estado de mensaje de error a verdadero
+		setErrorMessage(message); //Se setea el mensaje de error
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setError(false);
+			setErrorMessage("");
+		}, 2000)
+	}
+
+	// Funcion para mostrar una alerta satisfactoria dado un mensaje
+	const showSuccess = (message) => {
+		setSuccess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setSuccessMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setSuccess(false);
+			setSuccessMessage("");
+		}, 2000)
+	}
+
+	const deletePerspective = () => {
+		try {
+
+		} catch (error) {
+			if (error.response) {
+				showError(error.response.message);
+			} else {
+				showError('Ha ocurrido un error inesperado');
+			}
+		}
+	}
 
 	return (
 		<div className='perspective-card-container'>
@@ -30,7 +72,7 @@ const PerspectiveCard = (props) => {
 				isAdmin || isTeacher ?
 					<div className='delete-button'>
 						<Tooltip title="Editar" aria-label="edit">
-							<IconButton className="m-0 p-0 mr-2" color="primary" aria-label="Delete" onClick={() => setOpen(!open)}>
+							<IconButton className="m-0 p-0 mr-2" color="primary" aria-label="Delete" onClick={deletePerspective}>
 								<Edit />
 							</IconButton>
 						</Tooltip>

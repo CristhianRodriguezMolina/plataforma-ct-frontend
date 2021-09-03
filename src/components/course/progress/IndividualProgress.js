@@ -97,7 +97,6 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		width: '100%',
 		margin: 0,
-		marginBottom: '100px',
 		padding: 0,
 	},
 	bar: {
@@ -107,10 +106,10 @@ const useStyles = makeStyles((theme) => ({
 		borderRadius: "10px"
 	},
 	indicator: {
-		backgroundColor: 'yellowgreen',
+		backgroundColor: '#1e88e5',
 	},
 	selected: {
-		color: '#558b2f',
+		color: '#64b5f6',
 		fontWeight: 'bold'
 	},
 	notSelected: {
@@ -140,14 +139,21 @@ const IndividualProgress = (props) => {
 	// Valor actual referente a la pestaña actual abierta
 	const [value, setValue] = useState(0);
 
+	// Variable that contains the individual progress info
 	const [individualProgressInfo, setIndividualProgressInfo] = useState(null);
 
 	// Colors for the navbar in base of the image of the course
 	const [color, setColor] = useState(null);
 
+	// Background color of the student info
 	const [infoStudentBGColor, setInfoStudentBGColor] = useState(`rgba(${255}, ${255}, ${255})`)
 
+	// Variable to see if the data have load
 	const [loading, setLoading] = useState(true);
+
+	// PERSPECTIVES VARIABLES
+	const [newPerspective, setNewPerspective] = useState('');
+	const [studentPerspectives, setStudentPerspectives] = useState(null);
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -186,6 +192,10 @@ const IndividualProgress = (props) => {
 					imageExists(`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`, (exists) => {
 						if (exists) {
 							average(`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`, { sample: 10 }).then(color => {
+								setColor(color);
+							})
+						} else {
+							average('/default-course-image.jpg', { sample: 10 }).then(color => {
 								setColor(color);
 							})
 						}
@@ -382,6 +392,21 @@ const IndividualProgress = (props) => {
 		return items;
 	}
 
+	// Method to add a new perspective to the given student 
+	const handleAddPerspective = (e) => {
+		e.preventDefault();
+
+		try {
+
+		} catch (error) {
+			if (error.response) {
+				showError(error.response.message);
+			} else {
+				showError('Ha ocurrido un error inesperado');
+			}
+		}
+	}
+
 	return (
 		<div>
 			{
@@ -390,7 +415,7 @@ const IndividualProgress = (props) => {
 						title={individualProgressInfo.course.name}
 						color="#B6E768"
 						colorFont='#fff'
-						image={`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`}
+						image={individualProgressInfo.course.image === '' ? '/default-course-image.jpg' : `${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`}
 					/>
 					:
 					""
@@ -448,7 +473,6 @@ const IndividualProgress = (props) => {
 
 								{individualProgressInfo && individualProgressInfo.course.units[0] ? <div className="divider bg-white"></div> : ""}
 							</Tabs>
-							{individualProgressInfo && individualProgressInfo.course.units[0] ? <div className="divider"></div> : ""}
 						</div>
 					</Typography>
 
@@ -549,7 +573,22 @@ const IndividualProgress = (props) => {
 						</div>
 				}
 			</div>
-			<div className='perspectives-container'>
+
+			{/* PERSPECTIVES */}
+			<hr className='mx-5' style={{ borderWidth: '1px', borderColor: 'darkgrey' }} />
+			<div className='perspectives-container container'>
+				<h1 className="h4">Agregar perspectiva</h1>
+				<h1 className="h6 text-muted mb-3">Aqui puedes escribir una evaluación perspectiva del alumno en cuestión.</h1>
+				<form onSubmit={handleAddPerspective} className='mb-4'>
+					<div className='form-group w-md-50'>
+						<textarea className='form-control' type="text" rows="4" label="Perspective" name="Perspectiva" placeholder='Escribe tu perspectiva aqui' onChange={evt => setNewPerspective(evt.target.value)} value={newPerspective} />
+					</div>
+					<div className='d-flex justify-content-end'>
+						<button type='submit' className='custom-btn custom-btn-primary py-2 px-3'>Agregar</button>
+					</div>
+				</form>
+				<h1 className="h4">Perspectivas del alumno</h1>
+				<h1 className="h6 text-muted mb-3">Aqui puedes ver las evaluaciones perspectivas que has realizado a este alumno, editarlas y/o borrarlas.</h1>
 				<PerspectiveCard
 					perspective={{
 						course_name: 'Nombre del curso',
