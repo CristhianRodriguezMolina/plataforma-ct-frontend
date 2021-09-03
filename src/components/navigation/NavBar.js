@@ -102,6 +102,7 @@ function NavBar() {
 															""
 													}
 													<div className="dropdown-divider"></div>
+													<li><Link className="dropdown-item" to="/perspectives-view"><Computer className="mr-2" color="action" /> Mis evaluaciones</Link></li>
 													<li><Link className="dropdown-item" to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}><Computer className="mr-2" color="action" /> Mis cursos</Link></li>
 													{
 														isAdmin || isTeacher ?

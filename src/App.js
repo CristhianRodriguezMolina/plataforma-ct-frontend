@@ -34,6 +34,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 // Navigation
 import NavBar from './components/navigation/NavBar';
 
+// Expired session view
 import ExpiredSessionConfirmation from './components/expired-session/ExpiredSessionConfirmation';
 
 // My courses
@@ -83,6 +84,12 @@ const Questionnaire = React.lazy(() => import('./components/activity/questionnai
 //Logic sequence (student view)
 const StudentActivity = React.lazy(() => import('./components/activity/StudentActivity'));
 
+// PERSPECTIVE
+
+// My evaluations
+const PerspectivesView = React.lazy(() => import('./components/evaluation/PerspectivesView'));
+
+
 function App() {
 
   return (
@@ -120,6 +127,9 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/activity/maze/:activityId' exact component={Maze} />
                 <ProtectedRoute type="admin, teacher" path='/activity/questionnaire/:activityId' exact component={Questionnaire} />
                 {/* <ProtectedRoute type="admin, teacher" path='/activity/questionnaire/student/:activityId' exact component={MazeStudent} /> */}
+
+                {/* PERSPECTIVE */}
+                <ProtectedRoute path='/perspectives-view' exact component={PerspectivesView} />
 
                 {/* PROFILE */}
                 <ProtectedRoute path='/profile/:userId/:view' exact component={Profile} />

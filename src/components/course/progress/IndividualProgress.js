@@ -55,6 +55,9 @@ import TitleCard from '../../common/TitleCard';
 // Iconos
 import { AccountCircle, AccountTree, BorderVertical, Ballot, Cancel, CheckCircle } from '@material-ui/icons';
 
+// Perspective card
+import PerspectiveCard from '../../evaluation/PerspectiveCard';
+
 /* STUDENTS */
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -94,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		width: '100%',
 		margin: 0,
+		marginBottom: '100px',
 		padding: 0,
 	},
 	bar: {
@@ -151,42 +155,45 @@ const IndividualProgress = (props) => {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
-	useEffect(async () => {
-		if (!individualProgressInfo) {
-			try {
-				const res = await api.get(`/api/course/students/individual-progress/${studentId}/${courseId}`, {
-					headers: {
-						'x-access-token': localStorage.getItem('token')
-					}
-				});
-
-				if (res) {
-					setIndividualProgressInfo({
-						studentActivities: res.data.studentActivities,
-						course: res.data.course,
-						taskActivities: res.data.tasksActivities,
-						student: res.data.student,
-						activities: res.data.activities
+	useEffect(() => {
+		const fetchIndividualProgress = async () => {
+			if (!individualProgressInfo) {
+				try {
+					const res = await api.get(`/api/course/students/individual-progress/${studentId}/${courseId}`, {
+						headers: {
+							'x-access-token': localStorage.getItem('token')
+						}
 					});
 
-				}
+					if (res) {
+						setIndividualProgressInfo({
+							studentActivities: res.data.studentActivities,
+							course: res.data.course,
+							taskActivities: res.data.tasksActivities,
+							student: res.data.student,
+							activities: res.data.activities
+						});
 
-				setLoading(false);
-
-			} catch (e) {
-				setLoading(false);
-			}
-		} else {
-			if (individualProgressInfo.course) {
-				imageExists(`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`, (exists) => {
-					if (exists) {
-						average(`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`, { sample: 10 }).then(color => {
-							setColor(color);
-						})
 					}
-				});
+
+					setLoading(false);
+
+				} catch (e) {
+					setLoading(false);
+				}
+			} else {
+				if (individualProgressInfo.course) {
+					imageExists(`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`, (exists) => {
+						if (exists) {
+							average(`${process.env.REACT_APP_API_URL}/course-images/${individualProgressInfo.course.image}`, { sample: 10 }).then(color => {
+								setColor(color);
+							})
+						}
+					});
+				}
 			}
 		}
+		fetchIndividualProgress();
 	}, [individualProgressInfo]);
 
 	// Funcion para mostrar una alerta de error dado un mensaje
@@ -255,9 +262,6 @@ const IndividualProgress = (props) => {
 						}
 					}
 
-					// This is to add a custom date format
-					dateFormat.masks.customDateFormat = 'GMT:"El" yyyy-mm-dd "a las" HH:MM:ss';
-
 					items.push(
 						<tr>
 							<Tooltip enterDelay={200} enterNextDelay={200} title={tempTaskActivities[i].activity.name} aria-label="activity-name">
@@ -317,8 +321,8 @@ const IndividualProgress = (props) => {
 								</td>
 							</Tooltip>
 
-							<Tooltip enterDelay={200} enterNextDelay={200} title={dateFormat(tempStudentActivity.updatedAt, "customDateFormat")} aria-labe="realization-date">
-								<td className="activity-name-field-td">{dateFormat(tempStudentActivity.updatedAt, "customDateFormat")}</td>
+							<Tooltip enterDelay={200} enterNextDelay={200} title={util.getCustomDate(tempStudentActivity.updatedAt)} aria-labe="realization-date">
+								<td className="activity-name-field-td">{util.getCustomDate(tempStudentActivity.updatedAt)}</td>
 							</Tooltip>
 
 							<Tooltip enterDelay={200} enterNextDelay={200} title={`${tempStudentActivity.minutes}:${tempStudentActivity.seconds}`} aria-label="realization-time">
@@ -392,6 +396,8 @@ const IndividualProgress = (props) => {
 					""
 			}
 
+			{/* <div className='row w-100 mx-0'>
+				<div className='col-md-5 px-0 mx-0'> */}
 			{individualProgressInfo && individualProgressInfo.student ?
 				<div className='student-info' style={{ backgroundColor: infoStudentBGColor }}>
 					<div className='student-info-card'>
@@ -411,6 +417,8 @@ const IndividualProgress = (props) => {
 				</div>
 				: ""}
 
+			{/* </div>
+				<div className='col-md-7 px-0'> */}
 			<div className={classes.root}>
 				<AppBar className={classes.bar} position="static">
 					<Typography component="div">
@@ -491,13 +499,27 @@ const IndividualProgress = (props) => {
 																	<table className="student-progress-table-by-tasks">
 																		<thead>
 																			<tr>
-																				<th className="activity-field-th">Actividad</th>
-																				<th className="activity-field-th">Descripción</th>
-																				<th className="completed-field-th">Completada</th>
-																				<th className="grade-field-th">Nota</th>
-																				<th className="activity-field-th">Entregado a tiempo</th>
-																				<th className="activity-field-th">Fecha</th>
-																				<th className="activity-field-th">Tiempo</th>
+																				<Tooltip enterDelay={200} enterNextDelay={200} title="Actividad" aria-label="activity">
+																					<th className="activity-field-th">Actividad</th>
+																				</Tooltip>
+																				<Tooltip enterDelay={200} enterNextDelay={200} title="Descripción" aria-label="description">
+																					<th className="activity-field-th">Descripción</th>
+																				</Tooltip>
+																				<Tooltip enterDelay={200} enterNextDelay={200} title="Completada" aria-label="complete">
+																					<th className="completed-field-th">Completada</th>
+																				</Tooltip>
+																				<Tooltip enterDelay={200} enterNextDelay={200} title="Nota" aria-label="grade">
+																					<th className="grade-field-th">Nota</th>
+																				</Tooltip>
+																				<Tooltip enterDelay={200} enterNextDelay={200} title="Entregado a tiempo" aria-label="delivered in time">
+																					<th className="activity-field-th">Entregado a tiempo</th>
+																				</Tooltip>
+																				<Tooltip enterDelay={200} enterNextDelay={200} title="Fecha" aria-label="date">
+																					<th className="activity-field-th">Fecha</th>
+																				</Tooltip>
+																				<Tooltip enterDelay={200} enterNextDelay={200} title="Tiempo" aria-label="time">
+																					<th className="activity-field-th">Tiempo</th>
+																				</Tooltip>
 																			</tr>
 																		</thead>
 
@@ -527,7 +549,29 @@ const IndividualProgress = (props) => {
 						</div>
 				}
 			</div>
-		</div>
+			<div className='perspectives-container'>
+				<PerspectiveCard
+					perspective={{
+						course_name: 'Nombre del curso',
+						course_description: 'Descripción del curso',
+						teacher_name: 'Carlos Mora',
+						message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tempus non mi non malesuada. Aenean ultricies, augue ut mattis volutpat, libero mi cursus leo, sit amet maximus leo metus in dolor. Sed sed mi pharetra, posuere ex ut, tempor augue. Suspendisse vel odio eget mi aliquet sodales vel eu arcu. Maecenas eu semper enim. Duis blandit in orci in faucibus. Vestibulum vel aliquet ipsum. Nulla sit amet ex luctus odio imperdiet pulvinar quis nec purus. Proin ac congue tellus. Etiam pulvinar interdum nibh, at faucibus turpis lobortis ut. Praesent rutrum in sapien quis luctus. Nullam sollicitudin sapien id arcu tincidunt pharetra.',
+						createdAt: new Date('2021-08-23T18:42:46.986+00:00')
+					}}
+				/>
+				<PerspectiveCard
+					perspective={{
+						course_name: 'Nombre del curso',
+						course_description: 'Descripción del curso',
+						teacher_name: 'Carlos Mora',
+						message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tempus non mi non malesuada. Aenean ultricies, augue ut mattis volutpat, libero mi cursus leo, sit amet maximus leo metus in dolor. Sed sed mi pharetra, posuere ex ut, tempor augue. Suspendisse vel odio eget mi aliquet sodales vel eu arcu. Maecenas eu semper enim. Duis blandit in orci in faucibus. Vestibulum vel aliquet ipsum. Nulla sit amet ex luctus odio imperdiet pulvinar quis nec purus. Proin ac congue tellus. Etiam pulvinar interdum nibh, at faucibus turpis lobortis ut. Praesent rutrum in sapien quis luctus. Nullam sollicitudin sapien id arcu tincidunt pharetra.',
+						createdAt: new Date('2021-08-23T18:42:46.986+00:00')
+					}}
+				/>
+			</div>
+			{/* </div> */}
+			{/* </div> */}
+		</div >
 
 	)
 };

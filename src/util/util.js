@@ -76,3 +76,10 @@ export const getSpanishDate = (date) => {
     const auxDate = new Date(dateFormat(new Date(date), "GMT:yyyy/mm/dd")) // Se ponen slashes para que javascript lo detecte como una fecha con zona horaria local
     return `${auxDate.getDate()} de ${months[auxDate.getMonth()]} del ${auxDate.getFullYear()}`
 }
+
+export const getCustomDate = (date) => {
+    // This is to add a custom date format
+    dateFormat.masks.customDateFormat = 'GMT:"El" yyyy-mm-dd "a las" HH:MM:ss';
+
+    return dateFormat(date, "customDateFormat");
+}
