@@ -42,7 +42,8 @@ $roboto: "Roboto", sans-serif;
 .alert-message {
 	position: fixed;
 	bottom: 1em;
-	left: 1em;
+	left: 50%;
+	transform: translateX(-50%);
 	display: inline-block;
 	width: 95%;
 	align-self: center;
@@ -235,21 +236,18 @@ $roboto: "Roboto", sans-serif;
 
 @media only screen and (min-width: 690px) {
 	.alert-message {
-		left: 7em;
 		width: 80%;
 	}
 }
 
 @media only screen and (min-width: 940px) {
 	.alert-message {
-		left: 10em;
 		width: 50%;
 	}
 }
 
 @media only screen and (min-width: 1200px) {
 	.alert-message {
-		left: 32em;
 		width: 50%;
 	}
 }

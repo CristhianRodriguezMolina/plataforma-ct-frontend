@@ -50,7 +50,7 @@ export default function Overview(props) {
 							<Grid item xs={12}><hr /></Grid>
 
 							<Grid item xs={6}><label>Edad</label></Grid>
-							<Grid item xs={6}><p>{util.getAge(user.birth_date)} años</p></Grid>
+							<Grid item xs={6}><p>{util.getAge(user.birth_date)} {util.getAge(user.birth_date) !== 1 ? 'años' : 'año'}</p></Grid>
 
 							{
 								user.role === 'admin' || user.role === 'teacher' ?

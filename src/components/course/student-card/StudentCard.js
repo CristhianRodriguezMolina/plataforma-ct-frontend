@@ -117,9 +117,9 @@ export default function StudentCard(props) {
 					<b>{index + 1}</b>
 
 					{student && student.image !== "" ?
-						<Avatar className="student-avatar mr-2" src={`${process.env.REACT_APP_API_URL}/profile/${student.image}`} />:
+						<Avatar className="student-avatar mr-2" src={`${process.env.REACT_APP_API_URL}/profile/${student.image}`} /> :
 						<Avatar className="student-avatar mr-2">
-							<AccountCircle style={{ fontSize: 60 }}/>
+							<AccountCircle style={{ fontSize: 60 }} />
 						</Avatar>
 					}
 
@@ -160,7 +160,7 @@ export default function StudentCard(props) {
 							:
 
 							<>
-								<Typography variant="subtitle1" style={{minWidth: "72px"}}>
+								<Typography variant="subtitle1" style={{ minWidth: "72px" }}>
 									<div className="btn-group-sm btn-group-vertical">
 										<Tooltip title="Borrar del curso" aria-label="delete">
 											<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete btn-user-card mb-2"><Delete /></button>
@@ -209,9 +209,9 @@ export default function StudentCard(props) {
 								<div className="d-flex justify-content-center align-items-center">
 
 									{student && student.image !== "" ?
-										<Avatar className="student-avatar mr-2" src={`${process.env.REACT_APP_API_URL}/profile/${student.image}`} />:
+										<Avatar className="student-avatar mr-2" src={`${process.env.REACT_APP_API_URL}/profile/${student.image}`} /> :
 										<Avatar className="student-avatar mr-2">
-											<AccountCircle style={{ fontSize: 60 }}/>
+											<AccountCircle style={{ fontSize: 60 }} />
 										</Avatar>
 									}
 
@@ -225,7 +225,7 @@ export default function StudentCard(props) {
 										}
 
 										<p className='m-0 ml-4 mb-2 p-0'>{forStudent ? "Cumpleaños" : "Fecha de nacimiento"}: <b>{util.getSpanishDate(student.birth_date)}</b></p>
-										<p className='m-0 ml-4 mb-2 p-0'>Edad: <b>{util.getAge(student.birth_date)}</b></p>
+										<p className='m-0 ml-4 mb-2 p-0'>Edad: <b>{util.getAge(student.birth_date)} {util.getAge(student.birth_date) !== 1 ? 'años' : 'año'}</b></p>
 										<p className='m-0 ml-4 mb-2 p-0'>Genero: <b>{util.getGenre(student.genre)}</b></p>
 
 									</div>

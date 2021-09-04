@@ -33,7 +33,7 @@ import Container from '@material-ui/core/Container'
 import { makeStyles } from '@material-ui/core/styles'
 
 // Icons
-import { Close, People, PeopleOutline, LibraryBooks, LibraryAdd, Computer } from '@material-ui/icons';
+import { Close, People, PeopleOutline, LibraryBooks, LibraryAdd, Computer, EmojiPeople } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
 	navbar: {
@@ -102,7 +102,7 @@ function NavBar() {
 															""
 													}
 													<div className="dropdown-divider"></div>
-													<li><Link className="dropdown-item" to="/perspectives-view"><Computer className="mr-2" color="action" /> Mis evaluaciones</Link></li>
+													<li><Link className="dropdown-item" to="/perspectives-view"><EmojiPeople className="mr-2" color="action" /> Mis evaluaciones</Link></li>
 													<li><Link className="dropdown-item" to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}><Computer className="mr-2" color="action" /> Mis cursos</Link></li>
 													{
 														isAdmin || isTeacher ?
