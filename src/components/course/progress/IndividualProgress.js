@@ -331,8 +331,8 @@ const IndividualProgress = (props) => {
 								}
 							</td>
 
-							<Tooltip enterDelay={200} enterNextDelay={200} title={tempStudentActivity.grade} aria-label="grade">
-								<td className="grade-field-td">{tempStudentActivity.grade}</td>
+							<Tooltip enterDelay={200} enterNextDelay={200} title={tempStudentActivity.attempts} aria-label="attempts">
+								<td className="grade-field-td">{tempStudentActivity.attempts}</td>
 							</Tooltip>
 
 							<Tooltip enterDelay={200} enterNextDelay={200}
@@ -395,7 +395,7 @@ const IndividualProgress = (props) => {
 								<Cancel className='incompleted-task-icon' />
 							</td>
 
-							<Tooltip enterDelay={200} enterNextDelay={200} title="Aún sin resolver" aria-label="grade">
+							<Tooltip enterDelay={200} enterNextDelay={200} title="Aún sin resolver" aria-label="attempts">
 								<td className="grade-field-td">Aún sin resolver</td>
 							</Tooltip>
 
@@ -586,7 +586,7 @@ const IndividualProgress = (props) => {
 																							<th className="completed-field-th">Completada</th>
 																						</Tooltip>
 																						<Tooltip enterDelay={200} enterNextDelay={200} title="Nota" aria-label="grade">
-																							<th className="grade-field-th">Nota</th>
+																							<th className="grade-field-th">Número de intentos</th>
 																						</Tooltip>
 																						<Tooltip enterDelay={200} enterNextDelay={200} title="Entregado a tiempo" aria-label="delivered in time">
 																							<th className="activity-field-th">Entregado a tiempo</th>

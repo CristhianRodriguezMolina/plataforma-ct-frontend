@@ -878,7 +878,7 @@ export default function MazeStudent(props) {
 										<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 									</div>
 								</div>:
-									<p>Actividad Terminada<br/>Tu respuesta: </p>
+									<p>Actividad terminada<br/>Tu respuesta: </p>
 							:""}
 							<hr />
 						</Container>

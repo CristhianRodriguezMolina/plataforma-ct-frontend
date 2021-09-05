@@ -63,12 +63,16 @@ const LogicSequenceStudent = props => {
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-
+	const [info, setInfo] = useState(false); // Variable flag de informacion
+	const [infoMessage, setInfoMessage] = useState(''); // Info message
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
     //Timer vars
     const [isActive, setIsActive] = useState(false);
+
+	//Attempts number
+	const [attemptsNumber, setAttemptsNumber] = useState(0);
 
     useEffect(() => {
         changeColor('#f8bbd0');
@@ -81,6 +85,16 @@ const LogicSequenceStudent = props => {
         setTimeout(() => { //Dura 2sg en pantalla el mensaje
             setError(false);
             setErrorMessage("");
+        }, 2000)
+    };
+
+    // Funcion para mostrar una alerta de error dado un mensaje
+    const showInfo = (message) => {
+        setInfo(true);   //Se cambia el estado de mensaje de error a verdadero
+        setInfoMessage(message); //Se setea el mensaje de error
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setInfo(false);
+            setInfoMessage("");
         }, 2000)
     };
 
@@ -120,26 +134,15 @@ const LogicSequenceStudent = props => {
 
     const handleCompleteActivity = (minutes, seconds) => {
 
-        let grade = 0;
-        let equals = true;
-        for (let i = 0; i < orderedSequenceList.length && equals; i++) {
-            if (sequenceList[i]._id !== orderedSequenceList[i]._id) {
-                equals = false
-            }
-        }
-
-        if (equals) {
-            grade = 5;
-        }
-
         if (studentActivity) {
             api.put(`/api/student-activity/${studentActivity._id}`, {
                 complete: true,
-                grade,
+				grade: 5,
                 minutes,
                 seconds,
                 answer: sequenceList,
                 type: activity.type,
+				attempts: attemptsNumber
             }, {
                 headers: {
                     'x-access-token': localStorage.getItem('token')
@@ -160,6 +163,25 @@ const LogicSequenceStudent = props => {
                 });
         }
     };
+
+	const checkAnswer = () => {
+		
+		setAttemptsNumber(attemptsNumber+1);
+        let equals = true;
+
+        for (let i = 0; i < orderedSequenceList.length && equals; i++) {
+            if (sequenceList[i]._id !== orderedSequenceList[i]._id) {
+                equals = false
+            }
+        }
+
+        if (equals) {
+            setIsActive(false);
+        }
+		else {
+			showInfo('Tu respuesta aun tiene algunos errores ¡Sigue intentando!');
+		}
+	};
 
     const nameInputStyle = {
         textAlign: "center",
@@ -189,10 +211,16 @@ const LogicSequenceStudent = props => {
                 color="#FA61CD"
                 colorFont="#FFF"
             />
+
             {error ?
                 <Alert className="alert-message logic-sequence-alert" severity="error">{errorMessage}</Alert>
                 : ""
             }
+
+			{info ?
+				<Alert className='alert-message' severity="info">{infoMessage}</Alert>
+				: ""
+			}
 
             {success ?
                 <Alert className="alert-message" severity="success">{successMessage}</Alert>
@@ -228,7 +256,7 @@ const LogicSequenceStudent = props => {
                     <hr className="hr-bar"></hr>
 
 					{!studentActivity.complete?
-						<button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>:
+						<button onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>:
 						<button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>}
 					
                 </div>
