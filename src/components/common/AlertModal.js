@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 // SCSS
 import './AlertModal.scss';
@@ -20,6 +20,8 @@ export default function AlertModal(props) {
 
 	const [btnClass, setBtnClass] = useState('custom-btn custom-btn-delete ml-auto mr-2 p-2');
 
+	const executeActionBtn = useRef(null);
+
 	useEffect(() => {
 		if (type === 'delete') {
 			setBtnClass('custom-btn custom-btn-delete ml-auto mr-2 p-2');
@@ -31,6 +33,8 @@ export default function AlertModal(props) {
 	});
 
 	const executeAction = () => {
+		executeActionBtn.current.disabled = true; // This is to avoid problems if the user press the button multiple times
+
 		handleClose();
 		action();
 	}
@@ -64,7 +68,7 @@ export default function AlertModal(props) {
 				<div className="alert-modal-footer">
 					<hr />
 					<div>
-						<button onClick={executeAction} className={btnClass} color="secondary" variant="contained">{type === 'delete' ? 'Borrar' : 'Aceptar'}</button>
+						<button onClick={executeAction} ref={executeActionBtn} className={btnClass} color="secondary" variant="contained">{type === 'delete' ? 'Borrar' : 'Aceptar'}</button>
 						<button onClick={handleClose} className='custom-btn p-2'>Cancelar</button>
 					</div>
 				</div>

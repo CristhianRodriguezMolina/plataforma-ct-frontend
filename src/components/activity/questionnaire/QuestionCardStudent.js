@@ -99,12 +99,25 @@ const QuestionCardStudent = (props) => {
 		let found = false;
 
 		let auxOptionsList = optionsList.slice();
-		for (let i = 0; i < auxOptionsList.length && !found; i++) {
+
+		// // if (multipleSelection) {
+		// for (let i = 0; i < auxOptionsList.length && !found; i++) {
+		// 	if (auxOptionsList[i]._id === optionId) {
+		// 		found = true;
+		// 		auxOptionsList[i].answer = !auxOptionsList[i].answer;
+		// 	}
+		// }
+		// // } else {
+		for (let i = 0; i < auxOptionsList.length; i++) {
 			if (auxOptionsList[i]._id === optionId) {
-				found = true;
+				// found = true;
 				auxOptionsList[i].answer = !auxOptionsList[i].answer;
+			} else {
+				auxOptionsList[i].answer = false;
 			}
 		}
+		// }
+
 
 		setOptionsList(auxOptionsList);
 		updateQuestions(auxOptionsList);
@@ -147,15 +160,17 @@ const QuestionCardStudent = (props) => {
 										</Tooltip>
 										<p style={optionInputStyle} >{option.option}</p>
 									</div>
-									{option.image !== "" ?
-										<div className='d-flex justify-content-center'>
-											<div
-												className='image-container'
-											>
+									<div className='d-flex justify-content-center'>
+										<div
+											className='image-container'
+										>
+											{option.image !== "" ?
 												<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="Option" />
-											</div>
+												:
+												<img className='question-image' src='/blank.jpg' alt="Option" />
+											}
 										</div>
-										: ""}
+									</div>
 
 								</div>
 							)

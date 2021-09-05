@@ -172,37 +172,39 @@ const UnitContent = props => {
 
 				!isLoadingLasActivity ?
 					lastActivityInfo ?
+						<>
+							<div className="quick-access-container">
+								<h1 className="quick-access-label">Acceso rápido</h1>
 
-						<div className="quick-access-container">
-							<h1 className="quick-access-label">Acceso rápido</h1>
-
-							<div className="last-activity-container">
-								<div className="task-info">
-									<h2>{lastActivityInfo.taskName}</h2>
-									<p>{lastActivityInfo.taskDes}</p>
-								</div>
-
-								<div className='last-activity-info'>
-									<div className='activity-icon'>
-										{lastActivityInfo.activityType === 'logic_sequence' ?
-											<AccountTreeIcon style={{ fontSize: 50 }} /> :
-
-											lastActivityInfo.activityType === 'maze' ?
-												<BorderVerticalIcon style={{ fontSize: 50 }} /> :
-												<BallotIcon style={{ fontSize: 50 }} />
-										}
+								<div className="last-activity-container">
+									<div className="task-info">
+										<h2>{lastActivityInfo.taskName}</h2>
+										<p>{lastActivityInfo.taskDes}</p>
 									</div>
 
-									<h3><span style={{ color: '#aaa' }}>Nombre: </span>{lastActivityInfo.activityName}</h3>
-									<p className='activity-des-label'><span style={{ color: '#aaa' }}>Descripción: </span>{lastActivityInfo.activityDes}</p>
-									<p className='activity-pos-label'><span style={{ color: '#aaa' }}>Número: </span>{(lastActivityInfo.activityPos + 1)}</p>
+									<div className='last-activity-info'>
+										<div className='activity-icon'>
+											{lastActivityInfo.activityType === 'logic_sequence' ?
+												<AccountTreeIcon style={{ fontSize: 50 }} /> :
 
-									<div className='do-activity-button-container'>
-										<button className="custom-btn custom-btn-success px-2 py-1" onClick={() => redirectToActivity()}>Realizar actividad</button>
+												lastActivityInfo.activityType === 'maze' ?
+													<BorderVerticalIcon style={{ fontSize: 50 }} /> :
+													<BallotIcon style={{ fontSize: 50 }} />
+											}
+										</div>
+
+										<h3><span style={{ color: '#aaa' }}>Nombre: </span>{lastActivityInfo.activityName}</h3>
+										<p className='activity-des-label'><span style={{ color: '#aaa' }}>Descripción: </span>{lastActivityInfo.activityDes}</p>
+										<p className='activity-pos-label'><span style={{ color: '#aaa' }}>Número: </span>{(lastActivityInfo.activityPos + 1)}</p>
+
+										<div className='do-activity-button-container'>
+											<button className="custom-btn custom-btn-success px-2 py-1" onClick={() => redirectToActivity()}>Realizar actividad</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+							<hr className="mx-3" />
+						</>
 						: ""
 					:
 					<div style={{ height: '10em', width: '100%', position: 'relative' }}>
@@ -214,11 +216,11 @@ const UnitContent = props => {
 					</div>
 			}
 
-			<hr className="mx-3" />
+
 			<h1 className="h5 text-center mb-4">Actividades</h1>
 
 			{!foundTasks ?
-				<NoContentToShow messageTitle={'Sin tareas...'} messageDes={'Al parecer estas de suerte porque aquí no hay nada que hacer'} />
+				<NoContentToShow icon='face' messageTitle={'Sin tareas...'} messageDes={'Al parecer estas de suerte porque aquí no hay nada que hacer'} />
 				: ""}
 
 			{props.taskActivities ?

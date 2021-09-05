@@ -153,7 +153,7 @@ export default function CourseInformation({ course, setCourse }) {
     }
 
     return (
-        <div className="course-information container pt-4 px-5">
+        <div className="course-information container pt-4 px-3 px-md-5">
             {success ?
                 <Alert className='alert-message' severity="success">{successMessage}</Alert>
                 : ""

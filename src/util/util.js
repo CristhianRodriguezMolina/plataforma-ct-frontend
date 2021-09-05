@@ -79,7 +79,7 @@ export const getSpanishDate = (date) => {
 
 export const getCustomDate = (date) => {
     // This is to add a custom date format
-    dateFormat.masks.customDateFormat = 'GMT:"El" yyyy-mm-dd "a las" HH:MM:ss';
+    dateFormat.masks.customDateFormat = '"El" yyyy-mm-dd "a las" HH:MM:ss';
 
     return dateFormat(date, "customDateFormat");
 }
