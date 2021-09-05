@@ -12,6 +12,13 @@
     cursor: pointer;
     vertical-align: middle;
 
+    //disable text selection
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -o-user-select: none;
+
     .sequence-card-img {
         max-width: 100%;
         max-height: 100%;
