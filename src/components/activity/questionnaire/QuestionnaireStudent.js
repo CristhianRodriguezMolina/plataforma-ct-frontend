@@ -63,7 +63,13 @@ const QuestionnaireStudent = (props) => {
 
 	useEffect(() => {
 		if (props.activity && props.inheritedActivity && props.studentActivity) {
-			setAnswerQuestionsList(shuffleArray(getQuestionsWithAnswer(props.inheritedActivity.questions), { 'copy': true }));
+
+			if(props.studentActivity.complete) {
+				setAnswerQuestionsList(props.studentActivity.answer);
+			}
+			else {
+				setAnswerQuestionsList(shuffleArray(getQuestionsWithAnswer(props.inheritedActivity.questions), { 'copy': true }));
+			}
 			setQuestionnaire(props.inheritedActivity);
 			setActivity(props.activity);
 			setStudentActivity(props.studentActivity);
@@ -140,7 +146,7 @@ const QuestionnaireStudent = (props) => {
 					grade,
 					minutes,
 					seconds,
-					asnwer: answerQuestionsList,
+					answer: answerQuestionsList,
 					type: activity.type,
 				}, {
 					headers: {
@@ -148,7 +154,8 @@ const QuestionnaireStudent = (props) => {
 					}
 				})
 					.then((res) => {
-						showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+						showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`);
+						setStudentActivity(res.data.updatedStudentActivity);
 					})
 					.catch((err) => {
 						if (err.response) {
@@ -223,16 +230,31 @@ const QuestionnaireStudent = (props) => {
 								</div>
 							</div>
 
+							{studentActivity.complete?
+								<p>Tu respuesta:</p>
+							:""}
+
 							<div className="questionnaire-body">
 								{answerQuestionsList ?
 									answerQuestionsList.map((value, index) => (
-										<QuestionCardStudent key={`item-${index}`} questionnaire={questionnaire} answerQuestionsList={answerQuestionsList} setAnswerQuestionsList={setAnswerQuestionsList} index={index} value={value} />
+										<QuestionCardStudent
+											key={`item-${index}`}
+											questionnaire={questionnaire}
+											answerQuestionsList={answerQuestionsList}
+											setAnswerQuestionsList={setAnswerQuestionsList}
+											index={index}
+											value={value} />
 									))
 									: ""}
 							</div>
 							<hr className="hr-bar"></hr>
 							<div className='d-flex justify-content-center'>
-								<button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button>
+
+								{!studentActivity.complete?
+									<button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button>:
+									<button className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5" disabled>Terminada</button>
+								}
+
 							</div>
 						</div>
 					</>

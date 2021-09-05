@@ -110,6 +110,9 @@ export default function MazeStudent(props) {
 	// Instructions to the animation
 	const [instructions, setInstructions] = useState([]);
 
+	//Student Activity
+	const [studentActivity, setStudentActivity] = useState([]);
+
 	// Size of the maze
 	const [mazeSize, setMazeSize] = useState(0)
 	const [mazeSizeOffset, setMazeSizeOffset] = useState(0);
@@ -178,17 +181,23 @@ export default function MazeStudent(props) {
 
 	// UseEffect to init the maze activity data or to change the rows and cols
 	useEffect(() => {
-		if (!maze) {
+		if (!maze && props.studentActivity) {
+
+			if(props.studentActivity.complete) {
+				setInstructions(props.studentActivity.answer);
+			}
+
 			setMaze(props.inheritedActivity);
 			setActivityName(props.activity.name); // Activity_id is the activity schema of the maze
 			setActivityDescription(props.activity.description);
 			setLoading(false); // This it to wait to the component to render completely
 			setIsActive(true);
+			setStudentActivity(props.studentActivity)
 		} else {
 			setRows(maze.rows);
 			setCols(maze.cols);
 		}
-	}, [maze])
+	}, [maze, props.studentActivity]);
 
 	// Si cambia la posicion del inicio se cambia la del robot y se reicinia la variable flag que muestra el robot
 	useEffect(() => {
@@ -307,7 +316,7 @@ export default function MazeStudent(props) {
 				grade: grade,
 				minutes,
 				seconds,
-				asnwer: instructions,
+				answer: instructions,
 				type: props.activity.type,
 			}, {
 				headers: {
@@ -316,6 +325,7 @@ export default function MazeStudent(props) {
 			})
 				.then((res) => {
 					showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+					setStudentActivity(res.data.updatedStudentActivity);
 				})
 				.catch((err) => {
 					if (err.response) {
@@ -845,26 +855,31 @@ export default function MazeStudent(props) {
 							</div>
 							<hr />
 
-							<div className='d-flex flex-wrap justify-content-around align-items-center'>
-								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
-								<div className='d-flex flex-column'>
-									<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
-									<div>
-										<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
-										<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
-										<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
+							{studentActivity? 
+								!studentActivity.complete?
+
+								<div className='d-flex flex-wrap justify-content-around align-items-center'>
+									{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
+									<div className='d-flex flex-column'>
+										<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
+										<div>
+											<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
+											<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
+											<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
+										</div>
 									</div>
-								</div>
 
-								{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
-								<div className='mt-4 d-flex justify-content-center'>
-									<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
-									{/* <button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button> */}
-									<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
-									<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
-								</div>
-							</div>
+									{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
+									<div className='mt-4 d-flex justify-content-center'>
 
+										<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
+										{/* <button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button> */}
+										<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+										<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
+									</div>
+								</div>:
+									<p>Actividad Terminada<br/>Tu respuesta: </p>
+							:""}
 							<hr />
 						</Container>
 					</div>

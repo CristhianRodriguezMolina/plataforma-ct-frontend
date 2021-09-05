@@ -103,9 +103,15 @@ const LogicSequenceStudent = props => {
 
     useEffect(() => {
         if (props.activity && props.inheritedActivity && props.studentActivity) {
+
+			if(props.studentActivity.complete) {
+				setSequenceList(props.studentActivity.answer);
+			}
+			else {
+            	setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
+			}
             setLogicSequence(props.inheritedActivity);
             setOrderedSequenceList(props.inheritedActivity.sequence_cards);
-            setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
             setActivity(props.activity);
             setStudentActivity(props.studentActivity);
             setIsActive(true);
@@ -132,7 +138,7 @@ const LogicSequenceStudent = props => {
                 grade,
                 minutes,
                 seconds,
-                asnwer: sequenceList,
+                answer: sequenceList,
                 type: activity.type,
             }, {
                 headers: {
@@ -141,6 +147,8 @@ const LogicSequenceStudent = props => {
             })
                 .then((res) => {
                     showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+					setStudentActivity(res.data.updatedStudentActivity);
+
                 })
                 .catch((err) => {
                     if (err.response) {
@@ -207,6 +215,9 @@ const LogicSequenceStudent = props => {
                         <hr className="hr-bar"></hr>
 
                         <div className="panels">
+							{studentActivity.complete?
+								<p>Tu respuesta:</p>
+							:""}
                             <div className="sequence-cards-container">
                                 {sequenceList ?
                                     <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
@@ -215,8 +226,11 @@ const LogicSequenceStudent = props => {
                     </div>
 
                     <hr className="hr-bar"></hr>
-                    <button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>
 
+					{!studentActivity.complete?
+						<button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>:
+						<button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>}
+					
                 </div>
                 : ''}
         </>
