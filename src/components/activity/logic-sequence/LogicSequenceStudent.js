@@ -68,8 +68,8 @@ const LogicSequenceStudent = props => {
     const [infoMessage, setInfoMessage] = useState(''); // Info message
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
-    const [feedBack, setFeedBack] = useState(false); //Variable flag de proceso satisfactorio
-    const [feedBackMessage, setFeedBackMessage] = useState(''); //Mensaje de proceso satisfactorio
+    const [feedBack, setFeedBack] = useState(false); //Variable flag de feedback
+    const [feedBackMessage, setFeedBackMessage] = useState(''); //Mensaje de feedback
 
     //Timer vars
     const [isActive, setIsActive] = useState(false);

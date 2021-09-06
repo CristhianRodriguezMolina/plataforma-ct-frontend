@@ -32,6 +32,9 @@ import Alert from '@material-ui/lab/Alert';
 //Timer
 import Timer from '../../common/Timer';
 
+// Icons
+import { InfoOutlined } from '@material-ui/icons';
+
 const QuestionnaireStudent = (props) => {
 
 	//Store questionnaire data
@@ -49,13 +52,16 @@ const QuestionnaireStudent = (props) => {
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-	const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
-	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+	const [feedBack, setFeedBack] = useState(false); //Variable flag de feedback
+	const [feedBackMessage, setFeedBackMessage] = useState(''); //Mensaje de feedback
 
 	//Timer vars
 	const [isActive, setIsActive] = useState(false);
+
+	//Attempts number
+	const [attemptsNumber, setAttemptsNumber] = useState(0);
 
 	useEffect(() => {
 		changeColor('#f8bbd0');
@@ -64,7 +70,7 @@ const QuestionnaireStudent = (props) => {
 	useEffect(() => {
 		if (props.activity && props.inheritedActivity && props.studentActivity) {
 
-			if(props.studentActivity.complete) {
+			if (props.studentActivity.complete) {
 				setAnswerQuestionsList(props.studentActivity.answer);
 			}
 			else {
@@ -84,9 +90,17 @@ const QuestionnaireStudent = (props) => {
 		for (let i = 0; i < questionsTemp.length; i++) {
 			let options = questionsTemp[i].options;
 
+			let posibleAnswers = 0; // This variable is to count the number of possible correct answers for the question
+
 			for (let j = 0; j < options.length; j++) {
 				options[j] = { ...options[j], answer: false } // Adding a new field "answer" for the student to solve the questionnaire and later compare to the isCorrect field given by the activity
+
+				if (options[j].isCorrect) {
+					posibleAnswers += 1;
+				}
 			}
+
+			questionsTemp[i] = { ...questionsTemp[i], posibleAnswers } // This is to add the number of possible correct answers to the question
 		}
 		return questionsTemp;
 	}
@@ -111,39 +125,23 @@ const QuestionnaireStudent = (props) => {
 		}, 2000)
 	}
 
-	const showInfo = (message) => {
-		setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
-		setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
+	// Funcion para mostrar una alerta satisfactoria dado un mensaje
+	const showFeedBack = (message) => {
+		setFeedBack(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setFeedBackMessage(message); //Se setea el mensaje de proceso satisfactorio
 		setTimeout(() => { //Dura 2sg en pantalla el mensaje
-			setProcess(false);
-			setProcessMessage("");
+			setFeedBack(false);
+			setFeedBackMessage("");
 		}, 2000)
-	};
+	}
 
 	const handleCompleteActivity = (minutes, seconds) => {
 		try {
-			let goodQuestions = 0;
-			for (let i = 0; i < answerQuestionsList.length; i++) {
-				const answerOptionsList = answerQuestionsList[i].options.slice();
-
-				for (let j = 0; j < answerOptionsList.length; j++) {
-					if (!(answerOptionsList[j].isCorrect === answerOptionsList[j].answer)) { // It compares the answer given by the student and the aswer given by the activity
-						break;
-					}
-					if (j === answerOptionsList.length - 1) {
-						goodQuestions += 1;
-					}
-				}
-			}
-
-			// The grade it gets calculated on the number of good questions
-			const grade = goodQuestions / answerQuestionsList.length * 5;
-			console.log(grade)
 
 			if (studentActivity) {
 				api.put(`/api/student-activity/${studentActivity._id}`, {
 					complete: true,
-					grade,
+					grade: 5,
 					minutes,
 					seconds,
 					answer: answerQuestionsList,
@@ -174,6 +172,34 @@ const QuestionnaireStudent = (props) => {
 			}
 		}
 	}
+
+	const checkAnswer = () => {
+
+		setAttemptsNumber(attemptsNumber + 1);
+
+		let goodQuestions = 0;
+
+		for (let i = 0; i < answerQuestionsList.length; i++) {
+			const answerOptionsList = answerQuestionsList[i].options.slice();
+
+			for (let j = 0; j < answerOptionsList.length; j++) {
+				if (answerOptionsList[j].isCorrect && answerOptionsList[j].answer) { // It compares the answer given by the student and the aswer given by the activity
+					goodQuestions += 1;
+					break;
+				}
+			}
+		}
+
+		// The grade it gets calculated on the number of good questions
+		const grade = goodQuestions / answerQuestionsList.length * 5;
+
+		if (grade === 5) {
+			setIsActive(false);
+		}
+		else {
+			showFeedBack(`Aún tienes ${answerQuestionsList.length - goodQuestions} respuesta (s) mal ¡Sigue intentando!`);
+		}
+	};
 
 	const nameInputStyle = {
 		textAlign: "center",
@@ -208,6 +234,15 @@ const QuestionnaireStudent = (props) => {
 				<Alert className="alert-message" severity="success">{successMessage}</Alert>
 				: ""
 			}
+			{feedBack ?
+				<Alert className='alert-message-feedback alert-message' icon={<InfoOutlined style={{ color: 'whitesmoke' }} />} style={{
+					backgroundColor: 'rgb(180, 101, 233)',
+					color: 'whitesmoke',
+					display: 'flex',
+					alignItems: 'center'
+				}} severity=""><div>{feedBackMessage}</div></Alert>
+				: ""
+			}
 
 			<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
 
@@ -230,9 +265,9 @@ const QuestionnaireStudent = (props) => {
 								</div>
 							</div>
 
-							{studentActivity.complete?
+							{studentActivity.complete ?
 								<p>Tu respuesta:</p>
-							:""}
+								: ""}
 
 							<div className="questionnaire-body">
 								{answerQuestionsList ?
@@ -250,8 +285,8 @@ const QuestionnaireStudent = (props) => {
 							<hr className="hr-bar"></hr>
 							<div className='d-flex justify-content-center'>
 
-								{!studentActivity.complete?
-									<button onClick={() => setIsActive(false)} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button>:
+								{!studentActivity.complete ?
+									<button onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button> :
 									<button className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5" disabled>Terminada</button>
 								}
 

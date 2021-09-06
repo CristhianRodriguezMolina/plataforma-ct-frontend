@@ -96,28 +96,15 @@ const QuestionCardStudent = (props) => {
 
 	const handleSwitchIsCorrect = (optionId) => {
 
-		let found = false;
-
 		let auxOptionsList = optionsList.slice();
 
-		// // if (multipleSelection) {
-		// for (let i = 0; i < auxOptionsList.length && !found; i++) {
-		// 	if (auxOptionsList[i]._id === optionId) {
-		// 		found = true;
-		// 		auxOptionsList[i].answer = !auxOptionsList[i].answer;
-		// 	}
-		// }
-		// // } else {
 		for (let i = 0; i < auxOptionsList.length; i++) {
 			if (auxOptionsList[i]._id === optionId) {
-				// found = true;
 				auxOptionsList[i].answer = !auxOptionsList[i].answer;
 			} else {
 				auxOptionsList[i].answer = false;
 			}
 		}
-		// }
-
 
 		setOptionsList(auxOptionsList);
 		updateQuestions(auxOptionsList);
@@ -161,9 +148,7 @@ const QuestionCardStudent = (props) => {
 										<p style={optionInputStyle} >{option.option}</p>
 									</div>
 									<div className='d-flex justify-content-center'>
-										<div
-											className='image-container'
-										>
+										<div className='image-container'>
 											{option.image !== "" ?
 												<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="Option" />
 												:
@@ -178,6 +163,8 @@ const QuestionCardStudent = (props) => {
 					}
 				</div>
 				: ''}
+
+			<h4 className='correct-answers text-muted'>Esta pregunta tiene {props.value.posibleAnswers} respuestas correctas</h4>
 		</div>
 	)
 };
