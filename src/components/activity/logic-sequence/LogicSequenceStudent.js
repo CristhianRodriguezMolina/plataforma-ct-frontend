@@ -29,6 +29,7 @@ import Alert from '@material-ui/lab/Alert';
 
 //Timer
 import Timer from '../../common/Timer';
+import { InfoOutlined } from '@material-ui/icons';
 
 
 const SortableList = SortableContainer(({ items }) => {
@@ -63,16 +64,18 @@ const LogicSequenceStudent = props => {
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-	const [info, setInfo] = useState(false); // Variable flag de informacion
-	const [infoMessage, setInfoMessage] = useState(''); // Info message
+    const [info, setInfo] = useState(false); // Variable flag de informacion
+    const [infoMessage, setInfoMessage] = useState(''); // Info message
     const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
     const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+    const [feedBack, setFeedBack] = useState(false); //Variable flag de proceso satisfactorio
+    const [feedBackMessage, setFeedBackMessage] = useState(''); //Mensaje de proceso satisfactorio
 
     //Timer vars
     const [isActive, setIsActive] = useState(false);
 
-	//Attempts number
-	const [attemptsNumber, setAttemptsNumber] = useState(0);
+    //Attempts number
+    const [attemptsNumber, setAttemptsNumber] = useState(0);
 
     useEffect(() => {
         changeColor('#f8bbd0');
@@ -108,6 +111,16 @@ const LogicSequenceStudent = props => {
         }, 2000)
     }
 
+    // Funcion para mostrar una alerta satisfactoria dado un mensaje
+    const showFeedBack = (message) => {
+        setFeedBack(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+        setFeedBackMessage(message); //Se setea el mensaje de proceso satisfactorio
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setFeedBack(false);
+            setFeedBackMessage("");
+        }, 2000)
+    }
+
     const onSortEnd = ({ oldIndex, newIndex }) => {
 
         let arrayCopy = [...sequenceList];
@@ -118,12 +131,12 @@ const LogicSequenceStudent = props => {
     useEffect(() => {
         if (props.activity && props.inheritedActivity && props.studentActivity) {
 
-			if(props.studentActivity.complete) {
-				setSequenceList(props.studentActivity.answer);
-			}
-			else {
-            	setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
-			}
+            if (props.studentActivity.complete) {
+                setSequenceList(props.studentActivity.answer);
+            }
+            else {
+                setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
+            }
             setLogicSequence(props.inheritedActivity);
             setOrderedSequenceList(props.inheritedActivity.sequence_cards);
             setActivity(props.activity);
@@ -137,12 +150,12 @@ const LogicSequenceStudent = props => {
         if (studentActivity) {
             api.put(`/api/student-activity/${studentActivity._id}`, {
                 complete: true,
-				grade: 5,
+                grade: 5,
                 minutes,
                 seconds,
                 answer: sequenceList,
                 type: activity.type,
-				attempts: attemptsNumber
+                attempts: attemptsNumber
             }, {
                 headers: {
                     'x-access-token': localStorage.getItem('token')
@@ -150,7 +163,7 @@ const LogicSequenceStudent = props => {
             })
                 .then((res) => {
                     showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
-					setStudentActivity(res.data.updatedStudentActivity);
+                    setStudentActivity(res.data.updatedStudentActivity);
 
                 })
                 .catch((err) => {
@@ -164,9 +177,9 @@ const LogicSequenceStudent = props => {
         }
     };
 
-	const checkAnswer = () => {
-		
-		setAttemptsNumber(attemptsNumber+1);
+    const checkAnswer = () => {
+
+        setAttemptsNumber(attemptsNumber + 1);
         let equals = true;
 
         for (let i = 0; i < orderedSequenceList.length && equals; i++) {
@@ -178,10 +191,10 @@ const LogicSequenceStudent = props => {
         if (equals) {
             setIsActive(false);
         }
-		else {
-			showInfo('Tu respuesta aun tiene algunos errores ¡Sigue intentando!');
-		}
-	};
+        else {
+            showFeedBack('Tu respuesta aun tiene algunos errores ¡Sigue intentando!');
+        }
+    };
 
     const nameInputStyle = {
         textAlign: "center",
@@ -217,10 +230,20 @@ const LogicSequenceStudent = props => {
                 : ""
             }
 
-			{info ?
-				<Alert className='alert-message' severity="info">{infoMessage}</Alert>
-				: ""
-			}
+            {info ?
+                <Alert className='alert-message' severity='info' >{infoMessage}</Alert>
+                : ""
+            }
+
+            {feedBack ?
+                <Alert className='alert-message-feedback alert-message' icon={<InfoOutlined style={{ color: 'whitesmoke' }} />} style={{
+                    backgroundColor: 'rgb(180, 101, 233)',
+                    color: 'whitesmoke',
+                    display: 'flex',
+                    alignItems: 'center'
+                }} severity=""><div>{feedBackMessage}</div></Alert>
+                : ""
+            }
 
             {success ?
                 <Alert className="alert-message" severity="success">{successMessage}</Alert>
@@ -243,9 +266,9 @@ const LogicSequenceStudent = props => {
                         <hr className="hr-bar"></hr>
 
                         <div className="panels">
-							{studentActivity.complete?
-								<p>Tu respuesta:</p>
-							:""}
+                            {studentActivity.complete ?
+                                <p>Tu respuesta:</p>
+                                : ""}
                             <div className="sequence-cards-container">
                                 {sequenceList ?
                                     <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
@@ -255,10 +278,10 @@ const LogicSequenceStudent = props => {
 
                     <hr className="hr-bar"></hr>
 
-					{!studentActivity.complete?
-						<button onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button>:
-						<button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>}
-					
+                    {!studentActivity.complete ?
+                        <button onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button> :
+                        <button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>}
+
                 </div>
                 : ''}
         </>

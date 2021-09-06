@@ -32,6 +32,12 @@ const PerspectivesView = () => {
 	// Variable to see of the data is loading
 	const [isLoading, setIsLoading] = useState(true);
 
+	// Type to filter the perspectives
+	const [filterType, setFilterType] = useState('NA');
+
+	// Variable to see thee current filter type
+	const [filteredPerspectives, setFilteredPerspectives] = useState([]);
+
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
@@ -44,6 +50,40 @@ const PerspectivesView = () => {
 	useEffect(() => {
 		changeColor('#BFA7F3');
 	});
+
+	useEffect(() => {
+		if (filterType === 'COURSE') { // Grouping by course
+			const result = perspectives
+				.reduce((r, o) => {
+					var temp = r.find(([{ course }]) => course._id === o.course._id);
+					if (!temp) r.push(temp = []);
+					temp.push(o);
+					return r;
+				}, []);
+
+			setFilteredPerspectives(result);
+		} else if (filterType === 'TEACHER') { // Grouping by teacher
+			const result = perspectives
+				.reduce((r, o) => {
+					var temp = r.find(([{ teacher }]) => teacher._id === o.teacher._id);
+					if (!temp) r.push(temp = []);
+					temp.push(o);
+					return r;
+				}, []);
+
+			setFilteredPerspectives(result);
+		} else if (filterType === 'STUDENT') { // Grouping by student
+			const result = perspectives
+				.reduce((r, o) => {
+					var temp = r.find(([{ student }]) => student._id === o.student._id);
+					if (!temp) r.push(temp = []);
+					temp.push(o);
+					return r;
+				}, []);
+
+			setFilteredPerspectives(result);
+		}
+	}, [filterType])
 
 	useEffect(() => {
 		const fetchPerspectives = async () => {
@@ -118,6 +158,7 @@ const PerspectivesView = () => {
 				colorFont='#fff'
 			/>
 
+
 			<div className='perspective-view-container container'>
 				<h1 className="h6 text-muted my-3 text-justify">{
 					isAdmin || isTeacher ?
@@ -126,12 +167,65 @@ const PerspectivesView = () => {
 						'Aqui puedes ver las evaluaciones perspectivas que te ha realizado algún profesor.'
 				}
 				</h1>
+				<div className="filter mr-4">
+					<label className="text-start m-0 text-muted">Filtrar por</label>
+					<select className="form-control" onChange={evt => { setFilterType(evt.target.value); }} value={filterType} aria-label="Default select example">
+						<option value="NA" selected>N/A</option>
+						<option value="COURSE">Curso</option>
+						{
+							isAdmin || isTeacher ?
+								<option value="STUDENT">Estudiante</option>
+								:
+								<option value="TEACHER">Profesor</option>
+						}
+					</select>
+				</div>
+				<hr />
 				{
 					!isLoading ?
 						perspectives && perspectives.length > 0 ?
-							perspectives.map(perspective => {
-								return <PerspectiveCard perspective={perspective} setPerspectives={setPerspectives} />
-							})
+							filterType === 'NA' ?    // NO FILTER
+								perspectives.map(perspective => {
+									return <PerspectiveCard perspective={perspective} setPerspectives={setPerspectives} />
+								})
+								:
+								filterType === 'COURSE' ?		// FILTERING BY COURSE
+									filteredPerspectives.map(group => {
+										return <>
+											<h1 className="h4 mt-4">{group[0].course.name}</h1>
+											{
+												group.map(perspective => {
+													return <PerspectiveCard perspective={perspective} setPerspectives={setPerspectives} />
+												})
+											}
+										</>
+									})
+									:
+									filterType === 'TEACHER' ?		// FILTERING BY TEACHER
+										filteredPerspectives.map(group => {
+											return <>
+												<h1 className="h4 mt-4">{group[0].teacher.first_name} {group[0].teacher.last_name}</h1>
+												{
+													group.map(perspective => {
+														return <PerspectiveCard perspective={perspective} setPerspectives={setPerspectives} />
+													})
+												}
+											</>
+										})
+										:
+										filterType === 'STUDENT' ?		// FILTERING BY STUDENT
+											filteredPerspectives.map(group => {
+												return <>
+													<h1 className="h4 mt-4">{group[0].student.first_name} {group[0].student.last_name}</h1>
+													{
+														group.map(perspective => {
+															return <PerspectiveCard perspective={perspective} setPerspectives={setPerspectives} />
+														})
+													}
+												</>
+											})
+											:
+											<NoContentToShow icon='mood_bad' messageTitle='Error filtrando...' messageDes='Filtro incorrecto o error desconocido' />
 							:
 							<NoContentToShow icon='mood' messageTitle={'Sin perspectivas...'} messageDes={localStorage.getItem('user_role') === 'student' ? 'No hay perspectivas que mostrar, aqui se mostraran las evaluaciones de tus profesores' : 'No hay perspectivas que mostrar, aqui se mostraran las que agregues a un estudiante.'} />
 						:

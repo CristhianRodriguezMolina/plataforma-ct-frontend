@@ -429,6 +429,11 @@ const IndividualProgress = (props) => {
 	const handleAddPerspective = async (e) => {
 		e.preventDefault();
 
+		if (newPerspectiveMessage.trim() === '') {
+			showError('Añade un mensaje de evaluación primero');
+			return;
+		}
+
 		try {
 			const response = await api.post(`/api/perspective/${courseId}/${localStorage.getItem('user_id')}/${studentId}`, {
 				message: newPerspectiveMessage

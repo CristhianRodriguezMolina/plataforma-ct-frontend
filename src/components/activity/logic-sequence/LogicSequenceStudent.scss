@@ -1,6 +1,7 @@
 .logic-sequence-student-container {
     width: auto;
     margin: 4em auto auto auto;
+    margin-bottom: 5em;
 
     .activity-attributes {
         display: grid;
@@ -9,6 +10,8 @@
         margin-top: 2em;
         margin-bottom: 2em;
         justify-content: center;
+
+        // background-color: rgb(180, 101, 233);
 
         .difficulty-grid-item {
             display: flex;
@@ -73,6 +76,7 @@
     .logic-sequence-student-container {
         margin: auto;
         width: 30em;
+        margin-bottom: 5em;
 
         .logic-sequence-alert {
             width: 50em;

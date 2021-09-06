@@ -39,6 +39,13 @@ $roboto: "Roboto", sans-serif;
 	-webkit-box-orient: vertical;
 }
 
+.alert-message-feedback {
+	background-color: rgb(180, 101, 233);
+	color: whitesmoke;
+	display: flex;
+	align-items: center;
+}
+
 .alert-message {
 	position: fixed;
 	bottom: 1em;
