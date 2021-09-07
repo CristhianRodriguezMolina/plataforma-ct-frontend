@@ -54,7 +54,10 @@
 		position: relative;
 		background-color: #6cbae3;
 		border-radius: 10px;
-		overflow: hidden;
+
+		.cells {
+			overflow: hidden;
+		}
 	}
 }
 

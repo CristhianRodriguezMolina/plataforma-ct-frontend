@@ -1,5 +1,5 @@
 //React
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 
 //SCSS
@@ -150,6 +150,9 @@ const IndividualProgress = (props) => {
 
 	// Variable to see if the data have load
 	const [loading, setLoading] = useState(true);
+
+	// Ref of the add perspective button
+	const addPerspectiveBtn = useRef(null);
 
 	// PERSPECTIVES VARIABLES
 	const [newPerspectiveMessage, setNewPerspectiveMessage] = useState('');
@@ -428,6 +431,7 @@ const IndividualProgress = (props) => {
 	// Method to add a new perspective to the given student 
 	const handleAddPerspective = async (e) => {
 		e.preventDefault();
+		addPerspectiveBtn.current.disabled = true; // This is to avoid problems when the user click the button multiple times
 
 		if (newPerspectiveMessage.trim() === '') {
 			showError('Añade un mensaje de evaluación primero');
@@ -461,6 +465,7 @@ const IndividualProgress = (props) => {
 				showError('Ha ocurrido un error inesperado');
 			}
 		}
+		addPerspectiveBtn.current.disabled = false;
 	}
 
 	return (
@@ -636,7 +641,7 @@ const IndividualProgress = (props) => {
 									<textarea className='form-control' type="text" rows="4" label="Perspective" name="Perspectiva" placeholder='Escribe tu perspectiva aqui' onChange={evt => setNewPerspectiveMessage(evt.target.value)} value={newPerspectiveMessage} />
 								</div>
 								<div className='d-flex justify-content-end'>
-									<button type='submit' className='custom-btn custom-btn-primary py-2 px-3'>Agregar</button>
+									<button type='submit' ref={addPerspectiveBtn} className='custom-btn custom-btn-primary py-2 px-3'>Agregar</button>
 								</div>
 							</form>
 							<h1 className="h4">Perspectivas del alumno</h1>

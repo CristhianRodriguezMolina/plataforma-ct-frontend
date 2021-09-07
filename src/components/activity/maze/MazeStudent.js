@@ -183,7 +183,7 @@ export default function MazeStudent(props) {
 	useEffect(() => {
 		if (!maze && props.studentActivity) {
 
-			if(props.studentActivity.complete) {
+			if (props.studentActivity.complete) {
 				setInstructions(props.studentActivity.answer);
 			}
 
@@ -308,7 +308,6 @@ export default function MazeStudent(props) {
 	const handleCompleteActivity = async (grade, minutes, seconds) => {
 		setProcess(true);
 		setProcessMessage('Guardando cambios...');
-
 
 		if (props.studentActivity) {
 			api.put(`/api/student-activity/${props.studentActivity._id}`, {
@@ -801,11 +800,11 @@ export default function MazeStudent(props) {
 			setRobotX(startX);
 			setRobotY(startY);
 			setRobotGrades(0);
-		}
 
-		// When the animation ends then the button to prove the maze and the button to show the robot are activated
-		btnProveMaze.current.disabled = false;
-		btnShowRobot.current.disabled = false;
+			// When the animation ends then the button to prove the maze and the button to show the robot are activated
+			btnProveMaze.current.disabled = false;
+			btnShowRobot.current.disabled = false;
+		}
 	}
 
 	const handleShowRobot = () => {
@@ -855,31 +854,31 @@ export default function MazeStudent(props) {
 							</div>
 							<hr />
 
-							{studentActivity? 
-								!studentActivity.complete?
+							{studentActivity ?
+								!studentActivity.complete ?
 
-								<div className='d-flex flex-wrap justify-content-around align-items-center'>
-									{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
-									<div className='d-flex flex-column'>
-										<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
-										<div>
-											<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
-											<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
-											<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
+									<div className='d-flex flex-wrap justify-content-around align-items-center'>
+										{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
+										<div className='d-flex flex-column'>
+											<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
+											<div>
+												<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
+												<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
+												<button onClick={restoreSize} className="custom-btn custom-btn-search p-2">Restablecer</button>
+											</div>
 										</div>
-									</div>
 
-									{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
-									<div className='mt-4 d-flex justify-content-center'>
+										{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
+										<div className='mt-4 d-flex justify-content-center'>
 
-										<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
-										{/* <button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button> */}
-										<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
-										<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
-									</div>
-								</div>:
-									<p>Actividad terminada<br/>Tu respuesta: </p>
-							:""}
+											<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
+											{/* <button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button> */}
+											<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
+											<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
+										</div>
+									</div> :
+									<p>Actividad terminada<br />Tu respuesta: </p>
+								: ""}
 							<hr />
 						</Container>
 					</div>
@@ -913,8 +912,8 @@ export default function MazeStudent(props) {
 											<>
 											</>
 									}
-									{/* CHARACTER */}
 
+									{/* CHARACTER */}
 									{
 										animate &&
 										<Robot
