@@ -121,6 +121,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				.then((res) => {
 					showSuccess(res.data.message);
 					setOptionsList(res.data.updatedQuestion.options);
+					value.options = res.data.updatedQuestion.options; // Updating the options list with this
 					setSelectedOption("");
 				})
 				.catch(err => {
@@ -170,6 +171,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 			})
 				.then((res) => {
 					setOptionsList(res.data.updatedQuestion.options);
+					value.options = res.data.updatedQuestion.options // Updating the options list with this
 				})
 				.catch(err => {
 					if (err.response) {
@@ -213,7 +215,6 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 	const uploadOptionImg = (files) => {
 		if (files.length > 0 && questionnaire && selectedOption !== "") {
-			console.log(btnSaveImage.current)
 			btnSaveImage.current.disabled = true; // This is for avoid problems if the user press the button multiple times
 
 			setInfo(true);
@@ -317,6 +318,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 
 			if (options) {
 				setOptionsList(options);
+				value.options = options; // Updating the options list with this
 				showSuccess('Imagen borrada');
 			}
 		} catch (error) {
@@ -329,8 +331,12 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 		}
 	}
 
-	const updateQuestion = (value) => {
-		setQuestion(value);
+	const updateQuestion = (question) => {
+		setQuestion(question);
+
+		// Updating the options list with this
+		value.question = question;
+		value.options = optionsList;
 	};
 
 	const questionInputStyle = {
