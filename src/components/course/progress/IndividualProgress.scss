@@ -35,7 +35,7 @@
 	th,
 	td,
 	tr {
-		min-width: 5em;
+		min-width: 8em;
 	}
 
 	tr {
@@ -46,6 +46,11 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
+	}
+
+	td {
+		display: flex;
+		align-items: center;
 	}
 
 	th,
@@ -87,6 +92,7 @@
 	}
 
 	.activity-name-field-td {
+		line-height: 3em;
 		overflow: hidden;
 		display: -webkit-box;
 		-webkit-line-clamp: 1;

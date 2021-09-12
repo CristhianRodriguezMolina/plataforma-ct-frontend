@@ -164,7 +164,7 @@ const QuestionCardStudent = (props) => {
 				</div>
 				: ''}
 
-			<h4 className='correct-answers text-muted'>Esta pregunta tiene {props.value.posibleAnswers} respuestas correctas</h4>
+			<h4 className='correct-answers text-muted'>Esta pregunta tiene {props.value.posibleAnswers} respuesta(s) correcta(s)</h4>
 		</div>
 	)
 };

@@ -140,7 +140,7 @@ const UnitContent = props => {
 
 	const redirectToActivity = () => {
 		if (lastActivityInfo) {
-			props.history.push(`/activity/student/${props.course._id}/${props.unitValue._id}/${lastActivityInfo.taskId}/${lastActivityInfo.activityId}`);
+			props.history.push(`/activity/student/${localStorage.getItem("user_id")}/${props.course._id}/${props.unitValue._id}/${lastActivityInfo.taskId}/${lastActivityInfo.activityId}`);
 		}
 	}
 

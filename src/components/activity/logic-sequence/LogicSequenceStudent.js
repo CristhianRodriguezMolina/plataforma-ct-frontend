@@ -31,6 +31,8 @@ import Alert from '@material-ui/lab/Alert';
 import Timer from '../../common/Timer';
 import { InfoOutlined } from '@material-ui/icons';
 
+// Iconos
+import { Cancel, CheckCircle } from '@material-ui/icons';
 
 const SortableList = SortableContainer(({ items }) => {
 
@@ -308,9 +310,13 @@ const LogicSequenceStudent = props => {
                         <hr className="hr-bar"></hr>
 
                         <div className="panels">
-                            {studentActivity.complete ?
-                                <p>Tu respuesta:</p>
-                                : ""}
+                            {
+								props.forStudents ?
+									studentActivity.complete ?
+									<p>Tu respuesta:</p>
+									: ""
+								: <p>Respuesta del estudiante:</p>
+							}
                             <div className="sequence-cards-container">
                                 {sequenceList ?
                                     <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
@@ -319,10 +325,20 @@ const LogicSequenceStudent = props => {
                     </div>
 
                     <hr className="hr-bar"></hr>
-
-                    {!studentActivity.complete ?
-                        <button ref={acceptButton} onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button> :
-                        <button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>}
+						
+                    {
+						props.forStudents ?
+							!studentActivity.complete ?
+							<button ref={acceptButton} onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button> :
+							<button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>
+						: <div>
+							{
+								studentActivity.complete ?
+									<p className="d-flex justify-content-center aling-items-center"><CheckCircle style={{ color: "green", marginRight: "0.3em" }}/>Completada</p> :
+									<p className="d-flex justify-content-center aling-items-center"><Cancel style={{ color: "red", marginRight: "0.3em" }}/>Sin completar</p>
+							}
+						</div>
+					}
 
                 </div>
                 : ''}
