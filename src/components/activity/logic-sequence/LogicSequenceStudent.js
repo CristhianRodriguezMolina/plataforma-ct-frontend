@@ -181,6 +181,7 @@ const LogicSequenceStudent = props => {
 
         setAttemptsNumber(attemptsNumber + 1);
         if (studentActivity) {
+
             api.put(`/api/student-activity/${studentActivity._id}`, {
                 complete,
                 grade: 5,
@@ -190,6 +191,7 @@ const LogicSequenceStudent = props => {
                 type: activity.type,
                 attempts: (attemptsNumber + 1)
             }, {
+
                 headers: {
                     'x-access-token': localStorage.getItem('token')
                 }
@@ -198,6 +200,7 @@ const LogicSequenceStudent = props => {
                     if (complete) {
                         showSuccess('¡Actividad realizada!');
                     }
+
                     setStudentActivity(res.data.updatedStudentActivity);
                     if (acceptButton.current) {
                         acceptButton.current.disabled = false;
@@ -210,6 +213,7 @@ const LogicSequenceStudent = props => {
                     else {
                         showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
                     }
+
                     if (acceptButton.current) {
                         acceptButton.current.disabled = false;
                     }

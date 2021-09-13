@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 
 import { useParams, Redirect } from "react-router-dom";
 
@@ -57,11 +57,17 @@ const QuestionnaireStudent = (props) => {
 	const [feedBack, setFeedBack] = useState(false); //Variable flag de feedback
 	const [feedBackMessage, setFeedBackMessage] = useState(''); //Mensaje de feedback
 
-	//Timer vars
-	const [isActive, setIsActive] = useState(false);
+    //Timer vars
+    const [seconds, setSeconds] = useState('00');
+    const [minutes, setMinutes] = useState('00');
+    const [isActive, setIsActive] = useState(false);
+    const [counter, setCounter] = useState(0);
 
 	//Attempts number
 	const [attemptsNumber, setAttemptsNumber] = useState(0);
+
+    //To prevent api calls in the same time disabling the button
+    const btnCheckAnswer = useRef(null);
 
 	useEffect(() => {
 		changeColor('#f8bbd0');
@@ -70,8 +76,10 @@ const QuestionnaireStudent = (props) => {
 	useEffect(() => {
 		if (props.activity && props.inheritedActivity && props.studentActivity) {
 
-			if (props.studentActivity.complete) {
+			if (props.studentActivity.answer.length === props.inheritedActivity.questions.length) {
 				setAnswerQuestionsList(props.studentActivity.answer);
+                setCounter((parseInt(props.studentActivity.minutes) * 60) + parseInt(props.studentActivity.seconds));
+                setAttemptsNumber(props.studentActivity.attempts);
 			}
 			else {
 				setAnswerQuestionsList(shuffleArray(getQuestionsWithAnswer(props.inheritedActivity.questions), { 'copy': true }));
@@ -83,6 +91,29 @@ const QuestionnaireStudent = (props) => {
 			setIsActive(true);
 		}
 	}, [props.activity, props.inheritedActivity, props.studentActivity]);
+
+    //handle the timer
+    useEffect(() => {
+        let intervalId;
+
+        if (isActive) {
+            intervalId = setInterval(() => {
+                const secondsCounter = counter % 60;
+                const minutesCounter = Math.floor(counter / 60);
+
+                const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}` : secondsCounter;
+                const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}` : minutesCounter;
+
+                setSeconds(computedSeconds);
+                setMinutes(computedMinutes);
+
+                setCounter(counter => counter + 1);
+            }, 1000);
+        }
+
+        return () => clearInterval(intervalId);
+
+    }, [isActive, counter]);
 
 	// Method to add the answer field to the options
 	const getQuestionsWithAnswer = (questions) => {
@@ -135,25 +166,35 @@ const QuestionnaireStudent = (props) => {
 		}, 2000)
 	}
 
-	const handleCompleteActivity = (minutes, seconds) => {
+	const handleCompleteActivity = (complete) => {
 		try {
+
+        	setAttemptsNumber(attemptsNumber + 1);
 
 			if (studentActivity) {
 				api.put(`/api/student-activity/${studentActivity._id}`, {
-					complete: true,
+					complete,
 					grade: 5,
 					minutes,
 					seconds,
 					answer: answerQuestionsList,
 					type: activity.type,
+                	attempts: (attemptsNumber + 1)
 				}, {
 					headers: {
 						'x-access-token': localStorage.getItem('token')
 					}
 				})
 					.then((res) => {
-						showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`);
+						if(complete) {
+							showSuccess(`¡Actividad realizada!`);
+						}
 						setStudentActivity(res.data.updatedStudentActivity);
+
+						if(btnCheckAnswer.current) {
+							btnCheckAnswer.current.disabled = false;
+						}
+
 					})
 					.catch((err) => {
 						if (err.response) {
@@ -162,6 +203,11 @@ const QuestionnaireStudent = (props) => {
 						else {
 							showError("¡Ha ocurrido un error guardando su nota!");
 						}
+
+						if(btnCheckAnswer.current) {
+							btnCheckAnswer.current.disabled = false;
+						}
+
 					});
 			}
 		} catch (error) {
@@ -174,6 +220,10 @@ const QuestionnaireStudent = (props) => {
 	}
 
 	const checkAnswer = () => {
+		
+		if(btnCheckAnswer.current) {
+			btnCheckAnswer.current.disabled = true;
+		}
 
 		setAttemptsNumber(attemptsNumber + 1);
 
@@ -195,9 +245,11 @@ const QuestionnaireStudent = (props) => {
 
 		if (grade === 5) {
 			setIsActive(false);
+			handleCompleteActivity(true);
 		}
 		else {
-			showFeedBack(`Aún tienes ${answerQuestionsList.length - goodQuestions} respuesta (s) mal ¡Sigue intentando!`);
+			handleCompleteActivity(false);
+			showFeedBack(`Aún tienes ${answerQuestionsList.length - goodQuestions} respuesta(s) mal ¡Sigue intentando!`);
 		}
 	};
 
@@ -244,7 +296,6 @@ const QuestionnaireStudent = (props) => {
 				: ""
 			}
 
-			<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
 
 			{!loading ?
 				questionnaire && studentActivity ?
@@ -286,7 +337,7 @@ const QuestionnaireStudent = (props) => {
 							<div className='d-flex justify-content-center'>
 
 								{!studentActivity.complete ?
-									<button onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button> :
+									<button ref={btnCheckAnswer} onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5">Aceptar</button> :
 									<button className="custom-btn custom-btn-success px-3 py-1 mt-2 mb-5" disabled>Terminada</button>
 								}
 
