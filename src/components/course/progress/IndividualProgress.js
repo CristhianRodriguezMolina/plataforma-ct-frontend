@@ -52,8 +52,11 @@ import { AppBar, Avatar, Box, Button, Tab, Tabs, Typography } from '@material-ui
 // Tarjeta de titulo
 import TitleCard from '../../common/TitleCard';
 
+// Icono button
+import IconButton from '@material-ui/core/IconButton';
+
 // Iconos
-import { AccountCircle, AccountTree, BorderVertical, Ballot, Cancel, CheckCircle } from '@material-ui/icons';
+import { Visibility, AccountCircle, AccountTree, BorderVertical, Ballot, Cancel, CheckCircle } from '@material-ui/icons';
 
 // Perspective card
 import PerspectiveCard from '../../evaluation/PerspectiveCard';
@@ -275,6 +278,10 @@ const IndividualProgress = (props) => {
 		setValue(newValue);
 	};
 
+	const watchAnswer = (unitId, taskId, activityId) => {
+		props.history.push(`/activity/answer/${studentId}/${courseId}/${unitId}/${taskId}/${activityId}`);
+	};
+
 	// Method to render the table to show the data of the activities for each task
 	const renderStudentProgress = (task) => {
 
@@ -352,7 +359,7 @@ const IndividualProgress = (props) => {
 										'Sin fecha de entrega'
 								}
 								aria-label="just-in-time">
-								<td className="completed-field-td">
+								<td className="activity-name-field-td">
 									{task.is_due_date ?
 										justInTime === 1 ?
 											'SI'
@@ -373,6 +380,13 @@ const IndividualProgress = (props) => {
 
 							<Tooltip enterDelay={200} enterNextDelay={200} title={`${tempStudentActivity.minutes}:${tempStudentActivity.seconds}`} aria-label="realization-time">
 								<td className="activity-name-field-td">{tempStudentActivity.minutes}:{tempStudentActivity.seconds}</td>
+							</Tooltip>
+							<Tooltip enterDelay={200} enterNextDelay={200} title="Ver respuesta" aria-label="watch-answer">
+								<td className="activity-name-field-td">
+									<IconButton onClick={() => watchAnswer(tempStudentActivity.unit, tempStudentActivity.task, tempStudentActivity.activity)}>
+										<Visibility/>
+									</IconButton>
+								</td>
 							</Tooltip>
 						</tr>
 					)
@@ -403,7 +417,7 @@ const IndividualProgress = (props) => {
 							</Tooltip>
 
 							<Tooltip enterDelay={200} enterNextDelay={200} title="Sin fecha de entrega" aria-label="just-in-time">
-								<td className="completed-field-td">Sin fecha de entrega</td>
+								<td className="activity-name-field-td">Sin fecha de entrega</td>
 							</Tooltip>
 
 							<Tooltip enterDelay={200} enterNextDelay={200} title="Sin fecha de entrega" aria-label="realization-date">
@@ -412,6 +426,9 @@ const IndividualProgress = (props) => {
 
 							<Tooltip enterDelay={200} enterNextDelay={200} title="Sin tiempo de realización" aria-label="realization-time">
 								<td className="activity-name-field-td">Sin tiempo de realización</td>
+							</Tooltip>
+							<Tooltip enterDelay={200} enterNextDelay={200} title="Sin respuestas resgistradas" aria-label="watch-answer">
+								<td className="activity-name-field-td">Sin respuestas registradas</td>
 							</Tooltip>
 						</tr>
 					)
@@ -499,7 +516,10 @@ const IndividualProgress = (props) => {
 										<div>
 											<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Estudiante: </span>{individualProgressInfo.student.first_name} {individualProgressInfo.student.last_name}</h2>
 											<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Identificación: </span>{individualProgressInfo.student.id}</h2>
-											<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Edad: </span>{util.getAge(individualProgressInfo.student.birth_date)} {util.getAge(individualProgressInfo.student.birth_date) !== 1 ? 'años' : 'año'}</h2>
+											<h2 style={{ fontSize: 20 }}>
+												<span style={{ 'color': 'rgb(161, 161, 161)' }}>Edad: </span>
+												{util.getAge(individualProgressInfo.student.birth_date)} {util.getAge(individualProgressInfo.student.birth_date) !== 1 ? 'años' : 'año'}
+											</h2>
 											<h2 style={{ fontSize: 20 }}><span style={{ 'color': 'rgb(161, 161, 161)' }}>Género: </span>{util.getGenre(individualProgressInfo.student.genre)}</h2>
 										</div>
 									</div>
@@ -607,6 +627,9 @@ const IndividualProgress = (props) => {
 																						<Tooltip enterDelay={200} enterNextDelay={200} title="Tiempo" aria-label="time">
 																							<th className="activity-field-th">Tiempo</th>
 																						</Tooltip>
+																						<Tooltip enterDelay={200} enterNextDelay={200} title="Ver respuesta" aria-label="watch">
+																							<th className="activity-field-th">Ver</th>
+																						</Tooltip>
 																					</tr>
 																				</thead>
 
@@ -638,7 +661,14 @@ const IndividualProgress = (props) => {
 							<h1 className="h6 text-muted mb-3 text-justify">Aqui puedes escribir una evaluación perspectiva del alumno en cuestión.</h1>
 							<form onSubmit={handleAddPerspective} className='mb-4'>
 								<div className='form-group w-md-50'>
-									<textarea className='form-control' type="text" rows="4" label="Perspective" name="Perspectiva" placeholder='Escribe tu perspectiva aqui' onChange={evt => setNewPerspectiveMessage(evt.target.value)} value={newPerspectiveMessage} />
+									<textarea
+										className='form-control'
+										type="text"
+										rows="4"
+										label="Perspective"
+										name="Perspectiva"
+										placeholder='Escribe tu perspectiva aqui'
+										onChange={evt => setNewPerspectiveMessage(evt.target.value)} value={newPerspectiveMessage} />
 								</div>
 								<div className='d-flex justify-content-end'>
 									<button type='submit' ref={addPerspectiveBtn} className='custom-btn custom-btn-primary py-2 px-3'>Agregar</button>

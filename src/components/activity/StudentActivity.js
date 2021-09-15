@@ -18,7 +18,7 @@ const StudentActivity = (props) => {
 
 	const [loading, setLoading] = useState(true);
 
-	const { view, courseId, unitId, taskId, activityId } = useParams();
+	const { view, personId, courseId, unitId, taskId, activityId } = useParams();
 
 	useEffect(() => {
 
@@ -68,7 +68,7 @@ const StudentActivity = (props) => {
 
 			//GET student activity
 			const studentActivityRes = await api.post("/api/student-activity/foreign", {
-				student: localStorage.getItem("user_id"),
+				student: personId,
 				course: courseId,
 				unit: unitId,
 				task: taskId,
@@ -81,16 +81,22 @@ const StudentActivity = (props) => {
 			});
 
 			if (studentActivityRes) {
-				if (studentActivityRes.data.found) {
-
-					if (studentActivityRes.data.studentActivity.length > 0) {
-						setStudentActivity(studentActivityRes.data.studentActivity[0]);
-					} else {
-						createStudentActivity();
-					}
+				if (view === "answer") {
+					setStudentActivity(studentActivityRes.data.studentActivity[0]);
 				}
 				else {
-					createStudentActivity();
+
+					if (studentActivityRes.data.found) {
+
+						if (studentActivityRes.data.studentActivity.length > 0) {
+							setStudentActivity(studentActivityRes.data.studentActivity[0]);
+						} else {
+							createStudentActivity();
+						}
+					}
+					else {
+						createStudentActivity();
+					}
 				}
 			}
 			setLoading(false);
@@ -124,22 +130,31 @@ const StudentActivity = (props) => {
 		<div>
 			{!loading ?
 
-				view === 'teacher' || view === 'student' ?
+				view === 'teacher' || view === 'student' || view === 'answer' ?
 
-					view === 'student' && studentActivity ?
+					(view === 'student' || view === 'answer') && studentActivity ?
 
 						activity && inheritedActivity ?
 
 							activity.type === 'logic_sequence' ?
 
-								<LogicSequenceStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+								view === 'answer' ?
+									<LogicSequenceStudent forStudents={false} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+									:
+									<LogicSequenceStudent forStudents={true} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 								:
 								activity.type === 'maze' ?
 
-									<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+									view === 'answer' ?
+										<MazeStudent forStudents={false} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+										:
+										<MazeStudent forStudents={true} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 									:
 									activity.type === 'questionnaire' ?
-										<QuestionnaireStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+										view === 'answer' ?
+											<QuestionnaireStudent forStudents={false} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+											:
+											<QuestionnaireStudent forStudents={true} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 										:
 										<Redirect to='/unauthorized' />
 

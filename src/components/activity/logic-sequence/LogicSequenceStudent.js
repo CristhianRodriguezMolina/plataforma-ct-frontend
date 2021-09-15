@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import arrayMove from 'array-move';
 import api from '../../../services/api';
 import { useParams } from "react-router-dom";
@@ -31,6 +31,8 @@ import Alert from '@material-ui/lab/Alert';
 import Timer from '../../common/Timer';
 import { InfoOutlined } from '@material-ui/icons';
 
+// Iconos
+import { Cancel, CheckCircle } from '@material-ui/icons';
 
 const SortableList = SortableContainer(({ items }) => {
 
@@ -72,10 +74,16 @@ const LogicSequenceStudent = props => {
     const [feedBackMessage, setFeedBackMessage] = useState(''); //Mensaje de feedback
 
     //Timer vars
+    const [seconds, setSeconds] = useState('00');
+    const [minutes, setMinutes] = useState('00');
     const [isActive, setIsActive] = useState(false);
+    const [counter, setCounter] = useState(0);
 
     //Attempts number
     const [attemptsNumber, setAttemptsNumber] = useState(0);
+
+    //To prevent api calls in the same time disabling the button
+    const acceptButton = useRef(null);
 
     useEffect(() => {
         changeColor('#f8bbd0');
@@ -130,9 +138,10 @@ const LogicSequenceStudent = props => {
 
     useEffect(() => {
         if (props.activity && props.inheritedActivity && props.studentActivity) {
-
-            if (props.studentActivity.complete) {
+            if (props.studentActivity.answer.length === props.inheritedActivity.sequence_cards.length) {
                 setSequenceList(props.studentActivity.answer);
+                setCounter((parseInt(props.studentActivity.minutes) * 60) + parseInt(props.studentActivity.seconds));
+                setAttemptsNumber(props.studentActivity.attempts);
             }
             else {
                 setSequenceList(shuffleArray(props.inheritedActivity.sequence_cards, { 'copy': true }));
@@ -145,26 +154,57 @@ const LogicSequenceStudent = props => {
         }
     }, [props.activity, props.inheritedActivity, props.studentActivity]);
 
-    const handleCompleteActivity = (minutes, seconds) => {
+    //handle the timer
+    useEffect(() => {
+        let intervalId;
 
+        if (isActive) {
+            intervalId = setInterval(() => {
+                const secondsCounter = counter % 60;
+                const minutesCounter = Math.floor(counter / 60);
+
+                const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}` : secondsCounter;
+                const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}` : minutesCounter;
+
+                setSeconds(computedSeconds);
+                setMinutes(computedMinutes);
+
+                setCounter(counter => counter + 1);
+            }, 1000);
+        }
+
+        return () => clearInterval(intervalId);
+
+    }, [isActive, counter]);
+
+    const handleCompleteActivity = (complete) => {
+
+        setAttemptsNumber(attemptsNumber + 1);
         if (studentActivity) {
+
             api.put(`/api/student-activity/${studentActivity._id}`, {
-                complete: true,
+                complete,
                 grade: 5,
                 minutes,
                 seconds,
                 answer: sequenceList,
                 type: activity.type,
-                attempts: attemptsNumber
+                attempts: (attemptsNumber + 1)
             }, {
+
                 headers: {
                     'x-access-token': localStorage.getItem('token')
                 }
             })
                 .then((res) => {
-                    showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
-                    setStudentActivity(res.data.updatedStudentActivity);
+                    if (complete) {
+                        showSuccess('¡Actividad realizada!');
+                    }
 
+                    setStudentActivity(res.data.updatedStudentActivity);
+                    if (acceptButton.current) {
+                        acceptButton.current.disabled = false;
+                    }
                 })
                 .catch((err) => {
                     if (err.response) {
@@ -173,13 +213,20 @@ const LogicSequenceStudent = props => {
                     else {
                         showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
                     }
+
+                    if (acceptButton.current) {
+                        acceptButton.current.disabled = false;
+                    }
                 });
         }
     };
 
     const checkAnswer = () => {
 
-        setAttemptsNumber(attemptsNumber + 1);
+        if (acceptButton.current) {
+            acceptButton.current.disabled = true;
+        }
+
         let equals = true;
 
         for (let i = 0; i < orderedSequenceList.length && equals; i++) {
@@ -190,10 +237,13 @@ const LogicSequenceStudent = props => {
 
         if (equals) {
             setIsActive(false);
+            handleCompleteActivity(true);
         }
         else {
+            handleCompleteActivity(false);
             showFeedBack('Tu respuesta aun tiene algunos errores ¡Sigue intentando!');
         }
+
     };
 
     const nameInputStyle = {
@@ -250,8 +300,6 @@ const LogicSequenceStudent = props => {
                 : ""
             }
 
-            <Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(minutes, seconds)} />
-
             {logicSequence && studentActivity ?
 
                 <div className="logic-sequence-student-container">
@@ -266,9 +314,13 @@ const LogicSequenceStudent = props => {
                         <hr className="hr-bar"></hr>
 
                         <div className="panels">
-                            {studentActivity.complete ?
-                                <p>Tu respuesta:</p>
-                                : ""}
+                            {
+								props.forStudents ?
+									studentActivity.complete ?
+									<p>Tu respuesta:</p>
+									: ""
+								: <p>Respuesta del estudiante:</p>
+							}
                             <div className="sequence-cards-container">
                                 {sequenceList ?
                                     <SortableList items={sequenceList} onSortEnd={onSortEnd} /> : ""}
@@ -277,10 +329,20 @@ const LogicSequenceStudent = props => {
                     </div>
 
                     <hr className="hr-bar"></hr>
-
-                    {!studentActivity.complete ?
-                        <button onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button> :
-                        <button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>}
+						
+                    {
+						props.forStudents ?
+							!studentActivity.complete ?
+							<button ref={acceptButton} onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button> :
+							<button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>
+						: <div>
+							{
+								studentActivity.complete ?
+									<p className="d-flex justify-content-center aling-items-center"><CheckCircle style={{ color: "green", marginRight: "0.3em" }}/>Completada</p> :
+									<p className="d-flex justify-content-center aling-items-center"><Cancel style={{ color: "red", marginRight: "0.3em" }}/>Sin completar</p>
+							}
+						</div>
+					}
 
                 </div>
                 : ''}

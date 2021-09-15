@@ -77,9 +77,9 @@ const TaskCard = props => {
 	const handleRedirectToActivity = async (taskActivity) => {
 		if (props.forStudent) {
 
-			props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
+			props.history.push(`/activity/student/${localStorage.getItem("user_id")}/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
 		} else {
-			props.history.push(`/activity/teacher/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
+			props.history.push(`/activity/teacher/${localStorage.getItem("user_id")}/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivity.activity}`);
 		}
 	};
 
@@ -118,12 +118,12 @@ const TaskCard = props => {
 				//if the studentActivity exists
 				if (nextActivity.length > 0) {
 					if (!nextActivity[0].complete) {
-						props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
+						props.history.push(`/activity/student/${localStorage.getItem("user_id")}/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
 						return;
 					}
 				}
 				else {
-					props.history.push(`/activity/student/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
+					props.history.push(`/activity/student/${localStorage.getItem("user_id")}/${props.courseId}/${props.unitId}/${props.task._id}/${taskActivities[i].activity}`);
 					return;
 				}
 			}
