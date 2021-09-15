@@ -135,14 +135,14 @@ const MyActivities = props => {
 				setShowFetchButton(false);
 			}
 		}
-	}, [fin]);	
+	}, [fin]);
 
 	//when you filter the activities, it resets the init and fin vars
 	useEffect(() => {
-		if(filteredActivities && count !== 0) {
+		if (filteredActivities && count !== 0) {
 			setInit(0);
 			setFin(range);
-			if(filteredActivities.length > range) {
+			if (filteredActivities.length > range) {
 				setShowFetchButton(true);
 			}
 			else {
@@ -241,7 +241,7 @@ const MyActivities = props => {
 							</thead>
 
 							<tbody>
-								{	
+								{
 									filteredActivities.slice(0, fin).map((activity, i) => (
 										<tr key={i}>
 											<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
@@ -284,7 +284,7 @@ const MyActivities = props => {
 
 							</tbody >
 						</table >
-					:
+						:
 						<>
 							<table className="activities-list">
 								<thead>
@@ -296,14 +296,14 @@ const MyActivities = props => {
 									</tr>
 								</thead>
 							</table>
-							<NoContentToShow messageTitle="Sin actividades..." messageDes="Las actividades que agregues apareceran aqui"/>
+							<NoContentToShow icon='face' messageTitle="Sin actividades..." messageDes="Las actividades que agregues apareceran aqui" />
 						</>
-				:
-				<div className="spinner-loading" style={{ marginTop: '8em' }}>
-					<div className="spinner-border" role="status">
-						<span className="sr-only">Loading...</span>
+					:
+					<div className="spinner-loading" style={{ marginTop: '8em' }}>
+						<div className="spinner-border" role="status">
+							<span className="sr-only">Loading...</span>
+						</div>
 					</div>
-				</div>
 			}
 			<AlertModal
 				type="delete"
@@ -319,7 +319,7 @@ const MyActivities = props => {
 			}
 
 			{
-				showFetchButton && !loadingCourses && filteredActivities.length > 0?
+				showFetchButton && !loadingCourses && filteredActivities.length > 0 ?
 					<button type="button" className="btn btn-light btn-block" onClick={loadActivities}>Cargar más</button>
 					: ""
 			}

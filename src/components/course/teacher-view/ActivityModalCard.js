@@ -38,7 +38,7 @@ export default function ActivityModalCard(props) {
     return (
         <div className="user-modal-card">
             <div className="modal-card activity-modal-card-container">
-                { 	
+                {
                     activity && activity.type.localeCompare("logic_sequence") === 0 ?
                         <AccountTree fontSize="large" className="activity-icon" /> : activity.type.localeCompare("maze") === 0 ?
                             <BorderVertical fontSize="large" className="activity-icon" /> : <Ballot fontSize="large" className="activity-icon" />
@@ -46,7 +46,7 @@ export default function ActivityModalCard(props) {
                 <div className="ml-2">
                     {activity.name}
                     <br />
-                    {activity.description}
+                    <h6 className='text-muted mt-1'>{activity.description}</h6>
                 </div>
                 <Checkbox
                     checked={checked}

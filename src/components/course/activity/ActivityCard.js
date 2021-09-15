@@ -122,7 +122,7 @@ const ActivityCard = SortableElement((props) => {
 				<div className="ml-2">
 					{activity.name}
 					<br />
-					{activity.description}
+					<h6 className='text-muted mt-1'>{activity.description}</h6>
 				</div>
 			</div>
 			<div className="buttons-container">

@@ -189,7 +189,7 @@ export default function UserList({ type }) {
 								}
 							</>
 							:
-							<NoContentToShow messageTitle={`Sin ${type === "teachers" ? "profesores" : "alumnos"}...`} messageDes={`No hay ${type === "teachers" ? "profesores" : "alumnos"} para mostrar`} />
+							<NoContentToShow icon='face' messageTitle={`Sin ${type === "teachers" ? "profesores" : "alumnos"}...`} messageDes={`No hay ${type === "teachers" ? "profesores" : "alumnos"} para mostrar`} />
 						:
 						<div style={{ height: '10em', width: '100%', position: 'relative' }}>
 							<div className="spinner-loading" >

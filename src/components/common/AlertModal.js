@@ -16,7 +16,7 @@ import { green, blue } from '@material-ui/core/colors';
 
 export default function AlertModal(props) {
 
-	const { message, open, handleClose, action, type } = props;
+	const { message, open, handleClose, action, type, actionText, closingText } = props;
 
 	const [btnClass, setBtnClass] = useState('custom-btn custom-btn-delete ml-auto mr-2 p-2');
 
@@ -68,8 +68,8 @@ export default function AlertModal(props) {
 				<div className="alert-modal-footer">
 					<hr />
 					<div>
-						<button onClick={executeAction} ref={executeActionBtn} className={btnClass} color="secondary" variant="contained">{type === 'delete' ? 'Borrar' : 'Aceptar'}</button>
-						<button onClick={handleClose} className='custom-btn p-2'>Cancelar</button>
+						<button onClick={executeAction} ref={executeActionBtn} className={btnClass} color="secondary" variant="contained">{actionText ? actionText : type === 'delete' ? 'Borrar' : 'Aceptar'}</button>
+						<button onClick={handleClose} className='custom-btn p-2'>{closingText ? closingText : 'Cancelar'}</button>
 					</div>
 				</div>
 			</div>

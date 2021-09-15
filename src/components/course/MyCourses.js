@@ -85,6 +85,16 @@ export default function MyCourses({ history }) {
 		}, 2000)
 	}
 
+	// Funcion para mostrar una alerta información dado un mensaje
+	const showInfo = (message) => {
+		setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setProcess(false);
+			setProcessMessage("");
+		}, 2000)
+	}
+
 	const getUserCourses = async () => {
 		try {
 			setProcess(true);
@@ -104,8 +114,12 @@ export default function MyCourses({ history }) {
 				setCourses(courses);
 
 				showSuccess(message);
+
+				setProcess(false);
+				setProcessMessage('');
 			} else {
-				showError(message);
+				setCourses([]);
+				showInfo(message);
 			}
 		} catch (error) {
 			if (error.response) {
@@ -113,9 +127,9 @@ export default function MyCourses({ history }) {
 			} else {
 				showError(`Un error ha ocurrido obteniendo los cursos ${error}`);
 			}
+			setProcess(false);
+			setProcessMessage('');
 		}
-		setProcess(false);
-		setProcessMessage('');
 		setIsLoading(false);
 	}
 
@@ -206,11 +220,10 @@ export default function MyCourses({ history }) {
 									</div>
 								)
 								:
-								(
-
-									<NoContentToShow messageTitle="Sin cursos..." messageDes="No hay cursos para mostrar" />
-
-								)
+								isAdmin || isTeacher ?
+									<NoContentToShow icon='face' messageTitle="Sin cursos..." messageDes="No hay cursos para mostrar, primero intente crear uno" />
+									:
+									<NoContentToShow icon='face' messageTitle="Sin cursos..." messageDes="Aqui apareceran los cursos a los que estes inscrito" />
 						}
 						{
 							isTeacher || isAdmin ?
