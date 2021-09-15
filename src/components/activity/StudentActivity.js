@@ -62,6 +62,7 @@ const StudentActivity = (props) => {
 				setLoading(false);
 				return;
 			}
+
 			setActivity(activityRes.data.activity);
 			setInheritedActivity(activityRes.data.inheritedActivity);
 
@@ -81,11 +82,11 @@ const StudentActivity = (props) => {
 			});
 
 			if (studentActivityRes) {
-				if(view === "answer") {
+				if (view === "answer") {
 					setStudentActivity(studentActivityRes.data.studentActivity[0]);
 				}
 				else {
-					
+
 					if (studentActivityRes.data.found) {
 
 						if (studentActivityRes.data.studentActivity.length > 0) {
@@ -132,20 +133,20 @@ const StudentActivity = (props) => {
 
 				view === 'teacher' || view === 'student' || view === 'answer' ?
 
-					view === 'student'  || view === 'answer'?
+					view === 'student' || view === 'answer' ?
 
 						activity && inheritedActivity ?
 
 							activity.type === 'logic_sequence' ?
 
-								view === 'answer' ? 
+								view === 'answer' ?
 									<LogicSequenceStudent forStudents={false} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 									:
 									<LogicSequenceStudent forStudents={true} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 								:
 								activity.type === 'maze' ?
 
-									view === 'answer' ? 
+									view === 'answer' ?
 										<MazeStudent forStudents={false} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 										:
 										<MazeStudent forStudents={true} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
