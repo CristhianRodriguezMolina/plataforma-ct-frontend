@@ -126,7 +126,7 @@ const StudentActivity = (props) => {
 
 				view === 'teacher' || view === 'student' ?
 
-					view === 'student' ?
+					view === 'student' && studentActivity ?
 
 						activity && inheritedActivity ?
 
@@ -147,7 +147,7 @@ const StudentActivity = (props) => {
 							<Redirect to='/unauthorized' />
 
 						:
-						""
+						<Redirect to='/unauthorized' />
 
 					:
 					<Redirect to="/unauthorized" />

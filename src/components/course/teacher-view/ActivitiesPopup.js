@@ -212,7 +212,7 @@ export default function ActivitiesPopup(props) {
                                 ))
                                 :
                                 <>
-                                    <NoContentToShow messageTitle={'Sin activitidades...'} messageDes={'Ya estan todos las actividades agregadas a la tarea o aún no hay actividades verficadas en la plataforma'} />
+                                    <NoContentToShow icon='face' messageTitle={'Sin activitidades...'} messageDes={'Ya estan todos las actividades agregadas a la tarea o aún no hay actividades verficadas en la plataforma'} />
                                 </>
                             :
                             <div className="spinner-loading" style={{ marginTop: '8em' }}>

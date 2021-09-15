@@ -111,14 +111,14 @@ const LogicSequenceStudent = props => {
         }, 2000)
     }
 
-    // Funcion para mostrar una alerta satisfactoria dado un mensaje
+    // Funcion para mostrar una alerta de feedback dado un mensaje
     const showFeedBack = (message) => {
         setFeedBack(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
         setFeedBackMessage(message); //Se setea el mensaje de proceso satisfactorio
         setTimeout(() => { //Dura 2sg en pantalla el mensaje
             setFeedBack(false);
             setFeedBackMessage("");
-        }, 2000)
+        }, 3000)
     }
 
     const onSortEnd = ({ oldIndex, newIndex }) => {

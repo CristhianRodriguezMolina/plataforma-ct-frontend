@@ -80,6 +80,7 @@ export default function Maze() {
 		}, 2000)
 	}
 
+	// Funcion para mostrar una alerta información dado un mensaje
 	const showInfo = (message) => {
 		setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
 		setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
@@ -1092,7 +1093,7 @@ export default function Maze() {
 							{
 								maze ?
 									<>
-										<h5 className='text-muted font-italic'>Aqui pon las intrucciones de la solución mas optima para este laberinto cuando lo hayas terminado</h5>
+										<h5 className='text-muted font-italic' style={{ fontSize: '1.1em' }}>Aqui pon las intrucciones de la solución mas optima para este laberinto cuando lo hayas terminado</h5>
 										<Intructions maze={maze} setMaze={setMaze} cols={cols} rows={rows} />
 									</>
 									: ''

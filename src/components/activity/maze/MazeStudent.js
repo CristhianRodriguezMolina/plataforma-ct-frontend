@@ -28,7 +28,7 @@ import Cell from './Cell';
 import { Container } from '@material-ui/core';
 
 // Icons
-import { ZoomIn, ZoomOut } from '@material-ui/icons';
+import { InfoOutlined, ZoomIn, ZoomOut } from '@material-ui/icons';
 
 // Styled-components
 import styled, { css, keyframes } from 'styled-components'
@@ -41,6 +41,9 @@ import Timer from '../../common/Timer';
 
 // Titulo
 import TitleCard from '../../common/TitleCard';
+
+// Alert modal
+import AlertModal from '../../common/AlertModal';
 
 export default function MazeStudent(props) {
 
@@ -57,6 +60,8 @@ export default function MazeStudent(props) {
 	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
+	const [feedBack, setFeedBack] = useState(false); //Variable flag de feedback
+	const [feedBackMessage, setFeedBackMessage] = useState(''); //Mensaje de feedback
 
 	// UseEffect para cambiar el color de la barra de navegación
 	useEffect(() => {
@@ -90,6 +95,16 @@ export default function MazeStudent(props) {
 			setProcess(false);
 			setProcessMessage("");
 		}, 2000)
+	}
+
+	// Funcion para mostrar una alerta de feedback dado un mensaje
+	const showFeedBack = (message) => {
+		setFeedBack(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+		setFeedBackMessage(message); //Se setea el mensaje de proceso satisfactorio
+		setTimeout(() => { //Dura 2sg en pantalla el mensaje
+			setFeedBack(false);
+			setFeedBackMessage("");
+		}, 3000)
 	}
 
 	// VARIABLES DEL MAZE -------------------------------------------------------------------------------------------------
@@ -181,7 +196,7 @@ export default function MazeStudent(props) {
 
 	// UseEffect to init the maze activity data or to change the rows and cols
 	useEffect(() => {
-		if (!maze && props.studentActivity) {
+		if (!maze) {
 
 			if (props.studentActivity.complete) {
 				setInstructions(props.studentActivity.answer);
@@ -193,11 +208,11 @@ export default function MazeStudent(props) {
 			setLoading(false); // This it to wait to the component to render completely
 			setIsActive(true);
 			setStudentActivity(props.studentActivity)
-		} else {
+		} else if (maze) {
 			setRows(maze.rows);
 			setCols(maze.cols);
 		}
-	}, [maze, props.studentActivity]);
+	}, [maze]);
 
 	// Si cambia la posicion del inicio se cambia la del robot y se reicinia la variable flag que muestra el robot
 	useEffect(() => {
@@ -360,12 +375,16 @@ export default function MazeStudent(props) {
 	const btnProveMaze = useRef(null);
 	const btnShowRobot = useRef(null);
 
+	// The current type of the animation
 	const [animationType, setAnimationType] = useState('NO_ANIMATION')
 
 	const [currentGrades, setCurrentGrades] = useState(0)
 	const [currentTop, setCurrentTop] = useState(startY)
 	const [currentLeft, setCurrentLeft] = useState(startX)
 	const [errorMazeMessage, setErrorMazeMessage] = useState('')
+
+	// Variable to set if the confimation alert to finalize the maze is open or not
+	const [isOpenFinalization, setIsOpenFinalization] = useState(false);
 
 	// Character Robot, with styled-components
 	const Robot = styled.div`
@@ -455,6 +474,9 @@ export default function MazeStudent(props) {
 		// Message that gonna be show to the user if there is an error
 		var errorMazeMessage = '';
 
+		// Message that gonna be show to the user if there is an error to show it feedback
+		var feedbackMazeMessage = '';
+
 		// Flag to see if there is an error in the path of the maze
 		var isError = false;
 
@@ -526,10 +548,13 @@ export default function MazeStudent(props) {
 
 				if (currentCell.type === actions.BLOCK) {
 					errorMazeMessage = 'El robot choco con una pared';
+					feedbackMazeMessage = 'Revisa tus instrucciones, parece que tienes errores';
 				} else if (currentCell.type === 'NOT_EXIST') {
 					errorMazeMessage = 'El robot se cayo del laberinto';
+					feedbackMazeMessage = 'Revisa tus instrucciones, parece que tienes errores';
 				} else if (i === frameActions.length - 1) {
 					errorMazeMessage = 'No se encontró el final del laberinto';
+					feedbackMazeMessage = 'Revisa tus instrucciones, parece que no son suficientes';
 				}
 
 				isError = true;
@@ -545,6 +570,13 @@ export default function MazeStudent(props) {
 		currentLeft = startX;
 		currentTop = startY;
 		currentGrades = 0;
+
+		// THIS ID IS TO SHOW A FEEDBACK MESSAGE IF THERE IS A ERROR IN THE INSTRUCTIONS
+		if (isError) {
+			showFeedBack(feedbackMazeMessage);
+			cancelAnimation();
+			return;
+		}
 
 		// Current percent of the animation and the offset 
 		const percentOffset = Math.floor(100 / usableCells);
@@ -763,7 +795,7 @@ export default function MazeStudent(props) {
 		`
 
 		setAnimationDuration('1s');
-		setAnimationRepeat(5);
+		setAnimationRepeat(2);
 
 		setAnimation(keyframes`
 					  ${animationType === 'WIN' ? winAnimation : errorAnimation}
@@ -771,7 +803,10 @@ export default function MazeStudent(props) {
 
 		setTimeout(() => {
 			// Update the maze when executes any instructions
-			setIsActive(false);
+			if (instructions.length > maze.instructions.length && animationType === 'WIN') {
+				setIsOpenFinalization(true);
+				// setIsActive(false);
+			}
 
 			setRobotX(startX);
 			setRobotY(startY);
@@ -785,7 +820,7 @@ export default function MazeStudent(props) {
 			// When the animation ends then the button to prove the maze and the button to show the robot are activated
 			btnProveMaze.current.disabled = false;
 			btnShowRobot.current.disabled = false;
-		}, 5000)
+		}, 2000)
 
 	}
 
@@ -811,6 +846,15 @@ export default function MazeStudent(props) {
 		setAnimate(!animate)
 	}
 
+	const testingMethodFinalization = () => {
+		console.log('Trying to improve the answer');
+	}
+
+	const testingMethodHandleClose = () => {
+		console.log('Finalizing the maze');
+		setIsOpenFinalization(false);
+	}
+
 	return (
 		<div className='mb-5'>
 			{!loading ?
@@ -832,6 +876,17 @@ export default function MazeStudent(props) {
 							<Alert className="alert-message" severity="info">{processMessage}</Alert>
 							: ""
 					}
+
+					{feedBack ?
+						<Alert className='alert-message-feedback alert-message' icon={<InfoOutlined style={{ color: 'whitesmoke' }} />} style={{
+							backgroundColor: 'rgb(180, 101, 233)',
+							color: 'whitesmoke',
+							display: 'flex',
+							alignItems: 'center'
+						}} severity=""><div>{feedBackMessage}</div></Alert>
+						: ""
+					}
+
 					<TitleCard
 						title="Laberinto"
 						color="#FA61CD"
@@ -839,6 +894,16 @@ export default function MazeStudent(props) {
 					/>
 
 					<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(animationType === 'WIN' ? 5 : 0, minutes, seconds)} />
+
+					<AlertModal
+						message='Completaste el laberinto, pero podrias completarlo con menos instrucciones, ¿Quieres intentarlo?'
+						open={isOpenFinalization}
+						action={testingMethodFinalization}
+						handleClose={testingMethodHandleClose}
+						type='success'
+						actionText='¡Intentemoslo!'
+						closingText='No, gracias'
+					/>
 
 					<div className="maze-header">
 						<Container maxWidth='md'>
