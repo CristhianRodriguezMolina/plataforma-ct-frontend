@@ -51,7 +51,13 @@ export default function MazeStudent(props) {
 	const { changeColor } = useContext(UserContext);
 
 	//Timer vars
+	const [seconds, setSeconds] = useState('00');
+	const [minutes, setMinutes] = useState('00');
 	const [isActive, setIsActive] = useState(false);
+	const [counter, setCounter] = useState(0);
+
+	//Attempts number
+	const [attemptsNumber, setAttemptsNumber] = useState(0);
 
 	// MENSAJES DE LA VISTA
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -67,6 +73,29 @@ export default function MazeStudent(props) {
 	useEffect(() => {
 		changeColor('#f8bbd0');
 	});
+
+	//handle the timer
+	useEffect(() => {
+		let intervalId;
+
+		if (isActive) {
+			intervalId = setInterval(() => {
+				const secondsCounter = counter % 60;
+				const minutesCounter = Math.floor(counter / 60);
+
+				const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}` : secondsCounter;
+				const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}` : minutesCounter;
+
+				setSeconds(computedSeconds);
+				setMinutes(computedMinutes);
+
+				setCounter(counter => counter + 1);
+			}, 1000);
+		}
+
+		return () => clearInterval(intervalId);
+
+	}, [isActive, counter]);
 
 	// Funcion para mostrar una alerta satisfactoria dado un mensaje
 	const showSuccess = (message) => {
@@ -197,9 +226,10 @@ export default function MazeStudent(props) {
 	// UseEffect to init the maze activity data or to change the rows and cols
 	useEffect(() => {
 		if (!maze) {
-
-			if (props.studentActivity.complete) {
+			if (props.studentActivity.attempts > 0) {
 				setInstructions(props.studentActivity.answer);
+				setCounter((parseInt(props.studentActivity.minutes) * 60) + parseInt(props.studentActivity.seconds));
+				setAttemptsNumber(props.studentActivity.attempts);
 			}
 
 			setMaze(props.inheritedActivity);
@@ -320,18 +350,20 @@ export default function MazeStudent(props) {
 	}
 
 	// Update the data of the maze in the DB
-	const handleCompleteActivity = async (grade, minutes, seconds) => {
+	const handleCompleteActivity = async (complete) => {
 		setProcess(true);
 		setProcessMessage('Guardando cambios...');
 
+		setAttemptsNumber(attemptsNumber + 1);
 		if (props.studentActivity) {
 			api.put(`/api/student-activity/${props.studentActivity._id}`, {
-				complete: true,
-				grade: grade,
+				complete: complete,
+				grade: 5,
 				minutes,
 				seconds,
 				answer: instructions,
 				type: props.activity.type,
+				attempts: (attemptsNumber + 1)
 			}, {
 				headers: {
 					'x-access-token': localStorage.getItem('token')
@@ -575,6 +607,7 @@ export default function MazeStudent(props) {
 		if (isError) {
 			showFeedBack(feedbackMazeMessage);
 			cancelAnimation();
+			handleCompleteActivity(false);
 			return;
 		}
 
@@ -805,7 +838,6 @@ export default function MazeStudent(props) {
 			// Update the maze when executes any instructions
 			if (instructions.length > maze.instructions.length && animationType === 'WIN') {
 				setIsOpenFinalization(true);
-				// setIsActive(false);
 			}
 
 			setRobotX(startX);
@@ -893,13 +925,14 @@ export default function MazeStudent(props) {
 						colorFont="#FFF"
 					/>
 
-					<Timer isActive={isActive} sendTime={(minutes, seconds) => handleCompleteActivity(animationType === 'WIN' ? 5 : 0, minutes, seconds)} />
-
 					<AlertModal
 						message='Completaste el laberinto, pero podrias completarlo con menos instrucciones, ¿Quieres intentarlo?'
 						open={isOpenFinalization}
-						action={testingMethodFinalization}
-						handleClose={testingMethodHandleClose}
+						action={() => handleCompleteActivity(false)}
+						handleClose={() => {
+							handleCompleteActivity(true);
+							setIsActive(false);
+						}}
 						type='success'
 						actionText='¡Intentemoslo!'
 						closingText='No, gracias'

@@ -237,10 +237,10 @@ const LogicSequenceStudent = props => {
 
         if (equals) {
             setIsActive(false);
-            handleCompleteActivity(true);
+            handleCompleteActivity(true); // Save as completed
         }
         else {
-            handleCompleteActivity(false);
+            handleCompleteActivity(false); // Save as incompleted
             showFeedBack('Tu respuesta aun tiene algunos errores ¡Sigue intentando!');
         }
 
