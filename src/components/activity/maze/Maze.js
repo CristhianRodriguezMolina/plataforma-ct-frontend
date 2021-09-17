@@ -464,7 +464,7 @@ export default function Maze() {
 	const [animation, setAnimation] = useState('');
 
 	// Animation parameters
-	const [animationDuration, setAnimationDuration] = useState('5s');
+	const [animationDuration, setAnimationDuration] = useState(5);
 	const [animationRepeat, setAnimationRepeat] = useState(1);
 
 	// Robot position and grades
@@ -479,12 +479,17 @@ export default function Maze() {
 	const btnProveMaze = useRef(null);
 	const btnShowRobot = useRef(null);
 
+	// The current type of the animation
 	const [animationType, setAnimationType] = useState('NO_ANIMATION')
+	const [animationExecutionType, setAnimationExecutionType] = useState('NO_ANIMATION')
 
 	const [currentGrades, setCurrentGrades] = useState(0)
 	const [currentTop, setCurrentTop] = useState(startY)
 	const [currentLeft, setCurrentLeft] = useState(startX)
 	const [errorMazeMessage, setErrorMazeMessage] = useState('')
+
+	// Variables to save the timeouts id in case of cancelation
+	const [createAnimationTimeout, setCreateAnimationTimeout] = useState(null);
 
 	// Character Robot, with styled-components
 	const Robot = styled.div`
@@ -502,7 +507,7 @@ export default function Maze() {
 		animation: ${props =>
 			props.animate &&
 			css`
-			  ${animation} ${props.animationDuration} linear ${props.animationRepeat}
+			  ${animation} ${props.animationDuration}s linear ${props.animationRepeat}
 			`};
 	`
 
@@ -521,10 +526,12 @@ export default function Maze() {
 
 	// UseEffect for animation
 	useEffect(() => {
-		if (animationType !== 'NO_ANIMATION') {
+		if (animationExecutionType === 'RUNNING' && animationType === 'NO_ANIMATION') {
+			createAnimation();
+		} else if (animationExecutionType === 'RUNNING' && animationType !== 'NO_ANIMATION') {
 			finishAnimation();
 		}
-	}, [animationType])
+	}, [animationExecutionType, animationType])
 
 	const createAnimation = async () => {
 
@@ -548,7 +555,7 @@ export default function Maze() {
 		btnShowRobot.current.disabled = true;
 
 		// Reset the animation
-		setAnimationDuration('5s');
+		setAnimationDuration(5);
 		setAnimationRepeat(1);
 
 		// Reset the robot position
@@ -640,7 +647,7 @@ export default function Maze() {
 				isWin = true;
 
 				animateDuration = (i + 1) * 0.5;
-				setAnimationDuration(`${animateDuration}s`);
+				setAnimationDuration(animateDuration);
 				break;
 			}
 
@@ -659,10 +666,14 @@ export default function Maze() {
 				isError = true;
 
 				animateDuration = (i + 1) * 0.5;
-				setAnimationDuration(`${animateDuration}s`);
+				setAnimationDuration(animateDuration);
 				break;
 			}
 		}
+
+		setRobotX(currentLeft);
+		setRobotY(currentTop);
+		setRobotGrades(currentGrades);
 
 		// SET NEWLY THE VARIABLES CURRENT TOP, LEFT AND DIRECTION TO THE INITIAL VALUE
 		currentDirection = 'UP';
@@ -767,47 +778,39 @@ export default function Maze() {
 		  	${stringKeyFrame}
 		`);
 
-		setRobotX(currentLeft);
-		setRobotY(currentTop);
-		setRobotGrades(currentGrades);
+		// ERROR AND WIN ANIMATION EXECUTIONS; AND SAVING THE TIME ID, IN CASE OF CANCELATION
+		setCreateAnimationTimeout(setTimeout(() => {
+			setCurrentTop(currentTop);
+			setCurrentLeft(currentLeft);
+			setCurrentGrades(currentGrades);
+			setErrorMazeMessage(errorMazeMessage);
 
-		// ERROR AND WIN ANIMATION EXECUTIONS
-		setTimeout(() => {
-			if (animationType !== 'CANCELED') {
-				setCurrentTop(currentTop);
-				setCurrentLeft(currentLeft);
-				setCurrentGrades(currentGrades);
-				setErrorMazeMessage(errorMazeMessage);
-
-				if (isWin) {
-					setAnimationType('WIN');
-				} else if (isError) {
-					setAnimationType('ERROR');
-				}
+			if (isWin) {
+				setAnimationType('WIN');
+			} else if (isError) {
+				setAnimationType('ERROR');
 			}
-		}, animateDuration * 1000)
+		}, animateDuration * 1000))
 	}
 
 	// This method executes the finish animation (Win, Error) when the animation throught the maze ends
 	const finishAnimation = () => {
 		// If the animation is canceled
-		if (animationType === 'CANCELED' || animate === false) {
-			showInfo('Animacion cancelada');
-			setAnimationType('NO_ANIMATION');
+		if (animationExecutionType === 'NO_ANIMATION' || animate === false) {
 			return;
 		}
 
 		if (animationType === 'ERROR') {
-			setMaze(prevMaze => {
-				return { ...prevMaze, verified: false }
-			})
+			// setMaze(prevMaze => {
+			// 	return { ...prevMaze, verified: false }
+			// })
 			showError(errorMazeMessage);
 		}
 
 		if (animationType === 'WIN') {
-			setMaze(prevMaze => {
-				return { ...prevMaze, verified: true }
-			})
+			// setMaze(prevMaze => {
+			// 	return { ...prevMaze, verified: true }
+			// })
 			showSuccess('Felicidades completaste el laberinto')
 		}
 
@@ -886,17 +889,14 @@ export default function Maze() {
 		  }
 		`
 
-		setAnimationDuration('1s');
-		setAnimationRepeat(5);
+		setAnimationDuration(1);
+		setAnimationRepeat(2);
 
 		setAnimation(keyframes`
 					  ${animationType === 'WIN' ? winAnimation : errorAnimation}
 					`);
 
 		setTimeout(() => {
-			// Update the maze when executes any instructions
-			handleUpdateMaze();
-
 			setRobotX(startX);
 			setRobotY(startY);
 			setRobotGrades(0);
@@ -904,35 +904,45 @@ export default function Maze() {
 			setAnimation(``);
 			setAnimate(false);
 
+			setAnimationExecutionType('NO_ANIMATION');
+			setAnimationType('NO_ANIMATION');
+
+			// Update the maze when executes any instructions
+			handleUpdateMaze();
+
 			// When the animation ends then the button to prove the maze and the button to show the robot are activated
 			btnProveMaze.current.disabled = false;
 			btnShowRobot.current.disabled = false;
-		}, 5000)
-
-		setAnimationType('NO_ANIMATION');
+		}, 2000)
 	}
 
 	const cancelAnimation = () => {
 
 		if (animate) { // If there is an animation then cancel set the animation type to canceled, in other case just set the buttons to disabled = false, just in case
-			setAnimationType('CANCELED');
+			clearTimeout(createAnimationTimeout);
+
+			setAnimationExecutionType('NO_ANIMATION');
+			setAnimationType('NO_ANIMATION');
 
 			setAnimation(``);
 			setAnimate(false);
-			setAnimationDuration('0s');
+			setAnimationDuration(0);
 			setRobotX(startX);
 			setRobotY(startY);
 			setRobotGrades(0);
-		}
 
-		// When the animation ends then the button to prove the maze and the button to show the robot are activated
-		btnProveMaze.current.disabled = false;
-		btnShowRobot.current.disabled = false;
+			// When the animation ends then the button to prove the maze and the button to show the robot are activated
+			btnProveMaze.current.disabled = false;
+			btnShowRobot.current.disabled = false;
+		}
 	}
 
 	const handleShowRobot = () => {
 		if (isStart && isEnd) {
 			setAnimate(!animate)
+			setAnimation(``);
+			setAnimationExecutionType('NO_ANIMATION');
+			setAnimationType('NO_ANIMATION');
 		} else {
 			showError('No ha definido el inicio y el fin del laberinto!!');
 			setAnimate(false);
@@ -1031,7 +1041,7 @@ export default function Maze() {
 
 					<div className='mt-2 d-flex flex-wrap justify-content-center px-2 '>
 						<div className='d-flex justify-content-center mt-2'>
-							<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Probar maze</button>
+							<button onClick={() => { setAnimationExecutionType('RUNNING'); setAnimationType('NO_ANIMATION') }} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
 							<button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button>
 						</div>
 						<div className='d-flex justify-content-center mt-2'>

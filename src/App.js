@@ -120,13 +120,12 @@ function App() {
                 <ProtectedRoute type="admin, teacher" path='/course/mycourses' exact component={MyCourses} />
 
                 {/* ACTIVITY */}
-				<ProtectedRoute path='/activity/:view/:personId/:courseId/:unitId/:taskId/:activityId' exact component={StudentActivity} />
+				        <ProtectedRoute path='/activity/:view/:personId/:courseId/:unitId/:taskId/:activityId' exact component={StudentActivity} />
                 <ProtectedRoute type="admin, teacher" path='/activity/myActivities' exact component={MyActivities} />
                 <ProtectedRoute type="admin, teacher" path='/activity/create' exact component={CreateActivity} />
                 <ProtectedRoute type="admin, teacher" path='/activity/logic-sequence/:activityId' exact component={LogicSequence} />
                 <ProtectedRoute type="admin, teacher" path='/activity/maze/:activityId' exact component={Maze} />
                 <ProtectedRoute type="admin, teacher" path='/activity/questionnaire/:activityId' exact component={Questionnaire} />
-                {/* <ProtectedRoute type="admin, teacher" path='/activity/questionnaire/student/:activityId' exact component={MazeStudent} /> */}
 
                 {/* PERSPECTIVE */}
                 <ProtectedRoute path='/perspectives-view' exact component={PerspectivesView} />

@@ -79,18 +79,18 @@ export default function MazeStudent(props) {
 		let intervalId;
 
 		if (isActive) {
-			intervalId = setInterval(() => {
-				const secondsCounter = counter % 60;
-				const minutesCounter = Math.floor(counter / 60);
+			// intervalId = setInterval(() => {
+			// 	const secondsCounter = counter % 60;
+			// 	const minutesCounter = Math.floor(counter / 60);
 
-				const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}` : secondsCounter;
-				const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}` : minutesCounter;
+			// 	const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}` : secondsCounter;
+			// 	const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}` : minutesCounter;
 
-				setSeconds(computedSeconds);
-				setMinutes(computedMinutes);
+			// 	setSeconds(computedSeconds);
+			// 	setMinutes(computedMinutes);
 
-				setCounter(counter => counter + 1);
-			}, 1000);
+			// 	setCounter(counter => counter + 1);
+			// }, 1000);
 		}
 
 		return () => clearInterval(intervalId);
@@ -296,28 +296,6 @@ export default function MazeStudent(props) {
 
 	// Methods --------------------------------------------------------------------------------------------------------
 
-	// Fetch maze data
-	const fetchMaze = () => {
-		api.get(`/api/maze/${activityId}`, {
-			headers: { 'x-access-token': localStorage.getItem('token') }
-		})
-			.then((res) => {
-				setMaze(res.data);
-				setActivityName(res.data.activity_id.name); // Activity_id is the activity schema of the maze
-				setActivityDescription(res.data.activity_id.description);
-				setLoading(false);
-			})
-			.catch(err => {
-				setLoading(false);
-				if (err.response) {
-					showError(err.response.data.message);
-				}
-				else {
-					showError("¡No se han podido obtener el laberinto, por favor intentelo mas tarde!");
-				}
-			})
-	}
-
 	// Metodo para inicializar o actualizar los valores de tamaño del maze 
 	const setUp = () => {
 		setWX((mazeSize + mazeSizeOffset) / cols); // Width of each cell
@@ -370,7 +348,9 @@ export default function MazeStudent(props) {
 				}
 			})
 				.then((res) => {
-					showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+					if (complete) {
+						showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+					}
 					setStudentActivity(res.data.updatedStudentActivity);
 				})
 				.catch((err) => {
@@ -392,7 +372,7 @@ export default function MazeStudent(props) {
 	const [animation, setAnimation] = useState('');
 
 	// Animation parameters
-	const [animationDuration, setAnimationDuration] = useState('5s');
+	const [animationDuration, setAnimationDuration] = useState(5);
 	const [animationRepeat, setAnimationRepeat] = useState(1);
 
 	// Robot position and grades
@@ -409,14 +389,21 @@ export default function MazeStudent(props) {
 
 	// The current type of the animation
 	const [animationType, setAnimationType] = useState('NO_ANIMATION')
+	const [animationExecutionType, setAnimationExecutionType] = useState('NO_ANIMATION')
 
 	const [currentGrades, setCurrentGrades] = useState(0)
 	const [currentTop, setCurrentTop] = useState(startY)
 	const [currentLeft, setCurrentLeft] = useState(startX)
 	const [errorMazeMessage, setErrorMazeMessage] = useState('')
 
+	// Message that gonna be show to the user if there is an error to show it feedback
+	const [feedbackMazeMessage, setFeedbackMazeMessage] = useState('');
+
 	// Variable to set if the confimation alert to finalize the maze is open or not
 	const [isOpenFinalization, setIsOpenFinalization] = useState(false);
+
+	// Variables to save the timeouts id in case of cancelation
+	const [createAnimationTimeout, setCreateAnimationTimeout] = useState(null);
 
 	// Character Robot, with styled-components
 	const Robot = styled.div`
@@ -434,7 +421,7 @@ export default function MazeStudent(props) {
 		animation: ${props =>
 			props.animate &&
 			css`
-			  ${animation} ${props.animationDuration} linear ${props.animationRepeat}
+			  ${animation} ${props.animationDuration}s linear ${props.animationRepeat}
 			`};
 	`
 
@@ -453,10 +440,12 @@ export default function MazeStudent(props) {
 
 	// UseEffect for animation
 	useEffect(() => {
-		if (animationType !== 'NO_ANIMATION') {
+		if (animationExecutionType === 'RUNNING' && animationType === 'NO_ANIMATION') {
+			createAnimation();
+		} else if (animationExecutionType === 'RUNNING' && animationType !== 'NO_ANIMATION') {
 			finishAnimation();
 		}
-	}, [animationType])
+	}, [animationExecutionType, animationType])
 
 	const createAnimation = async () => {
 
@@ -475,7 +464,7 @@ export default function MazeStudent(props) {
 		btnShowRobot.current.disabled = true;
 
 		// Reset the animation
-		setAnimationDuration('5s');
+		setAnimationDuration(5);
 		setAnimationRepeat(1);
 
 		// Reset the robot position
@@ -505,9 +494,6 @@ export default function MazeStudent(props) {
 
 		// Message that gonna be show to the user if there is an error
 		var errorMazeMessage = '';
-
-		// Message that gonna be show to the user if there is an error to show it feedback
-		var feedbackMazeMessage = '';
 
 		// Flag to see if there is an error in the path of the maze
 		var isError = false;
@@ -570,7 +556,7 @@ export default function MazeStudent(props) {
 				isWin = true;
 
 				animateDuration = (i + 1) * 0.5;
-				setAnimationDuration(`${animateDuration}s`);
+				setAnimationDuration(animateDuration);
 				break;
 			}
 
@@ -580,36 +566,32 @@ export default function MazeStudent(props) {
 
 				if (currentCell.type === actions.BLOCK) {
 					errorMazeMessage = 'El robot choco con una pared';
-					feedbackMazeMessage = 'Revisa tus instrucciones, parece que tienes errores';
+					setFeedbackMazeMessage('Revisa tus instrucciones, parece que tienes errores');
 				} else if (currentCell.type === 'NOT_EXIST') {
 					errorMazeMessage = 'El robot se cayo del laberinto';
-					feedbackMazeMessage = 'Revisa tus instrucciones, parece que tienes errores';
+					setFeedbackMazeMessage('Revisa tus instrucciones, parece que tienes errores');
 				} else if (i === frameActions.length - 1) {
 					errorMazeMessage = 'No se encontró el final del laberinto';
-					feedbackMazeMessage = 'Revisa tus instrucciones, parece que no son suficientes';
+					setFeedbackMazeMessage('Revisa tus instrucciones, parece que no son suficientes');
 				}
 
 				isError = true;
 
 				animateDuration = (i + 1) * 0.5;
-				setAnimationDuration(`${animateDuration}s`);
+				setAnimationDuration(animateDuration);
 				break;
 			}
 		}
+
+		setRobotX(currentLeft);
+		setRobotY(currentTop);
+		setRobotGrades(currentGrades);
 
 		// SET NEWLY THE VARIABLES CURRENT TOP, LEFT AND DIRECTION TO THE INITIAL VALUE
 		currentDirection = 'UP';
 		currentLeft = startX;
 		currentTop = startY;
 		currentGrades = 0;
-
-		// THIS ID IS TO SHOW A FEEDBACK MESSAGE IF THERE IS A ERROR IN THE INSTRUCTIONS
-		if (isError) {
-			showFeedBack(feedbackMazeMessage);
-			cancelAnimation();
-			handleCompleteActivity(false);
-			return;
-		}
 
 		// Current percent of the animation and the offset 
 		const percentOffset = Math.floor(100 / usableCells);
@@ -708,47 +690,39 @@ export default function MazeStudent(props) {
 		  	${stringKeyFrame}
 		`);
 
-		setRobotX(currentLeft);
-		setRobotY(currentTop);
-		setRobotGrades(currentGrades);
+		// ERROR AND WIN ANIMATION EXECUTIONS; AND SAVING THE TIME ID, IN CASE OF CANCELATION
+		setCreateAnimationTimeout(setTimeout(() => {
+			setCurrentTop(currentTop);
+			setCurrentLeft(currentLeft);
+			setCurrentGrades(currentGrades);
+			setErrorMazeMessage(errorMazeMessage);
 
-		// ERROR AND WIN ANIMATION EXECUTIONS
-		setTimeout(() => {
-			if (animationType !== 'CANCELED') {
-				setCurrentTop(currentTop);
-				setCurrentLeft(currentLeft);
-				setCurrentGrades(currentGrades);
-				setErrorMazeMessage(errorMazeMessage);
-
-				if (isWin) {
-					setAnimationType('WIN');
-				} else if (isError) {
-					setAnimationType('ERROR');
-				}
+			if (isWin) {
+				setAnimationType('WIN');
+			} else if (isError) {
+				setAnimationType('ERROR');
 			}
-		}, animateDuration * 1000)
+		}, animateDuration * 1000))
 	}
 
 	// This method executes the finish animation (Win, Error) when the animation throught the maze ends
 	const finishAnimation = () => {
 		// If the animation is canceled
-		if (animationType === 'CANCELED' || animate === false) {
-			showInfo('Animacion cancelada');
-			setAnimationType('NO_ANIMATION');
+		if (animationExecutionType === 'NO_ANIMATION' || animate === false) {
 			return;
 		}
 
 		if (animationType === 'ERROR') {
-			setMaze(prevMaze => {
-				return { ...prevMaze, verified: false }
-			})
+			// setMaze(prevMaze => {
+			// 	return { ...prevMaze, verified: false }
+			// })
 			showError(errorMazeMessage);
 		}
 
 		if (animationType === 'WIN') {
-			setMaze(prevMaze => {
-				return { ...prevMaze, verified: true }
-			})
+			// setMaze(prevMaze => {
+			// 	return { ...prevMaze, verified: true }
+			// })
 			showSuccess('Felicidades completaste el laberinto')
 		}
 
@@ -827,7 +801,7 @@ export default function MazeStudent(props) {
 		  }
 		`
 
-		setAnimationDuration('1s');
+		setAnimationDuration(1);
 		setAnimationRepeat(2);
 
 		setAnimation(keyframes`
@@ -835,11 +809,6 @@ export default function MazeStudent(props) {
 					`);
 
 		setTimeout(() => {
-			// Update the maze when executes any instructions
-			if (instructions.length > maze.instructions.length && animationType === 'WIN') {
-				setIsOpenFinalization(true);
-			}
-
 			setRobotX(startX);
 			setRobotY(startY);
 			setRobotGrades(0);
@@ -847,23 +816,37 @@ export default function MazeStudent(props) {
 			setAnimation(``);
 			setAnimate(false);
 
+			setAnimationExecutionType('NO_ANIMATION');
 			setAnimationType('NO_ANIMATION');
+
+			// Feedbacks for the maze
+			if (instructions.length > maze.instructions.length && animationType === 'WIN') {
+				setIsOpenFinalization(true);
+			} else if (animationType === 'WIN') {
+				setIsActive(false);
+				handleCompleteActivity(true);
+			} if (animationType === 'ERROR') { // THIS ID IS TO SHOW A FEEDBACK MESSAGE IF THERE IS A ERROR IN THE INSTRUCTIONS
+				showFeedBack(feedbackMazeMessage);
+				handleCompleteActivity(false);
+			}
 
 			// When the animation ends then the button to prove the maze and the button to show the robot are activated
 			btnProveMaze.current.disabled = false;
 			btnShowRobot.current.disabled = false;
 		}, 2000)
-
 	}
 
 	const cancelAnimation = () => {
 
 		if (animate) { // If there is an animation then cancel set the animation type to canceled, in other case just set the buttons to disabled = false, just in case
-			setAnimationType('CANCELED');
+			clearTimeout(createAnimationTimeout);
+
+			setAnimationExecutionType('NO_ANIMATION');
+			setAnimationType('NO_ANIMATION');
 
 			setAnimation(``);
 			setAnimate(false);
-			setAnimationDuration('0s');
+			setAnimationDuration(0);
 			setRobotX(startX);
 			setRobotY(startY);
 			setRobotGrades(0);
@@ -875,16 +858,11 @@ export default function MazeStudent(props) {
 	}
 
 	const handleShowRobot = () => {
-		setAnimate(!animate)
-	}
+		setAnimate(!animate);
 
-	const testingMethodFinalization = () => {
-		console.log('Trying to improve the answer');
-	}
-
-	const testingMethodHandleClose = () => {
-		console.log('Finalizing the maze');
-		setIsOpenFinalization(false);
+		setAnimation(``);
+		setAnimationExecutionType('NO_ANIMATION');
+		setAnimationType('NO_ANIMATION');
 	}
 
 	return (
@@ -929,9 +907,10 @@ export default function MazeStudent(props) {
 						message='Completaste el laberinto, pero podrias completarlo con menos instrucciones, ¿Quieres intentarlo?'
 						open={isOpenFinalization}
 						action={() => handleCompleteActivity(false)}
-						handleClose={() => {
-							handleCompleteActivity(true);
+						handleClose={() => setIsOpenFinalization(!isOpenFinalization)}
+						actionClose={() => {
 							setIsActive(false);
+							handleCompleteActivity(true);
 						}}
 						type='success'
 						actionText='¡Intentemoslo!'
@@ -968,9 +947,7 @@ export default function MazeStudent(props) {
 
 										{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
 										<div className='mt-4 d-flex justify-content-center'>
-
-											<button onClick={() => createAnimation()} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
-											{/* <button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button> */}
+											<button onClick={() => { setAnimationExecutionType('RUNNING'); setAnimationType('NO_ANIMATION') }} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
 											<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
 											<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 										</div>
