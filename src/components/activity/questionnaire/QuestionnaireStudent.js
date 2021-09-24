@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, withRouter, Redirect } from "react-router-dom";
 
 //API
 import api from '../../../services/api';
@@ -32,10 +32,12 @@ import Alert from '@material-ui/lab/Alert';
 //Timer
 import Timer from '../../common/Timer';
 
-// Icons
-import { InfoOutlined } from '@material-ui/icons';
+// Alert modal
+import AlertModal from '../../common/AlertModal';
 
 const QuestionnaireStudent = (props) => {
+
+	const { courseId } = useParams();
 
 	//Store questionnaire data
 	const [questionnaire, setQuestionnaire] = useState(null);
@@ -57,17 +59,20 @@ const QuestionnaireStudent = (props) => {
 	const [feedBack, setFeedBack] = useState(false); //Variable flag de feedback
 	const [feedBackMessage, setFeedBackMessage] = useState(''); //Mensaje de feedback
 
-    //Timer vars
-    const [seconds, setSeconds] = useState('00');
-    const [minutes, setMinutes] = useState('00');
-    const [isActive, setIsActive] = useState(false);
-    const [counter, setCounter] = useState(0);
+	//Timer vars
+	const [seconds, setSeconds] = useState('00');
+	const [minutes, setMinutes] = useState('00');
+	const [isActive, setIsActive] = useState(false);
+	const [counter, setCounter] = useState(0);
 
 	//Attempts number
 	const [attemptsNumber, setAttemptsNumber] = useState(0);
 
-    //To prevent api calls in the same time disabling the button
-    const btnCheckAnswer = useRef(null);
+	//To prevent api calls in the same time disabling the button
+	const btnCheckAnswer = useRef(null);
+
+	// Flag to open the completing modal
+	const [openCompleting, setOpenCompleting] = useState(false);
 
 	useEffect(() => {
 		changeColor('#f8bbd0');
@@ -78,8 +83,8 @@ const QuestionnaireStudent = (props) => {
 
 			if (props.studentActivity.answer.length === props.inheritedActivity.questions.length) {
 				setAnswerQuestionsList(props.studentActivity.answer);
-                setCounter((parseInt(props.studentActivity.minutes) * 60) + parseInt(props.studentActivity.seconds));
-                setAttemptsNumber(props.studentActivity.attempts);
+				setCounter((parseInt(props.studentActivity.minutes) * 60) + parseInt(props.studentActivity.seconds));
+				setAttemptsNumber(props.studentActivity.attempts);
 			}
 			else {
 				setAnswerQuestionsList(shuffleArray(getQuestionsWithAnswer(props.inheritedActivity.questions), { 'copy': true }));
@@ -92,28 +97,28 @@ const QuestionnaireStudent = (props) => {
 		}
 	}, [props.activity, props.inheritedActivity, props.studentActivity]);
 
-    //handle the timer
-    useEffect(() => {
-        let intervalId;
+	//handle the timer
+	useEffect(() => {
+		let intervalId;
 
-        if (isActive) {
-            intervalId = setInterval(() => {
-                const secondsCounter = counter % 60;
-                const minutesCounter = Math.floor(counter / 60);
+		if (isActive) {
+			intervalId = setInterval(() => {
+				const secondsCounter = counter % 60;
+				const minutesCounter = Math.floor(counter / 60);
 
-                const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}` : secondsCounter;
-                const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}` : minutesCounter;
+				const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}` : secondsCounter;
+				const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}` : minutesCounter;
 
-                setSeconds(computedSeconds);
-                setMinutes(computedMinutes);
+				setSeconds(computedSeconds);
+				setMinutes(computedMinutes);
 
-                setCounter(counter => counter + 1);
-            }, 1000);
-        }
+				setCounter(counter => counter + 1);
+			}, 1000);
+		}
 
-        return () => clearInterval(intervalId);
+		return () => clearInterval(intervalId);
 
-    }, [isActive, counter]);
+	}, [isActive, counter]);
 
 	// Method to add the answer field to the options
 	const getQuestionsWithAnswer = (questions) => {
@@ -156,20 +161,16 @@ const QuestionnaireStudent = (props) => {
 		}, 2000)
 	}
 
-	// Funcion para mostrar una alerta satisfactoria dado un mensaje
+	// Funcion para mostrar una alerta de feedback dado un mensaje
 	const showFeedBack = (message) => {
-		setFeedBack(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
-		setFeedBackMessage(message); //Se setea el mensaje de proceso satisfactorio
-		setTimeout(() => { //Dura 2sg en pantalla el mensaje
-			setFeedBack(false);
-			setFeedBackMessage("");
-		}, 2000)
+		setFeedBack(true);   //Se cambia el estado de mensaje de feedback
+		setFeedBackMessage(message); //Se setea el mensaje de feedback
 	}
 
 	const handleCompleteActivity = (complete) => {
 		try {
 
-        	setAttemptsNumber(attemptsNumber + 1);
+			setAttemptsNumber(attemptsNumber + 1);
 
 			if (studentActivity) {
 				api.put(`/api/student-activity/${studentActivity._id}`, {
@@ -179,19 +180,20 @@ const QuestionnaireStudent = (props) => {
 					seconds,
 					answer: answerQuestionsList,
 					type: activity.type,
-                	attempts: (attemptsNumber + 1)
+					attempts: (attemptsNumber + 1)
 				}, {
 					headers: {
 						'x-access-token': localStorage.getItem('token')
 					}
 				})
 					.then((res) => {
-						if(complete) {
+						if (complete) {
+							setOpenCompleting(true);
 							showSuccess(`¡Actividad realizada!`);
 						}
 						setStudentActivity(res.data.updatedStudentActivity);
 
-						if(btnCheckAnswer.current) {
+						if (btnCheckAnswer.current) {
 							btnCheckAnswer.current.disabled = false;
 						}
 
@@ -204,7 +206,7 @@ const QuestionnaireStudent = (props) => {
 							showError("¡Ha ocurrido un error guardando su nota!");
 						}
 
-						if(btnCheckAnswer.current) {
+						if (btnCheckAnswer.current) {
 							btnCheckAnswer.current.disabled = false;
 						}
 
@@ -220,8 +222,8 @@ const QuestionnaireStudent = (props) => {
 	}
 
 	const checkAnswer = () => {
-		
-		if(btnCheckAnswer.current) {
+
+		if (btnCheckAnswer.current) {
 			btnCheckAnswer.current.disabled = true;
 		}
 
@@ -286,16 +288,26 @@ const QuestionnaireStudent = (props) => {
 				<Alert className="alert-message" severity="success">{successMessage}</Alert>
 				: ""
 			}
-			{feedBack ?
-				<Alert className='alert-message-feedback alert-message' icon={<InfoOutlined style={{ color: 'whitesmoke' }} />} style={{
-					backgroundColor: 'rgb(180, 101, 233)',
-					color: 'whitesmoke',
-					display: 'flex',
-					alignItems: 'center'
-				}} severity=""><div>{feedBackMessage}</div></Alert>
-				: ""
-			}
 
+			{/* MODAL TO SHOW THE FEEDBACK */}
+			<AlertModal
+				message={feedBackMessage}
+				open={feedBack}
+				handleClose={() => setFeedBack(false)}
+				type='feedback'
+				actionText='Vale, gracias'
+				disableBackdropClick
+			/>
+
+			{/* MODAL TO HANDLE THE COMPLETING OF THE ACTIVITY */}
+			<AlertModal
+				message='Felicidades por terminar la actividad, volvamos a las unidades'
+				open={openCompleting}
+				handleClose={() => props.history.push(`/course/view/${courseId}/units-info`)} // With this the user gets redirect to the list of units
+				type='feedback'
+				actionText='Terminar'
+				disableBackdropClick
+			/>
 
 			{!loading ?
 				questionnaire && studentActivity ?
@@ -358,4 +370,4 @@ const QuestionnaireStudent = (props) => {
 	)
 };
 
-export default QuestionnaireStudent;
+export default withRouter(QuestionnaireStudent);

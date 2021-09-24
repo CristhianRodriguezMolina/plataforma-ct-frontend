@@ -1,7 +1,11 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import arrayMove from 'array-move';
+import { useParams, withRouter } from "react-router-dom";
+
+// API
 import api from '../../../services/api';
-import { useParams } from "react-router-dom";
+
+import arrayMove from 'array-move';
+
 import shuffleArray from 'shuffle-array';
 
 // CONTEXT
@@ -29,10 +33,12 @@ import Alert from '@material-ui/lab/Alert';
 
 //Timer
 import Timer from '../../common/Timer';
-import { InfoOutlined } from '@material-ui/icons';
 
 // Iconos
 import { Cancel, CheckCircle } from '@material-ui/icons';
+
+// AlertModal
+import AlertModal from '../../common/AlertModal';
 
 const SortableList = SortableContainer(({ items }) => {
 
@@ -50,7 +56,7 @@ const SortableList = SortableContainer(({ items }) => {
 
 const LogicSequenceStudent = props => {
 
-    const { courseId, unitId, taskId, activityId } = useParams();
+    const { courseId } = useParams();
 
     const { changeColor } = useContext(UserContext);
 
@@ -84,6 +90,9 @@ const LogicSequenceStudent = props => {
 
     //To prevent api calls in the same time disabling the button
     const acceptButton = useRef(null);
+
+    // Flag to open the completing modal
+    const [openCompleting, setOpenCompleting] = useState(false);
 
     useEffect(() => {
         changeColor('#f8bbd0');
@@ -121,12 +130,8 @@ const LogicSequenceStudent = props => {
 
     // Funcion para mostrar una alerta de feedback dado un mensaje
     const showFeedBack = (message) => {
-        setFeedBack(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
-        setFeedBackMessage(message); //Se setea el mensaje de proceso satisfactorio
-        setTimeout(() => { //Dura 2sg en pantalla el mensaje
-            setFeedBack(false);
-            setFeedBackMessage("");
-        }, 3000)
+        setFeedBack(true);   //Se cambia el estado de mensaje de feedback
+        setFeedBackMessage(message); //Se setea el mensaje de feedback
     }
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -198,6 +203,7 @@ const LogicSequenceStudent = props => {
             })
                 .then((res) => {
                     if (complete) {
+                        setOpenCompleting(true);
                         showSuccess('¡Actividad realizada!');
                     }
 
@@ -285,20 +291,30 @@ const LogicSequenceStudent = props => {
                 : ""
             }
 
-            {feedBack ?
-                <Alert className='alert-message-feedback alert-message' icon={<InfoOutlined style={{ color: 'whitesmoke' }} />} style={{
-                    backgroundColor: 'rgb(180, 101, 233)',
-                    color: 'whitesmoke',
-                    display: 'flex',
-                    alignItems: 'center'
-                }} severity=""><div>{feedBackMessage}</div></Alert>
-                : ""
-            }
-
             {success ?
                 <Alert className="alert-message" severity="success">{successMessage}</Alert>
                 : ""
             }
+
+            {/* MODAL TO SHOW THE FEEDBACK */}
+            <AlertModal
+                message={feedBackMessage}
+                open={feedBack}
+                handleClose={() => setFeedBack(false)}
+                type='feedback'
+                actionText='Vale, gracias'
+                disableBackdropClick
+            />
+
+            {/* MODAL TO HANDLE THE COMPLETING OF THE ACTIVITY */}
+            <AlertModal
+                message='Felicidades por terminar la actividad, volvamos a las unidades'
+                open={openCompleting}
+                handleClose={() => props.history.push(`/course/view/${courseId}/units-info`)} // With this the user gets redirect to the list of units
+                type='feedback'
+                actionText='Terminar'
+                disableBackdropClick
+            />
 
             {logicSequence && studentActivity ?
 
@@ -349,4 +365,4 @@ const LogicSequenceStudent = props => {
         </>
     )
 };
-export default LogicSequenceStudent;
+export default withRouter(LogicSequenceStudent);

@@ -34,7 +34,12 @@ import InstructionCard from './InstructionCard';
 
 // Scrollbars
 import { Scrollbars } from 'react-custom-scrollbars';
+
+// Materia ui alert
 import { Alert } from '@material-ui/lab';
+
+// Alert modal
+import AlertModal from '../../common/AlertModal';
 
 export const CreateMazeContext = createContext({
     instructionsToDelete: [],
@@ -57,12 +62,20 @@ const Intructions = props => {
     // MENSAJES DE LA VISTA
     const [error, setError] = useState(false); //Variable flag de existencia de error
     const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
+    const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
+    const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
 
+    // List of instructions
     const [instructionsList, setInstructionsList] = useState([]);
 
+    // Instructions that will be deleted
     const [instructionsToDelete, setInstructionsToDelete] = useState([]);
 
+    // Flag to show the checks on the instruccions to delete
     const [showCheck, setShowCheck] = useState(false);
+
+    // variable to confirmation modal to clean the instructions
+    const [open, setOpen] = useState(false);
 
     // Instructions constans
     const instructions = {
@@ -88,6 +101,16 @@ const Intructions = props => {
         setTimeout(() => { //Dura 2sg en pantalla el mensaje
             setError(false);
             setErrorMessage("");
+        }, 2000)
+    }
+
+    // Funcion para mostrar una alerta información dado un mensaje
+    const showInfo = (message) => {
+        setProcess(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
+        setProcessMessage(message); //Se setea el mensaje de proceso satisfactorio
+        setTimeout(() => { //Dura 2sg en pantalla el mensaje
+            setProcess(false);
+            setProcessMessage("");
         }, 2000)
     }
 
@@ -151,14 +174,37 @@ const Intructions = props => {
         setShowCheck(false);
     };
 
+    // Method to handle the cleaning of the instructions
+    const handleCleanInstructions = () => {
+        if (instructionsList.length === 0) {
+            showInfo('Primero pon una instrucción');
+        } else {
+            setOpen(!open);
+        }
+    }
+
     return (
         <CreateMazeContext.Provider value={{ instructionsToDelete, setInstructionsToDelete }}>
             <div className="instructions-maze-container">
-                {
-                    error ?
-                        <Alert className="alert-message" severity="error">{errorMessage}</Alert>
-                        : ""
+                {error ?
+                    <Alert className="alert-message" severity="error">{errorMessage}</Alert>
+                    : ""
                 }
+                {process ?
+                    <Alert className="alert-message" severity="info">{processMessage}</Alert>
+                    : ""
+                }
+
+                {/* ALERT MODAL TO CLEAN ALL THE INSTRUCTIONS */}
+                <AlertModal
+                    type="delete"
+                    open={open}
+                    handleClose={() => setOpen(!open)}
+                    message='¿Esta seguro que quiere limpiar las instrucciones?'
+                    actionText='Limpiar'
+                    action={cleanInstructions}
+                />
+
                 {instructionsList ?
                     <div className="instructions-list-container">
                         <Scrollbars style={{ width: '100%', height: '100%' }}>
@@ -216,7 +262,7 @@ const Intructions = props => {
                     </div>
                     <div className='d-flex flex-column'>
                         <button onClick={showCheckMarks} className="custom-btn custom-btn-primary px-3 py-1 mt-2">Borrar</button>
-                        <button onClick={cleanInstructions} className="custom-btn custom-btn-delete px-3 py-1 mt-2">Limpiar</button>
+                        <button onClick={handleCleanInstructions} className="custom-btn custom-btn-delete px-3 py-1 mt-2">Limpiar</button>
                     </div>
                 </div>
             </div>

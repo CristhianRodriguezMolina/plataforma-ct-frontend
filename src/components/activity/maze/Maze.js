@@ -42,6 +42,9 @@ import Alert from '@material-ui/lab/Alert';
 // Titulo
 import TitleCard from '../../common/TitleCard';
 
+// Alert modal
+import AlertModal from '../../common/AlertModal';
+
 export default function Maze() {
 
 	// Variables del contexto
@@ -105,6 +108,9 @@ export default function Maze() {
 
 	// activity difficulty
 	const [difficulty, setDifficulty] = useState('beginner');
+
+	// variable to confirmation modal to clean the maze
+	const [open, setOpen] = useState(false);
 
 	// MAZE VARIABLES
 
@@ -975,6 +981,16 @@ export default function Maze() {
 						colorFont="#FFF"
 					/>
 
+					{/* ALERT MODAL TO CLEAN ALL THE CELLS IN THE MAZE */}
+					<AlertModal
+						type="delete"
+						open={open}
+						handleClose={() => setOpen(!open)}
+						message='¿Esta seguro que quiere limpiar las celdas del laberinto?'
+						actionText='Limpiar'
+						action={cleanMaze}
+					/>
+
 					<div className="maze-header">
 						<Container maxWidth='md'>
 							{/* GENERAL DATA OF THE MAZE */}
@@ -1042,7 +1058,7 @@ export default function Maze() {
 					<div className='mt-2 d-flex flex-wrap justify-content-center px-2 '>
 						<div className='d-flex justify-content-center mt-2'>
 							<button onClick={() => { setAnimationExecutionType('RUNNING'); setAnimationType('NO_ANIMATION') }} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
-							<button onClick={cleanMaze} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar maze</button>
+							<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar</button>
 						</div>
 						<div className='d-flex justify-content-center mt-2'>
 							<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>

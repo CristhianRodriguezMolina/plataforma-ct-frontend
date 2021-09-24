@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams, withRouter } from 'react-router-dom';
 
 // CONTEXT
 import UserContext from '../../../context/user/UserContext';
@@ -45,7 +45,9 @@ import TitleCard from '../../common/TitleCard';
 // Alert modal
 import AlertModal from '../../common/AlertModal';
 
-export default function MazeStudent(props) {
+const MazeStudent = (props) => {
+
+	const { courseId } = useParams();
 
 	// Variables del contexto
 	const { changeColor } = useContext(UserContext);
@@ -128,23 +130,19 @@ export default function MazeStudent(props) {
 
 	// Funcion para mostrar una alerta de feedback dado un mensaje
 	const showFeedBack = (message) => {
-		setFeedBack(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
-		setFeedBackMessage(message); //Se setea el mensaje de proceso satisfactorio
-		setTimeout(() => { //Dura 2sg en pantalla el mensaje
-			setFeedBack(false);
-			setFeedBackMessage("");
-		}, 3000)
+		setFeedBack(true);   //Se cambia el estado de mensaje de feedback
+		setFeedBackMessage(message); //Se setea el mensaje de feedback
 	}
 
 	// VARIABLES DEL MAZE -------------------------------------------------------------------------------------------------
 
 	// GENERAL VARAIBLES 
 
-	// Param variables
-	const { activityId } = useParams();
-
 	// Loading component while the maze is being fetching 
 	const [loading, setLoading] = useState(true);
+
+	// Flag to open the completing modal
+	const [openCompleting, setOpenCompleting] = useState(false);
 
 	// MAZE VARIABLES
 
@@ -349,7 +347,8 @@ export default function MazeStudent(props) {
 			})
 				.then((res) => {
 					if (complete) {
-						showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
+						setOpenCompleting(true);
+						showSuccess(`¡Actividad realizada!`)
 					}
 					setStudentActivity(res.data.updatedStudentActivity);
 				})
@@ -887,22 +886,23 @@ export default function MazeStudent(props) {
 							: ""
 					}
 
-					{feedBack ?
-						<Alert className='alert-message-feedback alert-message' icon={<InfoOutlined style={{ color: 'whitesmoke' }} />} style={{
-							backgroundColor: 'rgb(180, 101, 233)',
-							color: 'whitesmoke',
-							display: 'flex',
-							alignItems: 'center'
-						}} severity=""><div>{feedBackMessage}</div></Alert>
-						: ""
-					}
-
 					<TitleCard
 						title="Laberinto"
 						color="#FA61CD"
 						colorFont="#FFF"
 					/>
 
+					{/* MODAL TO SHOW THE FEEDBACK */}
+					<AlertModal
+						message={feedBackMessage}
+						open={feedBack}
+						handleClose={() => setFeedBack(false)}
+						type='feedback'
+						actionText='Vale, gracias'
+						disableBackdropClick
+					/>
+
+					{/* MODAL TO HANDLE THE FINISHING OF THE MAZE ACTIVITY */}
 					<AlertModal
 						message='Completaste el laberinto, pero podrias completarlo con menos instrucciones, ¿Quieres intentarlo?'
 						open={isOpenFinalization}
@@ -915,6 +915,17 @@ export default function MazeStudent(props) {
 						type='success'
 						actionText='¡Intentemoslo!'
 						closingText='No, gracias'
+						disableBackdropClick
+					/>
+
+					{/* MODAL TO HANDLE THE COMPLETING OF THE ACTIVITY */}
+					<AlertModal
+						message='Felicidades por terminar la actividad, volvamos a las unidades'
+						open={openCompleting}
+						handleClose={() => props.history.push(`/course/view/${courseId}/units-info`)}
+						type='feedback'
+						actionText='Terminar'
+						disableBackdropClick
 					/>
 
 					<div className="maze-header">
@@ -1018,3 +1029,5 @@ export default function MazeStudent(props) {
 		</div >
 	)
 }
+
+export default withRouter(MazeStudent);
