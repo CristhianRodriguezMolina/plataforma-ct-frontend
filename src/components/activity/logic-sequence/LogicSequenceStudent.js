@@ -27,8 +27,6 @@ import TitleCard from '../../common/TitleCard';
 // Alert
 import Alert from '@material-ui/lab/Alert';
 
-//Timer
-import Timer from '../../common/Timer';
 import { InfoOutlined } from '@material-ui/icons';
 
 // Iconos
@@ -50,9 +48,10 @@ const SortableList = SortableContainer(({ items }) => {
 
 const LogicSequenceStudent = props => {
 
+
     const { courseId, unitId, taskId, activityId } = useParams();
 
-    const { changeColor } = useContext(UserContext);
+    const { changeColor, isAdmin, isTeacher } = useContext(UserContext);
 
     const [sequenceList, setSequenceList] = useState(null);
     const [logicSequence, setLogicSequence] = useState(null);
@@ -315,11 +314,12 @@ const LogicSequenceStudent = props => {
 
                         <div className="panels">
                             {
-                                props.forStudents ?
+                                isAdmin || isTeacher ?
+                                    <p>Respuesta del estudiante: </p>
+                                    :
                                     studentActivity.complete ?
                                         <p>Tu respuesta:</p>
                                         : ""
-                                    : <p>Respuesta del estudiante:</p>
                             }
                             <div className="sequence-cards-container">
                                 {sequenceList ?
@@ -331,15 +331,17 @@ const LogicSequenceStudent = props => {
                     <hr className="hr-bar"></hr>
 
                     {
-                        props.forStudents ?
-                            !studentActivity.complete ?
-                                <button ref={acceptButton} onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button> :
-                                <button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>
+                        isAdmin || isTeacher ?
+
+                            studentActivity.complete ?
+                                <p className="d-flex justify-content-center aling-items-center"><CheckCircle style={{ color: "green", marginRight: "0.3em" }} />Completada</p> :
+                                <p className="d-flex justify-content-center aling-items-center"><Cancel style={{ color: "red", marginRight: "0.3em" }} />Sin completar</p>
+
                             : <div>
                                 {
-                                    studentActivity.complete ?
-                                        <p className="d-flex justify-content-center aling-items-center"><CheckCircle style={{ color: "green", marginRight: "0.3em" }} />Completada</p> :
-                                        <p className="d-flex justify-content-center aling-items-center"><Cancel style={{ color: "red", marginRight: "0.3em" }} />Sin completar</p>
+                                    !studentActivity.complete ?
+                                        <button ref={acceptButton} onClick={checkAnswer} className="custom-btn custom-btn-success px-3 py-1">Aceptar</button> :
+                                        <button className="custom-btn custom-btn-success px-3 py-1" disabled>Terminada</button>
                                 }
                             </div>
                     }

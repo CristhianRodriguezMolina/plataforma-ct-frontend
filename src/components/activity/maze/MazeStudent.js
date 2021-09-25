@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams, Prompt } from 'react-router-dom';
+
 
 // CONTEXT
 import UserContext from '../../../context/user/UserContext';
@@ -37,13 +38,14 @@ import styled, { css, keyframes } from 'styled-components'
 import Alert from '@material-ui/lab/Alert';
 
 // Timer
-import Timer from '../../common/Timer';
+import TimerWorker from '../../common/timer.worker';
 
 // Titulo
 import TitleCard from '../../common/TitleCard';
 
 // Alert modal
 import AlertModal from '../../common/AlertModal';
+import { ajaxSetup } from 'jquery';
 
 export default function MazeStudent(props) {
 
@@ -55,6 +57,13 @@ export default function MazeStudent(props) {
 	const [minutes, setMinutes] = useState('00');
 	const [isActive, setIsActive] = useState(false);
 	const [counter, setCounter] = useState(0);
+
+	const [evaluateActivity, setEvaluateActivity] = useState(false);
+
+	const [completed, setCompleted] = useState(false);
+
+
+	const [isLeavingPage, setisLeavingPage] = useState(true);
 
 	//Attempts number
 	const [attemptsNumber, setAttemptsNumber] = useState(0);
@@ -73,29 +82,6 @@ export default function MazeStudent(props) {
 	useEffect(() => {
 		changeColor('#f8bbd0');
 	});
-
-	//handle the timer
-	useEffect(() => {
-		let intervalId;
-
-		if (isActive) {
-			intervalId = setInterval(() => {
-				const secondsCounter = counter % 60;
-				const minutesCounter = Math.floor(counter / 60);
-
-				const computedSeconds = String(secondsCounter).length === 1 ? `0${secondsCounter}` : secondsCounter;
-				const computedMinutes = String(minutesCounter).length === 1 ? `0${minutesCounter}` : minutesCounter;
-
-				setSeconds(computedSeconds);
-				setMinutes(computedMinutes);
-
-				setCounter(counter => counter + 1);
-			}, 1000);
-		}
-
-		return () => clearInterval(intervalId);
-
-	}, [isActive, counter]);
 
 	// Funcion para mostrar una alerta satisfactoria dado un mensaje
 	const showSuccess = (message) => {
@@ -185,6 +171,28 @@ export default function MazeStudent(props) {
 	const [activityName, setActivityName] = useState('Nombre de la actividad');
 	const [activityDescription, setActivityDescription] = useState('Descripción de la actividad');
 
+	const [timerWorker, setTimerWorker] = useState(new TimerWorker());
+
+
+	useEffect(() => {
+		if (timerWorker) {
+			timerWorker.addEventListener("message", function (oEvent) {
+				//Receive message from worker
+				let data = oEvent.data;
+				setMinutes(data.minutes);
+				setSeconds(data.seconds);
+				setEvaluateActivity(true);
+			});
+		}
+	}, [timerWorker]);
+
+	useEffect(() => {
+		console.log("evaluateActivity", evaluateActivity)
+		if (evaluateActivity) {
+			handleCompleteActivity();
+		}
+	}, [evaluateActivity])
+
 	const nameInputStyle = {
 		textAlign: "center",
 		width: "80%",
@@ -238,6 +246,12 @@ export default function MazeStudent(props) {
 			setLoading(false); // This it to wait to the component to render completely
 			setIsActive(true);
 			setStudentActivity(props.studentActivity)
+
+
+			console.log("sending message")
+
+			//start timer
+			timerWorker.postMessage("This is a very important message")
 		} else if (maze) {
 			setRows(maze.rows);
 			setCols(maze.cols);
@@ -349,15 +363,23 @@ export default function MazeStudent(props) {
 		setMazeSizeOffset(0);
 	}
 
+	const getTime = () => {
+		if (timerWorker) {
+			timerWorker.postMessage('getTime');
+		}
+	};
+
 	// Update the data of the maze in the DB
-	const handleCompleteActivity = async (complete) => {
+	const handleCompleteActivity = async () => {
 		setProcess(true);
 		setProcessMessage('Guardando cambios...');
 
+		console.log("completed: ", completed)
+		console.log("time: ", minutes, ": ", seconds);
 		setAttemptsNumber(attemptsNumber + 1);
 		if (props.studentActivity) {
 			api.put(`/api/student-activity/${props.studentActivity._id}`, {
-				complete: complete,
+				complete: completed,
 				grade: 5,
 				minutes,
 				seconds,
@@ -370,8 +392,12 @@ export default function MazeStudent(props) {
 				}
 			})
 				.then((res) => {
+					if (completed) {
+						timerWorker.terminate();
+					}
 					showSuccess(`Actividad realizada, su calificación es: ${res.data.updatedStudentActivity.grade}`)
 					setStudentActivity(res.data.updatedStudentActivity);
+					setEvaluateActivity(false);
 				})
 				.catch((err) => {
 					if (err.response) {
@@ -380,6 +406,7 @@ export default function MazeStudent(props) {
 					else {
 						showError("Un error ha ocurrido resolviendo el laberinto");
 					}
+					setEvaluateActivity(false);
 				});
 		}
 		setProcess(false);
@@ -607,7 +634,8 @@ export default function MazeStudent(props) {
 		if (isError) {
 			showFeedBack(feedbackMazeMessage);
 			cancelAnimation();
-			handleCompleteActivity(false);
+			setCompleted(false);
+			getTime();
 			return;
 		}
 
@@ -889,6 +917,14 @@ export default function MazeStudent(props) {
 
 	return (
 		<div className='mb-5'>
+			<Prompt
+				when={isLeavingPage}
+				message={() => {
+					if (timerWorker) {
+						console.log("terminating")
+						timerWorker.terminate()
+					}
+				}} />
 			{!loading ?
 				<>
 					{
@@ -928,9 +964,13 @@ export default function MazeStudent(props) {
 					<AlertModal
 						message='Completaste el laberinto, pero podrias completarlo con menos instrucciones, ¿Quieres intentarlo?'
 						open={isOpenFinalization}
-						action={() => handleCompleteActivity(false)}
+						action={() => {
+							setCompleted(false)
+							getTime();
+						}}
 						handleClose={() => {
-							handleCompleteActivity(true);
+							setCompleted(true)
+							getTime();
 							setIsActive(false);
 						}}
 						type='success'

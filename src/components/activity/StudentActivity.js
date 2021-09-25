@@ -139,23 +139,15 @@ const StudentActivity = (props) => {
 
 							activity.type === 'logic_sequence' ?
 
-								view === 'answer' ?
-									<LogicSequenceStudent forStudents={false} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
-									:
-									<LogicSequenceStudent forStudents={true} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+								<LogicSequenceStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 								:
 								activity.type === 'maze' ?
 
-									view === 'answer' ?
-										<MazeStudent forStudents={false} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
-										:
-										<MazeStudent forStudents={true} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+									<MazeStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 									:
 									activity.type === 'questionnaire' ?
-										view === 'answer' ?
-											<QuestionnaireStudent forStudents={false} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
-											:
-											<QuestionnaireStudent forStudents={true} activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
+
+										<QuestionnaireStudent activity={activity} inheritedActivity={inheritedActivity} studentActivity={studentActivity} />
 										:
 										<Redirect to='/unauthorized' />
 
