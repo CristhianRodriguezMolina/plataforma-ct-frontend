@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, withRouter, Redirect } from "react-router-dom";
 
 //API
 import api from '../../../services/api';
@@ -32,9 +32,13 @@ import Alert from '@material-ui/lab/Alert';
 
 
 // Icons
-import { InfoOutlined, Cancel, CheckCircle } from '@material-ui/icons';
+import { Cancel, CheckCircle } from '@material-ui/icons';
+// Alert modal
+import AlertModal from '../../common/AlertModal';
 
 const QuestionnaireStudent = (props) => {
+
+	const { courseId } = useParams();
 
 	//Store questionnaire data
 	const [questionnaire, setQuestionnaire] = useState(null);
@@ -67,6 +71,9 @@ const QuestionnaireStudent = (props) => {
 
 	//To prevent api calls in the same time disabling the button
 	const btnCheckAnswer = useRef(null);
+
+	// Flag to open the completing modal
+	const [openCompleting, setOpenCompleting] = useState(false);
 
 	useEffect(() => {
 		changeColor('#f8bbd0');
@@ -155,14 +162,10 @@ const QuestionnaireStudent = (props) => {
 		}, 2000)
 	}
 
-	// Funcion para mostrar una alerta satisfactoria dado un mensaje
+	// Funcion para mostrar una alerta de feedback dado un mensaje
 	const showFeedBack = (message) => {
-		setFeedBack(true);   //Se cambia el estado de mensaje de proceso satisfactorio a verdadero
-		setFeedBackMessage(message); //Se setea el mensaje de proceso satisfactorio
-		setTimeout(() => { //Dura 2sg en pantalla el mensaje
-			setFeedBack(false);
-			setFeedBackMessage("");
-		}, 2000)
+		setFeedBack(true);   //Se cambia el estado de mensaje de feedback
+		setFeedBackMessage(message); //Se setea el mensaje de feedback
 	}
 
 	const handleCompleteActivity = (complete) => {
@@ -186,6 +189,7 @@ const QuestionnaireStudent = (props) => {
 				})
 					.then((res) => {
 						if (complete) {
+							setOpenCompleting(true);
 							showSuccess(`¡Actividad realizada!`);
 						}
 						setStudentActivity(res.data.updatedStudentActivity);
@@ -285,16 +289,26 @@ const QuestionnaireStudent = (props) => {
 				<Alert className="alert-message" severity="success">{successMessage}</Alert>
 				: ""
 			}
-			{feedBack ?
-				<Alert className='alert-message-feedback alert-message' icon={<InfoOutlined style={{ color: 'whitesmoke' }} />} style={{
-					backgroundColor: 'rgb(180, 101, 233)',
-					color: 'whitesmoke',
-					display: 'flex',
-					alignItems: 'center'
-				}} severity=""><div>{feedBackMessage}</div></Alert>
-				: ""
-			}
 
+			{/* MODAL TO SHOW THE FEEDBACK */}
+			<AlertModal
+				message={feedBackMessage}
+				open={feedBack}
+				handleClose={() => setFeedBack(false)}
+				type='feedback'
+				actionText='Vale, gracias'
+				disableBackdropClick
+			/>
+
+			{/* MODAL TO HANDLE THE COMPLETING OF THE ACTIVITY */}
+			<AlertModal
+				message='Felicidades por terminar la actividad, volvamos a las unidades'
+				open={openCompleting}
+				handleClose={() => props.history.push(`/course/view/${courseId}/units-info`)} // With this the user gets redirect to the list of units
+				type='feedback'
+				actionText='Terminar'
+				disableBackdropClick
+			/>
 
 			{!loading ?
 				questionnaire && studentActivity ?
@@ -372,4 +386,4 @@ const QuestionnaireStudent = (props) => {
 	)
 };
 
-export default QuestionnaireStudent;
+export default withRouter(QuestionnaireStudent);

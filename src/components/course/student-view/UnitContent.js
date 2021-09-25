@@ -11,27 +11,14 @@ import { withRouter } from 'react-router-dom';
 
 // COMPONENTS
 
-import DynamicInput from '../../common/DynamicInput';
-
 import TaskCard from '../task/TaskCard';
-
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 // Activities icons
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import BallotIcon from '@material-ui/icons/Ballot';
 import BorderVerticalIcon from '@material-ui/icons/BorderVertical';
 
-// Button
-import Button from '@material-ui/core/Button';
-
-// Modal de confirmacion de borrado
-import AlertModal from '../../common/AlertModal';
-
 import PropTypes from 'prop-types';
-
-import AddBoxIcon from '@material-ui/icons/AddBox';
 
 //CheckCircleIcon
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';

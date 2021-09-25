@@ -6,22 +6,18 @@ var counter = 0;
 
 onmessage = (e) => {
 
-	console.log("The message is ");
-	console.log(e.data)
-
 	let message = e.data;
 	if (message === "getTime") {
 		getTime();
 	}
 	else {
+		counter = e.data;
 		execute();
 	}
 
 }
 
 function getTime() {
-	console.log("sending")
-	console.log(minutes, ": ", seconds)
 	postMessage({ minutes, seconds });
 }
 
@@ -41,13 +37,9 @@ function execute() {
 			seconds = computedSeconds;
 			minutes = computedMinutes;
 
-			console.log(minutes, " :", seconds)
-
 			counter = counter + 1;
 		}, 1000);
 	}
-
-	// return () => clearInterval(intervalId);
 }
 
 

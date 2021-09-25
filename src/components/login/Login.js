@@ -147,7 +147,7 @@ export default function Login({ history }) {
                                     <Typography>
                                         <div className="form-group my-4 d-flex align-items-center">
                                             <AccountCircleOutlined className="align-self-end mr-2" />
-                                            <TextField color="secondary" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Numero de identificación" name="id" required />
+                                            <TextField color="secondary" min="0" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Numero de identificación" name="id" required />
                                         </div>
                                         <div className="form-group my-4 d-flex align-items-center">
                                             <Lock className="align-self-end mr-2" />

@@ -12,11 +12,11 @@ import { Modal } from '@material-ui/core';
 import { Error, Info, CheckCircle } from '@material-ui/icons';
 
 // Colors
-import { green, blue } from '@material-ui/core/colors';
+import { green, blue, purple } from '@material-ui/core/colors';
 
 export default function AlertModal(props) {
 
-	const { message, open, handleClose, action, type, actionText, closingText } = props;
+	const { message, open, handleClose, action, actionClose, type, actionText, closingText, disableBackdropClick } = props;
 
 	const [btnClass, setBtnClass] = useState('custom-btn custom-btn-delete ml-auto mr-2 p-2');
 
@@ -29,6 +29,8 @@ export default function AlertModal(props) {
 			setBtnClass('custom-btn custom-btn-success ml-auto mr-2 p-2');
 		} else if (type === 'info') {
 			setBtnClass('custom-btn custom-btn-info ml-auto mr-2 p-2');
+		} else if (type === 'feedback') {
+			setBtnClass('custom-btn custom-btn-search ml-auto mr-2 p-2');
 		}
 	});
 
@@ -36,13 +38,23 @@ export default function AlertModal(props) {
 		executeActionBtn.current.disabled = true; // This is to avoid problems if the user press the button multiple times
 
 		handleClose();
-		action();
+		if (action) {
+			action();
+		}
+	}
+
+	const executeClose = () => {
+		handleClose();
+		if (actionClose) {
+			actionClose();
+		}
 	}
 
 	return (
 		<Modal
 			open={open}
 			onClose={handleClose}
+			disableBackdropClick={disableBackdropClick ? true : false}
 			aria-labelledby="simple-modal-title"
 			aria-describedby="simple-modal-description"
 		>
@@ -58,7 +70,10 @@ export default function AlertModal(props) {
 								type === "info" ?
 									<Info fontSize="large" style={{ color: blue[500] }} />
 									:
-									""
+									type === "feedback" ?
+										<Info fontSize="large" style={{ color: purple[500] }} />
+										:
+										""
 					}
 					<hr />
 				</div>
@@ -69,7 +84,12 @@ export default function AlertModal(props) {
 					<hr />
 					<div>
 						<button onClick={executeAction} ref={executeActionBtn} className={btnClass} color="secondary" variant="contained">{actionText ? actionText : type === 'delete' ? 'Borrar' : 'Aceptar'}</button>
-						<button onClick={handleClose} className='custom-btn p-2'>{closingText ? closingText : 'Cancelar'}</button>
+						{
+							type !== "feedback" ?
+								<button onClick={executeClose} className='custom-btn p-2'>{closingText ? closingText : 'Cancelar'}</button>
+								:
+								''
+						}
 					</div>
 				</div>
 			</div>

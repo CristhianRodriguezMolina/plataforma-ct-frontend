@@ -53,7 +53,7 @@ const StudentActivity = (props) => {
 
 		const fetch = async () => {
 
-			//Get logic sequence activity
+			//Get activity
 			const activityRes = await api.get(`/api/activity/${activityId}`, {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			});
@@ -152,10 +152,10 @@ const StudentActivity = (props) => {
 										<Redirect to='/unauthorized' />
 
 							:
-							<Redirect to='/unauthorized' />
+							''
 
 						:
-						<Redirect to='/unauthorized' />
+						''
 
 					:
 					<Redirect to="/unauthorized" />
