@@ -201,7 +201,7 @@ export default function Profile(props) {
 				showError('Error en el servidor');
 			}
 			btnSaveImage.current.disabled = false;
-			toggle(); //Toggle para cerrar el modal de imagen de perfil despues de actualizar la imagen
+			toggle(); //Toggle para cerrar el modal de imagen de perfil si existe algun error
 		}
 		setUpload(!upload);
 		setInfo(false);
