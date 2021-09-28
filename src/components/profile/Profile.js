@@ -184,12 +184,13 @@ export default function Profile(props) {
 
 					showSuccess(message);
 
-					toggle(); //Toggle para cerrar el modal de imagen de perfil despues de actualizar la imagen
+
 
 					history.push(`/profile/${user._id}/${view}`); // Se redirige a la misma pagina en la que se encuentra el usuario para que se actualice la imagen de la navegacion
 				}
 
 				btnSaveImage.current.disabled = false;
+				toggle(); //Toggle para cerrar el modal de imagen de perfil despues de actualizar la imagen
 			} else {
 				showInfo('Selecciona alguna imagen')
 			}
@@ -200,6 +201,7 @@ export default function Profile(props) {
 				showError('Error en el servidor');
 			}
 			btnSaveImage.current.disabled = false;
+			toggle(); //Toggle para cerrar el modal de imagen de perfil despues de actualizar la imagen
 		}
 		setUpload(!upload);
 		setInfo(false);
