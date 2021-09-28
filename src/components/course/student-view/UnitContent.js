@@ -137,7 +137,7 @@ const UnitContent = props => {
 				<h1 className="h4 mb-4 mx-2">{props.unitValue.name}</h1>
 				<h1 className="h6 mx-2">{props.unitValue.description}</h1>
 			</div>
-			{props.unitValue.is_due_date ?
+			{props.unitValue.is_due_date && props.unitValue.due_date ?
 				<h3 className="h6 mx-3"><b>Hasta:</b> {props.unitValue.due_date.substring(0, 10)}</h3> :
 				<h3 className="h6 mx-3">Fecha limite de la unidad: Sin fecha limite</h3>}
 			<hr className="mx-3" />

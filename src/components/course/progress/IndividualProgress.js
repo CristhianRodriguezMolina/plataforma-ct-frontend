@@ -347,7 +347,7 @@ const IndividualProgress = (props) => {
 
 							<Tooltip enterDelay={200} enterNextDelay={200}
 								title={
-									task.is_due_date ?
+									task.is_due_date && task.due_date ?
 										justInTime === 1 ?
 											'SI'
 											:
@@ -360,7 +360,7 @@ const IndividualProgress = (props) => {
 								}
 								aria-label="just-in-time">
 								<td className="activity-name-field-td">
-									{task.is_due_date ?
+									{task.is_due_date && task.due_date ?
 										justInTime === 1 ?
 											'SI'
 											:
@@ -384,7 +384,7 @@ const IndividualProgress = (props) => {
 							<Tooltip enterDelay={200} enterNextDelay={200} title="Ver respuesta" aria-label="watch-answer">
 								<td className="activity-name-field-td">
 									<IconButton onClick={() => watchAnswer(tempStudentActivity.unit, tempStudentActivity.task, tempStudentActivity.activity)}>
-										<Visibility/>
+										<Visibility />
 									</IconButton>
 								</td>
 							</Tooltip>
@@ -596,7 +596,7 @@ const IndividualProgress = (props) => {
 																	<Typography component="div" style={{ width: '100%' }}>
 																		<div>
 																			<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Description: </span>{task.description}</p>
-																			{task.is_due_date ?
+																			{task.is_due_date && task.due_date ?
 																				<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Fecha de entrega: </span>{task.due_date.substring(0, 10)}</p>
 																				:
 																				<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Fecha de entrega: </span>Sin fecha de entrega</p>

@@ -95,7 +95,7 @@ export default function ManageTask() {
 	const [visible, setVisible] = useState(false);
 
 	//Limit date to do a task
-	const [dueDate, setDueDate] = useState(null);
+	const [dueDate, setDueDate] = useState(dateFormat(new Date(), 'GMT:yyyy-mm-dd'));
 
 	//To define and enable due date input
 	const [isDueDate, setIsDueDate] = useState(false);
@@ -151,7 +151,7 @@ export default function ManageTask() {
 					setTaskDescription(taskTemp.description);
 					setVisible(taskTemp.visible);
 					setIsDueDate(taskTemp.is_due_date);
-					if (taskTemp.is_due_date) {
+					if (taskTemp.is_due_date && taskTemp.due_date) {
 						setDueDate(taskTemp.due_date);
 					}
 					setLoading(false);
