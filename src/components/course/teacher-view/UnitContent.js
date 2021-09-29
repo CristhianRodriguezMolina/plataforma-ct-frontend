@@ -32,7 +32,7 @@ const UnitContent = props => {
 	const [activities, setActivities] = useState(null);
 
 	//Limit date to do a task
-	const [dueDate, setDueDate] = useState(null);
+	const [dueDate, setDueDate] = useState(dateFormat(new Date(), 'GMT:yyyy-mm-dd'));
 
 	//To define and enable due date input
 	const [isDueDate, setIsDueDate] = useState(false);
