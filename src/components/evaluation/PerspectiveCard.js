@@ -52,9 +52,6 @@ const PerspectiveCard = (props) => {
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
-	useEffect(() => {
-		console.log(perspective);
-	}, [])
 
 	useEffect(() => {
 		setMessageToUpdate(perspective.message);
