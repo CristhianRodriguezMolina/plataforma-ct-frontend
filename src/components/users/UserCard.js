@@ -37,8 +37,8 @@ export default function UserCard({ user, setUsers, history, type }) {
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
 	const [errorMessage, setErrorMessage] = useState(''); //Mensaje de error
-	const [process, setProcess] = useState(false); //Variable flag de existencia de un proceso
-	const [processMessage, setProcessMessage] = useState(''); //Mensaje de proceso
+	const [info, setInfo] = useState(false); //Variable flag de existencia de un proceso
+	const [infoMessage, setInfoMessage] = useState(''); //Mensaje de proceso
 	const [success, setSuccess] = useState(false); //Variable flag de proceso satisfactorio
 	const [successMessage, setSuccessMessage] = useState(''); //Mensaje de proceso satisfactorio
 
@@ -72,16 +72,16 @@ export default function UserCard({ user, setUsers, history, type }) {
 		// Toggle for the animation of the component
 		setVisible(false);
 		try {
-			setProcess(true);
-			setProcessMessage('Borrando usuario...');
+			setInfo(true);
+			setInfoMessage('Borrando usuario...');
 
 			const response = await api.delete(`/api/person/${user._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
 			const { deletedUser, message } = response.data;
 
 			if (deletedUser) {
-				setProcess(false);
-				setProcessMessage('');
+				setInfo(false);
+				setInfoMessage('');
 
 				showSuccess(message);
 
@@ -104,8 +104,8 @@ export default function UserCard({ user, setUsers, history, type }) {
 		}
 		// Toggle for the animation of the component
 		setVisible(true);
-		setProcess(false);
-		setProcessMessage('');
+		setInfo(false);
+		setInfoMessage('');
 	}
 
 	return (
@@ -113,7 +113,7 @@ export default function UserCard({ user, setUsers, history, type }) {
 			<div className="user-card d-flex justify-content-between mb-4">
 				<div className="card d-flex justify-content-center align-items-left mr-3">
 					<div className="d-flex align-items-center px-4">
-						<Avatar className="mr-2" src="https://i.pinimg.com/originals/32/a3/69/32a3690fe66a73adcb98922874eb8b8a.jpg" />
+						<Avatar className="mr-2" src={`${process.env.REACT_APP_API_URL}/profile/${user.image}`} />
 						<div className="ml-2 mr-5">
 							<p className="m-0">{user.first_name} {user.last_name}</p>
 							<p className="m-0 text-muted">ID: {user.id}</p>
@@ -127,8 +127,8 @@ export default function UserCard({ user, setUsers, history, type }) {
 							<Alert severity="error">{errorMessage}</Alert>
 							: ""
 						}
-						{process ?
-							<Alert severity="info">{processMessage}</Alert>
+						{info ?
+							<Alert severity="info">{infoMessage}</Alert>
 							: ""
 						}
 					</div>

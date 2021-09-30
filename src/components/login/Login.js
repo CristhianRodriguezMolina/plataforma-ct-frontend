@@ -180,7 +180,6 @@ export default function Login({ history }) {
                                     </Typography>
                                 </form>
                             </Container>
-                            <Link color="secondary" className="" to="/course/mycourses">¿Olvidó la contraseña?</Link>
                         </div>
                     </div>
                 </div>
