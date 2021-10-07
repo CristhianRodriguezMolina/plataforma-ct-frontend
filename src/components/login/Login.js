@@ -129,7 +129,7 @@ export default function Login({ history }) {
                 <header className="header-login">
                     <Container className="d-flex">
                         <Typography variant="h5" className="mr-auto">App</Typography>
-                        <Typography variant="h6">Login</Typography>
+                        <Typography variant="h6">Incio de sesión</Typography>
                     </Container>
                 </header>
                 <div className="login-card shadow row">
@@ -139,7 +139,7 @@ export default function Login({ history }) {
                     <div className="col-md-6 px-3 pt-2 pb-4">
                         <div className="signin-side">
                             <Typography variant="h6">
-                                Sign in
+                                Inicio de sesión
                             </Typography>
                             <hr className="mx-4" />
                             <Container>
@@ -147,7 +147,7 @@ export default function Login({ history }) {
                                     <Typography>
                                         <div className="form-group my-4 d-flex align-items-center">
                                             <AccountCircleOutlined className="align-self-end mr-2" />
-                                            <TextField color="secondary" min="0" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Numero de identificación" name="id" required />
+                                            <TextField color="secondary" min="0" className="form-control" type="number" onChange={evt => setId(evt.target.value)} value={id} label="Número de identificación" name="id" required />
                                         </div>
                                         <div className="form-group my-4 d-flex align-items-center">
                                             <Lock className="align-self-end mr-2" />
@@ -158,7 +158,7 @@ export default function Login({ history }) {
                                                 className="form-control"
                                                 onChange={evt => setPassword(evt.target.value)}
                                                 value={password} label="Contraseña"
-                                                name="contrasena"
+                                                name="password"
                                                 required
                                                 InputProps={{
                                                     endAdornment:
@@ -175,7 +175,7 @@ export default function Login({ history }) {
                                             />
                                         </div>
                                         <div className="form-group d-flex justify-content-center">
-                                            <Button type="submit" variant="outlined" color="secondary" className="btn btn-primary">Sign in</Button>
+                                            <Button type="submit" variant="outlined" color="secondary" className="btn btn-primary">Iniciar sesión</Button>
                                         </div>
                                     </Typography>
                                 </form>
@@ -189,7 +189,7 @@ export default function Login({ history }) {
                     </Typography>
                     <div></div>
                     <Typography variant="subtitle1" component="h1" className="">
-                        Uniquindio <ImportContacts />
+                        Uniquindío <ImportContacts />
                     </Typography>
                     <div></div>
                     <Typography variant="subtitle1" component="h1" className="">

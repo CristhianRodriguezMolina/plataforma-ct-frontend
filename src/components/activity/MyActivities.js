@@ -255,7 +255,7 @@ const MyActivities = props => {
 												</td>
 											</Tooltip>
 
-											<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
+											<Tooltip enterDelay={200} enterNextDelay={200} title={activity.description} aria-label={activity.description}>
 												<td className="activity-description">
 													{activity.description}
 												</td>

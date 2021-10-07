@@ -71,7 +71,7 @@ const InstructionCard = SortableElement(({ value, showCheck, position }) => {
     };
     return (
         <div onClick={handleClick} className="instruction-card-container">
-            <input ref={checkBox} type="checkbox" className={`${checkCard ? "show-check" : "hide-check"}`} />
+            <input ref={checkBox} onClick={handleClick} type="checkbox" className={`${checkCard ? "show-check" : "hide-check"}`} />
             <div
                 style={{
                     backgroundImage: `url(${image})`,

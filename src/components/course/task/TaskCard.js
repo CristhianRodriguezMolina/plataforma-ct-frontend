@@ -145,13 +145,13 @@ const TaskCard = props => {
 							<h3><b>Progreso:</b> {completedActivitiesNumber}/{taskActivities.length}</h3>
 							{props.task.is_due_date && props.task.due_date ?
 								<h3><b>Hasta:</b> {props.task.due_date.substring(0, 10)}</h3> :
-								<h3><b>Hasta:</b> Sin fecha limite</h3>}
+								<h3><b>Hasta:</b> Sin fecha límite</h3>}
 						</div> : ""
 					:
 					<div className="progress-visualization">
 						{props.task.is_due_date && props.task.due_date ?
 							<h3><b>Hasta:</b> {props.task.due_date.substring(0, 10)}</h3> :
-							<h3><b>Hasta:</b> Sin fecha limite</h3>}
+							<h3><b>Hasta:</b> Sin fecha límite</h3>}
 					</div>}
 			</div>
 			{

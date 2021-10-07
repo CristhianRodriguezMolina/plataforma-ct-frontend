@@ -117,7 +117,7 @@ const UnitContent = props => {
 				<DynamicInput dynamicInputValue={unitDes} dynamicInputStyle={desInputStyle} sendValue={updateDes}></DynamicInput>
 			</div>
 			<hr style={{ margin: '1em' }} />
-			<FormControlLabel className="switcher" labelPlacement="start" label="Definir fecha limite" control={
+			<FormControlLabel className="switcher" labelPlacement="start" label="Definir fecha límite" control={
 				<Switch
 					checked={isDueDate}
 					onChange={() => setIsDueDate(!isDueDate)}
@@ -132,7 +132,7 @@ const UnitContent = props => {
 				max="2050-12-31"
 				onChange={evt => setDueDate(new Date(evt.target.value))}
 				value={dateFormat(dueDate, 'GMT:yyyy-mm-dd')}
-				label="Fecha limite" name="fecha-limite"
+				label="Fecha límite" name="fecha-limite"
 				disabled={!isDueDate}
 				required />
 			<div className="buttons-container d-flex justify-content-between">

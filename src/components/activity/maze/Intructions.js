@@ -133,7 +133,7 @@ const Intructions = props => {
 
     const handleClick = (value) => {
         if (instructionsList.length >= props.cols * props.rows) {
-            showError('LLegó al numero de instrucciones')
+            showError('LLegó al número de instrucciones')
             return;
         }
 
@@ -148,6 +148,7 @@ const Intructions = props => {
     };
 
     const showCheckMarks = () => {
+        setInstructionsToDelete([]);
         setShowCheck(!showCheck);
     };
 
