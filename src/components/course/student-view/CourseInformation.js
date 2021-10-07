@@ -97,11 +97,11 @@ export default function CourseInformation(props) {
                                     }
                                     <div>
                                         <p className='m-0 ml-4 mb-2 p-0'><b>{teacher.first_name} {teacher.last_name}</b></p>
-                                        <p className='m-0 ml-4 mb-2 p-0 text-muted'>Genero: {teacher.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
+                                        <p className='m-0 ml-4 mb-2 p-0 text-muted'>Género: {teacher.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
                                     </div>
                                 </div>
                                 <div className='mt-3'>
-                                    <p className='m-0 mb-2 p-0'>Telefono: {teacher.phone !== '' ? <b>{teacher.phone}</b> : <b className='text-muted'>No tiene telefono :(</b>}</p>
+                                    <p className='m-0 mb-2 p-0'>Teléfono: {teacher.phone !== '' ? <b>{teacher.phone}</b> : <b className='text-muted'>No tiene teléfono :(</b>}</p>
                                     <p className='m-0 mb-2 p-0'>Email: {teacher.email !== '' ? <b>{teacher.email}</b> : <b className='text-muted'>No tiene email :(</b>}</p>
                                     <p className='m-0 mb-2 p-0'>Descripción: {teacher.description !== '' ? <b>{teacher.description}</b> : <b className='text-muted'>No tiene descripción :(</b>}</p>
                                 </div>

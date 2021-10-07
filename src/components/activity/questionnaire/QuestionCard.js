@@ -531,7 +531,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						type="delete"
 						open={openDeleteQuestion}
 						handleClose={() => setOpenDeleteQuestion(!openDeleteQuestion)}
-						message='¿Esta seguro que quiere eliminar esta pregunta?'
+						message='¿Está seguro que quiere eliminar esta pregunta?'
 						action={deleteCard}
 					/>
 				</>
@@ -579,7 +579,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				type="delete"
 				open={openDeleteOption}
 				handleClose={() => setOpenDeleteOption(!openDeleteOption)}
-				message='¿Esta seguro que quiere eliminar esta tarjeta?'
+				message='¿Está seguro que quiere eliminar esta tarjeta?'
 				action={deleteOption}
 			/>
 		</div>

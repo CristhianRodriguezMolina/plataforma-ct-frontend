@@ -183,7 +183,7 @@ const PerspectiveCard = (props) => {
 				!editing ?
 					<p className='message'>{perspective.message}</p>
 					:
-					<textarea className='message form-control' type="text" rows="6" label="Perspective" name="Perspectiva" placeholder='Escribe tu perspectiva aqui' onChange={(event) => setMessageToUpdate(event.target.value)} value={messageToUpdate} />
+					<textarea className='message form-control' type="text" rows="6" label="Perspective" name="Perspectiva" placeholder='Escribe tu perspectiva aquí' onChange={(event) => setMessageToUpdate(event.target.value)} value={messageToUpdate} />
 			}
 			<h4 className='teacher'><span className='text-muted'>Por el profesor: </span>{perspective.teacher.first_name} {perspective.teacher.last_name}</h4>
 			{
@@ -216,7 +216,7 @@ const PerspectiveCard = (props) => {
 				type="delete"
 				open={open}
 				handleClose={() => setOpen(!open)}
-				message='¿Esta seguro que quiere borrar esta perspectiva?'
+				message='¿Está seguro que quiere borrar esta perspectiva?'
 				action={deletePerspective}
 			/>
 

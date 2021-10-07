@@ -163,7 +163,7 @@ const TaskCard = props => {
 							type="delete"
 							open={open}
 							handleClose={() => setOpen(!open)}
-							message='¿Esta seguro que quiere borrar esta tarea de la unidad?'
+							message='¿Está seguro que quiere borrar esta tarea de la unidad?'
 							action={handleDeleteTask}
 						/>
 					</>

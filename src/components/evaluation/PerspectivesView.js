@@ -162,9 +162,9 @@ const PerspectivesView = () => {
 			<div className='perspective-view-container container'>
 				<h1 className="h6 text-muted my-3 text-justify">{
 					isAdmin || isTeacher ?
-						'Aqui puedes ver las evaluaciones perspectivas que has realizado, editarlas y/o borrarlas.'
+						'Aquí puedes ver las evaluaciones perspectivas que has realizado, editarlas y/o borrarlas.'
 						:
-						'Aqui puedes ver las evaluaciones perspectivas que te ha realizado algún profesor.'
+						'Aquí puedes ver las evaluaciones perspectivas que te ha realizado algún profesor.'
 				}
 				</h1>
 				<div className="filter mr-4">
@@ -227,7 +227,7 @@ const PerspectivesView = () => {
 											:
 											<NoContentToShow icon='mood_bad' messageTitle='Error filtrando...' messageDes='Filtro incorrecto o error desconocido' />
 							:
-							<NoContentToShow icon='face' messageTitle={'Sin perspectivas...'} messageDes={localStorage.getItem('user_role') === 'student' ? 'No hay perspectivas que mostrar, aqui se mostraran las evaluaciones de tus profesores' : 'No hay perspectivas que mostrar, aqui se mostraran las que agregues a un estudiante.'} />
+							<NoContentToShow icon='face' messageTitle={'Sin perspectivas...'} messageDes={localStorage.getItem('user_role') === 'student' ? 'No hay perspectivas que mostrar, aquí se mostraran las evaluaciones de tus profesores' : 'No hay perspectivas que mostrar, aquí se mostraran las que agregues a un estudiante.'} />
 						:
 						<div style={{ height: '10em', width: '100%', position: 'relative' }}>
 							<div className="spinner-loading">

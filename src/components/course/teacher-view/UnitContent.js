@@ -170,7 +170,7 @@ const UnitContent = props => {
 				type="delete"
 				open={open}
 				handleClose={() => setOpen(!open)}
-				message='¿Esta seguro que quiere borrar esta unidad del curso?'
+				message='¿Está seguro que quiere borrar esta unidad del curso?'
 				action={handleDeleteUnit}
 			/>
 		</div >

@@ -161,7 +161,7 @@ export default function SearchUser(props) {
 			</form>
 			<div className="d-flex justify-content-start align-items-center">
 				<div className="d-flex flex-column align-items-start mr-4">
-					<label className="text-start m-0 text-muted">Genero</label>
+					<label className="text-start m-0 text-muted">Género</label>
 					<select className="form-control" onChange={evt => { setFilterGenre(evt.target.value); }} value={filterGenre} aria-label="Default select example" required>
 						<option value="NA" selected>N/A</option>
 						<option value="F">Femenino</option>

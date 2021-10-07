@@ -184,7 +184,7 @@ export default function StudentCard(props) {
 									type="delete"
 									open={open}
 									handleClose={() => setOpen(!open)}
-									message='¿Esta seguro que quiere quitar este estudiante del curso?'
+									message='¿Está seguro que quiere quitar este estudiante del curso?'
 									action={deleteStundentFromCourse}
 								/>
 							</>
@@ -226,7 +226,7 @@ export default function StudentCard(props) {
 
 										<p className='m-0 ml-4 mb-2 p-0'>{forStudent ? "Cumpleaños" : "Fecha de nacimiento"}: <b>{util.getSpanishDate(student.birth_date)}</b></p>
 										<p className='m-0 ml-4 mb-2 p-0'>Edad: <b>{util.getAge(student.birth_date)} {util.getAge(student.birth_date) !== 1 ? 'años' : 'año'}</b></p>
-										<p className='m-0 ml-4 mb-2 p-0'>Genero: <b>{util.getGenre(student.genre)}</b></p>
+										<p className='m-0 ml-4 mb-2 p-0'>Género: <b>{util.getGenre(student.genre)}</b></p>
 
 									</div>
 								</div>

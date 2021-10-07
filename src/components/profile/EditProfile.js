@@ -31,11 +31,11 @@ function EditProfile(props) {
 	const [first_name, setFirstName] = useState(''); //Primer nombre del usuario
 	const [last_name, setLastName] = useState(''); //Apellido del usuario
 	const [birth_date, setBirthDate] = useState(''); //Edad del usuario
-	const [genre, setGenre] = useState('NA'); //Genero del usuario
+	const [genre, setGenre] = useState('NA'); //Género del usuario
 	const [id, setId] = useState(''); //Id del usuario
-	const [phone, setPhone] = useState(''); //Telefono del usuario
+	const [phone, setPhone] = useState(''); //Télefono del usuario
 	const [email, setEmail] = useState(''); //Email del usuario
-	const [description, setDescription] = useState(''); //Descripcion del usuario
+	const [description, setDescription] = useState(''); //Descripción del usuario
 
 	// MENSAJES DEL FORMULARIO
 	const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -78,7 +78,7 @@ function EditProfile(props) {
 		}, 2000)
 	}
 
-	// Metodo para crear o actualizar los datos basicos de un usuario (Nombre, apellido, fecha de nacimiento, genero, id)
+	// Metodo para crear o actualizar los datos basicos de un usuario (Nombre, apellido, fecha de nacimiento, género, id)
 	const updateUser = async (e) => {
 		e.preventDefault();
 
@@ -156,9 +156,9 @@ function EditProfile(props) {
 					<input className="form-control" type="date" min="1950-01-01" max={dateFormat(new Date(), 'yyyy-mm-dd')} onChange={evt => setBirthDate(new Date(evt.target.value))} value={dateFormat(birth_date, 'GMT:yyyy-mm-dd')} label="Fecha de cumpleaños" name="fechadecumpleaños" required />
 				</div>
 				<div className="form-group">
-					<label>Genero</label>
+					<label>Género</label>
 					<select className="form-control" onChange={evt => setGenre(evt.target.value)} value={genre} aria-label="Default select example" required>
-						<option value="NA" selected disabled>Selecciona un genero</option>
+						<option value="NA" selected disabled>Selecciona un género</option>
 						<option value="F">Femenino</option>
 						<option value="M">Masculino</option>
 						<option value="NB">No binario</option>
@@ -173,7 +173,7 @@ function EditProfile(props) {
 						<>
 							<div className="form-group">
 								<label>Teléfono</label>
-								<input className="form-control" type="number" onChange={evt => setPhone(evt.target.value)} value={phone} label="Telefono" name="telefono" />
+								<input className="form-control" type="number" onChange={evt => setPhone(evt.target.value)} value={phone} label="Télefono" name="teléfono" />
 							</div>
 							<div className="form-group">
 								<label>Email</label>
@@ -184,8 +184,8 @@ function EditProfile(props) {
 						''
 				}
 				<div className="form-group">
-					<label>Descripcion</label>
-					<textarea className="form-control" type="text" rows="4" onChange={evt => setDescription(evt.target.value)} value={description} label="Descripcion" name="Descripcion" />
+					<label>Descripción</label>
+					<textarea className="form-control" type="text" rows="4" onChange={evt => setDescription(evt.target.value)} value={description} label="Descripción" name="Descripción" />
 				</div>
 				<div className="form-group d-flex justify-content-end mt-4">
 					<button type='submit' className="custom-btn custom-btn-primary btn-create-user px-2 py-2">Guardar datos</button>

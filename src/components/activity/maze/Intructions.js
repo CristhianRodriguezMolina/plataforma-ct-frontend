@@ -200,7 +200,7 @@ const Intructions = props => {
                     type="delete"
                     open={open}
                     handleClose={() => setOpen(!open)}
-                    message='¿Esta seguro que quiere limpiar las instrucciones?'
+                    message='¿Está seguro que quiere limpiar las instrucciones?'
                     actionText='Limpiar'
                     action={cleanInstructions}
                 />

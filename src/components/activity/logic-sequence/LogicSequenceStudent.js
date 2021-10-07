@@ -246,7 +246,7 @@ const LogicSequenceStudent = props => {
         }
         else {
             handleCompleteActivity(false); // Save as incompleted
-            showFeedBack('Tu respuesta aun tiene algunos errores ¡Sigue intentando!');
+            showFeedBack('Tu respuesta aún tiene algunos errores ¡Sigue intentando!');
         }
 
     };
@@ -320,7 +320,7 @@ const LogicSequenceStudent = props => {
                 <div className="logic-sequence-student-container">
                     <div>
                         <h1 style={nameInputStyle} >{activity.name}</h1>
-                        <p style={desInputStyle} >{activity.description.trim() === '' ? 'Aqui iría la descripción... si tan solo tuviera una' : activity.description}</p>
+                        <p style={desInputStyle} >{activity.description.trim() === '' ? 'Aquí iría la descripción... si tan solo tuviera una' : activity.description}</p>
                         <div className='activity-attributes'>
                             <div className="difficulty-grid-item">
                                 <p><b>Dificultad:</b> {util.getDifficulty(activity.difficulty)}</p>

@@ -38,7 +38,7 @@ export default function CreateUser({ history }) {
 	const [first_name, setFirstName] = useState(''); //Primer nombre del usuario
 	const [last_name, setLastName] = useState(''); //Apellido del usuario
 	const [birth_date, setBirthDate] = useState(''); //Edad del usuario
-	const [genre, setGenre] = useState('NA'); //Genero del usuario
+	const [genre, setGenre] = useState('NA'); //Género del usuario
 	const [id, setId] = useState(''); //Id del usuario
 	const [password, setPassword] = useState(''); //Contraseña del usuario
 	const [confirm_password, setConfirmPassword] = useState(''); //Comfirmación de contraseña del usuario
@@ -116,7 +116,7 @@ export default function CreateUser({ history }) {
 		setProcessMessage('');
 	}
 
-	// Metodo para crear o actualizar los datos basicos de un usuario (Nombre, apellido, fecha de nacimiento, genero, id)
+	// Metodo para crear o actualizar los datos basicos de un usuario (Nombre, apellido, fecha de nacimiento, género, id)
 	const createUser = async (e) => {
 		e.preventDefault();
 
@@ -282,9 +282,9 @@ export default function CreateUser({ history }) {
 							required />
 					</div>
 					<div className="form-group">
-						<label>Genero</label>
+						<label>Género</label>
 						<select className="form-control" onChange={evt => setGenre(evt.target.value)} value={genre} aria-label="Default select example" required>
-							<option value="NA" selected disabled>Selecciona un genero</option>
+							<option value="NA" selected disabled>Selecciona un género</option>
 							<option value="F">Femenino</option>
 							<option value="M">Masculino</option>
 							<option value="NB">No binario</option>

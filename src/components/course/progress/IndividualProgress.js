@@ -658,7 +658,7 @@ const IndividualProgress = (props) => {
 						<hr className='mx-5' style={{ borderWidth: '1px', borderColor: 'darkgrey' }} />
 						<div className='perspectives-container container'>
 							<h1 className="h4">Agregar perspectiva</h1>
-							<h1 className="h6 text-muted mb-3 text-justify">Aqui puedes escribir una evaluación perspectiva del alumno en cuestión.</h1>
+							<h1 className="h6 text-muted mb-3 text-justify">Aquí puedes escribir una evaluación perspectiva del alumno en cuestión.</h1>
 							<form onSubmit={handleAddPerspective} className='mb-4'>
 								<div className='form-group w-md-50'>
 									<textarea
@@ -667,7 +667,7 @@ const IndividualProgress = (props) => {
 										rows="4"
 										label="Perspective"
 										name="Perspectiva"
-										placeholder='Escribe tu perspectiva aqui'
+										placeholder='Escribe tu perspectiva aquí'
 										onChange={evt => setNewPerspectiveMessage(evt.target.value)} value={newPerspectiveMessage} />
 								</div>
 								<div className='d-flex justify-content-end'>
@@ -675,7 +675,7 @@ const IndividualProgress = (props) => {
 								</div>
 							</form>
 							<h1 className="h4">Perspectivas del alumno</h1>
-							<h1 className="h6 text-muted mb-3 text-justify">Aqui puedes ver las evaluaciones perspectivas que has realizado a este alumno, editarlas y/o borrarlas.</h1>
+							<h1 className="h6 text-muted mb-3 text-justify">Aquí puedes ver las evaluaciones perspectivas que has realizado a este alumno, editarlas y/o borrarlas.</h1>
 							{
 								perspectives && perspectives.length > 0 ?
 									perspectives.map(perspective => {

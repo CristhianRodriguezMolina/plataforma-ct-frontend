@@ -65,13 +65,13 @@ export default function CourseInformation({ course, setCourse }) {
         }, 2000)
     }
 
-    // Funcion para actualizar los datos basicos de un curso como Nombre, Descripcion y Tema
+    // Funcion para actualizar los datos basicos de un curso como Nombre, Descripción y Tema
     const updateChanges = async (e) => {
         e.preventDefault();
 
         try {
             setInfo(true);
-            setInfoMessage('El curso se esta actualizando...');
+            setInfoMessage('El curso se está actualizando...');
 
             const response = await api.put(`/api/course/${course._id}`, {
                 name,

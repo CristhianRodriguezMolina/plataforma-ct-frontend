@@ -296,7 +296,7 @@ const MyActivities = props => {
 									</tr>
 								</thead>
 							</table>
-							<NoContentToShow icon='face' messageTitle="Sin actividades..." messageDes="Las actividades que agregues apareceran aqui" />
+							<NoContentToShow icon='face' messageTitle="Sin actividades..." messageDes="Las actividades que agregues apareceran aquí" />
 						</>
 					:
 					<div className="spinner-loading" style={{ marginTop: '8em' }}>
@@ -309,7 +309,7 @@ const MyActivities = props => {
 				type="delete"
 				open={open}
 				handleClose={() => setOpen(!open)}
-				message='¿Esta seguro que quiere eliminar esta actividad?'
+				message='¿Está seguro que quiere eliminar esta actividad?'
 				action={() => handleDelete(activityIdToDelete)}
 			/>
 			{

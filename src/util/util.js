@@ -57,7 +57,7 @@ export const getGenre = (genre) => {
     } else if (genre === 'NB') {
         return 'No binario'
     }
-    return 'Error obteniendo el genero'
+    return 'Error obteniendo el género'
 }
 
 export const getDifficulty = (difficulty) => {

@@ -34,7 +34,7 @@ export default function Overview(props) {
 
 							<Grid item xs={12}><hr /></Grid>
 
-							<Grid item xs={6}><label>Genero</label></Grid>
+							<Grid item xs={6}><label>Género</label></Grid>
 							<Grid item xs={6}><p>{util.getGenre(user.genre)}</p></Grid>
 
 							<Grid item xs={12}><hr /></Grid>
@@ -57,8 +57,8 @@ export default function Overview(props) {
 									<>
 										<Grid item xs={12}><hr /></Grid>
 
-										<Grid item xs={6}><label>Telefono</label></Grid>
-										<Grid item xs={6}><p>{user.phone === '' ? 'Aún no tiene telefono' : user.phone}</p></Grid>
+										<Grid item xs={6}><label>Teléfono</label></Grid>
+										<Grid item xs={6}><p>{user.phone === '' ? 'Aún no tiene télefono' : user.phone}</p></Grid>
 									</>
 									:
 									''

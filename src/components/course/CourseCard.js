@@ -71,7 +71,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
         setVisible(false);
         try {
             setInfo(true);
-            setInfoMessage('El curso se esta borrando...');
+            setInfoMessage('El curso se está borrando...');
 
             const response = await api.delete(`/api/course/${course._id}`, { headers: { 'x-access-token': localStorage.getItem('token') } });
 
@@ -117,7 +117,7 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                                 ""
                         }
                         <p className="text-left m-0">{course.units.length > 0 ? <>El curso tiene <b>{course.units.length}</b> unidades</> : <b>Aún no hay unidades</b>}</p>
-                        <p className="text-left m-0">{course.students !== 0 ? <>Tiene <b>{course.students}</b> estudiantes</> : <b>El curso aun no tiene estudiantes</b>}</p>
+                        <p className="text-left m-0">{course.students !== 0 ? <>Tiene <b>{course.students}</b> estudiantes</> : <b>El curso aún no tiene estudiantes</b>}</p>
                         {success ?
                             <Alert severity="success">{successMessage}</Alert>
                             : ""

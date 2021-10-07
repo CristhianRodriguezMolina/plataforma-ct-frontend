@@ -126,7 +126,7 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
                             type="delete"
                             open={open}
                             handleClose={() => setOpen(!open)}
-                            message='¿Esta seguro que quiere eliminar esta tarjeta?'
+                            message='¿Está seguro que quiere eliminar esta tarjeta?'
                             action={deleteCard}
                         />
                     </>

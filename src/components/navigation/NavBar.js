@@ -59,7 +59,7 @@ function NavBar() {
 									<Typography className='' variant="h6">
 										<Link className="link-app" to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>
 											<IconButton>
-												App
+												PECO
 											</IconButton>
 										</Link>
 									</Typography>
@@ -92,7 +92,7 @@ function NavBar() {
 																<div className="dropdown-divider"></div>
 																{
 																	isAdmin ?
-																		<li><Link className="dropdown-item" to="/user/teachers"><People className="mr-2" color="action" /> Gestion de profesores</Link></li>
+																		<li><Link className="dropdown-item" to="/user/teachers"><People className="mr-2" color="action" /> Gestión de profesores</Link></li>
 																		:
 																		""
 																}

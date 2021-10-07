@@ -143,7 +143,7 @@ const ActivityCard = SortableElement((props) => {
 				type="delete"
 				open={open}
 				handleClose={() => setOpen(!open)}
-				message='¿Esta seguro que quiere borrar esta actividad de la tarea?'
+				message='¿Está seguro que quiere borrar esta actividad de la tarea?'
 				action={deleteActivity}
 			/>
 		</div >

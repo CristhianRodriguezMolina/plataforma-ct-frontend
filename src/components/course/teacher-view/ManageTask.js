@@ -292,12 +292,12 @@ export default function ManageTask() {
 											required />
 									</div>
 									<div className="form-group">
-										<label className="form-label">Descripcion</label>
+										<label className="form-label">Descripción</label>
 										<textarea
 											className="form-control"
 											rows="3"
 											onChange={evt => setTaskDescription(evt.target.value)}
-											value={taskDescription} label="Descripcion de la tarea"
+											value={taskDescription} label="Descripción de la tarea"
 											name="taskdescription"
 											required />
 									</div>
@@ -350,7 +350,7 @@ export default function ManageTask() {
 											task={task} />
 										:
 										<div>
-											<NoContentToShow icon='mood' messageTitle={'Sin actividades...'} messageDes={'Las actividades agregadas se mostraran aqui'} />
+											<NoContentToShow icon='mood' messageTitle={'Sin actividades...'} messageDes={'Las actividades agregadas se mostraran aquí'} />
 										</div>
 									}
 								</div>

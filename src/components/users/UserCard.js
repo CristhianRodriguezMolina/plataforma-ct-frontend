@@ -150,7 +150,7 @@ export default function UserCard({ user, setUsers, history, type }) {
 						type="delete"
 						open={open}
 						handleClose={() => setOpen(!open)}
-						message={type === "teachers" ? '¿Esta seguro que quiere borrar este profesor de la plataforma?' : '¿Esta seguro que quiere borrar este estudiante de la plataforma?'}
+						message={type === "teachers" ? '¿Está seguro que quiere borrar este profesor de la plataforma?' : '¿Está seguro que quiere borrar este estudiante de la plataforma?'}
 						action={deleteUser}
 					/>
 				</div>

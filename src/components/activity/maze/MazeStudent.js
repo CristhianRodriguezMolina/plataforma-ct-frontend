@@ -964,7 +964,7 @@ const MazeStudent = (props) => {
 							{/* GENERAL DATA OF THE MAZE */}
 							<div>
 								<h1 style={nameInputStyle} >{activityName}</h1>
-								<p style={desInputStyle} >{activityDescription.trim() === '' ? 'Aqui iría la descripción... si tan solo tuviera una' : activityDescription}</p>
+								<p style={desInputStyle} >{activityDescription.trim() === '' ? 'Aquí iría la descripción... si tan solo tuviera una' : activityDescription}</p>
 								<div className='activity-attributes'>
 									<div className="difficulty-grid-item">
 										<p><b>Dificultad:</b> {util.getDifficulty(props.activity.difficulty)}</p>

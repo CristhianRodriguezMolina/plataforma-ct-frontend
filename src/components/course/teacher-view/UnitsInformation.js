@@ -411,7 +411,7 @@ const UnitsInformation = (props) => {
 														students={students}
 														unit={unit}
 														taskActivities={taskActivities} /> :
-													<NoContentToShow icon='mood' messageTitle={'Sin estudiantes...'} messageDes={'El progreso de los estudiantes se mostrara aqui'} />
+													<NoContentToShow icon='mood' messageTitle={'Sin estudiantes...'} messageDes={'El progreso de los estudiantes se mostrara aquí'} />
 										}
 									</TabPanel>
 								))

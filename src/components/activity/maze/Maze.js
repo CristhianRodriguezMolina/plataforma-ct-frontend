@@ -986,7 +986,7 @@ export default function Maze() {
 						type="delete"
 						open={open}
 						handleClose={() => setOpen(!open)}
-						message='¿Esta seguro que quiere limpiar las celdas del laberinto?'
+						message='¿Está seguro que quiere limpiar las celdas del laberinto?'
 						actionText='Limpiar'
 						action={cleanMaze}
 					/>
@@ -1026,7 +1026,7 @@ export default function Maze() {
 							<div className='d-flex flex-wrap justify-content-around align-items-center'>
 								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
 								<div className='d-flex flex-column align-items-center zoom-panel'>
-									<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
+									<h1 className='h4 mb-4'>Cambiar tamaño del laberinto</h1>
 									<div>
 										<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
 										<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
@@ -1061,8 +1061,8 @@ export default function Maze() {
 							<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar</button>
 						</div>
 						<div className='d-flex justify-content-center mt-2'>
-							<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
-							<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
+							<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Activar/desactivar robot</button>
+							<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar ejecución</button>
 						</div>
 					</div>
 
@@ -1119,7 +1119,7 @@ export default function Maze() {
 							{
 								maze ?
 									<>
-										<h5 className='text-muted font-italic' style={{ fontSize: '1.1em' }}>Aqui pon las intrucciones de la solución mas optima para este laberinto cuando lo hayas terminado</h5>
+										<h5 className='text-muted font-italic' style={{ fontSize: '1.1em' }}>Aquí pon las intrucciones de la solución mas óptima para este laberinto cuando lo hayas terminado</h5>
 										<Intructions maze={maze} setMaze={setMaze} cols={cols} rows={rows} />
 									</>
 									: ''
@@ -1143,7 +1143,7 @@ export default function Maze() {
 											backgroundSize: '100% 100%',
 										}}
 									/>
-									<h1 className='h4'>Block</h1>
+									<h1 className='h4'>Pared</h1>
 								</div>
 							</ButtonBase>
 
@@ -1160,7 +1160,7 @@ export default function Maze() {
 											backgroundColor: '#6cbae3',
 										}}
 									/>
-									<h1 className='h4'>Empty</h1>
+									<h1 className='h4'>Borrador</h1>
 								</div>
 							</ButtonBase>
 
@@ -1178,7 +1178,7 @@ export default function Maze() {
 											backgroundSize: '100% 100%',
 										}}
 									/>
-									<h1 className='h4'>Start</h1>
+									<h1 className='h4'>Inicio</h1>
 								</div>
 							</ButtonBase>
 
@@ -1198,7 +1198,7 @@ export default function Maze() {
 											backgroundSize: '100% 100%',
 										}}
 									/>
-									<h1 className='h4'>End</h1>
+									<h1 className='h4'>Fin</h1>
 								</div>
 							</ButtonBase>
 						</div>

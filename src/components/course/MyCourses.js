@@ -223,7 +223,7 @@ export default function MyCourses({ history }) {
 								isAdmin || isTeacher ?
 									<NoContentToShow icon='face' messageTitle="Sin cursos..." messageDes="No hay cursos para mostrar, primero intente crear uno" />
 									:
-									<NoContentToShow icon='face' messageTitle="Sin cursos..." messageDes="Aqui apareceran los cursos a los que estes inscrito" />
+									<NoContentToShow icon='face' messageTitle="Sin cursos..." messageDes="Aquí aparecerán los cursos a los que estes inscrito" />
 						}
 						{
 							isTeacher || isAdmin ?
