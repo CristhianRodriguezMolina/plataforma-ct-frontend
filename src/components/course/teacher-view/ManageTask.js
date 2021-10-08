@@ -162,7 +162,7 @@ export default function ManageTask() {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+						showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 					}
 				});
 		};
@@ -187,7 +187,7 @@ export default function ManageTask() {
 					showError(err.response.data.message);
 				}
 				else {
-					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+					showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 				}
 			});
 	};
@@ -225,7 +225,7 @@ export default function ManageTask() {
 							showError(err.response.data.message);
 						}
 						else {
-							showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+							showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 						}
 					});
 			})
@@ -234,7 +234,7 @@ export default function ManageTask() {
 					showError(err.response.data.message);
 				}
 				else {
-					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+					showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 				}
 			});
 
@@ -301,7 +301,7 @@ export default function ManageTask() {
 											name="taskdescription"
 											required />
 									</div>
-									<FormControlLabel className="switcher" labelPlacement="start" label="Definir fecha limite" control={
+									<FormControlLabel className="switcher" labelPlacement="start" label="Definir fecha límite" control={
 										<Switch
 											checked={isDueDate}
 											onChange={() => setIsDueDate(!isDueDate)}
@@ -317,7 +317,7 @@ export default function ManageTask() {
 											max="2050-12-31"
 											onChange={evt => setDueDate(new Date(evt.target.value))}
 											value={dateFormat(dueDate, 'GMT:yyyy-mm-dd')}
-											label="Fecha limite" name="fecha-limite"
+											label="Fecha límite" name="fecha-limite"
 											disabled={!isDueDate}
 											required />
 									</div>

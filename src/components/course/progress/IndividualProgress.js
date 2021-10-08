@@ -595,7 +595,7 @@ const IndividualProgress = (props) => {
 																<AccordionDetails>
 																	<Typography component="div" style={{ width: '100%' }}>
 																		<div>
-																			<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Description: </span>{task.description}</p>
+																			<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Descripción: </span>{task.description}</p>
 																			{task.is_due_date && task.due_date ?
 																				<p className='m-0'><span style={{ color: 'rgb(161, 161, 161)' }} >Fecha de entrega: </span>{task.due_date.substring(0, 10)}</p>
 																				:

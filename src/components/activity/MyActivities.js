@@ -9,13 +9,19 @@ import '../common/alert-message.scss';
 //To make api calls
 import api from '../../services/api';
 
-// Title card
-import TitleCard from '../common/TitleCard';
-
 // Activities icons
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import BallotIcon from '@material-ui/icons/Ballot';
 import BorderVerticalIcon from '@material-ui/icons/BorderVertical';
+
+//Util
+import * as  util from '../../util/util'
+
+// COMPONENTS
+
+
+// Title card
+import TitleCard from '../common/TitleCard';
 
 // Alert
 import Alert from '@material-ui/lab/Alert';
@@ -30,6 +36,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Tooltip from '@material-ui/core/Tooltip';
 import NoContentToShow from '../common/NoContentToShow';
+
+
 
 const MyActivities = props => {
 
@@ -100,12 +108,33 @@ const MyActivities = props => {
 	useEffect(() => {
 		if (!activities) {
 			const fetch = () => {
-				api.get(`/api/activity/myactivities/${localStorage.getItem('user_id')}`, {
+				api.get('/api/activity/', {
 					headers: { 'x-access-token': localStorage.getItem('token') }
 				})
 					.then((response) => {
-						setActivities(response.data.activities);
-						setFilteredActivities(response.data.activities);
+
+						const userActivities = response.data.activities.filter(activity => activity.creator._id === localStorage.getItem("user_id"));
+						const otherActivities = response.data.activities.filter(activity => activity.creator._id !== localStorage.getItem("user_id"));
+
+						const result = otherActivities
+							.reduce((r, o) => {
+								var temp = r.find(([{ creator }]) => creator.first_name === o.creator.first_name);
+								if (!temp) r.push(temp = []);
+								temp.push(o);
+								return r;
+							}, []);
+
+						var tempActivities = [];
+						result.map(res => {
+							res.map(r => {
+								tempActivities.push(r);
+							});
+						});
+
+						setActivities([...userActivities, ...tempActivities]);
+
+
+						setFilteredActivities([...userActivities, ...tempActivities]);
 						setCount(response.data.count);
 						if (response.data.count == 0) {
 							setLoadingCourses(false);
@@ -113,7 +142,7 @@ const MyActivities = props => {
 						}
 					}).catch((error) => {
 						//Show errors ocurred during the process
-						showError("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
+						showError("Un error ha ocurrido, por favor inténtelo de nuevo mas tarde");
 						setLoadingCourses(false);
 					});
 			};
@@ -193,7 +222,7 @@ const MyActivities = props => {
 					showError(err.response.data.message);
 				}
 				else {
-					showError("Un error ha ocurrido, por favor intentelo de nuevo mas tarde");
+					showError("Un error ha ocurrido, por favor inténtelo de nuevo mas tarde");
 				}
 			})
 	};
@@ -235,6 +264,7 @@ const MyActivities = props => {
 								<tr>
 									<th className="name-tag">Nombre</th>
 									<th>Descripción</th>
+									<th>Creador</th>
 									<th>Última modificación</th>
 									<th></th>
 								</tr>
@@ -255,12 +285,17 @@ const MyActivities = props => {
 												</td>
 											</Tooltip>
 
-											<Tooltip enterDelay={200} enterNextDelay={200} title={activity.name} aria-label={activity.name}>
+											<Tooltip enterDelay={200} enterNextDelay={200} title={activity.description} aria-label={activity.description}>
 												<td className="activity-description">
 													{activity.description}
 												</td>
 											</Tooltip>
-											<td>{activity.updatedAt.slice(0, 10)}</td>
+											<Tooltip enterDelay={200} enterNextDelay={200} title={`${activity.creator.first_name} ${activity.creator.last_name}`} aria-label={activity.description}>
+												<td className="activity-description">
+													{activity.creator.first_name} {activity.creator.last_name}
+												</td>
+											</Tooltip>
+											<td>{util.getCustomDate(activity.updatedAt)}</td>
 											<td>
 												<div className="drop-menu">
 													<div onClick={(e) => handleClick(e, activity)} className="drop-button">...</div>

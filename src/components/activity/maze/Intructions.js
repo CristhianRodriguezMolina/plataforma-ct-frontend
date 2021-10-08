@@ -133,7 +133,7 @@ const Intructions = props => {
 
     const handleClick = (value) => {
         if (instructionsList.length >= props.cols * props.rows) {
-            showError('LLegó al numero de instrucciones')
+            showError('LLegó al número de instrucciones')
             return;
         }
 
@@ -148,6 +148,7 @@ const Intructions = props => {
     };
 
     const showCheckMarks = () => {
+        setInstructionsToDelete([]);
         setShowCheck(!showCheck);
     };
 
@@ -208,7 +209,7 @@ const Intructions = props => {
                 {instructionsList ?
                     <div className="instructions-list-container">
                         <Scrollbars style={{ width: '100%', height: '100%' }}>
-                            <SortableList distance={1} items={instructionsList} onSortEnd={onSortEnd} axis='xy' showCheck={showCheck} />
+                            <SortableList distance={10} items={instructionsList} onSortEnd={onSortEnd} axis='xy' showCheck={showCheck} />
                         </Scrollbars>
                         <div className={`action-button-container ${showCheck ? 'show-action-button-container' : ''}`}>
                             <button onClick={() => setShowCheck(false)}><CloseIcon style={{ fontSize: 15, color: 'rgb(100, 100, 100)' }} /></button>

@@ -272,7 +272,7 @@ export default function Maze() {
 					showError(err.response.data.message);
 				}
 				else {
-					showError("¡No se han podido obtener el laberinto, por favor intentelo mas tarde!");
+					showError("¡No se han podido obtener el laberinto, por favor inténtelo mas tarde!");
 				}
 			})
 	}

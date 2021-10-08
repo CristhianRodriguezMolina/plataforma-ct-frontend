@@ -80,7 +80,7 @@ const SequenceCard = SortableElement(({ value, forStudents }) => {
                     showError(err.response.message);
                 }
                 else {
-                    showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+                    showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 
                 }
             })

@@ -129,14 +129,14 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						showError(err.response.message);
 					}
 					else {
-						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+						showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 
 					}
 					setSelectedOption("");
 				});
 		}
 		else {
-			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+			showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
 		}
 	}
 
@@ -154,13 +154,13 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						showError(err.response.message);
 					}
 					else {
-						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+						showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 
 					}
 				});
 		}
 		else {
-			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+			showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
 		}
 	}
 
@@ -178,12 +178,12 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+						showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 					}
 				})
 		}
 		else {
-			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+			showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
 		}
 	};
 
@@ -204,12 +204,12 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+						showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 					}
 				})
 		}
 		else {
-			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+			showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
 		}
 	};
 
@@ -241,7 +241,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				}).catch((error) => {
 					setSelectedOption("");
 					//Muestra errores durante el proceso
-					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+					showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 					setInfo(false);
 					setInfoMessage('');
 					btnSaveImage.current.disabled = false;
@@ -249,7 +249,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				});
 		}
 		else {
-			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+			showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
 		}
 	}
 
@@ -279,7 +279,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 					setOpenUploadImage(false);
 				}).catch((error) => {
 					//Muestra errores durante el proceso
-					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+					showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 					setInfo(false);
 					setInfoMessage('');
 					btnSaveImage.current.disabled = false;
@@ -287,7 +287,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				});
 		}
 		else {
-			showError("¡Error inexperado, por favor intentelo de nuevo mas tarde!");
+			showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
 		}
 	}
 

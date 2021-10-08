@@ -147,7 +147,7 @@ const UnitsInformation = (props) => {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+						showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 					}
 					setIsLoading(false);
 				});
@@ -168,7 +168,7 @@ const UnitsInformation = (props) => {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+						showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 					}
 				});
 		}
@@ -284,7 +284,7 @@ const UnitsInformation = (props) => {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+						showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 					}
 				})
 		}
@@ -309,7 +309,7 @@ const UnitsInformation = (props) => {
 					showError(err.response.data.message);
 				}
 				else {
-					showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+					showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 				}
 			});
 	}
@@ -327,7 +327,7 @@ const UnitsInformation = (props) => {
 					showError(err.response.data.message);
 				}
 				else {
-					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+					showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 				}
 			})
 	};

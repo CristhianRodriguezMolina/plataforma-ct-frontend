@@ -44,6 +44,8 @@ const UnitContent = props => {
 	// Variable to see if the info data is loading
 	const [isLoadingLasActivity, setIsLoadingLasActivity] = useState(true);
 
+	const [tasks, setTasks] = useState(null);
+
 	const nameInputStyle = {
 		width: "100%",
 		fontSize: "1.7em",
@@ -63,6 +65,13 @@ const UnitContent = props => {
 		fontWeight: "500",
 		minHeight: "2.5em"
 	};
+
+	useEffect(() => {
+		if (!tasks) {
+			setTasks(props.unitValue.tasks.filter(task => task.visible));
+		}
+
+	}, [tasks]);
 
 	useEffect(() => {
 
@@ -139,7 +148,7 @@ const UnitContent = props => {
 			</div>
 			{props.unitValue.is_due_date && props.unitValue.due_date ?
 				<h3 className="h6 mx-3"><b>Hasta:</b> {props.unitValue.due_date.substring(0, 10)}</h3> :
-				<h3 className="h6 mx-3">Fecha limite de la unidad: Sin fecha limite</h3>}
+				<h3 className="h6 mx-3">Fecha límite de la unidad: Sin fecha límite</h3>}
 			<hr className="mx-3" />
 			{!isCompletedUnit && completedPercentage && completedPercentage > 0 ?
 				<ProgressBar hasTitle={true} title={'Progreso:'} bgColor={'#ffb16e'} percentage={completedPercentage} />
@@ -212,19 +221,22 @@ const UnitContent = props => {
 
 			{props.taskActivities ?
 				<div className="cards-container">
-					{props.unitValue.tasks.map((task, i) => (
-						task.visible ?
-							<TaskCard
-								key={i}
-								forStudent={true}
-								studentActivities={props.studentActivities ? props.studentActivities.filter(studentActivity => studentActivity.task === task._id) : null}
-								taskActivities={props.taskActivities ? props.taskActivities.filter(taskActivity => taskActivity.task === task._id) : null}
-								courseId={props.course._id}
-								unitId={props.unitValue._id}
-								task={task} />
-							:
-							''
-					))}
+					{
+						tasks ?
+							tasks.length > 0 ?
+								tasks.map((task, i) => (
+									<TaskCard
+										key={i}
+										forStudent={true}
+										studentActivities={props.studentActivities ? props.studentActivities.filter(studentActivity => studentActivity.task === task._id) : null}
+										taskActivities={props.taskActivities ? props.taskActivities.filter(taskActivity => taskActivity.task === task._id) : null}
+										courseId={props.course._id}
+										unitId={props.unitValue._id}
+										task={task} />
+								))
+								: <NoContentToShow icon='face' messageTitle={'Sin tareas...'} messageDes={'Tu profesor no ha agregado tareas aún'} />
+							: <NoContentToShow icon='face' messageTitle={'Sin tareas...'} messageDes={'Tu profesor no ha agregado tareas aún'} />
+					}
 				</div>
 				: ""}
 
