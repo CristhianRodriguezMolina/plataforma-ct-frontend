@@ -321,7 +321,7 @@ const QuestionnaireStudent = (props) => {
 						<div className="questionnaire-container">
 							<div className='questionnaire-info'>
 								<h1 style={nameInputStyle} >{activity.name}</h1>
-								<p style={desInputStyle} >{activity.description.trim() === '' ? 'Aquí iría la descripción... si tan solo tuviera una' : activity.description}</p>
+								<p style={desInputStyle} >{activity.description}</p>
 								<div className='activity-attributes'>
 									<div className="difficulty-grid-item">
 										<p><b>Dificultad:</b> {util.getDifficulty(activity.difficulty)}</p>
