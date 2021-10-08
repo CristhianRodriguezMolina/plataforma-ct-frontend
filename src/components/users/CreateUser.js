@@ -150,6 +150,7 @@ export default function CreateUser({ history }) {
 							}
 						});
 					} else {
+						// To update user
 						response = await api.put(`/api/person/${user._id}`, { //Peticion post a la api para crear un usuario nuevo                               
 							id,                         //  PARAMETROS
 							first_name,                 //  DE 
@@ -176,6 +177,9 @@ export default function CreateUser({ history }) {
 						setLastName('');
 
 						history.goBack();
+					}
+					else {
+						showError(message);
 					}
 				} else {
 					showError("Debes llenar todos los campos");

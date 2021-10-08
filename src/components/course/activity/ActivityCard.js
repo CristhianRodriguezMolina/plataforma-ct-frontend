@@ -82,7 +82,7 @@ const ActivityCard = SortableElement((props) => {
 					showError(err.response.data.message);
 				}
 				else {
-					showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+					showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 				}
 			})
 	}

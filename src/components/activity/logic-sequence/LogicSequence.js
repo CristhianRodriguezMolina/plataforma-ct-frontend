@@ -145,7 +145,7 @@ const LogicSequence = props => {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+						showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 					}
 				})
 		}
@@ -173,7 +173,7 @@ const LogicSequence = props => {
 							showError(err.response.data.message);
 						}
 						else {
-							showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+							showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 						}
 					})
 			}
@@ -206,7 +206,7 @@ const LogicSequence = props => {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+						showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 					}
 				});
 		}

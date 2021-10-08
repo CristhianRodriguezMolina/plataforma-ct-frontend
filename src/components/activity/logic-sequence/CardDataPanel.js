@@ -137,7 +137,7 @@ const CardDataPanel = props => {
 						setInfoMessage('');
 					}).catch((error) => {
 						//Muestra errores durante el proceso
-						showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+						showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 						saveButton.current.disabled = false;
 						setInfo(false);
 						setInfoMessage('');
@@ -159,7 +159,7 @@ const CardDataPanel = props => {
 							showError(err.response.message);
 						}
 						else {
-							showError("Ha ocurrido un error inexperado, por favor intentelo mas tarde");
+							showError("Ha ocurrido un error inexperado, por favor inténtelo mas tarde");
 						}
 						saveButton.current.disabled = false;
 					})

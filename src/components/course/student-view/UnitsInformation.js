@@ -107,6 +107,15 @@ export default function UnitsInformation(props) {
 	// Variable to see if the info data is loading
 	const [isLoading, setIsLoading] = useState(true);
 
+	const [units, setUnits] = useState(null);
+
+	useEffect(() => {
+		if (!units) {
+			setUnits(props.course.units.filter(unit => unit.visible));
+		}
+
+	}, [units]);
+
 	useEffect(() => {
 		if (props.course) {
 			//Get activities all in the course
@@ -130,7 +139,7 @@ export default function UnitsInformation(props) {
 							showError(err.response.data.message);
 						}
 						else {
-							showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+							showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 						}
 						setIsLoading(false);
 					});
@@ -140,7 +149,7 @@ export default function UnitsInformation(props) {
 						showError(err.response.data.message);
 					}
 					else {
-						showError("¡No se han podido cargar las tarjetas, por favor intentelo mas tarde!");
+						showError("¡No se han podido cargar las tarjetas, por favor inténtelo mas tarde!");
 					}
 				});
 		}
@@ -222,14 +231,16 @@ export default function UnitsInformation(props) {
 			{/* COMPONENTS OF EACH UNIT IN THE COURSE */}
 			{
 				!isLoading ?
-					props.course.units.map((unit, index) => (
-						unit.visible ?
-							<TabPanel value={value} key={index} index={index}>
-								<UnitContent course={props.course} taskActivities={taskActivities ? taskActivities.filter(taskActivity => taskActivity.unit === unit._id) : null} studentActivities={studentActivities ? studentActivities.filter(studentActivity => studentActivity.unit === unit._id) : null} unitValue={unit} />
-							</TabPanel>
+					units ?
+						units.length > 0 ?
+							units.map((unit, index) => (
+								<TabPanel value={value} key={index} index={index}>
+									<UnitContent course={props.course} taskActivities={taskActivities ? taskActivities.filter(taskActivity => taskActivity.unit === unit._id) : null} studentActivities={studentActivities ? studentActivities.filter(studentActivity => studentActivity.unit === unit._id) : null} unitValue={unit} />
+								</TabPanel>
+							))
 							:
-							''
-					))
+							<NoContentToShow icon='face' messageTitle={'Sin unidades...'} messageDes={'Tu profesor no ha agregado unidades aún'} />
+						: <NoContentToShow icon='face' messageTitle={'Sin unidades...'} messageDes={'Tu profesor no ha agregado unidades aún'} />
 					:
 					<div className="spinner-loading" style={{ marginTop: '8em' }}>
 						<div className="spinner-border" role="status">
