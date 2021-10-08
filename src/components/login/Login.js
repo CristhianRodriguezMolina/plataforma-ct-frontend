@@ -13,7 +13,7 @@ import '../common/alert-message.scss';
 // COMPONENTS
 
 // Topografia and textfield
-import { Container, Link, TextField, Typography, Button, InputAdornment, IconButton } from '@material-ui/core';
+import { Container, TextField, Typography, Button, InputAdornment, IconButton } from '@material-ui/core';
 
 // Alerta
 import Alert from '@material-ui/lab/Alert';

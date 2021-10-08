@@ -33,7 +33,7 @@ import Container from '@material-ui/core/Container'
 import { makeStyles } from '@material-ui/core/styles'
 
 // Icons
-import { Close, People, PeopleOutline, LibraryBooks, LibraryAdd, Computer, EmojiPeople } from '@material-ui/icons';
+import { Close, People, PeopleOutline, LibraryBooks, LibraryAdd, Computer, EmojiPeople, Home } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
 	navbar: {
@@ -59,7 +59,7 @@ function NavBar() {
 									<Typography className='' variant="h6">
 										<Link className="link-app" to={isTeacher || isAdmin ? "/course/mycourses" : `/course/mycourses/${localStorage.getItem('user_name')}`}>
 											<IconButton>
-												PECO
+												<Home fontSize='large' /> PECO
 											</IconButton>
 										</Link>
 									</Typography>
