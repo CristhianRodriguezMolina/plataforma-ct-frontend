@@ -249,7 +249,13 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				});
 		}
 		else {
-			showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
+			if (files.length <= 0) {
+				showError("¡Seleccione una imagen primero!");
+			}
+			else {
+				showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
+			}
+
 		}
 	}
 
@@ -287,7 +293,12 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				});
 		}
 		else {
-			showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
+			if (files.length <= 0) {
+				showError("¡Seleccione una imagen primero!");
+			}
+			else {
+				showError("¡Error inexperado, por favor inténtelo de nuevo mas tarde!");
+			}
 		}
 	}
 
