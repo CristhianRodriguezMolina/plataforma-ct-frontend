@@ -170,8 +170,8 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				headers: { 'x-access-token': localStorage.getItem('token') }
 			})
 				.then((res) => {
-					setOptionsList(res.data.updatedQuestion.options);
-					value.options = res.data.updatedQuestion.options // Updating the options list with this
+					setOptionsList([...optionsList, res.data.updatedQuestion.options[res.data.updatedQuestion.options.length - 1]]);
+					value.options = [...optionsList, res.data.updatedQuestion.options[res.data.updatedQuestion.options.length - 1]]; // Updating the options list with this
 				})
 				.catch(err => {
 					if (err.response) {
@@ -503,7 +503,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 									<div
 										className='image-container'
 									>
-										<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="Option" />
+										<img className='option-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="Option" />
 										<Tooltip title="Borrar imagen" className={'ontouchstart' in window || navigator.msMaxTouchPoints ? 'delete-img-button-mobile' : 'delete-img-button'} aria-label="clean_filters">
 											<IconButton onClick={() => deleteOptionImg(option._id)} size="small">
 												<Clear />
@@ -590,7 +590,7 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 				type="delete"
 				open={openDeleteOption}
 				handleClose={() => setOpenDeleteOption(!openDeleteOption)}
-				message='¿Está seguro que quiere eliminar esta tarjeta?'
+				message='¿Está seguro que quiere eliminar esta opción?'
 				action={deleteOption}
 			/>
 		</div>
