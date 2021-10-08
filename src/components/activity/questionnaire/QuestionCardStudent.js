@@ -138,7 +138,6 @@ const QuestionCardStudent = (props) => {
 				<div className='row'>
 					{
 						optionsList.map((option, index) => {
-
 							return (
 								<div key={`item-${index}`} className="option-container option-container-student col-md-5" onClick={() => handleSwitchIsCorrect(option._id)}>
 									<div className="option-info">
@@ -149,10 +148,14 @@ const QuestionCardStudent = (props) => {
 									</div>
 									<div className='d-flex justify-content-center'>
 										<div className='image-container'>
-											{option.image !== "" ?
-												<img className='question-image' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="Option" />
-												:
-												<img className='question-image' src='/blank.jpg' alt="Option" />
+											{
+												!optionsList.every(o => o.image === "") ? // This is to verify if all the options have an image
+													option.image !== "" ?
+														<img className='option-image-student' src={`${process.env.REACT_APP_API_URL}/questionnaire/${option.image}`} alt="Option" />
+														:
+														<img className='option-image-student' src='/blank.jpg' alt="Option" />
+													:
+													''
 											}
 										</div>
 									</div>
