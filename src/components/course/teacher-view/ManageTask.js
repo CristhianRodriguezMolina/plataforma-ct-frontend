@@ -299,7 +299,7 @@ export default function ManageTask() {
 											onChange={evt => setTaskDescription(evt.target.value)}
 											value={taskDescription} label="Descripción de la tarea"
 											name="taskdescription"
-											required />
+										/>
 									</div>
 									<FormControlLabel className="switcher" labelPlacement="start" label="Definir fecha límite" control={
 										<Switch
@@ -350,7 +350,7 @@ export default function ManageTask() {
 											task={task} />
 										:
 										<div>
-											<NoContentToShow icon='mood' messageTitle={'Sin actividades...'} messageDes={'Las actividades agregadas se mostraran aquí'} />
+											<NoContentToShow icon='mood' messageTitle={'Sin actividades...'} messageDes={'Las actividades agregadas se mostrarán aquí'} />
 										</div>
 									}
 								</div>
