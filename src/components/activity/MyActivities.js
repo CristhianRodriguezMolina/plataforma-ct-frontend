@@ -107,11 +107,29 @@ const MyActivities = props => {
 	//Fetch the activities
 	useEffect(() => {
 		if (!activities) {
+
 			const fetch = () => {
 				api.get('/api/activity/', {
 					headers: { 'x-access-token': localStorage.getItem('token') }
 				})
 					.then((response) => {
+						let activities = response.data.activities;
+
+						/**
+						 * Set user as unknow when they doesn´t exist
+						 */
+
+						for (let i = 0; i < activities.length; i++) {
+							let activity = activities[i];
+							if (!activity.creator) {
+								activities[i].creator = {
+									_id: "",
+									first_name: "Desconocido",
+									last_name: ""
+								};
+							}
+						}
+
 
 						const userActivities = response.data.activities.filter(activity => activity.creator._id === localStorage.getItem("user_id"));
 						const otherActivities = response.data.activities.filter(activity => activity.creator._id !== localStorage.getItem("user_id"));
