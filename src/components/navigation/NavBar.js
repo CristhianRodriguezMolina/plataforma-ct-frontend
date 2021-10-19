@@ -107,7 +107,7 @@ function NavBar() {
 													{
 														isAdmin || isTeacher ?
 															<>
-																<li><Link className="dropdown-item" to="/activity/myactivities"><LibraryBooks className="mr-2" color="action" /> Mis actividades</Link></li>
+																<li><Link className="dropdown-item" to="/activity/myactivities"><LibraryBooks className="mr-2" color="action" /> Actividades</Link></li>
 																<li><Link className="dropdown-item" to="/activity/create"><LibraryAdd className="mr-2" color="action" /> Crear actividad</Link></li>
 																<div className="dropdown-divider"></div>
 															</>

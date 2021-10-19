@@ -8,9 +8,9 @@ import './InstructionCard.scss';
 import arrayMove from 'array-move';
 
 // Images
-import forward_img from '../../../assets/forward-instruction.jpg';
-import right_img from '../../../assets/right-instruction.jpg';
-import left_img from '../../../assets/left-instruction.jpg';
+import forward_img from '../../../assets/forward-instruction.png';
+import right_img from '../../../assets/right-instruction.png';
+import left_img from '../../../assets/left-instruction.png';
 
 /**
  * Icons

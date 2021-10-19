@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
 // Images
-import maze_block from '../../../assets/maze-block.jpg'
-import maze_start from '../../../assets/maze-start.jpg'
-import maze_end from '../../../assets/maze-end.jpg'
+import maze_block from '../../../assets/maze-block.png'
+import maze_start from '../../../assets/maze-start.png'
+import maze_end from '../../../assets/maze-end.png'
 
 // COMPONENTS
 
