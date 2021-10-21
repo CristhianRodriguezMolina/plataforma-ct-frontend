@@ -120,8 +120,8 @@ const QuestionCard = SortableElement(({ value, forStudents }) => {
 			})
 				.then((res) => {
 					showSuccess(res.data.message);
-					setOptionsList(res.data.updatedQuestion.options);
-					value.options = res.data.updatedQuestion.options; // Updating the options list with this
+					setOptionsList(optionsList.filter(option => option._id !== selectedOption));
+					value.options = optionsList.filter(option => option._id !== selectedOption); // Updating the options list with this
 					setSelectedOption("");
 				})
 				.catch(err => {
