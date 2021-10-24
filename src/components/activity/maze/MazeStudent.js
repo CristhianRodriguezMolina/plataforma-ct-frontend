@@ -244,8 +244,6 @@ const MazeStudent = (props) => {
 			setIsActive(true);
 			setStudentActivity(props.studentActivity)
 
-
-
 			//start timer
 			timerWorker.postMessage(counter)
 		} else if (maze) {
@@ -465,6 +463,16 @@ const MazeStudent = (props) => {
 			finishAnimation();
 		}
 	}, [animationExecutionType, animationType])
+
+	useEffect(() => {
+		if (btnShowRobot.current) {
+			if (animate) {
+				btnShowRobot.current.disabled = true;
+			} else {
+				btnShowRobot.current.disabled = false;
+			}
+		}
+	}, [animate])
 
 	const createAnimation = async () => {
 
@@ -732,16 +740,10 @@ const MazeStudent = (props) => {
 		}
 
 		if (animationType === 'ERROR') {
-			// setMaze(prevMaze => {
-			// 	return { ...prevMaze, verified: false }
-			// })
 			showError(errorMazeMessage);
 		}
 
 		if (animationType === 'WIN') {
-			// setMaze(prevMaze => {
-			// 	return { ...prevMaze, verified: true }
-			// })
 			showSuccess('Felicidades completaste el laberinto')
 		}
 
@@ -979,7 +981,7 @@ const MazeStudent = (props) => {
 									<div className='d-flex flex-wrap justify-content-around align-items-center'>
 										{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
 										<div className='d-flex flex-column'>
-											<h1 className='h4 mb-4'>Cambiar tamaño del maze</h1>
+											<h1 className='h4 mb-4'>Zoom del laberinto</h1>
 											<div>
 												<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
 												<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
@@ -989,8 +991,8 @@ const MazeStudent = (props) => {
 
 										{/* BUTTONS TO MANIPULATE THE MAZE ANIMATION */}
 										<div className='mt-4 d-flex justify-content-center'>
+											<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Activar robot</button>
 											<button onClick={() => { setAnimationExecutionType('RUNNING'); setAnimationType('NO_ANIMATION') }} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
-											<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Mostrar/Ocultar robot</button>
 											<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar animación</button>
 										</div>
 									</div> :

@@ -539,6 +539,16 @@ export default function Maze() {
 		}
 	}, [animationExecutionType, animationType])
 
+	useEffect(() => {
+		if (btnShowRobot.current) {
+			if (animate) {
+				btnShowRobot.current.disabled = true;
+			} else {
+				btnShowRobot.current.disabled = false;
+			}
+		}
+	}, [animate])
+
 	const createAnimation = async () => {
 
 		if (!isStart || !isEnd) {
@@ -807,16 +817,10 @@ export default function Maze() {
 		}
 
 		if (animationType === 'ERROR') {
-			// setMaze(prevMaze => {
-			// 	return { ...prevMaze, verified: false }
-			// })
 			showError(errorMazeMessage);
 		}
 
 		if (animationType === 'WIN') {
-			// setMaze(prevMaze => {
-			// 	return { ...prevMaze, verified: true }
-			// })
 			showSuccess('Felicidades completaste el laberinto')
 		}
 
@@ -1057,12 +1061,12 @@ export default function Maze() {
 
 					<div className='mt-2 d-flex flex-wrap justify-content-center px-2 '>
 						<div className='d-flex justify-content-center mt-2'>
+							<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Activar robot</button>
 							<button onClick={() => { setAnimationExecutionType('RUNNING'); setAnimationType('NO_ANIMATION') }} className='custom-btn custom-btn-success p-2 mr-2' ref={btnProveMaze} >Ejecutar</button>
-							<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete p-2 mr-2">Limpiar</button>
 						</div>
 						<div className='d-flex justify-content-center mt-2'>
-							<button onClick={handleShowRobot} className='custom-btn custom-btn-primary p-2 mr-2' ref={btnShowRobot} >Activar/desactivar robot</button>
-							<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2' >Cancelar ejecución</button>
+							<button onClick={cancelAnimation} className='custom-btn custom-btn-search p-2 mr-2' >Cancelar ejecución</button>
+							<button onClick={() => setOpen(!open)} className="custom-btn custom-btn-delete p-2">Limpiar</button>
 						</div>
 					</div>
 

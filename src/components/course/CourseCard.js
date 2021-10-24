@@ -1,4 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+
+// CONTEXT
+import UserContext from '../../context/user/UserContext';
 
 // API
 import api from '../../services/api';
@@ -30,6 +33,9 @@ import Alert from '@material-ui/lab/Alert';
 import Tooltip from '@material-ui/core/Tooltip';
 
 export default function CourseCard({ course, setCourses, image, onPress }) {
+
+    // Data from the context
+    const { isAdmin, isTeacher } = useContext(UserContext);
 
     // MENSAJES DEL FORMULARIO
     const [error, setError] = useState(false); //Variable flag de existencia de error
@@ -132,13 +138,18 @@ export default function CourseCard({ course, setCourses, image, onPress }) {
                         }
                     </div>
                 </div>
-                <div className="text-right">
-                    <Tooltip title="Borrar" aria-label="delete">
-                        <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                </div>
+                {
+                    isAdmin || isTeacher ?
+                        <div className="text-right">
+                            <Tooltip title="Borrar" aria-label="delete">
+                                <IconButton className="m-0 p-0" color="secondary" aria-label="Delete" onClick={() => setOpen(!open)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                        :
+                        ''
+                }
                 <AlertModal
                     type="delete"
                     open={open}
