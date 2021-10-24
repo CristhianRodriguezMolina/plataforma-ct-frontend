@@ -1030,7 +1030,7 @@ export default function Maze() {
 							<div className='d-flex flex-wrap justify-content-around align-items-center'>
 								{/* BUTTONS TO REDUCE OR ENLARGE THE MAZE */}
 								<div className='d-flex flex-column align-items-center zoom-panel'>
-									<h1 className='h4 mb-4'>Cambiar tamaño del laberinto</h1>
+									<h1 className='h4 mb-4'>Zoom del laberinto</h1>
 									<div>
 										<button onClick={makeZoomIn} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomIn /></button>
 										<button onClick={makeZoomOut} className="btn-zoom custom-btn custom-btn-primary mr-2"><ZoomOut /></button>
