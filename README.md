@@ -81,3 +81,11 @@ Start the server
 Now you can use a web browser and navigate to `localhost:3000`
 
 The admin credentials to login are set in the server repository
+
+
+If you are using the default values for environment variables you can login using the next admin credentials:
+```
+User: 214896
+Password: Expedited-Wrongful3-Skewer
+```
+
