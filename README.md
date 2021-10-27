@@ -80,7 +80,8 @@ Start the server
 
 Now you can use a web browser and navigate to `localhost:3000`
 
-Make sure to start the backend server too to connect the client 
+Make sure to start the backend server too to connect the client:
+[PECO - A platform to teach Computational thinking (CT) - Server](https://github.com/CristhianRodriguezMolina/plataforma-ct-backend)
 
 The admin credentials to login are set in the server repository
 
