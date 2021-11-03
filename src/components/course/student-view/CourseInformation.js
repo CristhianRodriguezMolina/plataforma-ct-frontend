@@ -6,6 +6,9 @@ import api from '../../../services/api';
 // SCSS
 import './studentview.scss';
 
+// Util
+import * as Util from '../../../util/util'
+
 // COMPONENTS
 
 // Material UI components
@@ -97,7 +100,7 @@ export default function CourseInformation(props) {
                                     }
                                     <div>
                                         <p className='m-0 ml-4 mb-2 p-0'><b>{teacher.first_name} {teacher.last_name}</b></p>
-                                        <p className='m-0 ml-4 mb-2 p-0 text-muted'>Género: {teacher.genre !== 'M' ? <b>Masculino</b> : <b>Femenino</b>}</p>
+                                        <p className='m-0 ml-4 mb-2 p-0 text-muted'>Género: {Util.getGenre(teacher.genre)}</p>
                                     </div>
                                 </div>
                                 <div className='mt-3'>
