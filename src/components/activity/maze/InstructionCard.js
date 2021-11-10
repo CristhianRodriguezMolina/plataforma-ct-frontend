@@ -52,6 +52,7 @@ const InstructionCard = SortableElement(({ value, showCheck, position }) => {
         if (checkCard) {
             if (instructionsToDelete) {
                 checkBox.current.checked = !checkBox.current.checked;
+
                 if (checkBox.current.checked) {
                     let tempList = [...instructionsToDelete];
                     tempList.push(value.num);

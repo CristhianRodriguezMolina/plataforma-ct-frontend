@@ -139,9 +139,25 @@ const Intructions = props => {
 
         let tempList = [...instructionsList];
 
+        let num = 0;
+
+        if (tempList.length == 0) {
+            num = 1;
+        }
+        else {
+            let max = 0;
+            for (let i = 0; i < tempList.length; i++) {
+                if (tempList[i].num > max) {
+                    max = tempList[i].num;
+                }
+            }
+            num = max + 1;
+        }
+
+
         tempList.push({
             type: `${value}`,
-            num: `${tempList.length}`
+            num: num
         });
         setInstructionsList(tempList);
         updateMazeInstructions(tempList);
